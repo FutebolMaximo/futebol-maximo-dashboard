@@ -642,18 +642,41 @@ async function loadData() {
   const badge = document.getElementById('dataBadge');
   try {
     badge.textContent = 'Carregando dados...';
-    const resp = await fetch('dados.csv');
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const csvUrl = 'dados.csv';
+    const resp = await fetch(csvUrl);
+    if (!resp.ok) throw new Error(`Arquivo não encontrado (HTTP ${resp.status}). Verifique se "dados.csv" está na raiz do repositório.`);
     const text = await resp.text();
     allData = parseCSVText(text);
     filteredData = [...allData];
-    if (!allData.length) throw new Error('CSV sem dados');
+    if (!allData.length) throw new Error('O arquivo dados.csv está vazio ou mal formatado.');
     badge.textContent = `${allData.length} vídeos`;
     init();
   } catch(err) {
-    badge.textContent = '⚠️ Erro ao carregar dados';
+    badge.textContent = '⚠️ Erro ao carregar';
     badge.style.background = '#fef2f2';
     badge.style.color = '#dc2626';
+
+    // Show visible error banner
+    const banner = document.createElement('div');
+    banner.style.cssText = `
+      position:fixed; top:0; left:0; right:0; z-index:9999;
+      background:#fef2f2; border-bottom:3px solid #dc2626;
+      padding:16px 24px; font-family:sans-serif; font-size:14px; color:#991b1b;
+      display:flex; align-items:flex-start; gap:12px;
+    `;
+    banner.innerHTML = `
+      <span style="font-size:22px;">⚠️</span>
+      <div>
+        <strong>Não foi possível carregar os dados.</strong><br>
+        ${err.message}<br><br>
+        <strong>Como corrigir:</strong> acesse seu repositório no GitHub e confirme que o arquivo
+        <code style="background:#fee2e2;padding:2px 6px;border-radius:4px;">dados.csv</code>
+        está na mesma pasta que o <code style="background:#fee2e2;padding:2px 6px;border-radius:4px;">index.html</code>.
+        <br><br>
+        <a href="javascript:location.reload()" style="color:#dc2626;font-weight:bold;">🔄 Tentar novamente</a>
+      </div>
+    `;
+    document.body.prepend(banner);
     console.error('Erro ao carregar dados.csv:', err);
   }
 }
