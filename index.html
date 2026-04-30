@@ -686,6 +686,86 @@
     <div class="chart-card"><div class="chart-title">🥧 Mix de Categorias por Período</div><div style="height:220px;overflow-y:auto;overflow-x:hidden;" id="chartTempMixContainer"></div></div>
   </div>
 
+  <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
+  <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
+  <div class="chart-card" style="margin-bottom:24px;">
+    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>🔽 Impressões → Views → Watch Time → Inscritos → Comentários</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
+        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="all">Geral (todos os vídeos)</option>
+          <option value="creator">Por Criador</option>
+          <option value="categoria">Por Categoria</option>
+        </select>
+      </div>
+    </div>
+    <div id="funnelContainer" style="margin-top:16px;"></div>
+  </div>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3>KPIs Derivados por Vídeo</h3>
+      <input type="text" id="funnelSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFunnelTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
+    </div>
+    <div class="table-wrap" style="max-height:380px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+        <thead><tr>
+          <th style="width:200px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;">Vídeo</th>
+          <th style="width:62px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;">Criador</th>
+          <th style="width:72px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Watch Hrs</th>
+          <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Insc/1K views</th>
+          <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Likes/1K views</th>
+          <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Comm/1K views</th>
+          <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Shares/1K views</th>
+          <th style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Views</th>
+        </tr></thead>
+        <tbody id="funnelTableBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="funnelTableFooter"></div>
+  </div>
+
+  <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
+  <div class="section-header"><div class="section-divider"></div><h2>Heatmap Criador × Categoria</h2></div>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3>Performance por Criador e Categoria</h3>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Colorir por:</label>
+        <select id="heatmapMetric" onchange="renderHeatmap()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="views">Views mediana</option>
+          <option value="ctr">CTR médio</option>
+          <option value="ret">Retenção média</option>
+          <option value="insc1k">Inscritos/1K views</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:500px;overflow-x:auto;"><div id="heatmapContainer"></div></div>
+    <div style="margin-top:8px;padding:8px 12px;font-size:11px;color:var(--gray-500);display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+      <span>Intensidade da cor = performance relativa:</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#dcfce7;border:1px solid #16a34a;border-radius:2px;display:inline-block;"></span>Top 25%</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fef9c3;border:1px solid #ca8a04;border-radius:2px;display:inline-block;"></span>Mediana</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fee2e2;border:1px solid #dc2626;border-radius:2px;display:inline-block;"></span>Bottom 25%</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:2px;display:inline-block;"></span>Sem dados</span>
+    </div>
+  </div>
+
+  <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
+  <div class="section-header"><div class="section-divider"></div><h2>Análise de Duração Ideal</h2></div>
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <label style="font-size:12px;color:var(--gray-500);">Criador:</label>
+    <select id="durCreatorFilter" onchange="renderDurationAnalysis()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;"><option value="">Todos</option></select>
+    <label style="font-size:12px;color:var(--gray-500);margin-left:8px;">Categoria:</label>
+    <select id="durCatFilter" onchange="renderDurationAnalysis()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;"><option value="">Todas</option></select>
+  </div>
+  <div class="table-card" style="margin-bottom:32px;">
+    <div class="table-toolbar">
+      <h3 id="durTableTitle">Todas as faixas de duração</h3>
+      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+    </div>
+    <div class="table-wrap"><div id="durationTableContainer"></div></div>
+  </div>
+
 </div>
 
 <script>
@@ -859,6 +939,10 @@ function renderAdvanced() {
   renderScatter();
   renderFeedbackTable();
   renderTemporal();
+  renderFunnel();
+  renderFunnelTable();
+  renderHeatmap();
+  renderDurationAnalysis();
 }
 
 function setChartMode(mode) {
@@ -1096,6 +1180,21 @@ function init() {
   }
 
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
+
+  // Populate duration analysis dropdowns
+  const dcSel = document.getElementById('durCreatorFilter');
+  const dcatSel = document.getElementById('durCatFilter');
+  if (dcSel) {
+    [...new Set(allData.map(r=>r.creator).filter(Boolean))].sort().forEach(c => {
+      const o = document.createElement('option'); o.value=c; o.textContent=c; dcSel.appendChild(o);
+    });
+  }
+  if (dcatSel) {
+    [...new Set(allData.map(r=>r.categoria).filter(Boolean))].sort().forEach(c => {
+      const o = document.createElement('option'); o.value=c; o.textContent=c; dcatSel.appendChild(o);
+    });
+  }
+
   applyFilters();
 }
 
@@ -2047,6 +2146,258 @@ function showComparison(days) {
     CTR <span style="color:${col(mA.ctr,mB.ctr)}">${arrow(mA.ctr,mB.ctr)} ${delta(mA.ctr,mB.ctr)}</span> ·
     Retenção <span style="color:${col(mA.ret,mB.ret)}">${arrow(mA.ret,mB.ret)} ${delta(mA.ret,mB.ret)}</span>
     <span style="color:var(--gray-400);margin-left:8px;">(${periodA.length} vs ${periodB.length} vídeos)</span>`;
+}
+
+// ── FUNIL DE PERFORMANCE ─────────────────────────────────────────────────────
+
+function funnelKPIs(rows) {
+  if (!rows.length) return null;
+  const totalViews = rows.reduce((a,r)=>a+r.views,0);
+  const totalImpr  = rows.reduce((a,r)=>a+r.impressoes,0);
+  const totalInsc  = rows.reduce((a,r)=>a+r.inscritos,0);
+  const totalComm  = rows.reduce((a,r)=>a+r.comentarios,0);
+  const watchHrs   = rows.reduce((a,r)=>a + r.views * r.avgViewDurSec / 3600, 0);
+  const ctr        = totalImpr > 0 ? totalViews/totalImpr*100 : 0;
+  const ret        = mean(rows.map(r=>r.avgViewedPct));
+  return { totalImpr, totalViews, watchHrs, totalInsc, totalComm, ctr, ret, n: rows.length };
+}
+
+function renderFunnel() {
+  const groupBy = document.getElementById('funnelGroupBy').value;
+  const d = filteredData;
+  const container = document.getElementById('funnelContainer');
+  if (!container || !d.length) return;
+
+  let groups = {};
+  if (groupBy === 'all') {
+    groups = { 'Todos os vídeos': d };
+  } else {
+    d.forEach(r => {
+      const key = (groupBy === 'creator' ? r.creator : r.categoria) || '(Sem dados)';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(r);
+    });
+  }
+
+  const stages = ['Impressões','Views','Watch Hrs','Inscritos','Comentários'];
+  const stageColors = ['#2563eb','#0891b2','#059669','#7c3aed','#db2777'];
+
+  let html = '';
+  Object.entries(groups).sort(([,a],[,b])=>b.length-a.length).forEach(([name, rows]) => {
+    const k = funnelKPIs(rows);
+    if (!k) return;
+    const vals = [k.totalImpr, k.totalViews, k.watchHrs, k.totalInsc, k.totalComm];
+    const maxV = vals[0] || 1;
+    html += `<div style="margin-bottom:20px;">
+      ${groupBy !== 'all' ? `<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">${name} <span style="font-weight:400;color:var(--gray-400);">(${rows.length} vídeos · CTR ${k.ctr.toFixed(1)}% · Ret ${k.ret.toFixed(1)}%)</span></div>` : ''}
+      <div style="display:flex;flex-direction:column;gap:6px;">`;
+    vals.forEach((v, i) => {
+      const pct = Math.max((v/maxV)*100, 1);
+      const fmt = i===2 ? v.toFixed(0)+'h' : fmtNum(v);
+      const conv = i > 0 && vals[i-1] > 0 ? (v/vals[i-1]*100).toFixed(1)+'%' : '';
+      html += `<div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:110px;font-size:11px;color:var(--gray-600);text-align:right;flex-shrink:0;">${stages[i]}</div>
+        <div style="flex:1;height:28px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative;">
+          <div style="width:${pct}%;height:100%;background:${stageColors[i]};border-radius:4px;transition:width .4s;display:flex;align-items:center;padding-left:8px;">
+            <span style="color:white;font-size:11px;font-weight:700;white-space:nowrap;">${fmt}</span>
+          </div>
+        </div>
+        ${conv ? `<div style="width:52px;font-size:10px;color:var(--gray-400);flex-shrink:0;">${conv}</div>` : '<div style="width:52px;"></div>'}
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+
+  container.innerHTML = html || '<p style="color:var(--gray-400);padding:12px;">Sem dados suficientes.</p>';
+}
+
+function renderFunnelTable() {
+  const q = (document.getElementById('funnelSearch').value || '').toLowerCase();
+  let rows = [...filteredData];
+  if (q) rows = rows.filter(r => r.title.toLowerCase().includes(q) || (r.creator||'').toLowerCase().includes(q));
+
+  rows.sort((a,b) => b.views - a.views);
+
+  const per1k = (v, views) => views > 0 ? (v/views*1000).toFixed(2) : '—';
+
+  document.getElementById('funnelTableBody').innerHTML = rows.map(r => {
+    const watchHrs = (r.views * r.avgViewDurSec / 3600).toFixed(1);
+    return `<tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.3;font-size:11px;">
+        ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
+      </td>
+      <td style="padding:5px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${watchHrs}h</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${per1k(r.inscritos, r.views)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${per1k(r.likes, r.views)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${per1k(r.comentarios, r.views)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${per1k(r.shares, r.views)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('funnelTableFooter').textContent = `${rows.length} vídeos`;
+}
+
+// ── HEATMAP CRIADOR × CATEGORIA ──────────────────────────────────────────────
+
+function heatColor(v, allVals) {
+  if (v === null || isNaN(v)) return { bg:'#f3f4f6', border:'#d1d5db', txt:'#9ca3af' };
+  const sorted = [...allVals].filter(x=>x!==null&&!isNaN(x)).sort((a,b)=>a-b);
+  const p25 = sorted[Math.floor(sorted.length*0.25)] ?? 0;
+  const p75 = sorted[Math.floor(sorted.length*0.75)] ?? 0;
+  if (v >= p75) return { bg:'#dcfce7', border:'#16a34a44', txt:'#15803d' };
+  if (v <= p25) return { bg:'#fee2e2', border:'#dc262644', txt:'#b91c1c' };
+  return { bg:'#fef9c3', border:'#ca8a0444', txt:'#92400e' };
+}
+
+function renderHeatmap() {
+  const metric = document.getElementById('heatmapMetric').value;
+  const d = filteredData;
+  const container = document.getElementById('heatmapContainer');
+  if (!container || !d.length) return;
+
+  const creators = [...new Set(d.map(r=>r.creator).filter(Boolean))].sort();
+  const cats = [...new Set(d.map(r=>r.categoria||'(Sem categoria)'))].sort();
+
+  const getVal = (rows) => {
+    if (!rows || !rows.length) return null;
+    if (metric === 'views')  return median(rows.map(r=>r.views));
+    if (metric === 'ctr')    return mean(rows.map(r=>r.ctr));
+    if (metric === 'ret')    return mean(rows.map(r=>r.avgViewedPct));
+    if (metric === 'insc1k') {
+      const v = rows.reduce((a,r)=>a+r.views,0);
+      return v > 0 ? rows.reduce((a,r)=>a+r.inscritos,0)/v*1000 : 0;
+    }
+    return null;
+  };
+
+  const fmtVal = v => {
+    if (v===null||isNaN(v)) return '—';
+    if (metric==='views') return fmtNum(v);
+    if (metric==='ctr'||metric==='ret') return v.toFixed(1)+'%';
+    return v.toFixed(2);
+  };
+
+  // Build all cell values for color scaling
+  const allCells = [];
+  const cellData = {};
+  creators.forEach(cr => {
+    cats.forEach(cat => {
+      const rows = d.filter(r=>r.creator===cr && (r.categoria||'(Sem categoria)')===cat);
+      const v = rows.length ? getVal(rows) : null;
+      cellData[`${cr}|${cat}`] = { v, n: rows.length };
+      if (v!==null) allCells.push(v);
+    });
+  });
+
+  const thStyle = `padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);white-space:nowrap;text-align:center;border-right:1px solid var(--gray-100);`;
+  const firstThStyle = `padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);text-align:left;position:sticky;left:0;z-index:2;`;
+
+  let html = `<table style="border-collapse:collapse;font-size:11px;min-width:100%;">
+    <thead><tr>
+      <th style="${firstThStyle}">Criador</th>
+      ${cats.map(c=>`<th style="${thStyle}" title="${c}">${c.length>12?c.slice(0,12)+'…':c}</th>`).join('')}
+    </tr></thead><tbody>`;
+
+  creators.forEach(cr => {
+    html += `<tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:6px 8px;font-weight:700;font-size:11px;white-space:nowrap;background:var(--gray-50);position:sticky;left:0;z-index:1;border-right:1px solid var(--gray-200);">${cr}</td>`;
+    cats.forEach(cat => {
+      const { v, n } = cellData[`${cr}|${cat}`];
+      const col = heatColor(v, allCells);
+      html += `<td style="padding:5px 8px;text-align:center;background:${col.bg};border:1px solid ${col.border};border-radius:3px;min-width:70px;" title="${cr} × ${cat}: ${fmtVal(v)} (${n} vídeos)">
+        <div style="font-weight:700;color:${col.txt};font-size:11px;">${fmtVal(v)}</div>
+        ${n>0?`<div style="font-size:9px;color:${col.txt}99;">${n}v</div>`:''}
+      </td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+// ── ANÁLISE DE DURAÇÃO IDEAL ──────────────────────────────────────────────────
+
+const DUR_BINS = [
+  { label:'0–5 min',  min:0,    max:300  },
+  { label:'5–10 min', min:300,  max:600  },
+  { label:'10–15 min',min:600,  max:900  },
+  { label:'15–20 min',min:900,  max:1200 },
+  { label:'20–25 min',min:1200, max:1500 },
+  { label:'>25 min',  min:1500, max:Infinity },
+];
+
+function renderDurationAnalysis() {
+  const crFilter  = document.getElementById('durCreatorFilter').value;
+  const catFilter = document.getElementById('durCatFilter').value;
+  const container = document.getElementById('durationTableContainer');
+  if (!container) return;
+
+  let d = filteredData;
+  if (crFilter)  d = d.filter(r=>r.creator===crFilter);
+  if (catFilter) d = d.filter(r=>r.categoria===catFilter);
+
+  document.getElementById('durTableTitle').textContent =
+    [crFilter, catFilter].filter(Boolean).join(' · ') || 'Todas as faixas de duração';
+
+  const binData = DUR_BINS.map(bin => {
+    const rows = d.filter(r => r.duracao >= bin.min && r.duracao < bin.max);
+    if (!rows.length) return { ...bin, n:0, medViews:null, medRet:null, avgWatchMin:null, insc1k:null, comm1k:null };
+    const views = rows.map(r=>r.views);
+    const totalViews = rows.reduce((a,r)=>a+r.views,0);
+    return {
+      ...bin,
+      n: rows.length,
+      medViews:   median(views),
+      medRet:     median(rows.map(r=>r.avgViewedPct)),
+      avgWatchMin: mean(rows.map(r=>r.avgViewDurSec))/60,
+      insc1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0,
+      comm1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0,
+    };
+  });
+
+  // For each column, build array of all non-null values for color scaling
+  const cols = ['medViews','medRet','avgWatchMin','insc1k','comm1k'];
+
+  const thS = `padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);text-align:right;white-space:nowrap;`;
+  const tdS = `padding:7px 10px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;`;
+
+  let html = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr>
+      <th style="${thS}text-align:left;">Faixa Duração</th>
+      <th style="${thS}">Nº Vídeos</th>
+      <th style="${thS}">Views Mediana</th>
+      <th style="${thS}">Retenção Média</th>
+      <th style="${thS}">Avg Watch (min)</th>
+      <th style="${thS}">Inscritos/1K views</th>
+      <th style="${thS}">Coment./1K views</th>
+    </tr></thead><tbody>`;
+
+  binData.forEach(row => {
+    const cellColor = (col) => {
+      const allVals = binData.map(b=>b[col]).filter(v=>v!==null&&!isNaN(v));
+      return heatColor(row[col], allVals);
+    };
+    const cell = (col, fmt) => {
+      if (row.n === 0 || row[col]===null) return `<td style="${tdS}color:var(--gray-300);">—</td>`;
+      const c = cellColor(col);
+      return `<td style="${tdS}background:${c.bg};color:${c.txt};font-weight:600;">${fmt(row[col])}</td>`;
+    };
+
+    html += `<tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${row.label}</td>
+      <td style="${tdS}font-weight:600;color:var(--gray-600);">${row.n}</td>
+      ${cell('medViews', v => fmtNum(v))}
+      ${cell('medRet',   v => v.toFixed(1)+'%')}
+      ${cell('avgWatchMin', v => v.toFixed(1)+' min')}
+      ${cell('insc1k',  v => v.toFixed(2))}
+      ${cell('comm1k',  v => v.toFixed(2))}
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
