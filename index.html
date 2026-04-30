@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futebol Máximo · Dashboard de Performance</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --blue-900: #0f2356;
+    --blue-800: #1a3a72;
+    --blue-600: #1d4ed8;
+    --blue-500: #2563eb;
+    --blue-400: #3b82f6;
+    --blue-100: #dbeafe;
+    --blue-50:  #eff6ff;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-300: #d1d5db;
+    --gray-100: #f3f4f6;
+    --gray-50:  #f9fafb;
+    --white: #ffffff;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-800) 100%);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-logo {
+    width: 44px; height: 44px;
+    background: var(--blue-500);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header-title { color: white; }
+  .header-title h1 { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
+  .header-title p { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 1px; }
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .upload-btn {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+    transition: background .2s;
+  }
+  .upload-btn:hover { background: rgba(255,255,255,.2); }
+  #csvFile { display: none; }
+  .data-badge {
+    background: rgba(255,255,255,.1);
+    color: rgba(255,255,255,.8);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.15);
+  }
+
+  /* MAIN */
+  .main { max-width: 1600px; margin: 0 auto; padding: 24px 24px 48px; box-sizing: border-box; width: 100%; }
+
+  /* FILTERS */
+  .filters-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; min-width: 160px; }
+  .filter-group label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; }
+  .filter-group select,
+  .filter-group input[type=date],
+  .filter-group input[type=text],
+  .filter-group input[type=number] {
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 13px;
+    color: var(--gray-900);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s;
+    height: 36px;
+  }
+  .filter-group select:focus,
+  .filter-group input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 2px rgba(37,99,235,.12); }
+  .filter-actions { display: flex; gap: 8px; align-items: flex-end; }
+  .btn-primary {
+    background: var(--blue-500); color: white;
+    border: none; border-radius: 8px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600;
+    cursor: pointer; height: 36px; transition: background .2s;
+  }
+  .btn-primary:hover { background: var(--blue-600); }
+  .btn-secondary {
+    background: var(--white); color: var(--gray-700);
+    border: 1px solid var(--gray-300); border-radius: 8px;
+    padding: 8px 14px; font-size: 13px;
+    cursor: pointer; height: 36px; transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--blue-400); color: var(--blue-500); }
+
+  /* Title search dropdown */
+  .title-search-wrap { position: relative; }
+  .title-search-wrap input { width: 240px; }
+  .title-dropdown {
+    position: absolute;
+    top: 100%; left: 0;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    min-width: 300px;
+  }
+  .title-dropdown.open { display: block; }
+  .title-option {
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--gray-700);
+    border-bottom: 1px solid var(--gray-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .title-option:hover { background: var(--blue-50); color: var(--blue-600); }
+  .title-option.selected { background: var(--blue-100); color: var(--blue-700); font-weight: 600; }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .section-header h2 { font-size: 14px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: .5px; }
+  .section-divider { height: 2px; background: var(--blue-500); width: 28px; border-radius: 2px; }
+
+  /* KPI GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    border-left: 3px solid var(--blue-500);
+    transition: transform .15s, box-shadow .15s;
+    cursor: default;
+  }
+  .kpi-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .kpi-card.accent { border-left-color: var(--blue-900); }
+  .kpi-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 800; color: var(--gray-900); line-height: 1; }
+  .kpi-sub { font-size: 11px; color: var(--gray-500); margin-top: 5px; }
+  .kpi-median { font-size: 11px; color: var(--blue-500); margin-top: 4px; font-weight: 600; }
+  .kpi-median::before { content: '⬡ '; font-size: 9px; }
+
+  /* CHARTS SECTION */
+  .charts-controls {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .charts-controls label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+  .topn-input { display: flex; align-items: center; gap: 8px; }
+  .topn-input input { width: 70px; }
+  .topn-toggle { display: flex; border: 1px solid var(--gray-300); border-radius: 8px; overflow: hidden; }
+  .toggle-btn {
+    background: var(--white); border: none; padding: 0 12px; height: 32px;
+    font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gray-600);
+    transition: background .15s, color .15s;
+  }
+  .toggle-btn.active { background: var(--blue-500); color: white; }
+  .toggle-btn:not(.active):hover { background: var(--blue-50); color: var(--blue-600); }
+  .legend-pills { display: flex; gap: 12px; margin-left: auto; flex-wrap: wrap; }
+  .pill { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-600); }
+  .pill-dot { width: 12px; height: 3px; border-radius: 2px; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .chart-card.wide { grid-column: 1 / -1; }
+  .chart-title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .chart-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--blue-100); color: var(--blue-700); font-weight: 600; }
+  .chart-wrap { position: relative; height: 280px; }
+  .chart-wrap canvas { cursor: pointer; }
+
+  /* TABLE SECTION */
+  .table-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .table-toolbar {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-100);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .table-toolbar h3 { font-size: 13px; font-weight: 700; color: var(--gray-700); }
+  .table-search input {
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    width: 220px;
+    outline: none;
+  }
+  .table-search input:focus { border-color: var(--blue-500); }
+  .table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
+  thead th {
+    background: var(--gray-50);
+    padding: 7px 6px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--gray-200);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  /* Column widths: Data, Título, Criador, Categoria, Impressões, CTR%, Views, Duração, Avg Dur, Ret.%, Inscritos, Conv.Insc, Likes, Coment., Conv.Comm, Shares */
+  thead th:nth-child(1)  { width: 72px; }
+  thead th:nth-child(2)  { width: 170px; }
+  thead th:nth-child(3)  { width: 58px; }
+  thead th:nth-child(4)  { width: 90px; }
+  thead th:nth-child(5)  { width: 68px; }
+  thead th:nth-child(6)  { width: 44px; }
+  thead th:nth-child(7)  { width: 56px; }
+  thead th:nth-child(8)  { width: 52px; }
+  thead th:nth-child(9)  { width: 52px; }
+  thead th:nth-child(10) { width: 44px; }
+  thead th:nth-child(11) { width: 58px; }
+  thead th:nth-child(12) { width: 62px; }
+  thead th:nth-child(13) { width: 48px; }
+  thead th:nth-child(14) { width: 58px; }
+  thead th:nth-child(15) { width: 62px; }
+  thead th:nth-child(16) { width: 46px; }
+  thead th:hover { background: var(--blue-50); color: var(--blue-600); }
+  thead th .sort-icon { margin-left: 2px; opacity: .4; }
+  thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
+  tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
+  tbody tr:hover { background: var(--blue-50); }
+  tbody td { padding: 6px 6px; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; }
+  tbody td.title-cell { font-weight: 500; color: var(--gray-900); white-space: normal; line-height: 1.3; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .creator-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--blue-100);
+    color: var(--blue-700);
+  }
+  .table-footer { padding: 10px 20px; font-size: 12px; color: var(--gray-500); border-top: 1px solid var(--gray-100); }
+
+  /* Column filters row */
+  tr.filter-row td {
+    background: var(--blue-50);
+    padding: 3px 4px;
+    border-bottom: 2px solid var(--blue-200);
+    position: sticky;
+    top: 33px;
+    z-index: 4;
+  }
+  .col-filter {
+    width: 100%;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 10px;
+    outline: none;
+    background: white;
+    color: var(--gray-800);
+  }
+  .col-filter:focus { border-color: var(--blue-400); box-shadow: 0 0 0 2px rgba(37,99,235,.1); }
+  .col-filter.active { border-color: var(--blue-500); background: var(--blue-50); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-card.wide { grid-column: 1; }
+    .main { padding: 16px 12px 32px; }
+  }
+  @media (max-width: 600px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">⚽</div>
+    <div class="header-title">
+      <h1>Futebol Máximo · Performance</h1>
+      <p>Dashboard de Análise de Vídeos</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="data-badge" id="dataBadge">Carregando...</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- FILTERS -->
+  <div class="filters-card">
+    <div class="filter-group">
+      <label>Criador</label>
+      <select id="filterCreator">
+        <option value="">Todos os Criadores</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Data Início</label>
+      <input type="date" id="filterDateStart">
+    </div>
+    <div class="filter-group">
+      <label>Data Fim</label>
+      <input type="date" id="filterDateEnd">
+    </div>
+    <div class="filter-group">
+      <label>Categoria</label>
+      <div class="title-search-wrap" id="catWrap">
+        <input type="text" id="filterCategoriaInput" placeholder="Todas as categorias..." readonly
+          onclick="toggleCatDropdown()" style="cursor:pointer;background:white;">
+        <div class="title-dropdown" id="catDropdown"></div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <label>Título do Vídeo</label>
+      <div class="title-search-wrap">
+        <input type="text" id="filterTitleSearch" placeholder="Buscar título..." autocomplete="off"
+          oninput="onTitleSearchInput()" onfocus="onTitleFocus()" onblur="onTitleBlur()">
+        <div class="title-dropdown" id="titleDropdown"></div>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
+      <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
+    </div>
+  </div>
+
+  <!-- KPI SECTION -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Visão Geral · KPIs</h2>
+  </div>
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card"><div class="kpi-label">Impressões</div><div class="kpi-value" id="kImpr">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="kImprMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Views</div><div class="kpi-value" id="kViews">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="kViewsMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Minutagem Média</div><div class="kpi-value" id="kDurMedia">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="kDurMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg Viewed %</div><div class="kpi-value" id="kAvgPct">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="kAvgPctMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg View Duration</div><div class="kpi-value" id="kAvgDur">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="kAvgDurMed">—</div></div>
+    <div class="kpi-card accent"><div class="kpi-label">Inscritos</div><div class="kpi-value" id="kInsc">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="kInscMed">—</div></div>
+    <div class="kpi-card accent"><div class="kpi-label">Conversão Inscritos</div><div class="kpi-value" id="kConv">—</div><div class="kpi-sub">Inscritos / Views</div><div class="kpi-median" id="kConvMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Likes</div><div class="kpi-value" id="kLikes">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="kLikesMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Comentários</div><div class="kpi-value" id="kComm">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="kCommMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Shares</div><div class="kpi-value" id="kShares">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="kSharesMed">—</div></div>
+  </div>
+
+
+  <!-- CHARTS CONTROLS -->
+  <div class="charts-controls">
+    <div class="topn-input">
+      <label>N Vídeos:</label>
+      <input type="number" id="topNInput" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+      <div class="topn-toggle">
+        <button id="btnTop" class="toggle-btn active" onclick="setChartMode('top')">🏆 Melhores</button>
+        <button id="btnBot" class="toggle-btn" onclick="setChartMode('bottom')">🔍 Piores</button>
+      </div>
+      <button class="btn-primary" style="height:32px;padding:0 12px;font-size:12px;" onclick="applyFilters()">Atualizar</button>
+    </div>
+    <div class="legend-pills" id="catLegendPills" style="flex-wrap:wrap;gap:8px;"></div>
+  </div>
+
+  <!-- CHARTS GRID -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Gráficos de Performance</h2>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card wide">
+      <div class="chart-title">📊 Views por Vídeo <span class="chart-badge">Top N</span></div>
+      <div class="chart-wrap"><canvas id="chartViews"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>⏱️ <span id="durationChartLabel">Avg View Duration por Vídeo</span></span>
+        <div class="topn-toggle" style="margin-left:8px;">
+          <button id="btnDuration" class="toggle-btn active" onclick="setDurationMode('duration')">Avg Duration</button>
+          <button id="btnRetention" class="toggle-btn" onclick="setDurationMode('retention')">Avg Viewed %</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartDuration"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>💬 <span id="commentsChartLabel">Comentários por Vídeo</span></span>
+        <div class="topn-toggle" style="margin-left:8px;">
+          <button id="btnComments" class="toggle-btn active" onclick="setCommentsMode('comments')">Comentários</button>
+          <button id="btnConvComm" class="toggle-btn" onclick="setCommentsMode('convComments')">Conv. Comm. %</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartComments"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>🔄 <span id="inscritosChartLabel">Conversão por Vídeo</span> <span id="inscritosChartSub" style="font-size:11px;font-weight:400;color:var(--gray-500)">(Inscritos/Views %)</span></span>
+        <div class="topn-toggle" style="margin-left:8px;">
+          <button id="btnConversao" class="toggle-btn active" onclick="setInscritosMode('conversao')">Conversão %</button>
+          <button id="btnInscritos" class="toggle-btn" onclick="setInscritosMode('inscritos')">Inscritos</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartInscritos"></canvas></div>
+    </div>
+  </div>
+
+  <!-- RAW DATA TABLE -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Análise por Categoria e Distribuição</h2>
+  </div>
+  <div class="charts-grid" style="margin-bottom:24px;">
+    <div class="chart-card">
+      <div class="chart-title">
+        🥧 Distribuição por Categoria <span class="chart-badge">Soma Views</span>
+      </div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="chartPizza"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistViews"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">⏱️ Distribuição de Duração (faixas de 5min)</div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistDur"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">📈 Média de Views por Faixa de Duração (5min)</div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistViewsAvg"></canvas></div>
+    </div>
+  </div>
+
+  <!-- BASE DE DADOS COMPLETA -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Base de Dados Completa</h2>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <h3 id="tableTitle">Todos os vídeos</h3>
+      <div class="table-search">
+        <input type="text" id="tableSearch" placeholder="🔍 Filtrar na tabela..." oninput="renderTable()">
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('title')" data-col="title">Título <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('categoria')" data-col="categoria">Categoria <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impressões <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('views')" data-col="views" class="num sorted">Views <span class="sort-icon">↓</span></th>
+            <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg Dur <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Ret.% <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('inscritos')" data-col="inscritos" class="num">Inscritos <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('conversao')" data-col="conversao" class="num">Conv. Insc. <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Comentários <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
+          </tr>
+          <tr class="filter-row">
+            <td><input class="col-filter" data-col="dataPublicacao" data-type="text" placeholder="ex: 2026"></td>
+            <td><input class="col-filter" data-col="title" data-type="text" placeholder="buscar..."></td>
+            <td><input class="col-filter" data-col="creator" data-type="text" placeholder="buscar..."></td>
+            <td><input class="col-filter" data-col="categoria" data-type="text" placeholder="buscar..."></td>
+            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500000"></td>
+            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">5"></td>
+            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
+            <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
+            <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
+            <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
+            <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
+            <td><input class="col-filter" data-col="conversao" data-type="num" placeholder=">0.005"></td>
+            <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
+            <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
+            <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
+            <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="tableFooter"></div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA LOADING ─────────────────────────────────────────────────────────────
+// Data is loaded from dados.csv in the same folder
+
+let allData = [];
+let filteredData = [];
+
+function parseCSVText(text) {
+  const lines = text.split(/\r?\n/);
+  const colMap = {
+    'video title': 'title', 'duracao': 'duracao', 'dura\u00e7\u00e3o': 'duracao',
+    'inscritos': 'inscritos', 'avg viewed %': 'avgViewedPct', 'likes': 'likes',
+    'shares': 'shares', 'total comments': 'comentarios', 'comentarios': 'comentarios',
+    'coment\u00e1rios': 'comentarios', 'views': 'views', 'impressoes': 'impressoes',
+    'impress\u00f5es': 'impressoes', 'ctr %': 'ctr', 'avg view duration': 'avgViewDuration',
+    'ano': 'ano', 'data publicacao': 'dataPublicacao', 'data publica\u00e7\u00e3o': 'dataPublicacao',
+    'mes_ano': 'mesAno', 'm\u00eas_ano': 'mesAno', 'link': 'link', 'creator': 'creator',
+    'categoria': 'categoria', 'conversao inscritos': 'conversao', 'convers\u00e3o inscritos': 'conversao',
+    'conversao comments': 'conversaoComments', 'convers\u00e3o comments': 'conversaoComments',
+    'conversao': 'conversao', 'convers\u00e3o': 'conversao', 'content': 'id',
+  };
+  const rawHeader = lines[0].split(',').map(h => h.replace(/["\']/g,'').trim().toLowerCase());
+  const mapped = rawHeader.map(h => colMap[h] || h);
+
+  const parseCSVLine = line => {
+    const result = []; let cur = ''; let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQ = !inQ; continue; }
+      if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+      cur += line[i];
+    }
+    result.push(cur);
+    return result;
+  };
+
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const cols = parseCSVLine(lines[i]);
+    const obj = {};
+    mapped.forEach((k,j) => { obj[k] = (cols[j]||'').trim(); });
+    if (!obj.title && !obj.id) continue;
+    rows.push({
+      id: obj.id||'', title: obj.title||'', link: obj.link||'',
+      duracao: parseInt(obj.duracao)||0, inscritos: parseInt(obj.inscritos)||0,
+      avgViewedPct: parseFloat(obj.avgViewedPct)||0, likes: parseInt(obj.likes)||0,
+      shares: parseInt(obj.shares)||0, comentarios: parseInt(obj.comentarios)||0,
+      views: parseInt(obj.views)||0, impressoes: parseInt(obj.impressoes)||0,
+      ctr: parseFloat(obj.ctr)||0, avgViewDuration: obj.avgViewDuration||'0:00',
+      ano: parseInt(obj.ano)||0, dataPublicacao: obj.dataPublicacao||'',
+      mesAno: obj.mesAno||'', creator: obj.creator||'', categoria: obj.categoria||'',
+      conversao: parseFloat(obj.conversao)||0,
+      conversaoComments: parseFloat(obj.conversaoComments)||0,
+      avgViewDurSec: parseDuration(obj.avgViewDuration),
+      conversaoComments: parseFloat(obj.conversaoComments)||0,
+    });
+  }
+  return rows;
+}
+
+async function loadData() {
+  const badge = document.getElementById('dataBadge');
+  try {
+    badge.textContent = 'Carregando dados...';
+    const resp = await fetch('dados.csv');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    allData = parseCSVText(text);
+    filteredData = [...allData];
+    if (!allData.length) throw new Error('CSV sem dados');
+    badge.textContent = `${allData.length} vídeos`;
+    init();
+  } catch(err) {
+    badge.textContent = '⚠️ Erro ao carregar dados';
+    badge.style.background = '#fef2f2';
+    badge.style.color = '#dc2626';
+    console.error('Erro ao carregar dados.csv:', err);
+  }
+}
+
+let filteredData = [...allData];
+let selectedTitles = new Set();   // multi-select titles
+let selectedCats   = new Set();   // multi-select categories
+let sortCol = 'dataPublicacao';
+let sortDir = -1; // -1 = desc, 1 = asc
+
+// chart instances
+const chartInstances = {};
+let chartMode = 'top'; // 'top' or 'bottom'
+
+function setChartMode(mode) {
+  chartMode = mode;
+  document.getElementById('btnTop').classList.toggle('active', mode === 'top');
+  document.getElementById('btnBot').classList.toggle('active', mode === 'bottom');
+  renderCharts();
+}
+
+// ── PIZZA & HISTOGRAMS ────────────────────────────────────────────────────────
+
+const PIE_COLORS = [
+  '#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6',
+  '#06b6d4','#f97316','#84cc16','#ec4899','#6366f1',
+  '#14b8a6','#fb923c','#a3e635','#e879f9','#38bdf8'
+];
+
+function buildHistConfig(labels, values, yLabel, bgColor) {
+  return {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label: yLabel, data: values, backgroundColor: bgColor, borderColor: bgColor.replace('.75','1'), borderWidth: 1, borderRadius: 3, barPercentage: 0.95, categoryPercentage: 1.0 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 350 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${yLabel}: ${fmtNum(Math.round(ctx.parsed.y))}` } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10 }, color: '#6b7280', maxRotation: 35 }, grid: { display: false } },
+        y: { ticks: { font: { size: 10 }, color: '#6b7280', precision: 0, callback: v => fmtNum(v) }, grid: { color: '#f3f4f6' } }
+      }
+    }
+  };
+}
+
+function renderCategoryPizza() {
+  destroyChart('chartPizza');
+  const d = filteredData;
+  const catMap = {};
+  d.forEach(r => {
+    const cat = r.categoria || '(Sem categoria)';
+    if (!catMap[cat]) catMap[cat] = { count: 0, views: 0, viewsArr: [] };
+    catMap[cat].count++;
+    catMap[cat].views += r.views;
+    catMap[cat].viewsArr.push(r.views);
+  });
+  const cats    = Object.keys(catMap).sort((a,b) => catMap[b].views - catMap[a].views);
+  const values  = cats.map(c => catMap[c].views);
+  const medians = cats.map(c => median(catMap[c].viewsArr));
+  const means   = cats.map(c => mean(catMap[c].viewsArr));
+  const counts  = cats.map(c => catMap[c].count);
+  const bgColors = cats.map(c => CAT_COLORS[c] || '#64748b');
+
+  chartInstances['chartPizza'] = new Chart(document.getElementById('chartPizza'), {
+    type: 'pie',
+    data: {
+      labels: cats,
+      datasets: [{ data: values, backgroundColor: bgColors, borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            font: { size: 11 }, padding: 10, boxWidth: 12,
+            generateLabels: chart => cats.map((cat, i) => ({
+              text: cat, fillStyle: bgColors[i], strokeStyle: '#fff',
+              lineWidth: 2, index: i, hidden: false
+            }))
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const i = ctx.dataIndex;
+              const total = values.reduce((a,b)=>a+b,0);
+              const pct = total > 0 ? (values[i]/total*100).toFixed(1) : 0;
+              return [
+                ` ${fmtNum(values[i])} views (${pct}%) · ${counts[i]} vídeos`,
+                ` Média views: ${fmtNum(Math.round(means[i]))}`,
+                ` Mediana views: ${fmtNum(medians[i])}`
+              ];
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderHistograms() {
+  const d = filteredData;
+  const BIN_VIEWS = 10000;
+  const MAX_VIEWS_BINS = 10; // 0-10K, 10-20K, ..., 90-100K, >100K
+
+  // ── Hist 1: Views faixas × Qtd vídeos (last bin = >100K)
+  {
+    const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
+    d.forEach(r => { bins[Math.min(Math.floor(r.views / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
+    const labels = bins.map((_, i) => i < MAX_VIEWS_BINS
+      ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}`
+      : `>100K`);
+    destroyChart('chartHistViews');
+    chartInstances['chartHistViews'] = new Chart(document.getElementById('chartHistViews'),
+      buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(37,99,235,.75)'));
+  }
+
+  // ── Hist 2: Duração (5min bins, last = >25min)
+  {
+    const BIN_DUR = 300;
+    const MAX_BINS = 5;
+    const bins = Array(MAX_BINS + 1).fill(0);
+    d.forEach(r => { bins[Math.min(Math.floor(r.duracao / BIN_DUR), MAX_BINS)]++; });
+    const labels = bins.map((_, i) => i < MAX_BINS ? `${i*5}–${(i+1)*5} min` : `>25 min`);
+    destroyChart('chartHistDur');
+    chartInstances['chartHistDur'] = new Chart(document.getElementById('chartHistDur'),
+      buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(16,185,129,.75)'));
+  }
+
+  // ── Hist 3: Duração faixas × Média de Views (last = >25min)
+  {
+    const BIN_DUR = 300;
+    const MAX_BINS = 5;
+    const binData = Array.from({length: MAX_BINS + 1}, () => []);
+    d.forEach(r => { binData[Math.min(Math.floor(r.duracao / BIN_DUR), MAX_BINS)].push(r.views); });
+    const avgVals = binData.map(arr => arr.length ? mean(arr) : 0);
+    const labels  = binData.map((_, i) => i < MAX_BINS ? `${i*5}–${(i+1)*5} min` : `>25 min`);
+    destroyChart('chartHistViewsAvg');
+    chartInstances['chartHistViewsAvg'] = new Chart(document.getElementById('chartHistViewsAvg'),
+      buildHistConfig(labels, avgVals, 'Média Views', 'rgba(245,158,11,.75)'));
+  }
+}
+
+
+function renderCatLegend() {
+  const el = document.getElementById('catLegendPills');
+  if (!el) return;
+  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  el.innerHTML = cats.map(c => {
+    const color = CAT_COLORS[c] || '#64748b';
+    return `<div class="pill"><div style="width:10px;height:10px;border-radius:2px;background:${color};flex-shrink:0;"></div><span style="font-size:10px;white-space:nowrap;">${c}</span></div>`;
+  }).join('');
+}
+
+function populateCatDropdown() {
+  const dd = document.getElementById('catDropdown');
+  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const allSelected = cats.every(c => selectedCats.has(c));
+  const allChecked = allSelected ? 'checked' : '';
+
+  dd.innerHTML = `
+    <div class="title-option cat-select-all" onclick="toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+      <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as categorias
+    </div>
+    ${cats.map(c => {
+      const checked = selectedCats.has(c) ? 'checked' : '';
+      const color = CAT_COLORS[c] || '#64748b';
+      const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<div class="title-option" onclick="toggleCatCheck('${safeC}', this)">
+        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${color};margin-right:5px;vertical-align:middle;flex-shrink:0;"></span>${c}
+      </div>`;
+    }).join('')}`;
+}
+
+function toggleAllCats(el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const allSelected = cats.every(c => selectedCats.has(c));
+  if (allSelected) {
+    selectedCats.clear();
+    if(cb) cb.checked = false;
+  } else {
+    cats.forEach(c => selectedCats.add(c));
+    if(cb) cb.checked = true;
+  }
+  updateCatInput();
+  populateCatDropdown(); // re-render to update all checkboxes
+}
+
+function updateCatInput() {
+  const inp = document.getElementById('filterCategoriaInput');
+  if (!inp) return;
+  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const allSelected = cats.every(c => selectedCats.has(c));
+  if (selectedCats.size === 0) {
+    inp.value = ''; inp.placeholder = 'Todas as categorias...';
+  } else if (allSelected) {
+    inp.value = 'Todas as categorias selecionadas'; inp.placeholder = '';
+  } else {
+    inp.value = `${selectedCats.size} categoria(s) selecionada(s)`; inp.placeholder = '';
+  }
+}
+
+function toggleCatDropdown() {
+  const dd = document.getElementById('catDropdown');
+  const isOpen = dd.classList.contains('open');
+  if (isOpen) { dd.classList.remove('open'); return; }
+  populateCatDropdown();
+  dd.classList.add('open');
+}
+
+function toggleCatCheck(cat, el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  if (selectedCats.has(cat)) { selectedCats.delete(cat); if(cb) cb.checked=false; }
+  else { selectedCats.add(cat); if(cb) cb.checked=true; }
+  updateCatInput();
+  // Update "all" checkbox
+  const allEl = document.querySelector('.cat-select-all input');
+  if (allEl) {
+    const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+    allEl.checked = cats.every(c => selectedCats.has(c));
+  }
+}
+
+function init() {
+  CAT_COLORS = buildCatColorMap(allData);
+  renderCatLegend();
+
+  const creators = [...new Set(allData.map(r => r.creator).filter(Boolean))].sort();
+  const sel = document.getElementById('filterCreator');
+  creators.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c; sel.appendChild(opt);
+  });
+
+  const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
+  if (dates.length) {
+    document.getElementById('filterDateStart').value = dates[0];
+    document.getElementById('filterDateEnd').value = dates[dates.length-1];
+  }
+
+  document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
+  applyFilters();
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+
+function applyFilters() {
+  const creator   = document.getElementById('filterCreator').value;
+  const dateStart = document.getElementById('filterDateStart').value;
+  const dateEnd   = document.getElementById('filterDateEnd').value;
+
+  filteredData = allData.filter(r => {
+    if (creator && r.creator !== creator) return false;
+    if (selectedCats.size > 0 && !selectedCats.has(r.categoria || '(Sem categoria)')) return false;
+    if (dateStart && r.dataPublicacao < dateStart) return false;
+    if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
+    if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
+    return true;
+  });
+
+  updateKPIs();
+  renderCharts();
+  renderTable();
+}
+
+function clearFilters() {
+  document.getElementById('filterCreator').value = '';
+  selectedCats.clear();
+  selectedTitles.clear();
+  updateCatInput();
+  updateTitleInput();
+  document.getElementById('titleDropdown').classList.remove('open');
+  document.getElementById('catDropdown').classList.remove('open');
+  const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
+  if (dates.length) {
+    document.getElementById('filterDateStart').value = dates[0];
+    document.getElementById('filterDateEnd').value = dates[dates.length-1];
+  }
+  applyFilters();
+}
+
+// ── TITLE SEARCH (multi-select) ───────────────────────────────────────────────
+
+let titleBlurTimer = null;
+
+function onTitleSearchInput() {
+  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
+  const dropdown = document.getElementById('titleDropdown');
+  // Sort chronologically (most recent first)
+  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
+  const unique = [];
+  const seen = new Set();
+  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const matches = q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique;
+  renderTitleDropdown(matches.slice(0, 60));
+  dropdown.classList.toggle('open', true);
+}
+
+function renderTitleDropdown(items) {
+  const dropdown = document.getElementById('titleDropdown');
+  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
+  // "All" checkbox = are ALL matching titles in the full dataset selected?
+  const allTitles = [...new Set(allData.map(r => r.title))];
+  const targetTitles = q ? allTitles.filter(t => t.toLowerCase().includes(q)) : allTitles;
+  const allSelected = targetTitles.length > 0 && targetTitles.every(t => selectedTitles.has(t));
+  const label = q ? `Todos os resultados (${targetTitles.length})` : `Todos os vídeos (${targetTitles.length})`;
+
+  dropdown.innerHTML = `
+    <div class="title-option title-select-all" onclick="toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+      <input type="checkbox" ${allSelected ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
+    </div>
+    ${items.map(r => {
+      const checked = selectedTitles.has(r.title) ? 'checked' : '';
+      const safeT = r.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<div class="title-option${selectedTitles.has(r.title) ? ' selected' : ''}"
+        onclick="toggleTitleCheck('${safeT}', this)">
+        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
+        <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${r.dataPublicacao}</span>${r.title}
+      </div>`;
+    }).join('')}
+    ${targetTitles.length > 60 ? `<div style="padding:8px 12px;font-size:11px;color:var(--gray-400);background:var(--gray-50);border-top:1px solid var(--gray-200);">Mostrando 60 de ${targetTitles.length}. Refine a busca para ver mais.</div>` : ''}`;
+}
+
+function toggleAllTitles(el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  // Get ALL unique titles from full dataset (not just rendered 60)
+  const allTitles = [...new Set(allData.map(r => r.title))];
+  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
+  // If there's a search query, only toggle matching titles; otherwise toggle all
+  const targetTitles = q ? allTitles.filter(t => t.toLowerCase().includes(q)) : allTitles;
+  const allSel = targetTitles.every(t => selectedTitles.has(t));
+  if (allSel) { targetTitles.forEach(t => selectedTitles.delete(t)); }
+  else        { targetTitles.forEach(t => selectedTitles.add(t)); }
+  updateTitleInput();
+  // Re-render the dropdown with updated state
+  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
+  const unique = []; const seen = new Set();
+  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
+  renderTitleDropdown(items);
+}
+
+function onTitleFocus() {
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
+  onTitleSearchInput();
+}
+
+function onTitleBlur() {
+  titleBlurTimer = setTimeout(() => {
+    document.getElementById('titleDropdown').classList.remove('open');
+  }, 250);
+}
+
+function toggleTitleCheck(title, el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  if (selectedTitles.has(title)) { selectedTitles.delete(title); el.classList.remove('selected'); if(cb) cb.checked=false; }
+  else { selectedTitles.add(title); el.classList.add('selected'); if(cb) cb.checked=true; }
+  updateTitleInput();
+  const allEl = document.querySelector('.title-select-all input');
+  if (allEl) {
+    const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
+    const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
+    const unique = []; const seen = new Set();
+    sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+    const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
+    allEl.checked = items.every(r => selectedTitles.has(r.title));
+  }
+}
+
+function updateTitleInput() {
+  const ts = document.getElementById('filterTitleSearch');
+  if (!ts) return;
+  if (selectedTitles.size > 0) {
+    ts.value = '';
+    ts.placeholder = `${selectedTitles.size} vídeo(s) selecionado(s)`;
+  } else {
+    ts.value = '';
+    ts.placeholder = 'Buscar título...';
+  }
+}
+
+// ── KPIs ──────────────────────────────────────────────────────────────────────
+
+function setKPI(id, val, medId, medVal) {
+  const el = document.getElementById(id);
+  const mel = document.getElementById(medId);
+  if (el) el.textContent = val;
+  if (mel) mel.textContent = medVal !== undefined ? `Mediana: ${medVal}` : '';
+}
+
+function updateKPIs() {
+  const d = filteredData;
+  const ids = ['kImpr','kViews','kDurMedia','kAvgPct','kAvgDur','kInsc','kConv','kLikes','kComm','kShares'];
+  const mids = ['kImprMed','kViewsMed','kDurMed','kAvgPctMed','kAvgDurMed','kInscMed','kConvMed','kLikesMed','kCommMed','kSharesMed'];
+  if (!d.length) {
+    ids.forEach(id => { const el=document.getElementById(id); if(el) el.textContent='—'; });
+    mids.forEach(id => { const el=document.getElementById(id); if(el) el.textContent=''; });
+    return;
+  }
+
+  const avgImpr    = mean(d.map(r=>r.impressoes));
+  const medImpr    = median(d.map(r=>r.impressoes));
+  const avgViews   = mean(d.map(r=>r.views));
+  const medViews   = median(d.map(r=>r.views));
+  const avgDurSec  = mean(d.map(r=>r.avgViewDurSec));
+  const medDurSec  = median(d.map(r=>r.avgViewDurSec));
+  const avgPct     = mean(d.map(r=>r.avgViewedPct));
+  const medPct     = median(d.map(r=>r.avgViewedPct));
+  const avgDuracao = mean(d.map(r=>r.duracao));
+  const medDuracao = median(d.map(r=>r.duracao));
+  const avgInsc    = mean(d.map(r=>r.inscritos));
+  const medInsc    = median(d.map(r=>r.inscritos));
+  const avgConv    = mean(d.map(r=>r.conversao));
+  const medConv    = median(d.map(r=>r.conversao));
+  const avgLikes   = mean(d.map(r=>r.likes));
+  const medLikes   = median(d.map(r=>r.likes));
+  const avgComm    = mean(d.map(r=>r.comentarios));
+  const medComm    = median(d.map(r=>r.comentarios));
+  const avgShares  = mean(d.map(r=>r.shares));
+  const medShares  = median(d.map(r=>r.shares));
+
+  // Minutagem média (duracao in seconds → display as MM:SS)
+  const dmAvg = Math.round(avgDuracao);
+  const dmMed = Math.round(medDuracao);
+  const toMMSS = s => { const m=Math.floor(s/60),sc=s%60; return `${m}:${String(sc).padStart(2,'0')}`; };
+
+  setKPI('kImpr',    fmtNum(avgImpr),                   'kImprMed',    fmtNum(medImpr));
+  setKPI('kViews',   fmtNum(avgViews),                  'kViewsMed',   fmtNum(medViews));
+  setKPI('kDurMedia',toMMSS(dmAvg),                     'kDurMed',     toMMSS(dmMed));
+  setKPI('kAvgPct',  avgPct.toFixed(1)+'%',             'kAvgPctMed',  medPct.toFixed(1)+'%');
+  setKPI('kAvgDur',  formatDuration(avgDurSec),         'kAvgDurMed',  formatDuration(medDurSec));
+  setKPI('kInsc',    fmtNum(avgInsc),                   'kInscMed',    fmtNum(medInsc));
+  setKPI('kConv',    (avgConv*100).toFixed(3)+'%',      'kConvMed',    (medConv*100).toFixed(3)+'%');
+  setKPI('kLikes',   fmtNum(avgLikes),                  'kLikesMed',   fmtNum(medLikes));
+  setKPI('kComm',    fmtNum(avgComm),                   'kCommMed',    fmtNum(medComm));
+  setKPI('kShares',  fmtNum(avgShares),                 'kSharesMed',  fmtNum(medShares));
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+
+const CHART_COLORS = {
+  bar:    '#2563eb',
+  barBg:  'rgba(37,99,235,.75)',
+  mean:   '#f59e0b',
+  median: '#10b981',
+};
+
+// Fixed colors per category name
+const NAMED_CAT_COLORS = {
+  'EXPLICANDO':             '#0057FF',
+  'COMO JOGA':              '#00A651',
+  'SELEÇÃO BRASILEIRA':     '#FFD400',
+  'FUTEBOL NO MUNDO':       '#00BFFF',
+  'COMO SER JOGADOR':       '#FF6A00',
+  'FUTEBOL INVISIVEL':      '#8A2BE2',
+  'FUTEBOL INVISÍVEL':      '#8A2BE2',
+  'TECNICOS BRASILEIRAO':   '#7FFF00',
+  'TÉCNICOS BRASILEIRÃO':   '#7FFF00',
+  'SEGUNDO OS NUMEROS':     '#00CED1',
+  'SEGUNDO OS NÚMEROS':     '#00CED1',
+  'KINGS LEAGUE':           '#FF0033',
+  'QUIZZ DE FUTEBOL':       '#FF1493',
+  'REACT':                  '#4B0082',
+  'ME MOSTRA ESSE GOL':     '#808080',
+  'UNIVERSO':               '#C0C0C0',
+  '(Sem categoria)':        '#D1D5DB',
+};
+
+// Build map: falls back to a generated color for unknown categories
+function buildCatColorMap(data) {
+  const fallbackList = ['#64748b','#9ca3af','#6b7280'];
+  const cats = [...new Set(data.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const map = {};
+  let fi = 0;
+  cats.forEach(c => {
+    map[c] = NAMED_CAT_COLORS[c] || fallbackList[fi++ % fallbackList.length];
+  });
+  return map;
+}
+let CAT_COLORS = {};
+
+let inscritosMode = 'conversao'; // 'conversao' | 'inscritos'
+let durationMode  = 'duration';  // 'duration' | 'retention'
+let commentsMode  = 'comments';  // 'comments' | 'convComments'
+
+function setCommentsMode(mode) {
+  commentsMode = mode;
+  document.getElementById('btnComments').classList.toggle('active', mode === 'comments');
+  document.getElementById('btnConvComm').classList.toggle('active', mode === 'convComments');
+  document.getElementById('commentsChartLabel').textContent =
+    mode === 'comments' ? 'Comentários por Vídeo' : 'Conv. Comments % por Vídeo';
+  renderCharts();
+}
+
+function setDurationMode(mode) {
+  durationMode = mode;
+  document.getElementById('btnDuration').classList.toggle('active', mode === 'duration');
+  document.getElementById('btnRetention').classList.toggle('active', mode === 'retention');
+  document.getElementById('durationChartLabel').textContent =
+    mode === 'duration' ? 'Avg View Duration por Vídeo' : 'Avg Viewed % por Vídeo';
+  renderCharts();
+}
+
+function setInscritosMode(mode) {
+  inscritosMode = mode;
+  document.getElementById('btnConversao').classList.toggle('active', mode === 'conversao');
+  document.getElementById('btnInscritos').classList.toggle('active', mode === 'inscritos');
+  const sub = document.getElementById('inscritosChartSub');
+  const lbl = document.getElementById('inscritosChartLabel');
+  if (mode === 'conversao') {
+    lbl.textContent = 'Conversão por Vídeo';
+    sub.textContent = '(Inscritos/Views %)';
+  } else {
+    lbl.textContent = 'Inscritos por Vídeo';
+    sub.textContent = '(total absoluto)';
+  }
+  renderCharts();
+}
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, formatTooltip, fullLabels, barColors, catNames, barLinks) {
+  return {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: yLabel,
+        data: values,
+        backgroundColor: barColors || CHART_COLORS.barBg,
+        borderColor: barColors ? barColors.map(c => c.replace('cc','ff')) : CHART_COLORS.bar,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      onClick: (evt, elements) => {
+        if (elements.length > 0 && barLinks) {
+          const idx = elements[0].index;
+          const url = barLinks[idx];
+          if (url) window.open(url, '_blank', 'noopener');
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const val = formatTooltip ? formatTooltip(ctx.parsed.y) : fmtNum(ctx.parsed.y);
+              const cat = catNames && catNames[ctx.dataIndex] ? catNames[ctx.dataIndex] : null;
+              const hasLink = barLinks && barLinks[ctx.dataIndex];
+              const lines = [` ${yLabel}: ${val}`];
+              if (cat) lines.push(` Categoria: ${cat}`);
+              if (hasLink) lines.push(` 🔗 Clique na barra para abrir`);
+              return lines;
+            },
+            title: ctx => (fullLabels && fullLabels[ctx[0].dataIndex]) ? fullLabels[ctx[0].dataIndex] : ctx[0].label,
+          }
+        },
+        annotation: undefined,
+      },
+      scales: {
+        x: {
+          ticks: {
+            font: { size: 10 },
+            maxRotation: 35,
+            minRotation: 0,
+            color: '#6b7280',
+          },
+          grid: { display: false },
+        },
+        y: {
+          ticks: {
+            font: { size: 10 },
+            color: '#6b7280',
+            callback: formatTick || (v => fmtNum(v)),
+          },
+          grid: { color: '#f3f4f6' },
+        },
+        yMeanMedian: {
+          display: false,
+          min: 0,
+          max: Math.max(...values, meanVal, medianVal) * 1.1 || 1,
+        }
+      }
+    },
+    plugins: [{
+      id: 'meanMedianLines',
+      afterDraw(chart) {
+        const {ctx, chartArea: {left, right, top, bottom}, scales} = chart;
+        const yScale = scales.y;
+        if (!yScale) return;
+
+        const drawLine = (val, color, label, labelSide) => {
+          const y = yScale.getPixelForValue(val);
+          if (y < top || y > bottom) return;
+          ctx.save();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([6, 3]);
+          ctx.beginPath();
+          ctx.moveTo(left, y);
+          ctx.lineTo(right, y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          const text = label + ': ' + (formatTick ? formatTick(val) : fmtNum(val));
+          ctx.font = 'bold 10px Segoe UI, system-ui, sans-serif';
+          const textW = ctx.measureText(text).width;
+          const pad = 4;
+          const bx = labelSide === 'right' ? right - textW - pad*2 - 2 : left + 2;
+          const by = y - 14;
+          ctx.fillStyle = 'rgba(255,255,255,0.88)';
+          ctx.beginPath();
+          ctx.roundRect(bx, by, textW + pad*2, 14, 3);
+          ctx.fill();
+          ctx.fillStyle = color;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.fillText(text, bx + pad, by + 2);
+          ctx.restore();
+        };
+
+        drawLine(meanVal,   CHART_COLORS.mean,   'Média',   'left');
+        drawLine(medianVal, CHART_COLORS.median, 'Mediana', 'right');
+      }
+    }]
+  };
+}
+
+function getTopN() {
+  return parseInt(document.getElementById('topNInput').value) || 20;
+}
+
+function getChartData(metric) {
+  const n = getTopN();
+  const metricVal = r => typeof metric === 'function' ? metric(r) : r[metric];
+  let sorted = [...filteredData].sort((a,b) =>
+    chartMode === 'top' ? metricVal(b) - metricVal(a) : metricVal(a) - metricVal(b)
+  );
+  const topN = sorted.slice(0, n);
+
+  const labels     = topN.map(r => truncateTitle(r.title, 22));
+  const fullLabels = topN.map(r => r.title);
+  const values     = topN.map(metricVal);
+  const barColors  = topN.map(r => {
+    const c = CAT_COLORS[r.categoria || '(Sem categoria)'] || '#2563eb';
+    return c + 'cc';
+  });
+  const catNames   = topN.map(r => r.categoria || '(Sem categoria)');
+  const barLinks   = topN.map(r => r.link || '');
+  const barRows    = topN;
+
+  // Mean & median from current year's full data (ignoring filters)
+  const currentYear = new Date().getFullYear();
+  const yearData = allData.filter(r => r.ano === currentYear);
+  const baseSet  = yearData.length > 0 ? yearData : allData;
+  const allVals  = baseSet.map(metricVal);
+  const meanVal   = mean(allVals);
+  const medianVal = median(allVals);
+
+  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows };
+}
+
+function renderCharts() {
+  // 1. Views
+  {
+    const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks } = getChartData('views');
+    destroyChart('chartViews');
+    const cfg = buildBarConfig(labels, values, meanVal, medianVal, 'Views', fmtNum, fmtNum, fullLabels, barColors, catNames, barLinks);
+    chartInstances['chartViews'] = new Chart(document.getElementById('chartViews'), cfg);
+  }
+
+  // 2. Avg View Duration OR Avg Viewed % — with toggle
+  {
+    const metric = durationMode === 'duration' ? 'avgViewDurSec' : 'avgViewedPct';
+    const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows } = getChartData(metric);
+    destroyChart('chartDuration');
+    const cfg = durationMode === 'duration'
+      ? buildBarConfig(labels, values, meanVal, medianVal, 'Avg View Duration',
+          v => formatDuration(v), v => formatDuration(v), fullLabels, barColors, catNames, barLinks)
+      : buildBarConfig(labels, values, meanVal, medianVal, 'Avg Viewed %',
+          v => v.toFixed(1) + '%', v => v.toFixed(1) + '%', fullLabels, barColors, catNames, barLinks);
+    cfg.options.plugins.tooltip.callbacks.label = ctx => {
+      const r = barRows[ctx.dataIndex];
+      const cat = catNames && catNames[ctx.dataIndex] ? catNames[ctx.dataIndex] : null;
+      const hasLink = barLinks && barLinks[ctx.dataIndex];
+      const lines = durationMode === 'duration'
+        ? [` Avg View Duration: ${formatDuration(ctx.parsed.y)}`]
+        : [` Avg Viewed %: ${ctx.parsed.y.toFixed(1)}%`];
+      if (r) {
+        if (durationMode === 'duration') {
+          lines.push(` Duração do vídeo: ${formatDuration(r.duracao)}`);
+          lines.push(` Avg Viewed %: ${r.avgViewedPct.toFixed(1)}%`);
+        } else {
+          lines.push(` Avg View Duration: ${formatDuration(r.avgViewDurSec)}`);
+          lines.push(` Duração do vídeo: ${formatDuration(r.duracao)}`);
+        }
+      }
+      if (cat) lines.push(` Categoria: ${cat}`);
+      if (hasLink) lines.push(` 🔗 Clique na barra para abrir`);
+      return lines;
+    };
+    chartInstances['chartDuration'] = new Chart(document.getElementById('chartDuration'), cfg);
+  }
+
+  // 3. Comentários OR Conv. Comments
+  {
+    const metric = commentsMode === 'comments' ? 'comentarios' : 'conversaoComments';
+    const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks } = getChartData(metric);
+    destroyChart('chartComments');
+    const cfg = commentsMode === 'comments'
+      ? buildBarConfig(labels, values, meanVal, medianVal, 'Comentários',
+          v => Math.round(v).toLocaleString('pt-BR'), v => Math.round(v).toLocaleString('pt-BR'), fullLabels, barColors, catNames, barLinks)
+      : buildBarConfig(labels, values, meanVal, medianVal, 'Conv. Comments',
+          v => (v*100).toFixed(2)+'%', v => (v*100).toFixed(2)+'%', fullLabels, barColors, catNames, barLinks);
+    if (commentsMode === 'comments') {
+      cfg.options.scales.y.ticks.callback = v => Math.round(v).toLocaleString('pt-BR');
+      cfg.options.scales.y.ticks.precision = 0;
+    }
+    chartInstances['chartComments'] = new Chart(document.getElementById('chartComments'), cfg);
+  }
+
+  // 4. Conversão % OR Inscritos absolutos
+  {
+    const metric = inscritosMode === 'conversao' ? 'conversao' : 'inscritos';
+    const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks } = getChartData(metric);
+    destroyChart('chartInscritos');
+    const cfg = inscritosMode === 'conversao'
+      ? buildBarConfig(labels, values, meanVal, medianVal, 'Conversão',
+          v => (v * 100).toFixed(2) + '%', v => (v * 100).toFixed(2) + '%', fullLabels, barColors, catNames, barLinks)
+      : buildBarConfig(labels, values, meanVal, medianVal, 'Inscritos', fmtNum, fmtNum, fullLabels, barColors, catNames, barLinks);
+    chartInstances['chartInscritos'] = new Chart(document.getElementById('chartInscritos'), cfg);
+  }
+
+  renderCategoryPizza();
+  renderHistograms();
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────────
+
+function sortTable(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = -1; }
+
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sorted');
+    th.querySelector('.sort-icon').textContent = '↕';
+  });
+  const th = document.querySelector(`thead th[data-col="${col}"]`);
+  if (th) {
+    th.classList.add('sorted');
+    th.querySelector('.sort-icon').textContent = sortDir === -1 ? '↓' : '↑';
+  }
+  renderTable();
+}
+
+function applyColFilter(val, expr, col) {
+  if (!expr) return true;
+  expr = expr.trim();
+  const numMatch = expr.match(/^(>=|<=|>|<|=)?\s*(-?[\d.]+)$/);
+  if (numMatch) {
+    const op = numMatch[1] || '>=';
+    const threshold = parseFloat(numMatch[2]);
+    // Duration fields: filter by minutes (convert stored seconds → minutes)
+    let v;
+    if (col === 'avgViewDurSec' || col === 'duracao') {
+      v = parseFloat(val) / 60; // stored in seconds, compare in minutes
+    } else {
+      v = parseFloat(val);
+    }
+    if (isNaN(v)) return false;
+    if (op === '>')  return v >  threshold;
+    if (op === '>=') return v >= threshold;
+    if (op === '<')  return v <  threshold;
+    if (op === '<=') return v <= threshold;
+    if (op === '=')  return Math.round(v) === threshold;
+  }
+  // Text filter
+  return String(val).toLowerCase().includes(expr.toLowerCase());
+}
+
+function getColFilters() {
+  const filters = {};
+  document.querySelectorAll('.col-filter').forEach(inp => {
+    const v = inp.value.trim();
+    inp.classList.toggle('active', v !== '');
+    if (v) filters[inp.dataset.col] = { expr: v, type: inp.dataset.type };
+  });
+  return filters;
+}
+
+function renderTable() {
+  const q = (document.getElementById('tableSearch').value || '').toLowerCase();
+  const colFilters = getColFilters();
+  let rows = [...filteredData];
+
+  if (q) {
+    rows = rows.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.creator||'').toLowerCase().includes(q) ||
+      r.dataPublicacao.includes(q)
+    );
+  }
+
+  // Apply per-column filters
+  for (const [col, {expr}] of Object.entries(colFilters)) {
+    rows = rows.filter(r => applyColFilter(r[col], expr, col));
+  }
+
+  rows.sort((a,b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+    return sortDir * ((av||0) - (bv||0));
+  });
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = rows.map(r => {
+    const catColor = CAT_COLORS[r.categoria] || '#6b7280';
+    const catBg = catColor + '22';
+    const duracaoFmt = (() => {
+      if (!r.duracao) return '—';
+      const sec = Math.round(r.duracao);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    })();
+    const avgDurFmt = (() => {
+      if (!r.avgViewDurSec) return '—';
+      const sec = Math.round(r.avgViewDurSec);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    })();
+    const dateFmt = r.dataPublicacao ? r.dataPublicacao.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$3/$2/$1') : '—';
+    return `
+    <tr>
+      <td style="white-space:nowrap;">${dateFmt}</td>
+      <td class="title-cell" style="white-space:normal;line-height:1.3;">
+        ${r.link
+          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
+          : `<span title="${r.title.replace(/"/g,'&quot;')}" style="font-weight:500;">${r.title}</span>`
+        }
+      </td>
+      <td><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
+      <td class="num">${fmtNum(r.impressoes)}</td>
+      <td class="num">${r.ctr.toFixed(2)}%</td>
+      <td class="num">${fmtNum(r.views)}</td>
+      <td class="num">${duracaoFmt}</td>
+      <td class="num">${avgDurFmt}</td>
+      <td class="num">${r.avgViewedPct.toFixed(1)}%</td>
+      <td class="num">${r.inscritos.toLocaleString('pt-BR')}</td>
+      <td class="num">${(r.conversao*100).toFixed(2)}%</td>
+      <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
+      <td class="num">${r.comentarios.toLocaleString('pt-BR')}</td>
+      <td class="num">${((r.conversaoComments||0)*100).toFixed(2)}%</td>
+      <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tableFooter').textContent =
+    `Exibindo ${rows.length} de ${filteredData.length} vídeos filtrados · ${allData.length} total`;
+  document.getElementById('tableTitle').textContent =
+    `${rows.length} vídeos`;
+}
+
+// Wire column filter inputs to re-render on typing
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.col-filter').forEach(inp => {
+    inp.addEventListener('input', renderTable);
+  });
+});
+
+// ── CSV UPLOAD ────────────────────────────────────────────────────────────────
+
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>
