@@ -579,8 +579,52 @@
 </div>
 
 <script>
+// ── UTILS (must come first) ───────────────────────────────────────────────────
+
+function parseDuration(str) {
+  if (!str) return 0;
+  const parts = String(str).split(':').map(Number);
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  return parts[0] || 0;
+}
+
+function formatDuration(sec) {
+  if (!sec && sec !== 0) return '—';
+  sec = Math.round(sec);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtNum(n) {
+  if (n === undefined || n === null || isNaN(n)) return '—';
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return Math.round(n).toLocaleString('pt-BR');
+}
+
+function mean(arr) {
+  if (!arr.length) return 0;
+  return arr.reduce((a,b) => a+b, 0) / arr.length;
+}
+
+function median(arr) {
+  if (!arr.length) return 0;
+  const s = [...arr].sort((a,b) => a-b);
+  const m = Math.floor(s.length/2);
+  return s.length % 2 ? s[m] : (s[m-1]+s[m])/2;
+}
+
+function truncateTitle(str, max) {
+  if (!str) return '';
+  return str.length > max ? str.slice(0, max) + '…' : str;
+}
+
 // ── DATA LOADING ─────────────────────────────────────────────────────────────
-// Data is loaded from dados.csv in the same folder
 
 let allData = [];
 let filteredData = [];
@@ -681,7 +725,6 @@ async function loadData() {
   }
 }
 
-let filteredData = [...allData];
 let selectedTitles = new Set();   // multi-select titles
 let selectedCats   = new Set();   // multi-select categories
 let sortCol = 'dataPublicacao';
