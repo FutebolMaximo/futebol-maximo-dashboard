@@ -357,6 +357,13 @@
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .header { padding: 14px 16px; }
   }
+  /* ── TABS ── */
+  .tab-nav { background:var(--white); border-bottom:2px solid var(--gray-200); padding:0 32px; display:flex; gap:4px; }
+  .tab-btn { padding:12px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
+  .tab-btn:hover { color:var(--blue-600); }
+  .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
+  .temp-mix-row { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:11px; border-bottom:1px solid var(--gray-100); }
+  .temp-mix-bar { height:14px; border-radius:3px; min-width:2px; }
 </style>
 </head>
 <body>
@@ -375,8 +382,14 @@
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" id="tabBtnDash" onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn" id="tabBtnAdv" onclick="switchTab('avancada')">🔬 Análise Avançada</button>
+</div>
+
+<!-- MAIN (Tab: Dashboard) -->
+<div class="main" id="panelDashboard">
 
   <!-- FILTERS -->
   <div class="filters-card">
@@ -578,7 +591,101 @@
 
 </div>
 
-<script>
+<!-- ANÁLISE AVANÇADA (Tab) -->
+<div class="main" id="panelAvancada" style="display:none;">
+
+  <!-- SCATTER: CTR x RETENÇÃO -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Matriz CTR × Retenção</h2>
+  </div>
+  <div class="chart-card" style="margin-bottom:24px;">
+    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>🎯 CTR × Retenção por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
+      <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:var(--gray-500);">
+        <span>Quadrantes pela mediana do dataset</span>
+        <div id="scatterLegend" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+    </div>
+    <div style="position:relative;height:480px;">
+      <canvas id="chartScatter"></canvas>
+      <div id="scatterQuadLabels" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:32px;margin-top:12px;font-size:11px;flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#dcfce7;border:1px solid #16a34a;border-radius:2px;display:inline-block;"></span>Alto CTR + Alta Retenção → Repetir formato</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#fef9c3;border:1px solid #ca8a04;border-radius:2px;display:inline-block;"></span>Alto CTR + Baixa Retenção → Melhorar abertura/entrega</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#dbeafe;border:1px solid #2563eb;border-radius:2px;display:inline-block;"></span>Baixo CTR + Alta Retenção → Testar thumbnail/título</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#fee2e2;border:1px solid #dc2626;border-radius:2px;display:inline-block;"></span>Baixo CTR + Baixa Retenção → Rever pauta/formato</span>
+    </div>
+  </div>
+
+  <!-- FEEDBACK TABLE -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Diagnóstico Automático por Vídeo</h2>
+  </div>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3 id="feedbackTitle">Todos os vídeos</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <select id="feedbackStatusFilter" onchange="renderFeedbackTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="">Todos os diagnósticos</option>
+          <option value="Escalar">🟢 Escalar</option>
+          <option value="Ajustar entrega">🟡 Ajustar entrega</option>
+          <option value="Reembalar">🔵 Reembalar</option>
+          <option value="Rever formato">🔴 Rever formato</option>
+        </select>
+        <input type="text" id="feedbackSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTable()"
+          style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:420px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+        <thead>
+          <tr>
+            <th style="width:180px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+            <th style="width:60px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Criador</th>
+            <th style="width:90px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Categoria</th>
+            <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;">CTR%</th>
+            <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;">Retenção%</th>
+            <th style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;">Views</th>
+            <th style="width:100px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Status</th>
+            <th style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
+            <th style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação sugerida</th>
+          </tr>
+        </thead>
+        <tbody id="feedbackBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="feedbackFooter"></div>
+  </div>
+
+  <!-- TEMPORAL EVOLUTION -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Evolução Temporal</h2>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+    <div class="topn-toggle">
+      <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
+      <button id="btnTempMonth" class="toggle-btn" onclick="setTempMode('month')">Por Mês</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button id="btnComp30" class="toggle-btn" onclick="showComparison(30)" style="font-size:11px;">vs 30 dias ant.</button>
+      <button id="btnComp90" class="toggle-btn" onclick="showComparison(90)" style="font-size:11px;">vs 90 dias ant.</button>
+    </div>
+    <div id="comparisonBadge" style="display:none;padding:6px 12px;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:8px;font-size:12px;color:var(--blue-600);"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+    <div class="chart-card"><div class="chart-title">📈 Views Medianas</div><div style="height:220px;"><canvas id="chartTempViews"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🎣 CTR Médio</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartTempRet"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🎬 Nº de Vídeos Publicados</div><div style="height:220px;"><canvas id="chartTempCount"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🥧 Mix de Categorias por Período</div><div style="height:220px;overflow-y:auto;overflow-x:hidden;" id="chartTempMixContainer"></div></div>
+  </div>
+
+</div>
 // ── UTILS (must come first) ───────────────────────────────────────────────────
 
 function parseDuration(str) {
@@ -733,6 +840,23 @@ let sortDir = -1; // -1 = desc, 1 = asc
 // chart instances
 const chartInstances = {};
 let chartMode = 'top'; // 'top' or 'bottom'
+let tempMode = 'month'; // 'week' | 'month'
+let activeTab = 'dashboard';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('panelDashboard').style.display = tab === 'dashboard' ? '' : 'none';
+  document.getElementById('panelAvancada').style.display  = tab === 'avancada'  ? '' : 'none';
+  document.getElementById('tabBtnDash').classList.toggle('active', tab === 'dashboard');
+  document.getElementById('tabBtnAdv').classList.toggle('active',  tab === 'avancada');
+  if (tab === 'avancada') renderAdvanced();
+}
+
+function renderAdvanced() {
+  renderScatter();
+  renderFeedbackTable();
+  renderTemporal();
+}
 
 function setChartMode(mode) {
   chartMode = mode;
@@ -991,6 +1115,7 @@ function applyFilters() {
   updateKPIs();
   renderCharts();
   renderTable();
+  if (activeTab === 'avancada') renderAdvanced();
 }
 
 function clearFilters() {
@@ -1612,6 +1737,299 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── CSV UPLOAD ────────────────────────────────────────────────────────────────
 
+
+// ── SCATTER: CTR × RETENÇÃO ──────────────────────────────────────────────────
+
+function renderScatter() {
+  const d = filteredData;
+  if (!d.length) return;
+
+  const medCTR = median(d.map(r => r.ctr));
+  const medRet = median(d.map(r => r.avgViewedPct));
+  const maxViews = Math.max(...d.map(r => r.views), 1);
+  const minR = 4, maxR = 28;
+
+  // Group by category for datasets
+  const catMap = {};
+  d.forEach(r => {
+    const cat = r.categoria || '(Sem categoria)';
+    if (!catMap[cat]) catMap[cat] = [];
+    catMap[cat].push(r);
+  });
+
+  const datasets = Object.entries(catMap).map(([cat, rows]) => ({
+    label: cat,
+    data: rows.map(r => ({
+      x: r.ctr,
+      y: r.avgViewedPct,
+      r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
+      _title: r.title,
+      _link: r.link,
+      _views: r.views,
+      _cat: cat,
+    })),
+    backgroundColor: (CAT_COLORS[cat] || '#64748b') + 'aa',
+    borderColor:     (CAT_COLORS[cat] || '#64748b'),
+    borderWidth: 1,
+  }));
+
+  // Render category legend
+  const legEl = document.getElementById('scatterLegend');
+  if (legEl) legEl.innerHTML = Object.keys(catMap).map(cat => {
+    const c = CAT_COLORS[cat] || '#64748b';
+    return `<span style="display:flex;align-items:center;gap:3px;font-size:10px;"><span style="width:9px;height:9px;border-radius:50%;background:${c};flex-shrink:0;"></span>${cat}</span>`;
+  }).join('');
+
+  if (chartInstances['chartScatter']) { chartInstances['chartScatter'].destroy(); delete chartInstances['chartScatter']; }
+
+  const ctx = document.getElementById('chartScatter');
+  chartInstances['chartScatter'] = new Chart(ctx, {
+    type: 'bubble',
+    data: { datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      onClick: (evt, elements) => {
+        if (!elements.length) return;
+        const el = elements[0];
+        const pt = datasets[el.datasetIndex].data[el.index];
+        if (pt._link) window.open(pt._link, '_blank', 'noopener');
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const p = ctx.raw;
+              return [
+                ` ${p._title}`,
+                ` CTR: ${p.x.toFixed(2)}% · Retenção: ${p.y.toFixed(1)}%`,
+                ` Views: ${fmtNum(p._views)} · ${p._cat}`,
+                p._link ? ` 🔗 Clique para abrir` : '',
+              ].filter(Boolean);
+            },
+            title: () => '',
+          }
+        },
+        annotation: {
+          annotations: {
+            lineV: { type:'line', xMin: medCTR, xMax: medCTR, borderColor:'rgba(100,100,100,0.5)', borderWidth:1, borderDash:[4,4] },
+            lineH: { type:'line', yMin: medRet, yMax: medRet, borderColor:'rgba(100,100,100,0.5)', borderWidth:1, borderDash:[4,4] },
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display:true, text:'CTR (%)', font:{size:11}, color:'#6b7280' },
+          ticks: { callback: v => v.toFixed(1)+'%', font:{size:10}, color:'#6b7280' },
+          grid: { color:'#f3f4f6' },
+        },
+        y: {
+          title: { display:true, text:'Retenção / Avg Viewed % (%)', font:{size:11}, color:'#6b7280' },
+          ticks: { callback: v => v.toFixed(0)+'%', font:{size:10}, color:'#6b7280' },
+          grid: { color:'#f3f4f6' },
+        }
+      }
+    }
+  });
+
+  // Draw quadrant background labels via overlay
+  // We use afterRender to position them
+  chartInstances['chartScatter']._medCTR = medCTR;
+  chartInstances['chartScatter']._medRet = medRet;
+}
+
+// ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
+
+function classifyVideo(r, medCTR, medRet) {
+  const highCTR = r.ctr >= medCTR;
+  const highRet = r.avgViewedPct >= medRet;
+  if (highCTR && highRet)  return { status:'Escalar',         color:'#16a34a', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Alta Retenção',         acao:'Fazer sequência / repetir formato' };
+  if (highCTR && !highRet) return { status:'Ajustar entrega', color:'#ca8a04', bg:'#fef9c3', icon:'🟡', diag:'Alto CTR + Baixa Retenção',         acao:'Melhorar abertura e primeiros 30s' };
+  if (!highCTR && highRet) return { status:'Reembalar',       color:'#2563eb', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Alta Retenção',         acao:'Testar nova thumbnail e título' };
+  return                     { status:'Rever formato',        color:'#dc2626', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Baixa Retenção',        acao:'Revisar pauta / reformular formato' };
+}
+
+function renderFeedbackTable() {
+  const d = filteredData;
+  if (!d.length) { document.getElementById('feedbackBody').innerHTML = ''; return; }
+
+  const medCTR = median(d.map(r => r.ctr));
+  const medRet = median(d.map(r => r.avgViewedPct));
+
+  const statusFilter = document.getElementById('feedbackStatusFilter').value;
+  const searchQ = (document.getElementById('feedbackSearch').value || '').toLowerCase();
+
+  let rows = d.map(r => ({ r, cls: classifyVideo(r, medCTR, medRet) }));
+  if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
+  if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
+
+  // Sort by status priority: Escalar first, then Ajustar, Reembalar, Rever
+  const order = ['Escalar','Reembalar','Ajustar entrega','Rever formato'];
+  rows.sort((a,b) => order.indexOf(a.cls.status) - order.indexOf(b.cls.status));
+
+  const catColor = cat => CAT_COLORS[cat] || '#6b7280';
+
+  document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => `
+    <tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:6px 8px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.3;font-size:11px;">
+        ${r.link
+          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>`
+          : `<span style="font-weight:500;">${r.title}</span>`}
+      </td>
+      <td style="padding:6px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:6px 8px;font-size:10px;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 6px;border-radius:10px;white-space:nowrap;">${r.categoria||'—'}</span></td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${r.ctr.toFixed(2)}%</td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${r.avgViewedPct.toFixed(1)}%</td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
+      <td style="padding:6px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
+      <td style="padding:6px 8px;font-size:11px;color:var(--gray-700);">${cls.diag}</td>
+      <td style="padding:6px 8px;font-size:11px;color:var(--gray-600);">${cls.acao}</td>
+    </tr>`).join('');
+
+  document.getElementById('feedbackFooter').textContent =
+    `${rows.length} vídeos · Mediana CTR: ${medCTR.toFixed(2)}% · Mediana Retenção: ${medRet.toFixed(1)}%`;
+  document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
+}
+
+// ── TEMPORAL EVOLUTION ────────────────────────────────────────────────────────
+
+function setTempMode(mode) {
+  tempMode = mode;
+  document.getElementById('btnTempWeek').classList.toggle('active',  mode === 'week');
+  document.getElementById('btnTempMonth').classList.toggle('active', mode === 'month');
+  document.getElementById('comparisonBadge').style.display = 'none';
+  renderTemporal();
+}
+
+function getPeriodKey(dateStr, mode) {
+  if (!dateStr) return null;
+  if (mode === 'month') return dateStr.slice(0, 7); // YYYY-MM
+  // ISO week
+  const d = new Date(dateStr);
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
+}
+
+function groupByPeriod(data, mode) {
+  const map = {};
+  data.forEach(r => {
+    const key = getPeriodKey(r.dataPublicacao, mode);
+    if (!key) return;
+    if (!map[key]) map[key] = [];
+    map[key].push(r);
+  });
+  return map;
+}
+
+function makeTempChart(id, labels, data, label, color, type='line', yFmt) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+  const el = document.getElementById(id);
+  if (!el) return;
+  chartInstances[id] = new Chart(el, {
+    type,
+    data: {
+      labels,
+      datasets: [{ label, data, borderColor: color, backgroundColor: color + '22',
+        fill: type==='line', tension: 0.3, pointRadius: 3, borderWidth: 2 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
+        y: { ticks: { font:{size:9}, color:'#6b7280', callback: yFmt || (v => fmtNum(v)) }, grid:{ color:'#f3f4f6' } }
+      }
+    }
+  });
+}
+
+function renderTemporal() {
+  const d = filteredData;
+  if (!d.length) return;
+
+  const grouped = groupByPeriod(d, tempMode);
+  const keys = Object.keys(grouped).sort();
+
+  const viewsMedian = keys.map(k => median(grouped[k].map(r => r.views)));
+  const ctrMean     = keys.map(k => mean(grouped[k].map(r => r.ctr)));
+  const retMean     = keys.map(k => mean(grouped[k].map(r => r.avgViewedPct)));
+  const inscMean    = keys.map(k => mean(grouped[k].map(r => r.inscritos)));
+  const counts      = keys.map(k => grouped[k].length);
+
+  const shortKey = k => tempMode === 'month'
+    ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
+    : k.replace(/(\d{4})-W/, 'W') + '/' + k.slice(2,4);
+  const labels = keys.map(shortKey);
+
+  makeTempChart('chartTempViews', labels, viewsMedian, 'Views Mediana', '#2563eb', 'line', v => fmtNum(v));
+  makeTempChart('chartTempCTR',   labels, ctrMean,     'CTR Médio',     '#f59e0b', 'line', v => v.toFixed(1)+'%');
+  makeTempChart('chartTempRet',   labels, retMean,     'Retenção Média','#10b981', 'line', v => v.toFixed(1)+'%');
+  makeTempChart('chartTempInsc',  labels, inscMean,    'Inscritos/vídeo','#8b5cf6','line', v => fmtNum(v));
+  makeTempChart('chartTempCount', labels, counts,      'Nº Vídeos',     '#06b6d4', 'bar',  v => Math.round(v));
+
+  // Mix de categorias
+  renderCategoryMix(keys, grouped, labels);
+}
+
+function renderCategoryMix(keys, grouped, labels) {
+  const container = document.getElementById('chartTempMixContainer');
+  if (!container) return;
+  const cats = [...new Set(filteredData.map(r => r.categoria||'(Sem categoria)'))].sort();
+
+  let html = `<table style="width:100%;font-size:10px;border-collapse:collapse;">
+    <thead><tr><th style="padding:4px 6px;text-align:left;color:var(--gray-500);font-weight:700;position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);">Período</th>
+    ${cats.map(c => `<th style="padding:4px 3px;text-align:center;color:${CAT_COLORS[c]||'#6b7280'};font-weight:700;position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);writing-mode:vertical-lr;font-size:9px;max-width:22px;" title="${c}">${c.slice(0,4)}</th>`).join('')}
+    </tr></thead><tbody>`;
+
+  keys.forEach((k, i) => {
+    const rows = grouped[k];
+    const total = rows.length;
+    const catCounts = {};
+    cats.forEach(c => { catCounts[c] = rows.filter(r => (r.categoria||'(Sem categoria)') === c).length; });
+    html += `<tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:3px 6px;white-space:nowrap;font-weight:600;">${labels[i]}</td>
+      ${cats.map(c => {
+        const pct = total > 0 ? Math.round(catCounts[c]/total*100) : 0;
+        const bg = pct > 0 ? (CAT_COLORS[c]||'#64748b') + Math.round(40 + pct*2).toString(16) : 'transparent';
+        return `<td style="padding:3px;text-align:center;background:${bg};color:${pct>30?'white':'var(--gray-700)'};" title="${c}: ${catCounts[c]} vídeos (${pct}%)">${pct>0?pct+'%':''}</td>`;
+      }).join('')}
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function showComparison(days) {
+  const today = new Date();
+  const cutA = new Date(today); cutA.setDate(cutA.getDate() - days);
+  const cutB = new Date(cutA); cutB.setDate(cutB.getDate() - days);
+  const fmt = d => d.toISOString().slice(0,10);
+
+  const periodA = filteredData.filter(r => r.dataPublicacao >= fmt(cutA) && r.dataPublicacao <= fmt(today));
+  const periodB = filteredData.filter(r => r.dataPublicacao >= fmt(cutB) && r.dataPublicacao < fmt(cutA));
+
+  if (!periodA.length || !periodB.length) {
+    document.getElementById('comparisonBadge').style.display = 'block';
+    document.getElementById('comparisonBadge').textContent = 'Dados insuficientes para comparação';
+    return;
+  }
+
+  const delta = (a, b) => b === 0 ? '—' : ((a-b)/b*100).toFixed(1) + '%';
+  const arrow = (a, b) => a >= b ? '▲' : '▼';
+  const col   = (a, b) => a >= b ? '#16a34a' : '#dc2626';
+
+  const mA = { views: median(periodA.map(r=>r.views)), ctr: mean(periodA.map(r=>r.ctr)), ret: mean(periodA.map(r=>r.avgViewedPct)) };
+  const mB = { views: median(periodB.map(r=>r.views)), ctr: mean(periodB.map(r=>r.ctr)), ret: mean(periodB.map(r=>r.avgViewedPct)) };
+
+  const badge = document.getElementById('comparisonBadge');
+  badge.style.display = 'block';
+  badge.innerHTML = `<strong>Últimos ${days}d vs ${days}d anteriores:</strong>
+    Views med. <span style="color:${col(mA.views,mB.views)}">${arrow(mA.views,mB.views)} ${delta(mA.views,mB.views)}</span> ·
+    CTR <span style="color:${col(mA.ctr,mB.ctr)}">${arrow(mA.ctr,mB.ctr)} ${delta(mA.ctr,mB.ctr)}</span> ·
+    Retenção <span style="color:${col(mA.ret,mB.ret)}">${arrow(mA.ret,mB.ret)} ${delta(mA.ret,mB.ret)}</span>
+    <span style="color:var(--gray-400);margin-left:8px;">(${periodA.length} vs ${periodB.length} vídeos)</span>`;
+}
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 
