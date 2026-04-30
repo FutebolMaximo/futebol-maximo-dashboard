@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Futebol Máximo · Dashboard de Performance</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
   :root {
     --blue-900: #0f2356;
@@ -1783,9 +1784,35 @@ function renderScatter() {
   if (chartInstances['chartScatter']) { chartInstances['chartScatter'].destroy(); delete chartInstances['chartScatter']; }
 
   const ctx = document.getElementById('chartScatter');
+
+  // Inline plugin: draw quadrant backgrounds + median lines (no external plugin needed)
+  const quadrantPlugin = {
+    id: 'quadrantBg',
+    beforeDatasetsDraw(chart) {
+      const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
+      if (!scales.x || !scales.y) return;
+      const xMed = scales.x.getPixelForValue(medCTR);
+      const yMed = scales.y.getPixelForValue(medRet);
+      c.save();
+      const quads = [
+        { x1:xMed, y1:top,    x2:right,  y2:yMed,    color:'rgba(220,252,231,0.30)' },
+        { x1:xMed, y1:yMed,   x2:right,  y2:bottom,  color:'rgba(254,249,195,0.30)' },
+        { x1:left, y1:top,    x2:xMed,   y2:yMed,    color:'rgba(219,234,254,0.30)' },
+        { x1:left, y1:yMed,   x2:xMed,   y2:bottom,  color:'rgba(254,226,226,0.30)' },
+      ];
+      quads.forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
+      c.strokeStyle = 'rgba(100,100,100,0.45)';
+      c.lineWidth = 1.5; c.setLineDash([5,4]);
+      c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
+      c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
+      c.setLineDash([]); c.restore();
+    }
+  };
+
   chartInstances['chartScatter'] = new Chart(ctx, {
     type: 'bubble',
     data: { datasets },
+    plugins: [quadrantPlugin],
     options: {
       responsive: true, maintainAspectRatio: false,
       onClick: (evt, elements) => {
@@ -1810,12 +1837,6 @@ function renderScatter() {
             title: () => '',
           }
         },
-        annotation: {
-          annotations: {
-            lineV: { type:'line', xMin: medCTR, xMax: medCTR, borderColor:'rgba(100,100,100,0.5)', borderWidth:1, borderDash:[4,4] },
-            lineH: { type:'line', yMin: medRet, yMax: medRet, borderColor:'rgba(100,100,100,0.5)', borderWidth:1, borderDash:[4,4] },
-          }
-        }
       },
       scales: {
         x: {
@@ -1831,11 +1852,6 @@ function renderScatter() {
       }
     }
   });
-
-  // Draw quadrant background labels via overlay
-  // We use afterRender to position them
-  chartInstances['chartScatter']._medCTR = medCTR;
-  chartInstances['chartScatter']._medRet = medRet;
 }
 
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
