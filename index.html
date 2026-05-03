@@ -955,7 +955,6 @@ function renderAdvanced() {
   renderScatter();
   renderFeedbackTable();
   renderFunnel();
-  renderFunnelTable();
   renderHeatmap();
   renderDurationAnalysis();
 }
@@ -2359,7 +2358,11 @@ function renderFunnel() {
 }
 
 function renderFunnelTable() {
-  const q = (document.getElementById('funnelSearch').value || '').toLowerCase();
+  const bodyEl = document.getElementById('funnelTableBody');
+  const footerEl = document.getElementById('funnelTableFooter');
+  if (!bodyEl) return; // table was removed
+  const searchEl = document.getElementById('funnelSearch');
+  const q = (searchEl ? searchEl.value : '').toLowerCase();
   let rows = [...filteredData];
   if (q) rows = rows.filter(r => r.title.toLowerCase().includes(q) || (r.creator||'').toLowerCase().includes(q));
 
@@ -2367,7 +2370,7 @@ function renderFunnelTable() {
 
   const per1k = (v, views) => views > 0 ? (v/views*1000).toFixed(2) : '—';
 
-  document.getElementById('funnelTableBody').innerHTML = rows.map(r => {
+  bodyEl.innerHTML = rows.map(r => {
     const watchHrs = (r.views * r.avgViewDurSec / 3600).toFixed(1);
     return `<tr style="border-bottom:1px solid var(--gray-100);">
       <td style="padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.3;font-size:11px;">
@@ -2383,7 +2386,7 @@ function renderFunnelTable() {
     </tr>`;
   }).join('');
 
-  document.getElementById('funnelTableFooter').textContent = `${rows.length} vídeos`;
+  if (footerEl) footerEl.textContent = `${rows.length} vídeos`;
 }
 
 // ── HEATMAP CRIADOR × CATEGORIA ──────────────────────────────────────────────
