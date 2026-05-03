@@ -551,6 +551,7 @@
       <div class="chart-wrap"><canvas id="chartInscritos"></canvas></div>
     </div>
 
+
   <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
@@ -687,19 +688,19 @@
       </div>
     </div>
     <div class="table-wrap" style="max-height:480px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;min-width:900px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
         <thead>
           <tr>
-            <th style="width:200px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Vídeo</th>
-            <th class="sortable" data-ftcol="creator" style="width:60px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('creator')">Criador</th>
-            <th class="sortable" data-ftcol="categoria" style="width:90px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('categoria')">Categoria</th>
-            <th class="sortable" data-ftcol="impressoes" style="width:80px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('impressoes')">Impressões</th>
-            <th class="sortable" data-ftcol="cliques" style="width:68px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('cliques')">Cliques</th>
-            <th class="sortable" data-ftcol="avgViewDurSec" style="width:60px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('avgViewDurSec')">Avg Dur</th>
-            <th class="sortable" data-ftcol="views" style="width:68px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('views')">Views</th>
-            <th class="sortable" data-ftcol="status" style="width:90px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('status')">Status</th>
-            <th style="width:160px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Diagnóstico</th>
-            <th style="width:200px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Ação sugerida</th>
+            <th style="padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+            <th class="sortable" data-ftcol="creator" style="width:58px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('creator')">Criador</th>
+            <th class="sortable" data-ftcol="categoria" style="width:80px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('categoria')">Categ.</th>
+            <th class="sortable" data-ftcol="impressoes" style="width:64px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('impressoes')">Impr.</th>
+            <th class="sortable" data-ftcol="cliques" style="width:58px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('cliques')">Cliques</th>
+            <th class="sortable" data-ftcol="avgViewDurSec" style="width:52px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
+            <th class="sortable" data-ftcol="views" style="width:56px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('views')">Views</th>
+            <th class="sortable" data-ftcol="status" style="width:84px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('status')">Status</th>
+            <th style="width:130px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
+            <th style="width:140px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação sugerida</th>
           </tr>
         </thead>
         <tbody id="feedbackBody"></tbody>
@@ -952,11 +953,16 @@ function switchTab(tab) {
 }
 
 function renderAdvanced() {
-  renderScatter();
-  renderFeedbackTable();
-  renderFunnel();
-  renderHeatmap();
-  renderDurationAnalysis();
+  const fns = [
+    ['renderScatter', renderScatter],
+    ['renderFeedbackTable', renderFeedbackTable],
+    ['renderFunnel', renderFunnel],
+    ['renderHeatmap', renderHeatmap],
+    ['renderDurationAnalysis', renderDurationAnalysis],
+  ];
+  for (const [name, fn] of fns) {
+    try { fn(); } catch(e) { console.error('renderAdvanced error in ' + name + ':', e.message, e.stack); }
+  }
 }
 
 function setChartMode(mode) {
@@ -1229,10 +1235,10 @@ function applyFilters() {
   });
 
   updateKPIs();
-  renderCharts();
-  renderTemporal();
-  renderTable();
-  renderAdvanced();
+  try { renderCharts(); } catch(e) { console.error('renderCharts error:', e.message); }
+  try { renderTemporal(); } catch(e) { console.error('renderTemporal error:', e.message); }
+  try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
+  try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
 }
 
 function clearFilters() {
@@ -1719,14 +1725,19 @@ function sortTable(col) {
   if (sortCol === col) sortDir *= -1;
   else { sortCol = col; sortDir = -1; }
 
-  document.querySelectorAll('thead th').forEach(th => {
+  // Scope to #dataTable only — avoids hitting feedback table headers
+  const table = document.getElementById('dataTable');
+  if (!table) return;
+  table.querySelectorAll('thead th').forEach(th => {
     th.classList.remove('sorted');
-    th.querySelector('.sort-icon').textContent = '↕';
+    const icon = th.querySelector('.sort-icon');
+    if (icon) icon.textContent = '↕';
   });
-  const th = document.querySelector(`thead th[data-col="${col}"]`);
+  const th = table.querySelector(`thead th[data-col="${col}"]`);
   if (th) {
     th.classList.add('sorted');
-    th.querySelector('.sort-icon').textContent = sortDir === -1 ? '↓' : '↑';
+    const icon = th.querySelector('.sort-icon');
+    if (icon) icon.textContent = sortDir === -1 ? '↓' : '↑';
   }
   renderTable();
 }
@@ -2018,18 +2029,18 @@ function renderFeedbackTable() {
 
   document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => `
     <tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;" title="${r.title.replace(/"/g,'&quot;')}">
+      <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
-      <td style="padding:5px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:5px 8px;font-size:10px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 5px;border-radius:8px;white-space:nowrap;" title="${r.categoria||'—'}">${(r.categoria||'—').slice(0,14)}</span></td>
-      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
-      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
-      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
-      <td style="padding:5px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
-      <td style="padding:5px 8px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
-      <td style="padding:5px 8px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
+      <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
