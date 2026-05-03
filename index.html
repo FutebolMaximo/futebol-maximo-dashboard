@@ -668,7 +668,7 @@
     <div class="section-divider"></div>
     <h2>Feedback Automático por Vídeo</h2>
   </div>
-  <p class="section-desc">Classificação automática de cada vídeo em 4 quadrantes com diagnóstico e ação sugerida, baseada nas medianas de CTR e Avg View Duration do dataset filtrado.</p>
+  <p class="section-desc">Classificação de cada vídeo com limiares fixos: ≥50K views, ≥30K cliques e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -1204,7 +1204,10 @@ function init() {
 
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
-    document.getElementById('filterDateStart').value = dates[0];
+    const currentYear = new Date().getFullYear();
+    const defaultStart = `${currentYear}-01-01`;
+    const hasCurrentYear = dates.some(d => d >= defaultStart);
+    document.getElementById('filterDateStart').value = hasCurrentYear ? defaultStart : dates[0];
     document.getElementById('filterDateEnd').value = dates[dates.length-1];
   }
 
@@ -1980,13 +1983,22 @@ function renderScatter() {
 
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
-function classifyVideo(r, medCTR, medDur) {
-  const highCTR = r.ctr >= medCTR;
-  const highDur = r.avgViewDurSec >= medDur;
-  if (highCTR && highDur)  return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração',   acao:'Fazer sequência / repetir formato' };
-  if (highCTR && !highDur) return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração',   acao:'Melhorar abertura e primeiros 30s' };
-  if (!highCTR && highDur) return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Longa duração',  acao:'Testar nova thumbnail e título' };
-  return                     { status:'Rever formato',        color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Curta duração',  acao:'Revisar pauta / reformular formato' };
+// Fixed classification thresholds (absolute, not dynamic)
+const THRESHOLDS = { views: 50000, cliques: 30000, avgViewDurSec: 360 }; // 360s = 6min
+
+function classifyVideo(r) {
+  const highViews  = r.views           >= THRESHOLDS.views;
+  const highCliq   = (r.cliques||0)    >= THRESHOLDS.cliques;
+  const longDur    = r.avgViewDurSec   >= THRESHOLDS.avgViewDurSec;
+
+  // Alto CTR proxy = alto views + alto cliques (ambos acima do limiar)
+  const altoCTR = highViews && highCliq;
+  const baixoCTR = !highViews && !highCliq;
+
+  if (altoCTR  && longDur)  return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração',  acao:'Fazer sequência / repetir formato' };
+  if (altoCTR  && !longDur) return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração',  acao:'Melhorar abertura e primeiros 30s' };
+  if (!altoCTR && longDur)  return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Longa duração', acao:'Testar nova thumbnail e título' };
+  return                     { status:'Rever formato',          color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Curta duração', acao:'Revisar pauta / reformular formato' };
 }
 
 let feedbackSortCol = 'status';
@@ -2006,13 +2018,10 @@ function renderFeedbackTable() {
   const d = filteredData;
   if (!d.length) { document.getElementById('feedbackBody').innerHTML = ''; return; }
 
-  const medCTR = median(d.map(r => r.ctr));
-  const medDur = median(d.map(r => r.avgViewDurSec));
-
   const statusFilter = document.getElementById('feedbackStatusFilter').value;
   const searchQ = (document.getElementById('feedbackSearch').value || '').toLowerCase();
 
-  let rows = d.map(r => ({ r, cls: classifyVideo(r, medCTR, medDur) }));
+  let rows = d.map(r => ({ r, cls: classifyVideo(r) }));
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
   if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
 
@@ -2053,7 +2062,7 @@ function renderFeedbackTable() {
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Mediana CTR: ${medCTR.toFixed(2)}% · Mediana Avg Dur: ${formatDuration(medDur)}`;
+    `${rows.length} vídeos · Limiares fixos: ≥50K views · ≥30K cliques · ≥6min avg view duration`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
