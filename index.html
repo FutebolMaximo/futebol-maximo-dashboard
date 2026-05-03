@@ -550,12 +550,12 @@
       </div>
       <div class="chart-wrap"><canvas id="chartInscritos"></canvas></div>
     </div>
+  </div>
 
-
-  <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
+  <!-- FUNIL DE PERFORMANCE -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
-  <div class="chart-card" style="margin-bottom:24px;">
+  <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -567,10 +567,7 @@
         </select>
       </div>
     </div>
-    <div id="funnelContainer" style="margin-top:16px;"></div>
-  </div>
-
-
+    <div id="funnelContainer" style="margin-top:16px;max-width:900px;"></div>
   </div>
 
 
@@ -689,18 +686,30 @@
     </div>
     <div class="table-wrap" style="max-height:480px;">
       <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+        <colgroup>
+          <col style="width:30%">   <!-- Vídeo -->
+          <col style="width:6%">    <!-- Criador -->
+          <col style="width:9%">    <!-- Categ. -->
+          <col style="width:7%">    <!-- Impr. -->
+          <col style="width:7%">    <!-- Cliques -->
+          <col style="width:6%">    <!-- Dur. -->
+          <col style="width:6%">    <!-- Views -->
+          <col style="width:8%">    <!-- Status -->
+          <col style="width:10%">   <!-- Diagnóstico -->
+          <col style="width:11%">   <!-- Ação sugerida -->
+        </colgroup>
         <thead>
           <tr>
-            <th style="padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
-            <th class="sortable" data-ftcol="creator" style="width:58px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('creator')">Criador</th>
-            <th class="sortable" data-ftcol="categoria" style="width:80px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('categoria')">Categ.</th>
-            <th class="sortable" data-ftcol="impressoes" style="width:64px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('impressoes')">Impr.</th>
-            <th class="sortable" data-ftcol="cliques" style="width:58px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('cliques')">Cliques</th>
-            <th class="sortable" data-ftcol="avgViewDurSec" style="width:52px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
-            <th class="sortable" data-ftcol="views" style="width:56px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;" onclick="sortFeedback('views')">Views</th>
-            <th class="sortable" data-ftcol="status" style="width:84px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('status')">Status</th>
-            <th style="width:130px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
-            <th style="width:140px;padding:5px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação sugerida</th>
+            <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+            <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('creator')">Criador</th>
+            <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categ.</th>
+            <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impr.</th>
+            <th class="sortable" data-ftcol="cliques" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('cliques')">Cliques</th>
+            <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
+            <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
+            <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
+            <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
+            <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
           </tr>
         </thead>
         <tbody id="feedbackBody"></tbody>
