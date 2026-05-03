@@ -469,6 +469,29 @@
     <div class="kpi-card"><div class="kpi-label">Shares</div><div class="kpi-value" id="kShares">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="kSharesMed">—</div></div>
   </div>
 
+  <!-- EVOLUÇÃO TEMPORAL -->
+  <div class="section-header">
+    <div class="section-divider"></div>
+    <h2>Evolução Temporal</h2>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+    <div class="topn-toggle">
+      <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
+      <button id="btnTempMonth" class="toggle-btn" onclick="setTempMode('month')">Por Mês</button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button id="btnComp30" class="toggle-btn" onclick="showComparison(30)" style="font-size:11px;">vs 30 dias ant.</button>
+      <button id="btnComp90" class="toggle-btn" onclick="showComparison(90)" style="font-size:11px;">vs 90 dias ant.</button>
+    </div>
+    <div id="comparisonBadge" style="display:none;padding:6px 12px;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:8px;font-size:12px;color:var(--blue-600);"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+    <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartTempViews"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🎣 CTR Médio</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartTempRet"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
+  </div>
+
 
   <!-- CHARTS CONTROLS -->
   <div class="charts-controls">
@@ -527,10 +550,10 @@
     </div>
   </div>
 
-  <!-- RAW DATA TABLE -->
+  <!-- CATEGORIA E PIZZA -->
   <div class="section-header">
     <div class="section-divider"></div>
-    <h2>Análise por Categoria e Distribuição</h2>
+    <h2>Análise por Categoria</h2>
   </div>
   <div class="charts-grid" style="margin-bottom:24px;">
     <div class="chart-card">
@@ -538,18 +561,6 @@
         🥧 Distribuição por Categoria <span class="chart-badge">Soma Views</span>
       </div>
       <div class="chart-wrap" style="height:300px;"><canvas id="chartPizza"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistViews"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">⏱️ Distribuição de Duração (faixas de 5min)</div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistDur"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">📈 Média de Views por Faixa de Duração (5min)</div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="chartHistViewsAvg"></canvas></div>
     </div>
   </div>
 
@@ -619,7 +630,7 @@
   <!-- SCATTER: CTR x RETENÇÃO -->
   <div class="section-header">
     <div class="section-divider"></div>
-    <h2>Matriz CTR × Avg View Duration</h2>
+    <h2>Matriz Avg View Duration × Impressões</h2>
   </div>
   <p class="section-desc">O problema foi o pacote ou o conteúdo? Alto CTR = thumbnail/título funcionou. Alta duração = conteúdo entregou.</p>
   <div class="chart-card" style="margin-bottom:24px;">
@@ -670,7 +681,7 @@
             <th style="width:180px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
             <th class="sortable" data-ftcol="creator" style="width:60px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
             <th class="sortable" data-ftcol="categoria" style="width:90px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
-            <th class="sortable" data-ftcol="ctr" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
+            <th class="sortable" data-ftcol="impressoes" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
             <th class="sortable" data-ftcol="avgViewDurSec" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg Dur</th>
             <th class="sortable" data-ftcol="views" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
             <th class="sortable" data-ftcol="status" style="width:100px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
@@ -685,29 +696,7 @@
   </div>
 
   <!-- TEMPORAL EVOLUTION -->
-  <div class="section-header">
-    <div class="section-divider"></div>
-    <h2>Evolução Temporal</h2>
-  </div>
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
-    <div class="topn-toggle">
-      <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
-      <button id="btnTempMonth" class="toggle-btn" onclick="setTempMode('month')">Por Mês</button>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <button id="btnComp30" class="toggle-btn" onclick="showComparison(30)" style="font-size:11px;">vs 30 dias ant.</button>
-      <button id="btnComp90" class="toggle-btn" onclick="showComparison(90)" style="font-size:11px;">vs 90 dias ant.</button>
-    </div>
-    <div id="comparisonBadge" style="display:none;padding:6px 12px;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:8px;font-size:12px;color:var(--blue-600);"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
-    <div class="chart-card"><div class="chart-title">📈 Views Medianas</div><div style="height:220px;"><canvas id="chartTempViews"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🎣 CTR Médio</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartTempRet"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🎬 Nº de Vídeos Publicados</div><div style="height:220px;"><canvas id="chartTempCount"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🥧 Mix de Categorias por Período</div><div style="height:220px;overflow-y:auto;overflow-x:hidden;" id="chartTempMixContainer"></div></div>
-  </div>
+
 
   <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
@@ -788,6 +777,23 @@
       <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
     </div>
     <div class="table-wrap"><div id="durationTableContainer"></div></div>
+  </div>
+
+  <!-- HISTOGRAMAS DE DISTRIBUIÇÃO -->
+  <div class="section-header"><div class="section-divider"></div><h2>Distribuição de Views e Duração</h2></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:32px;">
+    <div class="chart-card">
+      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViews"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">⏱️ Distribuição de Duração (faixas de 5min)</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistDur"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">📈 Média de Views por Faixa de Duração</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsAvg"></canvas></div>
+    </div>
   </div>
 
 </div>
@@ -1870,8 +1876,8 @@ function renderScatter() {
   const d = filteredData;
   if (!d.length) return;
 
-  const medCTR = median(d.map(r => r.ctr));
-  const medDur = median(d.map(r => r.avgViewDurSec));
+  const medDur  = median(d.map(r => r.avgViewDurSec));
+  const medImpr = median(d.map(r => r.impressoes));
   const maxViews = Math.max(...d.map(r => r.views), 1);
   const minR = 4, maxR = 28;
 
@@ -1885,17 +1891,13 @@ function renderScatter() {
   const datasets = Object.entries(catMap).map(([cat, rows]) => ({
     label: cat,
     data: rows.map(r => ({
-      x: r.ctr,
-      y: r.avgViewDurSec,
+      x: r.avgViewDurSec,
+      y: r.impressoes,
       r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
-      _title: r.title,
-      _link: r.link,
-      _views: r.views,
-      _cat: cat,
-      _dur: r.avgViewDurSec,
+      _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _cat: cat,
     })),
     backgroundColor: (CAT_COLORS[cat] || '#64748b') + 'aa',
-    borderColor:     (CAT_COLORS[cat] || '#64748b'),
+    borderColor: (CAT_COLORS[cat] || '#64748b'),
     borderWidth: 1,
   }));
 
@@ -1908,24 +1910,21 @@ function renderScatter() {
   if (chartInstances['chartScatter']) { chartInstances['chartScatter'].destroy(); delete chartInstances['chartScatter']; }
 
   const ctx = document.getElementById('chartScatter');
-
   const quadrantPlugin = {
     id: 'quadrantBg',
     beforeDatasetsDraw(chart) {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
-      const xMed = scales.x.getPixelForValue(medCTR);
-      const yMed = scales.y.getPixelForValue(medDur);
+      const xMed = scales.x.getPixelForValue(medDur);
+      const yMed = scales.y.getPixelForValue(medImpr);
       c.save();
-      const quads = [
-        { x1:xMed, y1:top,    x2:right,  y2:yMed,    color:'rgba(220,252,231,0.30)' },
-        { x1:xMed, y1:yMed,   x2:right,  y2:bottom,  color:'rgba(254,249,195,0.30)' },
-        { x1:left, y1:top,    x2:xMed,   y2:yMed,    color:'rgba(219,234,254,0.30)' },
-        { x1:left, y1:yMed,   x2:xMed,   y2:bottom,  color:'rgba(254,226,226,0.30)' },
-      ];
-      quads.forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
-      c.strokeStyle = 'rgba(100,100,100,0.45)';
-      c.lineWidth = 1.5; c.setLineDash([5,4]);
+      [
+        { x1:xMed, y1:top,   x2:right, y2:yMed,   color:'rgba(220,252,231,0.30)' },
+        { x1:xMed, y1:yMed,  x2:right, y2:bottom, color:'rgba(254,249,195,0.30)' },
+        { x1:left, y1:top,   x2:xMed,  y2:yMed,   color:'rgba(219,234,254,0.30)' },
+        { x1:left, y1:yMed,  x2:xMed,  y2:bottom, color:'rgba(254,226,226,0.30)' },
+      ].forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
+      c.strokeStyle = 'rgba(100,100,100,0.45)'; c.lineWidth = 1.5; c.setLineDash([5,4]);
       c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
       c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
       c.setLineDash([]); c.restore();
@@ -1933,43 +1932,38 @@ function renderScatter() {
   };
 
   chartInstances['chartScatter'] = new Chart(ctx, {
-    type: 'bubble',
-    data: { datasets },
-    plugins: [quadrantPlugin],
+    type: 'bubble', data: { datasets }, plugins: [quadrantPlugin],
     options: {
       responsive: true, maintainAspectRatio: false,
       onClick: (evt, elements) => {
         if (!elements.length) return;
-        const el = elements[0];
-        const pt = datasets[el.datasetIndex].data[el.index];
+        const pt = datasets[elements[0].datasetIndex].data[elements[0].index];
         if (pt._link) window.open(pt._link, '_blank', 'noopener');
       },
       plugins: {
         legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              const p = ctx.raw;
-              return [
-                ` ${p._title}`,
-                ` CTR: ${p.x.toFixed(2)}% · Avg Dur: ${formatDuration(p._dur)}`,
-                ` Views: ${fmtNum(p._views)} · ${p._cat}`,
-                p._link ? ` 🔗 Clique para abrir` : '',
-              ].filter(Boolean);
-            },
-            title: () => '',
-          }
-        },
+        tooltip: { callbacks: {
+          label: ctx => {
+            const p = ctx.raw;
+            return [
+              ` ${p._title}`,
+              ` Avg View Dur: ${formatDuration(p.x)} · Impressões: ${fmtNum(p.y)}`,
+              ` Views: ${fmtNum(p._views)} · CTR: ${p._ctr.toFixed(2)}% · ${p._cat}`,
+              p._link ? ' 🔗 Clique para abrir' : '',
+            ].filter(Boolean);
+          },
+          title: () => '',
+        }}
       },
       scales: {
         x: {
-          title: { display:true, text:'CTR (%)', font:{size:11}, color:'#6b7280' },
-          ticks: { callback: v => v.toFixed(1)+'%', font:{size:10}, color:'#6b7280' },
+          title: { display:true, text:'Avg View Duration', font:{size:11}, color:'#6b7280' },
+          ticks: { callback: v => formatDuration(v), font:{size:10}, color:'#6b7280' },
           grid: { color:'#f3f4f6' },
         },
         y: {
-          title: { display:true, text:'Avg View Duration', font:{size:11}, color:'#6b7280' },
-          ticks: { callback: v => formatDuration(v), font:{size:10}, color:'#6b7280' },
+          title: { display:true, text:'Impressões', font:{size:11}, color:'#6b7280' },
+          ticks: { callback: v => fmtNum(v), font:{size:10}, color:'#6b7280' },
           grid: { color:'#f3f4f6' },
         }
       }
@@ -2044,7 +2038,7 @@ function renderFeedbackTable() {
       </td>
       <td style="padding:6px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:6px 8px;font-size:10px;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 6px;border-radius:10px;white-space:nowrap;">${r.categoria||'—'}</span></td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${r.ctr.toFixed(2)}%</td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
       <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
       <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
       <td style="padding:6px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
@@ -2117,25 +2111,68 @@ function renderTemporal() {
   const grouped = groupByPeriod(d, tempMode);
   const keys = Object.keys(grouped).sort();
 
+  const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
   const viewsMedian = keys.map(k => median(grouped[k].map(r => r.views)));
+  const counts      = keys.map(k => grouped[k].length);
   const ctrMean     = keys.map(k => mean(grouped[k].map(r => r.ctr)));
   const retMean     = keys.map(k => mean(grouped[k].map(r => r.avgViewedPct)));
   const inscMean    = keys.map(k => mean(grouped[k].map(r => r.inscritos)));
-  const counts      = keys.map(k => grouped[k].length);
 
   const shortKey = k => tempMode === 'month'
     ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
     : k.replace(/(\d{4})-W/, 'W') + '/' + k.slice(2,4);
   const labels = keys.map(shortKey);
 
-  makeTempChart('chartTempViews', labels, viewsMedian, 'Views Mediana', '#2563eb', 'line', v => fmtNum(v));
-  makeTempChart('chartTempCTR',   labels, ctrMean,     'CTR Médio',     '#f59e0b', 'line', v => v.toFixed(1)+'%');
-  makeTempChart('chartTempRet',   labels, retMean,     'Retenção Média','#10b981', 'line', v => v.toFixed(1)+'%');
-  makeTempChart('chartTempInsc',  labels, inscMean,    'Inscritos/vídeo','#8b5cf6','line', v => fmtNum(v));
-  makeTempChart('chartTempCount', labels, counts,      'Nº Vídeos',     '#06b6d4', 'bar',  v => Math.round(v));
+  // Views: dual-axis — soma de views (line, left) + qtd vídeos (bar, right)
+  if (chartInstances['chartTempViews']) { chartInstances['chartTempViews'].destroy(); delete chartInstances['chartTempViews']; }
+  const elViews = document.getElementById('chartTempViews');
+  if (elViews) {
+    chartInstances['chartTempViews'] = new Chart(elViews, {
+      data: {
+        labels,
+        datasets: [
+          {
+            type: 'line', label: 'Soma Views', data: viewsSum,
+            borderColor: '#2563eb', backgroundColor: '#2563eb22',
+            fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2,
+            yAxisID: 'yViews', order: 1,
+          },
+          {
+            type: 'bar', label: 'Qtd Vídeos', data: counts,
+            backgroundColor: '#06b6d422', borderColor: '#06b6d4',
+            borderWidth: 1, borderRadius: 3,
+            yAxisID: 'yCount', order: 2,
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
+        plugins: {
+          legend: { display: true, position: 'top', labels: { font:{size:10}, boxWidth:12 } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                if (ctx.datasetIndex === 0) {
+                  const med = viewsMedian[ctx.dataIndex];
+                  return [` Soma Views: ${fmtNum(ctx.parsed.y)}`, ` Mediana: ${fmtNum(med)}`];
+                }
+                return ` Qtd Vídeos: ${ctx.parsed.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
+          yViews: { position:'left',  ticks: { font:{size:9}, color:'#2563eb', callback: v => fmtNum(v) }, grid:{ color:'#f3f4f6' } },
+          yCount: { position:'right', ticks: { font:{size:9}, color:'#06b6d4', callback: v => Math.round(v) }, grid:{ drawOnChartArea:false } },
+        }
+      }
+    });
+  }
 
-  // Mix de categorias
-  renderCategoryMix(keys, grouped, labels);
+  makeTempChart('chartTempCTR',   labels, ctrMean,  'CTR Médio',      '#f59e0b', 'line', v => v.toFixed(1)+'%');
+  makeTempChart('chartTempRet',   labels, retMean,  'Retenção Média', '#10b981', 'line', v => v.toFixed(1)+'%');
+  makeTempChart('chartTempInsc',  labels, inscMean, 'Inscritos/vídeo','#8b5cf6', 'line', v => fmtNum(v));
 }
 
 function renderCategoryMix(keys, grouped, labels) {
@@ -2245,7 +2282,10 @@ function renderFunnel() {
     vals.forEach((v, i) => {
       const pct = Math.max((v/maxV)*100, 1);
       const fmt = fmtNum(v);
-      const conv = i > 0 && vals[i-1] > 0 ? (v/vals[i-1]*100).toFixed(1)+'%' : '';
+      // % shown: stage 1 (Views) = vs Impressões; stages 2-5 = vs Views
+      let conv = '';
+      if (i === 1 && vals[0] > 0) conv = (vals[1]/vals[0]*100).toFixed(1)+'%'; // Views/Impressões
+      if (i >= 2 && vals[1] > 0)  conv = (v/vals[1]*100).toFixed(2)+'%';       // X/Views
       // Use dark text when bar is too narrow to read white text
       const textColor = pct > 12 ? 'white' : stageColors[i];
       const labelPos = pct > 12
