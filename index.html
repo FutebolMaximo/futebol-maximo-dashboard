@@ -291,23 +291,24 @@
     top: 0;
     z-index: 5;
   }
-  /* Column widths: Data, Título, Criador, Categoria, Impressões, CTR%, Views, Duração, Avg Dur, Ret.%, Inscritos, Conv.Insc, Likes, Coment., Conv.Comm, Shares */
-  thead th:nth-child(1)  { width: 72px; }
-  thead th:nth-child(2)  { width: 170px; }
-  thead th:nth-child(3)  { width: 58px; }
-  thead th:nth-child(4)  { width: 90px; }
-  thead th:nth-child(5)  { width: 68px; }
-  thead th:nth-child(6)  { width: 44px; }
-  thead th:nth-child(7)  { width: 56px; }
-  thead th:nth-child(8)  { width: 52px; }
-  thead th:nth-child(9)  { width: 52px; }
-  thead th:nth-child(10) { width: 44px; }
-  thead th:nth-child(11) { width: 58px; }
-  thead th:nth-child(12) { width: 62px; }
-  thead th:nth-child(13) { width: 48px; }
-  thead th:nth-child(14) { width: 58px; }
-  thead th:nth-child(15) { width: 62px; }
-  thead th:nth-child(16) { width: 46px; }
+  /* Column widths: Data, Título, Criador, Categoria, Impressões, CTR%, Views, Duração, Avg Dur, Ret.%, Inscritos, Conv.Insc, Likes, Coment., Conv.Comm, Cliques, Shares */
+  thead th:nth-child(1)  { width: 70px; }
+  thead th:nth-child(2)  { width: 160px; }
+  thead th:nth-child(3)  { width: 55px; }
+  thead th:nth-child(4)  { width: 85px; }
+  thead th:nth-child(5)  { width: 65px; }
+  thead th:nth-child(6)  { width: 42px; }
+  thead th:nth-child(7)  { width: 54px; }
+  thead th:nth-child(8)  { width: 50px; }
+  thead th:nth-child(9)  { width: 50px; }
+  thead th:nth-child(10) { width: 42px; }
+  thead th:nth-child(11) { width: 56px; }
+  thead th:nth-child(12) { width: 58px; }
+  thead th:nth-child(13) { width: 46px; }
+  thead th:nth-child(14) { width: 56px; }
+  thead th:nth-child(15) { width: 58px; }
+  thead th:nth-child(16) { width: 54px; }
+  thead th:nth-child(17) { width: 46px; }
   thead th:hover { background: var(--blue-50); color: var(--blue-600); }
   thead th .sort-icon { margin-left: 2px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
@@ -595,6 +596,7 @@
             <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Comentários <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('cliques')" data-col="cliques" class="num">Cliques <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
           </tr>
           <tr class="filter-row">
@@ -613,6 +615,7 @@
             <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
             <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
+            <td><input class="col-filter" data-col="cliques" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
           </tr>
         </thead>
@@ -630,7 +633,7 @@
   <!-- SCATTER: CTR x RETENÇÃO -->
   <div class="section-header">
     <div class="section-divider"></div>
-    <h2>Matriz Avg View Duration × Impressões</h2>
+    <h2>Matriz Avg View Duration × Cliques</h2>
   </div>
   <p class="section-desc">O problema foi o pacote ou o conteúdo? Alto CTR = thumbnail/título funcionou. Alta duração = conteúdo entregou.</p>
   <div class="chart-card" style="margin-bottom:24px;">
@@ -682,6 +685,7 @@
             <th class="sortable" data-ftcol="creator" style="width:60px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
             <th class="sortable" data-ftcol="categoria" style="width:90px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
             <th class="sortable" data-ftcol="impressoes" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
+            <th class="sortable" data-ftcol="cliques" style="width:72px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('cliques')">Cliques</th>
             <th class="sortable" data-ftcol="avgViewDurSec" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg Dur</th>
             <th class="sortable" data-ftcol="views" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
             <th class="sortable" data-ftcol="status" style="width:100px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
@@ -858,7 +862,8 @@ function parseCSVText(text) {
     'coment\u00e1rios': 'comentarios', 'views': 'views', 'impressoes': 'impressoes',
     'impress\u00f5es': 'impressoes', 'ctr %': 'ctr', 'avg view duration': 'avgViewDuration',
     'ano': 'ano', 'data publicacao': 'dataPublicacao', 'data publica\u00e7\u00e3o': 'dataPublicacao',
-    'mes_ano': 'mesAno', 'm\u00eas_ano': 'mesAno', 'link': 'link', 'creator': 'creator',
+    'mes_ano': 'mesAno', 'mês_ano': 'mesAno', 'link': 'link', 'creator': 'creator',
+    'cliques': 'cliques',
     'categoria': 'categoria', 'conversao inscritos': 'conversao', 'convers\u00e3o inscritos': 'conversao',
     'conversao comments': 'conversaoComments', 'convers\u00e3o comments': 'conversaoComments',
     'conversao': 'conversao', 'convers\u00e3o': 'conversao', 'content': 'id',
@@ -895,6 +900,7 @@ function parseCSVText(text) {
       mesAno: obj.mesAno||'', creator: obj.creator||'', categoria: obj.categoria||'',
       conversao: parseFloat(obj.conversao)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
+      cliques: parseInt(obj.cliques)||0,
       avgViewDurSec: parseDuration(obj.avgViewDuration),
       conversaoComments: parseFloat(obj.conversaoComments)||0,
     });
@@ -968,7 +974,6 @@ function switchTab(tab) {
 function renderAdvanced() {
   renderScatter();
   renderFeedbackTable();
-  renderTemporal();
   renderFunnel();
   renderFunnelTable();
   renderHeatmap();
@@ -1246,8 +1251,9 @@ function applyFilters() {
 
   updateKPIs();
   renderCharts();
+  renderTemporal();
   renderTable();
-  if (activeTab === 'avancada') renderAdvanced();
+  renderAdvanced();
 }
 
 function clearFilters() {
@@ -1850,6 +1856,7 @@ function renderTable() {
       <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
       <td class="num">${r.comentarios.toLocaleString('pt-BR')}</td>
       <td class="num">${((r.conversaoComments||0)*100).toFixed(2)}%</td>
+      <td class="num">${(r.cliques||0).toLocaleString('pt-BR')}</td>
       <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
     </tr>`;
   }).join('');
@@ -1876,8 +1883,8 @@ function renderScatter() {
   const d = filteredData;
   if (!d.length) return;
 
-  const medDur  = median(d.map(r => r.avgViewDurSec));
-  const medImpr = median(d.map(r => r.impressoes));
+  const medDur    = median(d.map(r => r.avgViewDurSec));
+  const medCliques = median(d.map(r => r.cliques));
   const maxViews = Math.max(...d.map(r => r.views), 1);
   const minR = 4, maxR = 28;
 
@@ -1892,9 +1899,9 @@ function renderScatter() {
     label: cat,
     data: rows.map(r => ({
       x: r.avgViewDurSec,
-      y: r.impressoes,
+      y: r.cliques,
       r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
-      _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _cat: cat,
+      _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _impressoes: r.impressoes, _cat: cat,
     })),
     backgroundColor: (CAT_COLORS[cat] || '#64748b') + 'aa',
     borderColor: (CAT_COLORS[cat] || '#64748b'),
@@ -1916,7 +1923,7 @@ function renderScatter() {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
       const xMed = scales.x.getPixelForValue(medDur);
-      const yMed = scales.y.getPixelForValue(medImpr);
+      const yMed = scales.y.getPixelForValue(medCliques);
       c.save();
       [
         { x1:xMed, y1:top,   x2:right, y2:yMed,   color:'rgba(220,252,231,0.30)' },
@@ -1947,8 +1954,9 @@ function renderScatter() {
             const p = ctx.raw;
             return [
               ` ${p._title}`,
-              ` Avg View Dur: ${formatDuration(p.x)} · Impressões: ${fmtNum(p.y)}`,
-              ` Views: ${fmtNum(p._views)} · CTR: ${p._ctr.toFixed(2)}% · ${p._cat}`,
+              ` Avg View Dur: ${formatDuration(p.x)} · Cliques: ${fmtNum(p.y)}`,
+              ` Views: ${fmtNum(p._views)} · CTR: ${p._ctr.toFixed(2)}% · Impressões: ${fmtNum(p._impressoes)}`,
+              ` ${p._cat}`,
               p._link ? ' 🔗 Clique para abrir' : '',
             ].filter(Boolean);
           },
@@ -1962,7 +1970,7 @@ function renderScatter() {
           grid: { color:'#f3f4f6' },
         },
         y: {
-          title: { display:true, text:'Impressões', font:{size:11}, color:'#6b7280' },
+          title: { display:true, text:'Cliques', font:{size:11}, color:'#6b7280' },
           ticks: { callback: v => fmtNum(v), font:{size:10}, color:'#6b7280' },
           grid: { color:'#f3f4f6' },
         }
@@ -2039,6 +2047,8 @@ function renderFeedbackTable() {
       <td style="padding:6px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:6px 8px;font-size:10px;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 6px;border-radius:10px;white-space:nowrap;">${r.categoria||'—'}</span></td>
       <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
+      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques)}</td>
       <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
       <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
       <td style="padding:6px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
