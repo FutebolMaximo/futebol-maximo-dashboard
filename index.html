@@ -488,9 +488,10 @@
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
     <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartTempViews"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🎣 CTR Médio</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🖱️ Cliques Totais</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartTempRet"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">⏱️ Avg View Duration Média</div><div style="height:220px;"><canvas id="chartTempDur"></canvas></div></div>
   </div>
 
 
@@ -549,21 +550,29 @@
       </div>
       <div class="chart-wrap"><canvas id="chartInscritos"></canvas></div>
     </div>
+
+  <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
+  <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
+  <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
+  <div class="chart-card" style="margin-bottom:24px;">
+    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
+        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="all">Geral (todos os vídeos)</option>
+          <option value="creator">Por Criador</option>
+          <option value="categoria">Por Categoria</option>
+        </select>
+      </div>
+    </div>
+    <div id="funnelContainer" style="margin-top:16px;"></div>
   </div>
 
-  <!-- CATEGORIA E PIZZA -->
-  <div class="section-header">
-    <div class="section-divider"></div>
-    <h2>Análise por Categoria</h2>
+
   </div>
-  <div class="charts-grid" style="margin-bottom:24px;">
-    <div class="chart-card">
-      <div class="chart-title">
-        🥧 Distribuição por Categoria <span class="chart-badge">Soma Views</span>
-      </div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="chartPizza"></canvas></div>
-    </div>
-  </div>
+
+
 
   <!-- BASE DE DADOS COMPLETA -->
   <div class="section-header">
@@ -677,20 +686,20 @@
           style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
       </div>
     </div>
-    <div class="table-wrap" style="max-height:420px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+    <div class="table-wrap" style="max-height:480px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;min-width:900px;">
         <thead>
           <tr>
-            <th style="width:180px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
-            <th class="sortable" data-ftcol="creator" style="width:60px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
-            <th class="sortable" data-ftcol="categoria" style="width:90px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
-            <th class="sortable" data-ftcol="impressoes" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
-            <th class="sortable" data-ftcol="cliques" style="width:72px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('cliques')">Cliques</th>
-            <th class="sortable" data-ftcol="avgViewDurSec" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg Dur</th>
-            <th class="sortable" data-ftcol="views" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
-            <th class="sortable" data-ftcol="status" style="width:100px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
-            <th style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
-            <th style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação sugerida</th>
+            <th style="width:200px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Vídeo</th>
+            <th class="sortable" data-ftcol="creator" style="width:60px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('creator')">Criador</th>
+            <th class="sortable" data-ftcol="categoria" style="width:90px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('categoria')">Categoria</th>
+            <th class="sortable" data-ftcol="impressoes" style="width:80px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('impressoes')">Impressões</th>
+            <th class="sortable" data-ftcol="cliques" style="width:68px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('cliques')">Cliques</th>
+            <th class="sortable" data-ftcol="avgViewDurSec" style="width:60px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('avgViewDurSec')">Avg Dur</th>
+            <th class="sortable" data-ftcol="views" style="width:68px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('views')">Views</th>
+            <th class="sortable" data-ftcol="status" style="width:90px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="sortFeedback('status')">Status</th>
+            <th style="width:160px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Diagnóstico</th>
+            <th style="width:200px;padding:5px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Ação sugerida</th>
           </tr>
         </thead>
         <tbody id="feedbackBody"></tbody>
@@ -702,44 +711,15 @@
   <!-- TEMPORAL EVOLUTION -->
 
 
-  <!-- ── ITEM 2: FUNIL DE PERFORMANCE ─────────────────────────────────────── -->
-  <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
-  <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
-  <div class="chart-card" style="margin-bottom:24px;">
-    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
-        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-          <option value="all">Geral (todos os vídeos)</option>
-          <option value="creator">Por Criador</option>
-          <option value="categoria">Por Categoria</option>
-        </select>
-      </div>
+
+
+  <!-- PIZZA DENTRO DO HEATMAP -->
+  <div class="section-header" style="margin-top:24px;"><div class="section-divider"></div><h2>Análise por Categoria</h2></div>
+  <div class="charts-grid" style="margin-bottom:20px;">
+    <div class="chart-card">
+      <div class="chart-title">🥧 Distribuição por Categoria <span class="chart-badge">Soma Views</span></div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="chartPizza"></canvas></div>
     </div>
-    <div id="funnelContainer" style="margin-top:16px;"></div>
-  </div>
-  <div class="table-card" style="margin-bottom:24px;">
-    <div class="table-toolbar">
-      <h3>KPIs Derivados por Vídeo</h3>
-      <input type="text" id="funnelSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFunnelTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
-    </div>
-    <div class="table-wrap" style="max-height:380px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-        <thead><tr>
-          <th style="width:200px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;">Vídeo</th>
-          <th style="width:62px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;">Criador</th>
-          <th class="sortable" data-fkcol="watchHrs" onclick="sortFunnelTable('watchHrs')" style="width:72px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Watch Hrs</th>
-          <th class="sortable" data-fkcol="insc1k" onclick="sortFunnelTable('insc1k')" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Insc/1K views</th>
-          <th class="sortable" data-fkcol="likes1k" onclick="sortFunnelTable('likes1k')" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Likes/1K views</th>
-          <th class="sortable" data-fkcol="comm1k" onclick="sortFunnelTable('comm1k')" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Comm/1K views</th>
-          <th class="sortable" data-fkcol="shares1k" onclick="sortFunnelTable('shares1k')" style="width:80px;padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Shares/1K views</th>
-          <th class="sortable" data-fkcol="views" onclick="sortFunnelTable('views')" style="padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);position:sticky;top:0;text-align:right;">Views</th>
-        </tr></thead>
-        <tbody id="funnelTableBody"></tbody>
-      </table>
-    </div>
-    <div class="table-footer" id="funnelTableFooter"></div>
   </div>
 
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
@@ -2039,21 +2019,18 @@ function renderFeedbackTable() {
 
   document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => `
     <tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:6px 8px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.3;font-size:11px;">
-        ${r.link
-          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>`
-          : `<span style="font-weight:500;">${r.title}</span>`}
+      <td style="padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;" title="${r.title.replace(/"/g,'&quot;')}">
+        ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
-      <td style="padding:6px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:6px 8px;font-size:10px;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 6px;border-radius:10px;white-space:nowrap;">${r.categoria||'—'}</span></td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques)}</td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
-      <td style="padding:6px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
-      <td style="padding:6px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
-      <td style="padding:6px 8px;font-size:11px;color:var(--gray-700);">${cls.diag}</td>
-      <td style="padding:6px 8px;font-size:11px;color:var(--gray-600);">${cls.acao}</td>
+      <td style="padding:5px 8px;font-size:11px;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:5px 8px;font-size:10px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 5px;border-radius:8px;white-space:nowrap;" title="${r.categoria||'—'}">${(r.categoria||'—').slice(0,14)}</span></td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
+      <td style="padding:5px 8px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 8px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
+      <td style="padding:5px 8px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
+      <td style="padding:5px 8px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
@@ -2124,9 +2101,11 @@ function renderTemporal() {
   const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
   const viewsMedian = keys.map(k => median(grouped[k].map(r => r.views)));
   const counts      = keys.map(k => grouped[k].length);
-  const ctrMean     = keys.map(k => mean(grouped[k].map(r => r.ctr)));
+  const cliquesSum  = keys.map(k => grouped[k].reduce((a,r)=>a+(r.cliques||0),0));
+  const cliquesMedian = keys.map(k => median(grouped[k].map(r => r.cliques||0)));
   const retMean     = keys.map(k => mean(grouped[k].map(r => r.avgViewedPct)));
   const inscMean    = keys.map(k => mean(grouped[k].map(r => r.inscritos)));
+  const avgDurMean  = keys.map(k => mean(grouped[k].map(r => r.avgViewDurSec)));
 
   const shortKey = k => tempMode === 'month'
     ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
@@ -2180,9 +2159,70 @@ function renderTemporal() {
     });
   }
 
-  makeTempChart('chartTempCTR',   labels, ctrMean,  'CTR Médio',      '#f59e0b', 'line', v => v.toFixed(1)+'%');
-  makeTempChart('chartTempRet',   labels, retMean,  'Retenção Média', '#10b981', 'line', v => v.toFixed(1)+'%');
-  makeTempChart('chartTempInsc',  labels, inscMean, 'Inscritos/vídeo','#8b5cf6', 'line', v => fmtNum(v));
+  // Cliques totais + mediana no tooltip
+  if (chartInstances['chartTempCTR']) { chartInstances['chartTempCTR'].destroy(); delete chartInstances['chartTempCTR']; }
+  const elCTR = document.getElementById('chartTempCTR');
+  if (elCTR) {
+    chartInstances['chartTempCTR'] = new Chart(elCTR, {
+      type: 'line',
+      data: { labels, datasets: [{ label:'Cliques', data: cliquesSum, borderColor:'#f59e0b', backgroundColor:'#f59e0b22', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation:{duration:300},
+        plugins: {
+          legend: { display:false },
+          tooltip: { callbacks: { label: ctx => [` Cliques: ${fmtNum(ctx.parsed.y)}`, ` Mediana: ${fmtNum(cliquesMedian[ctx.dataIndex])}`] } }
+        },
+        scales: {
+          x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
+          y: { ticks: { font:{size:9}, color:'#6b7280', callback: v => fmtNum(v) }, grid:{ color:'#f3f4f6' } }
+        }
+      }
+    });
+  }
+
+  // Retenção média — tooltip com 1 decimal + %
+  if (chartInstances['chartTempRet']) { chartInstances['chartTempRet'].destroy(); delete chartInstances['chartTempRet']; }
+  const elRet = document.getElementById('chartTempRet');
+  if (elRet) {
+    chartInstances['chartTempRet'] = new Chart(elRet, {
+      type: 'line',
+      data: { labels, datasets: [{ label:'Retenção Média', data: retMean, borderColor:'#10b981', backgroundColor:'#10b98122', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation:{duration:300},
+        plugins: {
+          legend: { display:false },
+          tooltip: { callbacks: { label: ctx => ` Retenção Média: ${ctx.parsed.y.toFixed(1)}%` } }
+        },
+        scales: {
+          x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
+          y: { ticks: { font:{size:9}, color:'#6b7280', callback: v => v.toFixed(1)+'%' }, grid:{ color:'#f3f4f6' } }
+        }
+      }
+    });
+  }
+
+  makeTempChart('chartTempInsc', labels, inscMean, 'Inscritos/vídeo', '#8b5cf6', 'line', v => fmtNum(v));
+
+  // Avg View Duration média
+  if (chartInstances['chartTempDur']) { chartInstances['chartTempDur'].destroy(); delete chartInstances['chartTempDur']; }
+  const elDur = document.getElementById('chartTempDur');
+  if (elDur) {
+    chartInstances['chartTempDur'] = new Chart(elDur, {
+      type: 'line',
+      data: { labels, datasets: [{ label:'Avg View Duration', data: avgDurMean, borderColor:'#06b6d4', backgroundColor:'#06b6d422', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation:{duration:300},
+        plugins: {
+          legend: { display:false },
+          tooltip: { callbacks: { label: ctx => ` Avg View Duration: ${formatDuration(ctx.parsed.y)}` } }
+        },
+        scales: {
+          x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
+          y: { ticks: { font:{size:9}, color:'#6b7280', callback: v => formatDuration(v) }, grid:{ color:'#f3f4f6' } }
+        }
+      }
+    });
+  }
 }
 
 function renderCategoryMix(keys, grouped, labels) {
@@ -2398,24 +2438,24 @@ function renderHeatmap() {
     });
   });
 
-  const thStyle = `padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);white-space:nowrap;text-align:center;border-right:1px solid var(--gray-100);`;
-  const firstThStyle = `padding:7px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:1px solid var(--gray-200);text-align:left;position:sticky;left:0;z-index:2;`;
+  const thStyle = `padding:7px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);white-space:nowrap;text-align:center;border-right:1px solid var(--gray-100);min-width:80px;`;
+  const firstThStyle = `padding:7px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);text-align:left;position:sticky;left:0;z-index:2;min-width:80px;`;
 
   let html = `<table style="border-collapse:collapse;font-size:11px;min-width:100%;">
     <thead><tr>
       <th style="${firstThStyle}">Criador</th>
-      ${cats.map(c=>`<th style="${thStyle}" title="${c}">${c.length>12?c.slice(0,12)+'…':c}</th>`).join('')}
+      ${cats.map(c=>`<th style="${thStyle}" title="${c}"><div style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;">${c}</div></th>`).join('')}
     </tr></thead><tbody>`;
 
   creators.forEach(cr => {
     html += `<tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:6px 8px;font-weight:700;font-size:11px;white-space:nowrap;background:var(--gray-50);position:sticky;left:0;z-index:1;border-right:1px solid var(--gray-200);">${cr}</td>`;
+      <td style="padding:7px 10px;font-weight:700;font-size:12px;white-space:nowrap;background:var(--gray-50);position:sticky;left:0;z-index:1;border-right:1px solid var(--gray-200);min-width:80px;">${cr}</td>`;
     cats.forEach(cat => {
       const { v, n } = cellData[`${cr}|${cat}`];
       const col = heatColor(v, allCells);
-      html += `<td style="padding:5px 8px;text-align:center;background:${col.bg};border:1px solid ${col.border};border-radius:3px;min-width:70px;" title="${cr} × ${cat}: ${fmtVal(v)} (${n} vídeos)">
+    html += `<td style="padding:5px 4px;text-align:center;background:${col.bg};border:1px solid ${col.border};border-radius:3px;min-width:80px;" title="${cr} × ${cat}: ${fmtVal(v)} (${n} vídeos)">
         <div style="font-weight:700;color:${col.txt};font-size:11px;">${fmtVal(v)}</div>
-        ${n>0?`<div style="font-size:9px;color:${col.txt}99;">${n}v</div>`:''}
+        ${n>0?`<div style="font-size:9px;color:${col.txt}bb;">${n}v</div>`:''}
       </td>`;
     });
     html += '</tr>';
