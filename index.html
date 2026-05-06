@@ -955,6 +955,7 @@ function parseCSVText(text) {
     'categoria': 'categoria', 'conversao inscritos': 'conversao', 'convers\u00e3o inscritos': 'conversao',
     'conversao comments': 'conversaoComments', 'convers\u00e3o comments': 'conversaoComments',
     'conversao': 'conversao', 'convers\u00e3o': 'conversao', 'content': 'id',
+    'tipo': 'tipo',
   };
   const rawHeader = lines[0].split(',').map(h => h.replace(/["\']/g,'').trim().toLowerCase());
   const mapped = rawHeader.map(h => colMap[h] || h);
@@ -992,6 +993,7 @@ function parseCSVText(text) {
       ctrYT: parseFloat(obj.ctrYT)||0,
       avgViewDurSec: parseInt(obj.avgViewDuration)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
+      tipo: obj.tipo||'',
     });
   }
   return rows;
