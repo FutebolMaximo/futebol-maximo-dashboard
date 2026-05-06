@@ -1355,6 +1355,7 @@ function applyFilters() {
   };
   // Long Form only → used by Dashboard and Análise Avançada
   filteredData   = allData.filter(r => (r.tipo||'').toLowerCase().includes('long') && baseFilter(r));
+  filteredLong   = filteredData; // alias — all Dashboard/Análise Avançada code uses filteredLong
   // Shorts only → used by Shorts tab
   filteredShorts = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && baseFilter(r));
   // All types → used by Base de Dados tab
