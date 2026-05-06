@@ -435,7 +435,13 @@
       </div>
     </div>
     <div class="filter-group">
-      <label>Título do Vídeo</label>
+      <label>Semana</label>
+      <div class="title-search-wrap" id="weekWrap">
+        <input type="text" id="filterWeekInput" placeholder="Todas as semanas..." readonly
+          onclick="toggleWeekDropdown()" style="cursor:pointer;background:white;">
+        <div class="title-dropdown" id="weekDropdown"></div>
+      </div>
+    </div>
       <div class="title-search-wrap">
         <input type="text" id="filterTitleSearch" placeholder="Buscar título..." autocomplete="off"
           oninput="onTitleSearchInput()" onfocus="onTitleFocus()" onblur="onTitleBlur()">
@@ -552,8 +558,8 @@
     </div>
   </div>
 
-  <!-- FUNIL DE PERFORMANCE -->
-  <div class="section-header"><div class="section-divider"></div><h2>Funil de Performance</h2></div>
+  <!-- FUNIL DE ENGAJAMENTO -->
+  <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -603,7 +609,7 @@
             <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Comentários <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('cliques')" data-col="cliques" class="num">Cliques <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
           </tr>
           <tr class="filter-row">
@@ -622,7 +628,7 @@
             <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
             <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
-            <td><input class="col-filter" data-col="cliques" data-type="num" placeholder=">1000"></td>
+            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
             <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
           </tr>
         </thead>
@@ -640,7 +646,7 @@
   <!-- SCATTER: CTR x RETENÇÃO -->
   <div class="section-header">
     <div class="section-divider"></div>
-    <h2>Matriz Avg View Duration × Cliques</h2>
+    <h2>Matriz Avg View Duration × CTR%</h2>
   </div>
   <p class="section-desc">O problema foi o pacote ou o conteúdo? Alto CTR = thumbnail/título funcionou. Alta duração = conteúdo entregou.</p>
   <div class="chart-card" style="margin-bottom:24px;">
@@ -668,7 +674,7 @@
     <div class="section-divider"></div>
     <h2>Feedback Automático por Vídeo</h2>
   </div>
-  <p class="section-desc">Classificação de cada vídeo com limiares fixos: ≥50K views, ≥30K cliques e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
+  <p class="section-desc">Classificação de cada vídeo com limiares fixos: ≥50K views, CTR% ≥5% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -704,7 +710,7 @@
             <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('creator')">Criador</th>
             <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categ.</th>
             <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impr.</th>
-            <th class="sortable" data-ftcol="cliques" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('cliques')">Cliques</th>
+            <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
             <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
             <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
             <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
@@ -853,7 +859,7 @@ function parseCSVText(text) {
     'impress\u00f5es': 'impressoes', 'ctr %': 'ctr', 'avg view duration': 'avgViewDuration',
     'ano': 'ano', 'data publicacao': 'dataPublicacao', 'data publica\u00e7\u00e3o': 'dataPublicacao',
     'mes_ano': 'mesAno', 'mês_ano': 'mesAno', 'link': 'link', 'creator': 'creator',
-    'cliques': 'cliques',
+    'ctr%': 'ctr', 'ctr% yt': 'ctrYT', 'ctr% YT': 'ctrYT',
     'categoria': 'categoria', 'conversao inscritos': 'conversao', 'convers\u00e3o inscritos': 'conversao',
     'conversao comments': 'conversaoComments', 'convers\u00e3o comments': 'conversaoComments',
     'conversao': 'conversao', 'convers\u00e3o': 'conversao', 'content': 'id',
@@ -890,8 +896,9 @@ function parseCSVText(text) {
       mesAno: obj.mesAno||'', creator: obj.creator||'', categoria: obj.categoria||'',
       conversao: parseFloat(obj.conversao)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
-      cliques: parseInt(obj.cliques)||0,
-      avgViewDurSec: parseDuration(obj.avgViewDuration),
+      ctr: parseFloat(obj.ctr)||0,
+      ctrYT: parseFloat(obj.ctrYT)||0,
+      avgViewDurSec: parseInt(obj.avgViewDuration)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
     });
   }
@@ -1243,6 +1250,7 @@ function applyFilters() {
     if (dateStart && r.dataPublicacao < dateStart) return false;
     if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
     if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
+    if (selectedWeeks.size > 0 && !selectedWeeks.has(getWeekKey(r.dataPublicacao))) return false;
     return true;
   });
 
@@ -1259,8 +1267,9 @@ function clearFilters() {
   selectedTitles.clear();
   updateCatInput();
   updateTitleInput();
-  document.getElementById('titleDropdown').classList.remove('open');
-  document.getElementById('catDropdown').classList.remove('open');
+  selectedWeeks.clear();
+  updateWeekInput();
+  document.getElementById('weekDropdown').classList.remove('open');
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
     document.getElementById('filterDateStart').value = dates[0];
@@ -1858,7 +1867,7 @@ function renderTable() {
       <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
       <td class="num">${r.comentarios.toLocaleString('pt-BR')}</td>
       <td class="num">${((r.conversaoComments||0)*100).toFixed(2)}%</td>
-      <td class="num">${(r.cliques||0).toLocaleString('pt-BR')}</td>
+      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
       <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
     </tr>`;
   }).join('');
@@ -1886,7 +1895,7 @@ function renderScatter() {
   if (!d.length) return;
 
   const medDur    = median(d.map(r => r.avgViewDurSec));
-  const medCliques = median(d.map(r => r.cliques));
+  const medCTR    = median(d.map(r => r.ctr));
   const maxViews = Math.max(...d.map(r => r.views), 1);
   const minR = 4, maxR = 28;
 
@@ -1901,7 +1910,7 @@ function renderScatter() {
     label: cat,
     data: rows.map(r => ({
       x: r.avgViewDurSec,
-      y: r.cliques,
+      y: r.ctr,
       r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
       _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _impressoes: r.impressoes, _cat: cat,
     })),
@@ -1925,7 +1934,7 @@ function renderScatter() {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
       const xMed = scales.x.getPixelForValue(medDur);
-      const yMed = scales.y.getPixelForValue(medCliques);
+      const yMed = scales.y.getPixelForValue(medCTR);
       c.save();
       [
         { x1:xMed, y1:top,   x2:right, y2:yMed,   color:'rgba(220,252,231,0.30)' },
@@ -1956,7 +1965,7 @@ function renderScatter() {
             const p = ctx.raw;
             return [
               ` ${p._title}`,
-              ` Avg View Dur: ${formatDuration(p.x)} · Cliques: ${fmtNum(p.y)}`,
+              ` Avg View Dur: ${formatDuration(p.x)} · CTR%: ${(p.y*100).toFixed(2)}%`,
               ` Views: ${fmtNum(p._views)} · CTR: ${p._ctr.toFixed(2)}% · Impressões: ${fmtNum(p._impressoes)}`,
               ` ${p._cat}`,
               p._link ? ' 🔗 Clique para abrir' : '',
@@ -1972,8 +1981,8 @@ function renderScatter() {
           grid: { color:'#f3f4f6' },
         },
         y: {
-          title: { display:true, text:'Cliques', font:{size:11}, color:'#6b7280' },
-          ticks: { callback: v => fmtNum(v), font:{size:10}, color:'#6b7280' },
+          title: { display:true, text:'CTR%', font:{size:11}, color:'#6b7280' },
+          ticks: { callback: v => (v*100).toFixed(1)+'%', font:{size:10}, color:'#6b7280' },
           grid: { color:'#f3f4f6' },
         }
       }
@@ -1984,16 +1993,15 @@ function renderScatter() {
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
 // Fixed classification thresholds (absolute, not dynamic)
-const THRESHOLDS = { views: 50000, cliques: 30000, avgViewDurSec: 360 }; // 360s = 6min
+// ctr field = ratio (0.077 = 7.7%); 30K cliques replaced by ctr >= 0.05 (5% CTR)
+const THRESHOLDS = { views: 50000, ctr: 0.05, avgViewDurSec: 360 }; // 360s = 6min
 
 function classifyVideo(r) {
-  const highViews  = r.views           >= THRESHOLDS.views;
-  const highCliq   = (r.cliques||0)    >= THRESHOLDS.cliques;
-  const longDur    = r.avgViewDurSec   >= THRESHOLDS.avgViewDurSec;
+  const highViews = r.views >= THRESHOLDS.views;
+  const highCTR   = r.ctr   >= THRESHOLDS.ctr;
+  const longDur   = r.avgViewDurSec >= THRESHOLDS.avgViewDurSec;
 
-  // Alto CTR proxy = alto views + alto cliques (ambos acima do limiar)
-  const altoCTR = highViews && highCliq;
-  const baixoCTR = !highViews && !highCliq;
+  const altoCTR = highViews && highCTR;
 
   if (altoCTR  && longDur)  return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração',  acao:'Fazer sequência / repetir formato' };
   if (altoCTR  && !longDur) return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração',  acao:'Melhorar abertura e primeiros 30s' };
@@ -2053,7 +2061,7 @@ function renderFeedbackTable() {
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.cliques||0)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${(r.ctr*100).toFixed(2)}%</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
@@ -2062,7 +2070,7 @@ function renderFeedbackTable() {
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Limiares fixos: ≥50K views · ≥30K cliques · ≥6min avg view duration`;
+    `${rows.length} vídeos · Limiares fixos: ≥50K views · CTR% ≥5% · ≥6min avg view duration`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
@@ -2168,6 +2176,12 @@ function renderTemporal() {
           legend: { display: true, position: 'top', labels: { font:{size:10}, boxWidth:12 } },
           tooltip: {
             callbacks: {
+              title: ctx => {
+                if (tempMode === 'week' && keys[ctx[0].dataIndex]) {
+                  return `${labels[ctx[0].dataIndex]} · ${getWeekRange(keys[ctx[0].dataIndex])}`;
+                }
+                return labels[ctx[0].dataIndex] || '';
+              },
               label: ctx => {
                 if (ctx.datasetIndex === 0) {
                   const med = viewsMedian[ctx.dataIndex];
@@ -2312,7 +2326,7 @@ function showComparison(days) {
     <span style="color:var(--gray-400);margin-left:8px;">(${periodA.length} vs ${periodB.length} vídeos)</span>`;
 }
 
-// ── FUNIL DE PERFORMANCE ─────────────────────────────────────────────────────
+// ── FUNIL DE ENGAJAMENTO ─────────────────────────────────────────────────────
 
 function funnelKPIs(rows) {
   if (!rows.length) return null;
@@ -2345,6 +2359,15 @@ function renderFunnel() {
     });
   }
 
+  // Pre-compute max % per stage index across all groups (for bolding)
+  const allGroupsData = Object.entries(groups).map(([name, rows]) => funnelKPIs(rows)).filter(Boolean);
+  const maxConvPerStage = [1,2,3,4,5].map(i => {
+    const convs = allGroupsData.map(k => {
+      const vals = [k.totalImpr, k.totalViews, k.totalLikes, k.totalInsc, k.totalShares, k.totalComm];
+      return vals[1] > 0 ? vals[i] / vals[1] * 100 : 0;
+    });
+    return Math.max(...convs);
+  });
   const stages = ['Impressões','Views','Likes','Inscritos','Shares','Comentários'];
   const stageColors = ['#2563eb','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777'];
 
@@ -2360,10 +2383,16 @@ function renderFunnel() {
     vals.forEach((v, i) => {
       const pct = Math.max((v/maxV)*100, 1);
       const fmt = fmtNum(v);
-      // % shown: stage 1 (Views) = vs Impressões; stages 2-5 = vs Views
+      // % shown: stage 1 (Views) = vs Impressões; stages 2-5 = vs Views, with bold for max per stage
       let conv = '';
-      if (i === 1 && vals[0] > 0) conv = (vals[1]/vals[0]*100).toFixed(1)+'%'; // Views/Impressões
-      if (i >= 2 && vals[1] > 0)  conv = (v/vals[1]*100).toFixed(2)+'%';       // X/Views
+      if (i === 1 && vals[0] > 0) conv = (vals[1]/vals[0]*100).toFixed(1)+'%';
+      if (i >= 2 && vals[1] > 0) {
+        const pctVal = (v/vals[1]*100);
+        const isBold = groupBy !== 'all' && maxConvPerStage[i-1] > 0 && Math.abs(pctVal - maxConvPerStage[i-1]) < 0.0001;
+        conv = isBold
+          ? `<strong style="color:#1e40af;font-size:11px;">${pctVal.toFixed(2)}%</strong>`
+          : `<span>${pctVal.toFixed(2)}%</span>`;
+      }
       // Use dark text when bar is too narrow to read white text
       const textColor = pct > 12 ? 'white' : stageColors[i];
       const labelPos = pct > 12
@@ -2377,7 +2406,7 @@ function renderFunnel() {
           </div>
           ${pct <= 12 ? `<span style="position:absolute;left:${pct}% + 4px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:${stageColors[i]};white-space:nowrap;padding-left:${pct+1}%;">${fmt}</span>` : ''}
         </div>
-        ${conv ? `<div style="width:52px;font-size:10px;color:var(--gray-400);flex-shrink:0;">${conv}</div>` : '<div style="width:52px;"></div>'}
+        ${conv ? `<div style="width:60px;font-size:10px;color:var(--gray-500);flex-shrink:0;">${conv}</div>` : '<div style="width:60px;"></div>'}
       </div>`;
     });
     html += '</div></div>';
@@ -2577,6 +2606,107 @@ function renderDurationAnalysis() {
 
   html += `</tbody></table>`;
   container.innerHTML = html;
+}
+
+// ── WEEK FILTER ───────────────────────────────────────────────────────────────
+
+let selectedWeeks = new Set();
+
+function getWeekKey(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
+}
+
+function getWeekRange(weekKey) {
+  // weekKey = "2026-W05"
+  const [year, wStr] = weekKey.split('-W');
+  const w = parseInt(wStr);
+  const jan1 = new Date(parseInt(year), 0, 1);
+  // Find first Monday
+  const dayOfWeek = jan1.getDay(); // 0=Sun
+  const daysToMon = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+  const firstMon = new Date(jan1);
+  firstMon.setDate(jan1.getDate() + (dayOfWeek === 1 ? 0 : daysToMon));
+  const mon = new Date(firstMon);
+  mon.setDate(firstMon.getDate() + (w - 1) * 7);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  return `${fmt(mon)} – ${fmt(sun)}`;
+}
+
+function buildWeekOptions() {
+  // Build sorted list of unique weeks from allData (filtered by current date filters)
+  const dateStart = document.getElementById('filterDateStart').value;
+  const dateEnd   = document.getElementById('filterDateEnd').value;
+  const weekSet = new Map(); // weekKey → {label, count, dates}
+  allData.forEach(r => {
+    if (dateStart && r.dataPublicacao < dateStart) return;
+    if (dateEnd   && r.dataPublicacao > dateEnd)   return;
+    const key = getWeekKey(r.dataPublicacao);
+    if (!key) return;
+    if (!weekSet.has(key)) weekSet.set(key, { count:0, range: getWeekRange(key) });
+    weekSet.get(key).count++;
+  });
+  return [...weekSet.entries()].sort((a,b) => a[0].localeCompare(b[0])).map(([k,v]) => ({ key:k, ...v }));
+}
+
+function populateWeekDropdown() {
+  const dd = document.getElementById('weekDropdown');
+  const weeks = buildWeekOptions();
+  const allSel = weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key));
+  dd.innerHTML = `
+    <div class="title-option week-select-all" onclick="toggleAllWeeks(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+      <input type="checkbox" ${allSel ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">Todas as semanas (${weeks.length})
+    </div>
+    ${weeks.map(w => {
+      const checked = selectedWeeks.has(w.key) ? 'checked' : '';
+      return `<div class="title-option" onclick="toggleWeekCheck('${w.key}', this)">
+        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
+        <span style="font-size:10px;color:var(--gray-500);margin-right:4px;">${w.range}</span>
+        <span style="font-size:10px;color:var(--gray-400);">(${w.count}v)</span>
+      </div>`;
+    }).join('')}`;
+}
+
+function toggleWeekDropdown() {
+  const dd = document.getElementById('weekDropdown');
+  if (dd.classList.contains('open')) { dd.classList.remove('open'); return; }
+  populateWeekDropdown();
+  dd.classList.add('open');
+}
+
+function toggleAllWeeks(el) {
+  const weeks = buildWeekOptions();
+  const allSel = weeks.every(w => selectedWeeks.has(w.key));
+  if (allSel) weeks.forEach(w => selectedWeeks.delete(w.key));
+  else        weeks.forEach(w => selectedWeeks.add(w.key));
+  updateWeekInput();
+  populateWeekDropdown();
+}
+
+function toggleWeekCheck(key, el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  if (selectedWeeks.has(key)) { selectedWeeks.delete(key); if(cb) cb.checked=false; }
+  else { selectedWeeks.add(key); if(cb) cb.checked=true; }
+  updateWeekInput();
+  const allEl = document.querySelector('.week-select-all input');
+  if (allEl) {
+    const weeks = buildWeekOptions();
+    allEl.checked = weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key));
+  }
+}
+
+function updateWeekInput() {
+  const inp = document.getElementById('filterWeekInput');
+  if (!inp) return;
+  if (selectedWeeks.size === 0) {
+    inp.value = ''; inp.placeholder = 'Todas as semanas...';
+  } else {
+    inp.value = `${selectedWeeks.size} semana(s) selecionada(s)`; inp.placeholder = '';
+  }
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
