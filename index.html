@@ -1497,6 +1497,9 @@ function setKPI(id, val, medId, medVal) {
 
 function updateKPIs() {
   const d = filteredLong;
+  // Debug: show counts in badge
+  const badge = document.getElementById('dataBadge');
+  if (badge) badge.textContent = `${allData.length} total · ${(filteredLong||[]).length} LF · ${(filteredShorts||[]).length} Sh`;
   const ids = ['kImpr','kViews','kDurMedia','kAvgPct','kAvgDur','kInsc','kConv','kLikes','kComm','kShares'];
   const mids = ['kImprMed','kViewsMed','kDurMed','kAvgPctMed','kAvgDurMed','kInscMed','kConvMed','kLikesMed','kCommMed','kSharesMed'];
   if (!d.length) {
