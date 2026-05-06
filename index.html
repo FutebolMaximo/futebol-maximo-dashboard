@@ -407,6 +407,8 @@
 <div class="tab-nav" id="tabNav">
   <button class="tab-btn active" id="tabBtnDash" onclick="switchTab('dashboard')">📊 Dashboard</button>
   <button class="tab-btn" id="tabBtnAdv" onclick="switchTab('avancada')">🔬 Análise Avançada</button>
+  <button class="tab-btn" id="tabBtnBase" onclick="switchTab('basedados')">📋 Base de Dados</button>
+  <button class="tab-btn" id="tabBtnShorts" onclick="switchTab('shorts')">⚡ Shorts</button>
 </div>
 
 <!-- STICKY FILTERS (shared across tabs) -->
@@ -578,7 +580,11 @@
 
 
 
-  <!-- BASE DE DADOS COMPLETA -->
+</div>
+
+<!-- BASE DE DADOS (Tab) -->
+<div class="main" id="panelBaseDados" style="display:none;">
+<!-- BASE DE DADOS COMPLETA -->
   <div class="section-header">
     <div class="section-divider"></div>
     <h2>Base de Dados Completa</h2>
@@ -795,6 +801,89 @@
       <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsAvg"></canvas></div>
     </div>
   </div>
+</div>
+
+<!-- SHORTS (Tab) -->
+<div class="main" id="panelShorts" style="display:none;">
+
+  <!-- SHORTS KPIs -->
+  <div class="section-header"><div class="section-divider"></div><h2>⚡ Shorts · Visão Geral</h2></div>
+  <div class="kpi-grid" id="kpiGridShorts">
+    <div class="kpi-card"><div class="kpi-label">Impressões</div><div class="kpi-value" id="skImpr">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skImprMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Views</div><div class="kpi-value" id="skViews">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skViewsMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Minutagem Média</div><div class="kpi-value" id="skDurMedia">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skDurMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg Viewed %</div><div class="kpi-value" id="skAvgPct">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skAvgPctMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg View Duration</div><div class="kpi-value" id="skAvgDur">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skAvgDurMed">—</div></div>
+    <div class="kpi-card accent"><div class="kpi-label">Inscritos</div><div class="kpi-value" id="skInsc">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skInscMed">—</div></div>
+    <div class="kpi-card accent"><div class="kpi-label">CTR%</div><div class="kpi-value" id="skCTR">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skCTRMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Likes</div><div class="kpi-value" id="skLikes">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skLikesMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Comentários</div><div class="kpi-value" id="skComm">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skCommMed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Shares</div><div class="kpi-value" id="skShares">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skSharesMed">—</div></div>
+  </div>
+
+  <!-- SHORTS EVOLUÇÃO TEMPORAL -->
+  <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal · Shorts</h2></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+    <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartSTempViews"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🖱️ Cliques Totais</div><div style="height:220px;"><canvas id="chartSTempCTR"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartSTempRet"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartSTempInsc"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">⏱️ Avg View Duration Média</div><div style="height:220px;"><canvas id="chartSTempDur"></canvas></div></div>
+  </div>
+
+  <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
+  <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance · Shorts</h2></div>
+  <div id="charts-controls-shorts" class="charts-controls" style="margin-bottom:16px;">
+    <span style="font-size:12px;color:var(--gray-500);">N Vídeos:</span>
+    <input id="topNInputShorts" type="number" value="20" min="1" max="200" style="width:60px;padding:4px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+    <div class="topn-toggle">
+      <button id="btnTopShorts" class="toggle-btn active" onclick="setChartModeShorts('top')">🏆 Melhores</button>
+      <button id="btnBotShorts" class="toggle-btn" onclick="setChartModeShorts('bottom')">🔍 Piores</button>
+    </div>
+    <button class="btn-primary" style="height:32px;padding:0 12px;font-size:12px;" onclick="renderShortsCharts()">Atualizar</button>
+  </div>
+  <div style="margin-bottom:20px;"><div class="chart-card"><div class="chart-title">📊 Views por Vídeo <span class="chart-badge" id="topNBadgeShorts">Top N</span></div><div class="chart-wrap"><canvas id="chartSViews"></canvas></div></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>⏱️ <span id="sDurationChartLabel">Avg View Duration por Vídeo</span></span>
+        <div class="topn-toggle"><button id="sBtnDuration" class="toggle-btn active" onclick="setSDurationMode('duration')">Avg Duration</button><button id="sBtnRetention" class="toggle-btn" onclick="setSDurationMode('retention')">Avg Viewed %</button></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartSDuration"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>💬 <span id="sCommentsChartLabel">Comentários por Vídeo</span></span>
+        <div class="topn-toggle"><button id="sBtnComments" class="toggle-btn active" onclick="setSCommentsMode('comments')">Comentários</button><button id="sBtnConvComm" class="toggle-btn" onclick="setSCommentsMode('convComments')">Conv. Comm. %</button></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartSComments"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="justify-content:space-between;">
+        <span>🔄 <span id="sInscritosChartLabel">Conversão por Vídeo</span> <span id="sInscritosChartSub" style="font-size:11px;font-weight:400;color:var(--gray-500)">(Inscritos/Views %)</span></span>
+        <div class="topn-toggle"><button id="sBtnConversao" class="toggle-btn active" onclick="setSInscritosMode('conversao')">Conversão %</button><button id="sBtnInscritos" class="toggle-btn" onclick="setSInscritosMode('inscritos')">Inscritos</button></div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartSInscritos"></canvas></div>
+    </div>
+    <div class="chart-card"><div class="chart-title">🖱️ CTR% por Vídeo</div><div class="chart-wrap"><canvas id="chartSCTR"></canvas></div></div>
+  </div>
+
+  <!-- SHORTS FUNIL -->
+  <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento · Shorts</h2></div>
+  <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade.</p>
+  <div class="chart-card wide" style="margin-bottom:32px;">
+    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
+        <select id="funnelGroupByShorts" onchange="renderShortsAll()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="all">Geral (todos os Shorts)</option>
+          <option value="creator">Por Criador</option>
+        </select>
+      </div>
+    </div>
+    <div id="funnelContainerShorts" style="margin-top:16px;max-width:900px;"></div>
+  </div>
 
 </div>
 
@@ -848,6 +937,9 @@ function truncateTitle(str, max) {
 
 let allData = [];
 let filteredData = [];
+let filteredLong   = [];
+let filteredShorts = [];
+let filteredAll = [];
 
 function parseCSVText(text) {
   const lines = text.split(/\r?\n/);
@@ -961,11 +1053,17 @@ let activeTab = 'dashboard';
 
 function switchTab(tab) {
   activeTab = tab;
-  document.getElementById('panelDashboard').style.display = tab === 'dashboard' ? '' : 'none';
-  document.getElementById('panelAvancada').style.display  = tab === 'avancada'  ? '' : 'none';
-  document.getElementById('tabBtnDash').classList.toggle('active', tab === 'dashboard');
-  document.getElementById('tabBtnAdv').classList.toggle('active',  tab === 'avancada');
-  if (tab === 'avancada') renderAdvanced();
+  document.getElementById('panelDashboard').style.display  = tab === 'dashboard' ? '' : 'none';
+  document.getElementById('panelAvancada').style.display   = tab === 'avancada'  ? '' : 'none';
+  document.getElementById('panelBaseDados').style.display  = tab === 'basedados' ? '' : 'none';
+  document.getElementById('panelShorts').style.display     = tab === 'shorts'    ? '' : 'none';
+  document.getElementById('tabBtnDash').classList.toggle('active',   tab === 'dashboard');
+  document.getElementById('tabBtnAdv').classList.toggle('active',    tab === 'avancada');
+  document.getElementById('tabBtnBase').classList.toggle('active',   tab === 'basedados');
+  document.getElementById('tabBtnShorts').classList.toggle('active', tab === 'shorts');
+  if (tab === 'avancada')  renderAdvanced();
+  if (tab === 'basedados') renderTable();
+  if (tab === 'shorts')    renderShortsAll();
 }
 
 function renderAdvanced() {
@@ -1019,7 +1117,7 @@ function buildHistConfig(labels, values, yLabel, bgColor) {
 
 function renderCategoryPizza() {
   destroyChart('chartPizza');
-  const d = filteredData;
+  const d = filteredLong;
   const catMap = {};
   d.forEach(r => {
     const cat = r.categoria || '(Sem categoria)';
@@ -1074,7 +1172,7 @@ function renderCategoryPizza() {
 }
 
 function renderHistograms() {
-  const d = filteredData;
+  const d = filteredLong;
   const BIN_VIEWS = 10000;
   const MAX_VIEWS_BINS = 10; // 0-10K, 10-20K, ..., 90-100K, >100K
 
@@ -1244,7 +1342,7 @@ function applyFilters() {
   const dateStart = document.getElementById('filterDateStart').value;
   const dateEnd   = document.getElementById('filterDateEnd').value;
 
-  filteredData = allData.filter(r => {
+  const baseFilter = r => {
     if (creator && r.creator !== creator) return false;
     if (selectedCats.size > 0 && !selectedCats.has(r.categoria || '(Sem categoria)')) return false;
     if (dateStart && r.dataPublicacao < dateStart) return false;
@@ -1252,13 +1350,20 @@ function applyFilters() {
     if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
     if (selectedWeeks.size > 0 && !selectedWeeks.has(getWeekKey(r.dataPublicacao))) return false;
     return true;
-  });
+  };
+  // Long Form only → used by Dashboard and Análise Avançada
+  filteredData   = allData.filter(r => (r.tipo||'').toLowerCase().includes('long') && baseFilter(r));
+  // Shorts only → used by Shorts tab
+  filteredShorts = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && baseFilter(r));
+  // All types → used by Base de Dados tab
+  filteredAll    = allData.filter(baseFilter);
 
   updateKPIs();
   try { renderCharts(); } catch(e) { console.error('renderCharts error:', e.message); }
   try { renderTemporal(); } catch(e) { console.error('renderTemporal error:', e.message); }
   try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
+  try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
 }
 
 function clearFilters() {
@@ -1388,7 +1493,7 @@ function setKPI(id, val, medId, medVal) {
 }
 
 function updateKPIs() {
-  const d = filteredData;
+  const d = filteredLong;
   const ids = ['kImpr','kViews','kDurMedia','kAvgPct','kAvgDur','kInsc','kConv','kLikes','kComm','kShares'];
   const mids = ['kImprMed','kViewsMed','kDurMed','kAvgPctMed','kAvgDurMed','kInscMed','kConvMed','kLikesMed','kCommMed','kSharesMed'];
   if (!d.length) {
@@ -1638,7 +1743,7 @@ function getTopN() {
 function getChartData(metric) {
   const n = getTopN();
   const metricVal = r => typeof metric === 'function' ? metric(r) : r[metric];
-  let sorted = [...filteredData].sort((a,b) =>
+  let sorted = [...filteredLong].sort((a,b) =>
     chartMode === 'top' ? metricVal(b) - metricVal(a) : metricVal(a) - metricVal(b)
   );
   const topN = sorted.slice(0, n);
@@ -1801,7 +1906,7 @@ function getColFilters() {
 function renderTable() {
   const q = (document.getElementById('tableSearch').value || '').toLowerCase();
   const colFilters = getColFilters();
-  let rows = [...filteredData];
+  let rows = [...(filteredAll||filteredData)]; // Base de Dados shows all types
 
   if (q) {
     rows = rows.filter(r =>
@@ -1891,7 +1996,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── SCATTER: CTR × RETENÇÃO ──────────────────────────────────────────────────
 
 function renderScatter() {
-  const d = filteredData;
+  const d = filteredLong;
   if (!d.length) return;
 
   const medDur    = median(d.map(r => r.avgViewDurSec));
@@ -2023,7 +2128,7 @@ function sortFeedback(col) {
 }
 
 function renderFeedbackTable() {
-  const d = filteredData;
+  const d = filteredLong;
   if (!d.length) { document.getElementById('feedbackBody').innerHTML = ''; return; }
 
   const statusFilter = document.getElementById('feedbackStatusFilter').value;
@@ -2105,7 +2210,7 @@ function groupByPeriod(data, mode) {
   return map;
 }
 
-function makeTempChart(id, labels, data, label, color, type='line', yFmt) {
+function makeTempChart(id, labels, data, label, color, type='line', yFmt, wTitle) {
   if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
   const el = document.getElementById(id);
   if (!el) return;
@@ -2118,7 +2223,10 @@ function makeTempChart(id, labels, data, label, color, type='line', yFmt) {
     },
     options: {
       responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: wTitle ? { callbacks: { title: ctx => wTitle(ctx[0].dataIndex) } } : {}
+      },
       scales: {
         x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
         y: { ticks: { font:{size:9}, color:'#6b7280', callback: yFmt || (v => fmtNum(v)) }, grid:{ color:'#f3f4f6' } }
@@ -2143,11 +2251,17 @@ function renderTemporal() {
   const inscMean    = keys.map(k => mean(grouped[k].map(r => r.inscritos)));
   const avgDurMean  = keys.map(k => mean(grouped[k].map(r => r.avgViewDurSec)));
 
-  const shortKey = k => tempMode === 'month'
-    ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
-    : k.replace(/(\d{4})-W/, 'W') + '/' + k.slice(2,4);
+  const shortKey = k => {
+    if (tempMode === 'month') return new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});
+    const wr = getWeekRange(k);
+    return wr.label;
+  };
   const labels = keys.map(shortKey);
-
+  const weekTitle = (idx) => {
+    if (tempMode !== 'week' || !keys[idx]) return labels[idx] || '';
+    const wr = getWeekRange(keys[idx]);
+    return `${wr.label} · ${wr.range}`;
+  };
   // Views: dual-axis — soma de views (line, left) + qtd vídeos (bar, right)
   if (chartInstances['chartTempViews']) { chartInstances['chartTempViews'].destroy(); delete chartInstances['chartTempViews']; }
   const elViews = document.getElementById('chartTempViews');
@@ -2176,12 +2290,7 @@ function renderTemporal() {
           legend: { display: true, position: 'top', labels: { font:{size:10}, boxWidth:12 } },
           tooltip: {
             callbacks: {
-              title: ctx => {
-                if (tempMode === 'week' && keys[ctx[0].dataIndex]) {
-                  return `${labels[ctx[0].dataIndex]} · ${getWeekRange(keys[ctx[0].dataIndex])}`;
-                }
-                return labels[ctx[0].dataIndex] || '';
-              },
+              title: ctx => weekTitle(ctx[0].dataIndex),
               label: ctx => {
                 if (ctx.datasetIndex === 0) {
                   const med = viewsMedian[ctx.dataIndex];
@@ -2212,7 +2321,10 @@ function renderTemporal() {
         responsive: true, maintainAspectRatio: false, animation:{duration:300},
         plugins: {
           legend: { display:false },
-          tooltip: { callbacks: { label: ctx => [` Cliques: ${fmtNum(ctx.parsed.y)}`, ` Mediana: ${fmtNum(cliquesMedian[ctx.dataIndex])}`] } }
+          tooltip: { callbacks: {
+            title: ctx => weekTitle(ctx[0].dataIndex),
+            label: ctx => [` Cliques: ${fmtNum(ctx.parsed.y)}`, ` Mediana: ${fmtNum(cliquesMedian[ctx.dataIndex])}`]
+          } }
         },
         scales: {
           x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
@@ -2233,7 +2345,10 @@ function renderTemporal() {
         responsive: true, maintainAspectRatio: false, animation:{duration:300},
         plugins: {
           legend: { display:false },
-          tooltip: { callbacks: { label: ctx => ` Retenção Média: ${ctx.parsed.y.toFixed(1)}%` } }
+          tooltip: { callbacks: {
+            title: ctx => weekTitle(ctx[0].dataIndex),
+            label: ctx => ` Retenção Média: ${ctx.parsed.y.toFixed(1)}%`
+          } }
         },
         scales: {
           x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
@@ -2243,7 +2358,21 @@ function renderTemporal() {
     });
   }
 
-  makeTempChart('chartTempInsc', labels, inscMean, 'Inscritos/vídeo', '#8b5cf6', 'line', v => fmtNum(v));
+  // Inscritos with week date range in tooltip
+  if (chartInstances['chartTempInsc']) { chartInstances['chartTempInsc'].destroy(); delete chartInstances['chartTempInsc']; }
+  const elInsc = document.getElementById('chartTempInsc');
+  if (elInsc) {
+    chartInstances['chartTempInsc'] = new Chart(elInsc, {
+      type: 'line',
+      data: { labels, datasets: [{ label:'Inscritos/vídeo', data: inscMean, borderColor:'#8b5cf6', backgroundColor:'#8b5cf622', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
+      options: { responsive:true, maintainAspectRatio:false, animation:{duration:300},
+        plugins: { legend:{display:false}, tooltip:{ callbacks:{
+          title: ctx => weekTitle(ctx[0].dataIndex),
+          label: ctx => ` Inscritos/vídeo: ${fmtNum(ctx.parsed.y)}`
+        }}}},
+        scales: { x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}}, y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>fmtNum(v)},grid:{color:'#f3f4f6'}} }
+    });
+  }
 
   // Avg View Duration média
   if (chartInstances['chartTempDur']) { chartInstances['chartTempDur'].destroy(); delete chartInstances['chartTempDur']; }
@@ -2256,7 +2385,10 @@ function renderTemporal() {
         responsive: true, maintainAspectRatio: false, animation:{duration:300},
         plugins: {
           legend: { display:false },
-          tooltip: { callbacks: { label: ctx => ` Avg View Duration: ${formatDuration(ctx.parsed.y)}` } }
+          tooltip: { callbacks: {
+            title: ctx => weekTitle(ctx[0].dataIndex),
+            label: ctx => ` Avg View Duration: ${formatDuration(ctx.parsed.y)}`
+          } }
         },
         scales: {
           x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
@@ -2270,7 +2402,7 @@ function renderTemporal() {
 function renderCategoryMix(keys, grouped, labels) {
   const container = document.getElementById('chartTempMixContainer');
   if (!container) return;
-  const cats = [...new Set(filteredData.map(r => r.categoria||'(Sem categoria)'))].sort();
+  const cats = [...new Set(filteredLong.map(r => r.categoria||'(Sem categoria)'))].sort();
 
   let html = `<table style="width:100%;font-size:10px;border-collapse:collapse;">
     <thead><tr><th style="padding:4px 6px;text-align:left;color:var(--gray-500);font-weight:700;position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);">Período</th>
@@ -2344,7 +2476,7 @@ function funnelKPIs(rows) {
 
 function renderFunnel() {
   const groupBy = document.getElementById('funnelGroupBy').value;
-  const d = filteredData;
+  const d = filteredLong;
   const container = document.getElementById('funnelContainer');
   if (!container || !d.length) return;
 
@@ -2359,12 +2491,15 @@ function renderFunnel() {
     });
   }
 
-  // Pre-compute max % per stage index across all groups (for bolding)
+  // Pre-compute max % per stage across all groups for bolding
+  // index 0 = Views/Impressões, index 1-4 = metric/Views
   const allGroupsData = Object.entries(groups).map(([name, rows]) => funnelKPIs(rows)).filter(Boolean);
-  const maxConvPerStage = [1,2,3,4,5].map(i => {
+  const maxConvPerStage = [0,1,2,3,4,5].map(i => {
     const convs = allGroupsData.map(k => {
       const vals = [k.totalImpr, k.totalViews, k.totalLikes, k.totalInsc, k.totalShares, k.totalComm];
-      return vals[1] > 0 ? vals[i] / vals[1] * 100 : 0;
+      if (i === 0) return 0; // Impressões has no % to compare
+      if (i === 1) return vals[0] > 0 ? vals[1]/vals[0]*100 : 0; // Views/Impressões
+      return vals[1] > 0 ? vals[i]/vals[1]*100 : 0; // X/Views
     });
     return Math.max(...convs);
   });
@@ -2385,10 +2520,19 @@ function renderFunnel() {
       const fmt = fmtNum(v);
       // % shown: stage 1 (Views) = vs Impressões; stages 2-5 = vs Views, with bold for max per stage
       let conv = '';
-      if (i === 1 && vals[0] > 0) conv = (vals[1]/vals[0]*100).toFixed(1)+'%';
+      if (i === 1 && vals[0] > 0) {
+        const pctVal = (vals[1]/vals[0]*100);
+        // Pre-compute max Views% across groups for bolding
+        const allViewsPcts = allGroupsData.map(k2 => k2.totalImpr > 0 ? k2.totalViews/k2.totalImpr*100 : 0);
+        const maxViewsPct = Math.max(...allViewsPcts);
+        const isBold = groupBy !== 'all' && maxViewsPct > 0 && Math.abs(pctVal - maxViewsPct) < 0.001;
+        conv = isBold
+          ? `<strong style="color:#1e40af;font-size:11px;">${pctVal.toFixed(1)}%</strong>`
+          : `<span>${pctVal.toFixed(1)}%</span>`;
+      }
       if (i >= 2 && vals[1] > 0) {
         const pctVal = (v/vals[1]*100);
-        const isBold = groupBy !== 'all' && maxConvPerStage[i-1] > 0 && Math.abs(pctVal - maxConvPerStage[i-1]) < 0.0001;
+        const isBold = groupBy !== 'all' && maxConvPerStage[i] > 0 && Math.abs(pctVal - maxConvPerStage[i]) < 0.0001;
         conv = isBold
           ? `<strong style="color:#1e40af;font-size:11px;">${pctVal.toFixed(2)}%</strong>`
           : `<span>${pctVal.toFixed(2)}%</span>`;
@@ -2421,7 +2565,7 @@ function renderFunnelTable() {
   if (!bodyEl) return; // table was removed
   const searchEl = document.getElementById('funnelSearch');
   const q = (searchEl ? searchEl.value : '').toLowerCase();
-  let rows = [...filteredData];
+  let rows = [...filteredLong];
   if (q) rows = rows.filter(r => r.title.toLowerCase().includes(q) || (r.creator||'').toLowerCase().includes(q));
 
   rows.sort((a,b) => b.views - a.views);
@@ -2461,7 +2605,7 @@ function heatColor(v, allVals) {
 
 function renderHeatmap() {
   const metric = document.getElementById('heatmapMetric').value;
-  const d = filteredData;
+  const d = filteredLong;
   const container = document.getElementById('heatmapContainer');
   if (!container || !d.length) return;
 
@@ -2542,7 +2686,7 @@ function renderDurationAnalysis() {
   const container = document.getElementById('durationTableContainer');
   if (!container) return;
 
-  let d = filteredData;
+  let d = filteredLong;
   if (crFilter)  d = d.filter(r=>r.creator===crFilter);
   if (catFilter) d = d.filter(r=>r.categoria===catFilter);
 
@@ -2620,21 +2764,26 @@ function getWeekKey(dateStr) {
   return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
 }
 
+function weekLabel(weekKey) {
+  const [year, wStr] = weekKey.split('-W');
+  return `W${wStr}/${String(year).slice(2)}`;
+}
+
 function getWeekRange(weekKey) {
-  // weekKey = "2026-W05"
   const [year, wStr] = weekKey.split('-W');
   const w = parseInt(wStr);
-  const jan1 = new Date(parseInt(year), 0, 1);
-  // Find first Monday
-  const dayOfWeek = jan1.getDay(); // 0=Sun
-  const daysToMon = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+  const y = parseInt(year);
+  const jan1 = new Date(y, 0, 1);
+  const dayOfWeek = jan1.getDay();
+  const daysToMon = dayOfWeek === 0 ? 1 : (dayOfWeek === 1 ? 0 : 8 - dayOfWeek);
   const firstMon = new Date(jan1);
-  firstMon.setDate(jan1.getDate() + (dayOfWeek === 1 ? 0 : daysToMon));
+  firstMon.setDate(jan1.getDate() + daysToMon);
   const mon = new Date(firstMon);
   mon.setDate(firstMon.getDate() + (w - 1) * 7);
   const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
   const fmt = d => d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
-  return `${fmt(mon)} – ${fmt(sun)}`;
+  const yy = String(y).slice(2);
+  return { label: `S${w}/${yy}`, range: `${fmt(mon)} – ${fmt(sun)}` };
 }
 
 function buildWeekOptions() {
@@ -2647,7 +2796,10 @@ function buildWeekOptions() {
     if (dateEnd   && r.dataPublicacao > dateEnd)   return;
     const key = getWeekKey(r.dataPublicacao);
     if (!key) return;
-    if (!weekSet.has(key)) weekSet.set(key, { count:0, range: getWeekRange(key) });
+    if (!weekSet.has(key)) {
+      const wr = getWeekRange(key);
+      weekSet.set(key, { count:0, label: wr.label, range: wr.range });
+    }
     weekSet.get(key).count++;
   });
   return [...weekSet.entries()].sort((a,b) => a[0].localeCompare(b[0])).map(([k,v]) => ({ key:k, ...v }));
@@ -2665,6 +2817,7 @@ function populateWeekDropdown() {
       const checked = selectedWeeks.has(w.key) ? 'checked' : '';
       return `<div class="title-option" onclick="toggleWeekCheck('${w.key}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
+        <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${w.label}</span>
         <span style="font-size:10px;color:var(--gray-500);margin-right:4px;">${w.range}</span>
         <span style="font-size:10px;color:var(--gray-400);">(${w.count}v)</span>
       </div>`;
@@ -2707,6 +2860,252 @@ function updateWeekInput() {
   } else {
     inp.value = `${selectedWeeks.size} semana(s) selecionada(s)`; inp.placeholder = '';
   }
+}
+
+// ── SHORTS RENDERING ──────────────────────────────────────────────────────────
+
+let chartModeShorts = 'top';
+let durationModeShorts = 'duration';
+let commentsModeShorts = 'comments';
+let inscritosModeShorts = 'conversao';
+
+function setChartModeShorts(mode) {
+  chartModeShorts = mode;
+  document.getElementById('btnTopShorts').classList.toggle('active', mode==='top');
+  document.getElementById('btnBotShorts').classList.toggle('active', mode==='bottom');
+  renderShortsCharts();
+}
+function setSDurationMode(mode) {
+  durationModeShorts = mode;
+  document.getElementById('sBtnDuration').classList.toggle('active', mode==='duration');
+  document.getElementById('sBtnRetention').classList.toggle('active', mode==='retention');
+  document.getElementById('sDurationChartLabel').textContent = mode==='duration' ? 'Avg View Duration por Vídeo' : 'Avg Viewed % por Vídeo';
+  renderShortsCharts();
+}
+function setSCommentsMode(mode) {
+  commentsModeShorts = mode;
+  document.getElementById('sBtnComments').classList.toggle('active', mode==='comments');
+  document.getElementById('sBtnConvComm').classList.toggle('active', mode==='convComments');
+  document.getElementById('sCommentsChartLabel').textContent = mode==='comments' ? 'Comentários por Vídeo' : 'Conv. Comments % por Vídeo';
+  renderShortsCharts();
+}
+function setSInscritosMode(mode) {
+  inscritosModeShorts = mode;
+  document.getElementById('sBtnConversao').classList.toggle('active', mode==='conversao');
+  document.getElementById('sBtnInscritos').classList.toggle('active', mode==='inscritos');
+  const lbl = document.getElementById('sInscritosChartLabel');
+  const sub = document.getElementById('sInscritosChartSub');
+  if (mode==='conversao') { lbl.textContent='Conversão por Vídeo'; sub.textContent='(Inscritos/Views %)'; }
+  else { lbl.textContent='Inscritos por Vídeo'; sub.textContent='(total absoluto)'; }
+  renderShortsCharts();
+}
+
+function renderShortsAll() {
+  try { renderShortsKPIs();   } catch(e) { console.error('ShortsKPIs:', e.message); }
+  try { renderShortsTemporal(); } catch(e) { console.error('ShortsTemporal:', e.message); }
+  try { renderShortsCharts(); } catch(e) { console.error('ShortsCharts:', e.message); }
+  try { renderShortsFunil();  } catch(e) { console.error('ShortsFunil:', e.message); }
+}
+
+function renderShortsKPIs() {
+  const d = filteredShorts;
+  const setS = (id, val, medId, medVal) => {
+    const el = document.getElementById(id); const mel = document.getElementById(medId);
+    if(el) el.textContent = val;
+    if(mel) mel.textContent = medVal !== undefined ? `Mediana: ${medVal}` : '';
+  };
+  if (!d.length) {
+    ['skImpr','skViews','skDurMedia','skAvgPct','skAvgDur','skInsc','skCTR','skLikes','skComm','skShares'].forEach(id => {
+      const el=document.getElementById(id); if(el) el.textContent='—';
+    });
+    return;
+  }
+  const toMMSS = s => { s=Math.round(s); const m=Math.floor(s/60),sc=s%60; return `${m}:${String(sc).padStart(2,'0')}`; };
+  setS('skImpr',    fmtNum(mean(d.map(r=>r.impressoes))),    'skImprMed',    fmtNum(median(d.map(r=>r.impressoes))));
+  setS('skViews',   fmtNum(mean(d.map(r=>r.views))),         'skViewsMed',   fmtNum(median(d.map(r=>r.views))));
+  setS('skDurMedia',toMMSS(mean(d.map(r=>r.duracao))),        'skDurMed',     toMMSS(median(d.map(r=>r.duracao))));
+  setS('skAvgPct',  mean(d.map(r=>r.avgViewedPct)).toFixed(1)+'%', 'skAvgPctMed', median(d.map(r=>r.avgViewedPct)).toFixed(1)+'%');
+  setS('skAvgDur',  formatDuration(mean(d.map(r=>r.avgViewDurSec))), 'skAvgDurMed', formatDuration(median(d.map(r=>r.avgViewDurSec))));
+  setS('skInsc',    fmtNum(mean(d.map(r=>r.inscritos))),     'skInscMed',    fmtNum(median(d.map(r=>r.inscritos))));
+  setS('skCTR',     (mean(d.map(r=>r.ctr))*100).toFixed(2)+'%', 'skCTRMed', (median(d.map(r=>r.ctr))*100).toFixed(2)+'%');
+  setS('skLikes',   fmtNum(mean(d.map(r=>r.likes))),         'skLikesMed',   fmtNum(median(d.map(r=>r.likes))));
+  setS('skComm',    fmtNum(mean(d.map(r=>r.comentarios))),   'skCommMed',    fmtNum(median(d.map(r=>r.comentarios))));
+  setS('skShares',  fmtNum(mean(d.map(r=>r.shares))),        'skSharesMed',  fmtNum(median(d.map(r=>r.shares))));
+}
+
+function renderShortsTemporal() {
+  const d = filteredShorts;
+  if (!d.length) return;
+  const grouped = groupByPeriod(d, tempMode);
+  const keys = Object.keys(grouped).sort();
+  const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
+  const viewsMedian = keys.map(k => median(grouped[k].map(r=>r.views)));
+  const counts      = keys.map(k => grouped[k].length);
+  const ctrMean     = keys.map(k => mean(grouped[k].map(r=>r.ctr)));
+  const retMean     = keys.map(k => mean(grouped[k].map(r=>r.avgViewedPct)));
+  const inscMean    = keys.map(k => mean(grouped[k].map(r=>r.inscritos)));
+  const avgDurMean  = keys.map(k => mean(grouped[k].map(r=>r.avgViewDurSec)));
+  const shortKey = k => tempMode==='month'
+    ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
+    : getWeekRange(k).label;
+  const labels = keys.map(shortKey);
+  const wTitle = idx => {
+    if (tempMode!=='week'||!keys[idx]) return labels[idx]||'';
+    const wr = getWeekRange(keys[idx]);
+    return `${wr.label} · ${wr.range}`;
+  };
+
+  // Views dual-axis
+  if (chartInstances['chartSTempViews']) { chartInstances['chartSTempViews'].destroy(); delete chartInstances['chartSTempViews']; }
+  const elV = document.getElementById('chartSTempViews');
+  if (elV) {
+    chartInstances['chartSTempViews'] = new Chart(elV, {
+      data: { labels, datasets: [
+        { type:'line', label:'Soma Views', data:viewsSum, borderColor:'#2563eb', backgroundColor:'#2563eb22', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yViews', order:1 },
+        { type:'bar',  label:'Qtd Vídeos', data:counts,  backgroundColor:'#06b6d422', borderColor:'#06b6d4', borderWidth:1, borderRadius:3, yAxisID:'yCount', order:2 }
+      ]},
+      options: { responsive:true, maintainAspectRatio:false, animation:{duration:300},
+        plugins: { legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}},
+          tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex), label:ctx=>ctx.datasetIndex===0?[` Soma Views: ${fmtNum(ctx.parsed.y)}`,` Mediana: ${fmtNum(viewsMedian[ctx.dataIndex])}`]:` Qtd Vídeos: ${ctx.parsed.y}`}}},
+        scales: { x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},
+          yViews:{position:'left',ticks:{font:{size:9},color:'#2563eb',callback:v=>fmtNum(v)},grid:{color:'#f3f4f6'}},
+          yCount:{position:'right',ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)},grid:{drawOnChartArea:false}} }
+      }
+    });
+  }
+
+  // CTR% médio
+  if (chartInstances['chartSTempCTR']) { chartInstances['chartSTempCTR'].destroy(); delete chartInstances['chartSTempCTR']; }
+  const elC = document.getElementById('chartSTempCTR');
+  if (elC) chartInstances['chartSTempCTR'] = new Chart(elC, {
+    type:'line', data:{labels,datasets:[{label:'CTR%',data:ctrMean,borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex),label:ctx=>` CTR%: ${(ctx.parsed.y*100).toFixed(2)}%`}}},
+      scales:{x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>(v*100).toFixed(1)+'%'},grid:{color:'#f3f4f6'}}}}
+  });
+
+  makeTempChart('chartSTempRet',  labels, retMean,    'Retenção',    '#10b981', 'line', v=>v.toFixed(1)+'%', wTitle);
+  makeTempChart('chartSTempInsc', labels, inscMean,   'Inscritos',   '#8b5cf6', 'line', v=>fmtNum(v),       wTitle);
+  makeTempChart('chartSTempDur',  labels, avgDurMean, 'Avg View Dur','#06b6d4', 'line', v=>formatDuration(v), wTitle);
+}
+
+function getChartDataShorts(metric) {
+  const n = parseInt(document.getElementById('topNInputShorts').value)||20;
+  const metricVal = r => typeof metric==='function' ? metric(r) : r[metric];
+  const sorted = [...filteredShorts].sort((a,b) => chartModeShorts==='top' ? metricVal(b)-metricVal(a) : metricVal(a)-metricVal(b));
+  const topN = sorted.slice(0,n);
+  const labels = topN.map(r=>truncateTitle(r.title,22));
+  const fullLabels = topN.map(r=>r.title);
+  const values = topN.map(metricVal);
+  const barColors = topN.map(r=>(CAT_COLORS[r.categoria||'(Sem categoria)']||'#2563eb')+'cc');
+  const catNames = topN.map(r=>r.categoria||'(Sem categoria)');
+  const barLinks = topN.map(r=>r.link||'');
+  const allVals = filteredShorts.map(metricVal);
+  return { labels, fullLabels, values, meanVal:mean(allVals), medianVal:median(allVals), barColors, catNames, barLinks };
+}
+
+function renderShortsCharts() {
+  const d = filteredShorts;
+  if (!d.length) return;
+  document.getElementById('topNBadgeShorts').textContent = chartModeShorts==='top' ? `Top ${document.getElementById('topNInputShorts').value}` : `Bot ${document.getElementById('topNInputShorts').value}`;
+
+  // Views
+  { const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts('views');
+    destroyChart('chartSViews');
+    chartInstances['chartSViews'] = new Chart(document.getElementById('chartSViews'), buildBarConfig(labels,values,meanVal,medianVal,'Views',fmtNum,fmtNum,fullLabels,barColors,catNames,barLinks)); }
+
+  // Duration / Retention
+  { const metric = durationModeShorts==='duration' ? 'avgViewDurSec' : 'avgViewedPct';
+    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks,barRows} = {...getChartDataShorts(metric), barRows:null};
+    destroyChart('chartSDuration');
+    const cfg = durationModeShorts==='duration'
+      ? buildBarConfig(labels,values,meanVal,medianVal,'Avg View Duration',v=>formatDuration(v),v=>formatDuration(v),fullLabels,barColors,catNames,barLinks)
+      : buildBarConfig(labels,values,meanVal,medianVal,'Avg Viewed %',v=>v.toFixed(1)+'%',v=>v.toFixed(1)+'%',fullLabels,barColors,catNames,barLinks);
+    chartInstances['chartSDuration'] = new Chart(document.getElementById('chartSDuration'), cfg); }
+
+  // Comments
+  { const metric = commentsModeShorts==='comments' ? 'comentarios' : 'conversaoComments';
+    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts(metric);
+    destroyChart('chartSComments');
+    const cfg = commentsModeShorts==='comments'
+      ? buildBarConfig(labels,values,meanVal,medianVal,'Comentários',v=>Math.round(v).toLocaleString('pt-BR'),v=>Math.round(v).toLocaleString('pt-BR'),fullLabels,barColors,catNames,barLinks)
+      : buildBarConfig(labels,values,meanVal,medianVal,'Conv. Comments',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks);
+    chartInstances['chartSComments'] = new Chart(document.getElementById('chartSComments'), cfg); }
+
+  // Inscritos / Conversao
+  { const metric = inscritosModeShorts==='conversao' ? 'conversao' : 'inscritos';
+    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts(metric);
+    destroyChart('chartSInscritos');
+    const cfg = inscritosModeShorts==='conversao'
+      ? buildBarConfig(labels,values,meanVal,medianVal,'Conversão',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks)
+      : buildBarConfig(labels,values,meanVal,medianVal,'Inscritos',fmtNum,fmtNum,fullLabels,barColors,catNames,barLinks);
+    chartInstances['chartSInscritos'] = new Chart(document.getElementById('chartSInscritos'), cfg); }
+
+  // CTR%
+  { const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts('ctr');
+    destroyChart('chartSCTR');
+    chartInstances['chartSCTR'] = new Chart(document.getElementById('chartSCTR'),
+      buildBarConfig(labels,values,meanVal,medianVal,'CTR%',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks)); }
+}
+
+function renderShortsFunil() {
+  const groupBy = document.getElementById('funnelGroupByShorts').value;
+  const d = filteredShorts;
+  const container = document.getElementById('funnelContainerShorts');
+  if (!container || !d.length) return;
+
+  let groups = {};
+  if (groupBy === 'all') groups = { 'Todos os Shorts': d };
+  else d.forEach(r => {
+    const key = r.creator || '(Sem dados)';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+
+  const stages = ['Impressões','Views','Likes','Inscritos','Shares','Comentários'];
+  const stageColors = ['#2563eb','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777'];
+
+  const allGD = Object.values(groups).map(rows => funnelKPIs(rows)).filter(Boolean);
+  const maxCS = [0,1,2,3,4,5].map(i => {
+    const convs = allGD.map(k => {
+      const v = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm];
+      if (i===0) return 0;
+      if (i===1) return v[0]>0?v[1]/v[0]*100:0;
+      return v[1]>0?v[i]/v[1]*100:0;
+    });
+    return Math.max(...convs);
+  });
+
+  let html = '';
+  Object.entries(groups).sort(([,a],[,b])=>b.length-a.length).forEach(([name, rows]) => {
+    const k = funnelKPIs(rows);
+    if (!k) return;
+    const vals = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm];
+    const maxV = vals[0]||1;
+    html += `<div style="margin-bottom:20px;">
+      ${groupBy!=='all'?`<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">${name} <span style="font-weight:400;color:var(--gray-400);">(${rows.length} vídeos · CTR ${(k.ctr*100).toFixed(1)}% · Ret ${k.ret.toFixed(1)}%)</span></div>`:''}
+      <div style="display:flex;flex-direction:column;gap:6px;">`;
+    vals.forEach((v,i) => {
+      const pct = Math.max((v/maxV)*100,1);
+      const fmt = fmtNum(v);
+      let conv = '';
+      if (i===1&&vals[0]>0){const pv=(vals[1]/vals[0]*100);const ib=groupBy!=='all'&&maxCS[1]>0&&Math.abs(pv-maxCS[1])<0.001;conv=ib?`<strong style="color:#1e40af;font-size:11px;">${pv.toFixed(1)}%</strong>`:`<span>${pv.toFixed(1)}%</span>`;}
+      if (i>=2&&vals[1]>0){const pv=(v/vals[1]*100);const ib=groupBy!=='all'&&maxCS[i]>0&&Math.abs(pv-maxCS[i])<0.0001;conv=ib?`<strong style="color:#1e40af;font-size:11px;">${pv.toFixed(2)}%</strong>`:`<span>${pv.toFixed(2)}%</span>`;}
+      const textColor = pct>12?'white':stageColors[i];
+      html += `<div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:110px;font-size:11px;color:var(--gray-600);text-align:right;flex-shrink:0;">${stages[i]}</div>
+        <div style="flex:1;height:28px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative;">
+          <div style="width:${pct}%;height:100%;background:${stageColors[i]};border-radius:4px;${pct>12?'display:flex;align-items:center;padding-left:8px;':''}transition:width .4s;">
+            ${pct>12?`<span style="color:${textColor};font-size:11px;font-weight:700;white-space:nowrap;">${fmt}</span>`:''}
+          </div>
+          ${pct<=12?`<span style="position:absolute;left:${Math.min(pct+1,90)}%;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:${stageColors[i]};white-space:nowrap;">${fmt}</span>`:''}
+        </div>
+        ${conv?`<div style="width:60px;font-size:10px;color:var(--gray-500);flex-shrink:0;">${conv}</div>`:'<div style="width:60px;"></div>'}
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html || '<p style="color:var(--gray-400);padding:12px;">Sem dados suficientes.</p>';
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
