@@ -603,41 +603,47 @@
         <thead>
           <tr>
             <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('semana')" data-col="semana">Semana <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('mesAno')" data-col="mesAno">Mês_Ano <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('title')" data-col="title">Título <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('tipo')" data-col="tipo">Tipo <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('categoria')" data-col="categoria">Categoria <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg Viewed % <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg View Dur <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impressões <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('ctrYT')" data-col="ctrYT" class="num">CTR% YT <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('views')" data-col="views" class="num sorted">Views <span class="sort-icon">↓</span></th>
-            <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg Dur <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Ret.% <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('inscritos')" data-col="inscritos" class="num">Inscritos <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversao')" data-col="conversao" class="num">Conv. Insc. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Comentários <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
           </tr>
           <tr class="filter-row">
             <td><input class="col-filter" data-col="dataPublicacao" data-type="text" placeholder="ex: 2026"></td>
+            <td><input class="col-filter" data-col="semana" data-type="text" placeholder="ex: W18/26"></td>
+            <td><input class="col-filter" data-col="mesAno" data-type="text" placeholder="ex: 05-2026"></td>
             <td><input class="col-filter" data-col="title" data-type="text" placeholder="buscar..."></td>
+            <td><input class="col-filter" data-col="tipo" data-type="text" placeholder="Long Form"></td>
             <td><input class="col-filter" data-col="creator" data-type="text" placeholder="buscar..."></td>
             <td><input class="col-filter" data-col="categoria" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500000"></td>
-            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">5"></td>
-            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
             <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
-            <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
             <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
+            <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
+            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500000"></td>
+            <td><input class="col-filter" data-col="ctrYT" data-type="num" placeholder=">5"></td>
+            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
+            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
+            <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
             <td><input class="col-filter" data-col="conversao" data-type="num" placeholder=">0.005"></td>
-            <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
+            <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
             <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
             <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
-            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
-            <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -825,9 +831,15 @@
 
   <!-- SHORTS EVOLUÇÃO TEMPORAL -->
   <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal · Shorts</h2></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+    <div class="topn-toggle">
+      <button id="btnSTempWeek" class="toggle-btn active" onclick="setSTempMode('week')">Por Semana</button>
+      <button id="btnSTempMonth" class="toggle-btn" onclick="setSTempMode('month')">Por Mês</button>
+    </div>
+  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
     <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartSTempViews"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🖱️ Cliques Totais</div><div style="height:220px;"><canvas id="chartSTempCTR"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">📊 CTR% Médio</div><div style="height:220px;"><canvas id="chartSTempCTR"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartSTempRet"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartSTempInsc"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">⏱️ Avg View Duration Média</div><div style="height:220px;"><canvas id="chartSTempDur"></canvas></div></div>
@@ -1566,13 +1578,13 @@ const NAMED_CAT_COLORS = {
   'FUTEBOL INVISÍVEL':      '#8A2BE2',
   'TECNICOS BRASILEIRAO':   '#7FFF00',
   'TÉCNICOS BRASILEIRÃO':   '#7FFF00',
-  'SEGUNDO OS NUMEROS':     '#00CED1',
-  'SEGUNDO OS NÚMEROS':     '#00CED1',
+  'SEGUNDO OS NUMEROS':     '#3730A3',
+  'SEGUNDO OS NÚMEROS':     '#3730A3',
   'KINGS LEAGUE':           '#FF0033',
   'QUIZZ DE FUTEBOL':       '#FF1493',
   'REACT':                  '#4B0082',
-  'ME MOSTRA ESSE GOL':     '#808080',
-  'UNIVERSO':               '#C0C0C0',
+  'ME MOSTRA ESSE GOL':     '#27272A',
+  'UNIVERSO':               '#0F766E',
   '(Sem categoria)':        '#D1D5DB',
 };
 
@@ -1957,27 +1969,30 @@ function renderTable() {
     return `
     <tr>
       <td style="white-space:nowrap;">${dateFmt}</td>
+      <td style="white-space:nowrap;">${r.semana||'—'}</td>
+      <td style="white-space:nowrap;">${r.mesAno||'—'}</td>
       <td class="title-cell" style="white-space:normal;line-height:1.3;">
         ${r.link
-          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
+          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
           : `<span title="${r.title.replace(/"/g,'&quot;')}" style="font-weight:500;">${r.title}</span>`
         }
       </td>
+      <td style="white-space:nowrap;">${r.tipo||'—'}</td>
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
       <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
-      <td class="num">${fmtNum(r.impressoes)}</td>
-      <td class="num">${r.ctr.toFixed(2)}%</td>
-      <td class="num">${fmtNum(r.views)}</td>
       <td class="num">${duracaoFmt}</td>
-      <td class="num">${avgDurFmt}</td>
       <td class="num">${r.avgViewedPct.toFixed(1)}%</td>
+      <td class="num">${avgDurFmt}</td>
+      <td class="num">${fmtNum(r.impressoes)}</td>
+      <td class="num">${(r.ctrYT||0).toFixed(2)}%</td>
+      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
+      <td class="num">${fmtNum(r.views)}</td>
+      <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
       <td class="num">${r.inscritos.toLocaleString('pt-BR')}</td>
       <td class="num">${(r.conversao*100).toFixed(2)}%</td>
-      <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
+      <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
       <td class="num">${r.comentarios.toLocaleString('pt-BR')}</td>
       <td class="num">${((r.conversaoComments||0)*100).toFixed(2)}%</td>
-      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
-      <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
     </tr>`;
   }).join('');
 
@@ -2249,7 +2264,13 @@ function renderTemporal() {
   if (!d.length) return;
 
   const grouped = groupByPeriod(d, tempMode);
-  const keys = Object.keys(grouped).sort();
+  const sortWeekKey = k => {
+    const m = k.match(/W(\d+)\/(\d+)/);
+    return m ? parseInt(m[2]) * 1000 + parseInt(m[1]) : 0;
+  };
+  const keys = Object.keys(grouped).sort((a,b) =>
+    tempMode === 'week' ? sortWeekKey(a) - sortWeekKey(b) : a.localeCompare(b)
+  );
 
   const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
   const viewsMedian = keys.map(k => median(grouped[k].map(r => r.views)));
@@ -2885,6 +2906,14 @@ let chartModeShorts = 'top';
 let durationModeShorts = 'duration';
 let commentsModeShorts = 'comments';
 let inscritosModeShorts = 'conversao';
+let tempModeShorts = 'week'; // independent from Dashboard tempMode
+
+function setSTempMode(mode) {
+  tempModeShorts = mode;
+  document.getElementById('btnSTempWeek').classList.toggle('active', mode==='week');
+  document.getElementById('btnSTempMonth').classList.toggle('active', mode==='month');
+  renderShortsTemporal();
+}
 
 function setChartModeShorts(mode) {
   chartModeShorts = mode;
@@ -2953,21 +2982,25 @@ function renderShortsKPIs() {
 function renderShortsTemporal() {
   const d = filteredShorts;
   if (!d.length) return;
-  const grouped = groupByPeriod(d, tempMode);
-  const keys = Object.keys(grouped).sort();
+  const grouped = groupByPeriod(d, tempModeShorts);
+  const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*1000+parseInt(m[1]) : 0; };
+  const keys = Object.keys(grouped).sort((a,b) =>
+    tempModeShorts === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
+  );
   const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
   const viewsMedian = keys.map(k => median(grouped[k].map(r=>r.views)));
   const counts      = keys.map(k => grouped[k].length);
-  const ctrMean     = keys.map(k => mean(grouped[k].map(r=>r.ctr)));
+  const ctrMean     = keys.map(k => mean(grouped[k].map(r=>r.ctr))*100);
+  const ctrMedian   = keys.map(k => median(grouped[k].map(r=>r.ctr))*100);
   const retMean     = keys.map(k => mean(grouped[k].map(r=>r.avgViewedPct)));
   const inscMean    = keys.map(k => mean(grouped[k].map(r=>r.inscritos)));
   const avgDurMean  = keys.map(k => mean(grouped[k].map(r=>r.avgViewDurSec)));
-  const shortKey = k => tempMode==='month'
+  const shortKey = k => tempModeShorts==='month'
     ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
-    : k; // k is already 'W18/26' from CSV
+    : k;
   const labels = keys.map(shortKey);
   const wTitle = idx => {
-    if (tempMode !== 'week' || !keys[idx]) return labels[idx]||'';
+    if (tempModeShorts !== 'week' || !keys[idx]) return labels[idx]||'';
     const k = keys[idx];
     const dates = (grouped[k]||[]).map(r=>r.dataPublicacao).filter(Boolean).sort();
     const fmt = d => d ? `${d.slice(8,10)}/${d.slice(5,7)}` : '';
@@ -2998,10 +3031,10 @@ function renderShortsTemporal() {
   if (chartInstances['chartSTempCTR']) { chartInstances['chartSTempCTR'].destroy(); delete chartInstances['chartSTempCTR']; }
   const elC = document.getElementById('chartSTempCTR');
   if (elC) chartInstances['chartSTempCTR'] = new Chart(elC, {
-    type:'line', data:{labels,datasets:[{label:'CTR%',data:ctrMean,borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},
+    type:'line', data:{labels,datasets:[{label:'CTR% Médio',data:ctrMean,borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
-      plugins:{legend:{display:false},tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex),label:ctx=>` CTR%: ${(ctx.parsed.y*100).toFixed(2)}%`}}},
-      scales:{x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>(v*100).toFixed(1)+'%'},grid:{color:'#f3f4f6'}}}}
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex),label:ctx=>[` CTR% Médio: ${ctx.parsed.y.toFixed(2)}%`,` Mediana: ${ctrMedian[ctx.dataIndex].toFixed(2)}%`]}}},
+      scales:{x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>v.toFixed(1)+'%'},grid:{color:'#f3f4f6'}}}}
   });
 
   makeTempChart('chartSTempRet',  labels, retMean,    'Retenção',    '#10b981', 'line', v=>v.toFixed(1)+'%', wTitle);
