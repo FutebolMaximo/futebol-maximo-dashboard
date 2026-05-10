@@ -656,7 +656,7 @@
   </div>
 
   <div class="section-header" style="margin-top:16px;"><div class="section-divider"></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação com limiares: ≥400K views E CTR% ≥74% E Avg View Duration ≥37s = Escalar.</p>
+  <p class="section-desc">Classificação com limiares: ≥98.1K views E CTR% ≥74% E Avg View Duration ≥37s = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackSTitle">Todos os Shorts</h3>
@@ -1455,12 +1455,10 @@ function applyFilters() {
     return baseFilter(r);
   });
 
-  updateKPIs();
+  try { updateKPIs(); } catch(e) { console.error('updateKPIs error:', e.message); }
   try { renderCharts(); } catch(e) { console.error('renderCharts error:', e.message); }
   try { renderTemporal(); } catch(e) { console.error('renderTemporal error:', e.message); }
-  if (activeTab === 'basedados') {
-    try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
-  }
+  try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
   try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
   try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
@@ -1468,6 +1466,8 @@ function applyFilters() {
 
 function clearFilters() {
   document.getElementById('filterCreator').value = '';
+  const tipoEl = document.getElementById('filterTipo');
+  if (tipoEl) tipoEl.value = '';
   selectedCats.clear();
   selectedTitles.clear();
   updateCatInput();
@@ -2238,7 +2238,7 @@ function renderScatter() {
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
 // Shorts-specific classification thresholds
-const THRESHOLDS_SHORTS = { views: 400000, ctr: 0.74, avgViewDurSec: 37 };
+const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.74, avgViewDurSec: 37 };
 
 // Long Form classification thresholds
 const THRESHOLDS = { views: 50000, ctr: 0.05, avgViewDurSec: 360 };
@@ -3358,7 +3358,7 @@ function renderFeedbackTableShorts() {
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥400K views · CTR% ≥74% · Avg View Dur ≥37s`;
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · CTR% ≥74% · Avg View Dur ≥37s`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
