@@ -1458,7 +1458,9 @@ function applyFilters() {
   updateKPIs();
   try { renderCharts(); } catch(e) { console.error('renderCharts error:', e.message); }
   try { renderTemporal(); } catch(e) { console.error('renderTemporal error:', e.message); }
-  try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
+  if (activeTab === 'basedados') {
+    try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
+  }
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
   try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
   try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
@@ -2162,10 +2164,33 @@ function renderScatter() {
         { x1:left, y1:top,   x2:xMed,  y2:yMed,   color:'rgba(219,234,254,0.30)' },
         { x1:left, y1:yMed,  x2:xMed,  y2:bottom, color:'rgba(254,226,226,0.30)' },
       ].forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
-      c.strokeStyle = 'rgba(100,100,100,0.45)'; c.lineWidth = 1.5; c.setLineDash([5,4]);
-      c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
-      c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
-      c.setLineDash([]); c.restore();
+
+      // Draw dashed lines
+      c.strokeStyle = 'rgba(100,100,100,0.55)'; c.lineWidth = 1.5; c.setLineDash([5,4]);
+      c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();   // vertical = Avg View Duration
+      c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();   // horizontal = CTR%
+      c.setLineDash([]);
+
+      // Label: CTR% median → right extremity of horizontal line
+      const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
+      c.font = 'bold 10px system-ui, sans-serif';
+      const ctrW = c.measureText(ctrLabel).width + 8;
+      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.beginPath(); c.roundRect(right - ctrW - 2, yMed - 9, ctrW, 16, 3); c.fill();
+      c.fillStyle = '#374151';
+      c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(ctrLabel, right - 6, yMed);
+
+      // Label: Avg View Duration median → top extremity of vertical line
+      const durLabel = `${formatDuration(medDur)}`;
+      const durW = c.measureText(durLabel).width + 8;
+      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.beginPath(); c.roundRect(xMed - durW/2, top + 2, durW, 16, 3); c.fill();
+      c.fillStyle = '#374151';
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText(durLabel, xMed, top + 4);
+
+      c.restore();
     }
   };
 
@@ -2215,6 +2240,9 @@ function renderScatter() {
 // Shorts-specific classification thresholds
 const THRESHOLDS_SHORTS = { views: 400000, ctr: 0.74, avgViewDurSec: 37 };
 
+// Long Form classification thresholds
+const THRESHOLDS = { views: 50000, ctr: 0.05, avgViewDurSec: 360 };
+
 function classifyVideoShorts(r) {
   const highViews = r.views           >= THRESHOLDS_SHORTS.views;
   const highCTR   = r.ctr             >= THRESHOLDS_SHORTS.ctr;
@@ -2229,7 +2257,7 @@ function classifyVideoShorts(r) {
 function classifyVideo(r) {
   const highViews = r.views >= THRESHOLDS.views;
   const highCTR   = r.ctr   >= THRESHOLDS.ctr;
-  const longDur   = r.avgViewDurSec >= THRESHOLDS.avgViewDurSec;
+  const longDur   = (r.avgViewDurSec||0) >= THRESHOLDS.avgViewDurSec;
 
   const altoCTR = highViews && highCTR;
 
