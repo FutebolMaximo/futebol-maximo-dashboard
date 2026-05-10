@@ -656,7 +656,7 @@
   </div>
 
   <div class="section-header" style="margin-top:16px;"><div class="section-divider"></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação de cada Short com limiares fixos: ≥50K views, CTR% ≥5%, ≥6min avg view duration.</p>
+  <p class="section-desc">Classificação com limiares: ≥400K views E CTR% ≥74% E Avg View Duration ≥37s = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackSTitle">Todos os Shorts</h3>
@@ -675,18 +675,27 @@
     <div class="table-wrap" style="max-height:480px;">
       <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
         <colgroup>
-          <col style="width:30%"><col style="width:6%"><col style="width:9%">
-          <col style="width:7%"><col style="width:7%"><col style="width:6%">
-          <col style="width:6%"><col style="width:8%"><col style="width:10%"><col style="width:11%">
+          <col style="width:24%">  <!-- Vídeo -->
+          <col style="width:6%">   <!-- Criador -->
+          <col style="width:7%">   <!-- Views -->
+          <col style="width:7%">   <!-- CTR% -->
+          <col style="width:8%">   <!-- Impressões -->
+          <col style="width:6%">   <!-- Duração -->
+          <col style="width:7%">   <!-- Avg Viewed% -->
+          <col style="width:8%">   <!-- Avg View Duration -->
+          <col style="width:9%">   <!-- Status -->
+          <col style="width:10%">  <!-- Diagnóstico -->
+          <col style="width:8%">   <!-- Ação -->
         </colgroup>
         <thead><tr>
           <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
           <th class="sortable" data-sfcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('creator')">Criador</th>
-          <th class="sortable" data-sfcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('categoria')">Categ.</th>
-          <th class="sortable" data-sfcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('impressoes')">Impr.</th>
-          <th class="sortable" data-sfcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('ctr')">CTR%</th>
-          <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Dur.</th>
           <th class="sortable" data-sfcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('views')">Views</th>
+          <th class="sortable" data-sfcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('ctr')">CTR%</th>
+          <th class="sortable" data-sfcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('impressoes')">Impressões</th>
+          <th class="sortable" data-sfcol="duracao" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('duracao')">Duração</th>
+          <th class="sortable" data-sfcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewedPct')">Avg Viewed%</th>
+          <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Avg View Dur</th>
           <th class="sortable" data-sfcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('status')">Status</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
@@ -992,15 +1001,16 @@ function fmtNum(n) {
 }
 
 function mean(arr) {
-  if (!arr.length) return 0;
-  return arr.reduce((a,b) => a+b, 0) / arr.length;
+  const valid = arr.filter(v => v !== null && v !== undefined && !isNaN(v));
+  if (!valid.length) return 0;
+  return valid.reduce((a,b) => a+b, 0) / valid.length;
 }
 
 function median(arr) {
-  if (!arr.length) return 0;
-  const s = [...arr].sort((a,b) => a-b);
-  const m = Math.floor(s.length/2);
-  return s.length % 2 ? s[m] : (s[m-1]+s[m])/2;
+  const valid = [...arr.filter(v => v !== null && v !== undefined && !isNaN(v))].sort((a,b) => a-b);
+  if (!valid.length) return 0;
+  const m = Math.floor(valid.length/2);
+  return valid.length % 2 ? valid[m] : (valid[m-1]+valid[m])/2;
 }
 
 function truncateTitle(str, max) {
@@ -1056,7 +1066,7 @@ function parseCSVText(text) {
     rows.push({
       id: obj.id||'', title: obj.title||'', link: obj.link||'',
       duracao: parseInt(obj.duracao)||0, inscritos: parseInt(obj.inscritos)||0,
-      avgViewedPct: parseFloat(obj.avgViewedPct)||0, likes: parseInt(obj.likes)||0,
+      avgViewedPct: (obj.avgViewedPct !== '' && obj.avgViewedPct !== undefined) ? (parseFloat(obj.avgViewedPct)||0) : null, likes: parseInt(obj.likes)||0,
       shares: parseInt(obj.shares)||0, comentarios: parseInt(obj.comentarios)||0,
       views: parseInt(obj.views)||0, impressoes: parseInt(obj.impressoes)||0,
       ctr: parseFloat(obj.ctr)||0, avgViewDuration: obj.avgViewDuration||'0:00',
@@ -1066,7 +1076,7 @@ function parseCSVText(text) {
       conversaoComments: parseFloat(obj.conversaoComments)||0,
       ctr: parseFloat(obj.ctr)||0,
       ctrYT: parseFloat(obj.ctrYT)||0,
-      avgViewDurSec: parseInt(obj.avgViewDuration)||0,
+      avgViewDurSec: (obj.avgViewDuration !== '' && obj.avgViewDuration !== undefined && obj.avgViewDuration !== '0') ? (parseInt(obj.avgViewDuration)||null) : null,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
       tipo: obj.tipo||'',
       semana: obj.semana||'',
@@ -2077,6 +2087,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.col-filter').forEach(inp => {
     inp.addEventListener('input', renderTable);
   });
+  // Close all dropdowns when clicking outside their wrapper
+  document.addEventListener('click', e => {
+    const closings = [
+      ['catWrap',   'catDropdown'],
+      ['weekWrap',  'weekDropdown'],
+      ['titleWrap', 'titleDropdown'],
+    ];
+    closings.forEach(([wrapId, ddId]) => {
+      const wrap = document.getElementById(wrapId);
+      const dd   = document.getElementById(ddId);
+      if (wrap && dd && !wrap.contains(e.target)) dd.classList.remove('open');
+    });
+  });
 });
 
 // ── CSV UPLOAD ────────────────────────────────────────────────────────────────
@@ -2189,9 +2212,19 @@ function renderScatter() {
 
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
-// Fixed classification thresholds (absolute, not dynamic)
-// ctr field = ratio (0.077 = 7.7%); 30K cliques replaced by ctr >= 0.05 (5% CTR)
-const THRESHOLDS = { views: 50000, ctr: 0.05, avgViewDurSec: 360 }; // 360s = 6min
+// Shorts-specific classification thresholds
+const THRESHOLDS_SHORTS = { views: 400000, ctr: 0.74, avgViewDurSec: 37 };
+
+function classifyVideoShorts(r) {
+  const highViews = r.views           >= THRESHOLDS_SHORTS.views;
+  const highCTR   = r.ctr             >= THRESHOLDS_SHORTS.ctr;
+  const longDur   = (r.avgViewDurSec||0) >= THRESHOLDS_SHORTS.avgViewDurSec;
+
+  if (highViews && highCTR && longDur) return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto alcance + CTR + Retenção',      acao:'Replicar formato e frequência' };
+  if (highCTR   && !longDur)          return { status:'Ajustar entrega',  color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração assistida', acao:'Melhorar gancho e primeiros 3s' };
+  if (!highCTR  && longDur)           return { status:'Reembalar',        color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Boa retenção',           acao:'Testar nova capa e legenda' };
+  return                               { status:'Rever formato',           color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Baixa retenção',         acao:'Revisar formato e gancho inicial' };
+}
 
 function classifyVideo(r) {
   const highViews = r.views >= THRESHOLDS.views;
@@ -3120,14 +3153,18 @@ function getChartDataShorts(metric) {
   const metricVal = r => typeof metric==='function' ? metric(r) : r[metric];
   const sorted = [...filteredShorts].sort((a,b) => chartModeShorts==='top' ? metricVal(b)-metricVal(a) : metricVal(a)-metricVal(b));
   const topN = sorted.slice(0,n);
-  const labels = topN.map(r=>truncateTitle(r.title,22));
-  const fullLabels = topN.map(r=>r.title);
-  const values = topN.map(metricVal);
+  const labels    = topN.map(r=>truncateTitle(r.title,22));
+  const fullLabels= topN.map(r=>r.title);
+  const values    = topN.map(metricVal);
   const barColors = topN.map(r=>(CAT_COLORS[r.categoria||'(Sem categoria)']||'#2563eb')+'cc');
-  const catNames = topN.map(r=>r.categoria||'(Sem categoria)');
-  const barLinks = topN.map(r=>r.link||'');
-  const allVals = filteredShorts.map(metricVal);
-  return { labels, fullLabels, values, meanVal:mean(allVals), medianVal:median(allVals), barColors, catNames, barLinks };
+  const catNames  = topN.map(r=>r.categoria||'(Sem categoria)');
+  const barLinks  = topN.map(r=>r.link||'');
+  // Fixed baseline: Shorts + 2026 (independent of user filters)
+  const shorts2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && r.ano === 2026);
+  const base = shorts2026.length > 0 ? shorts2026 : (filteredShorts.length > 0 ? filteredShorts : allData);
+  const meanVal   = mean(base.map(metricVal));
+  const medianVal = median(base.map(metricVal));
+  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks };
 }
 
 function renderShortsCharts() {
@@ -3264,13 +3301,13 @@ function renderFeedbackTableShorts() {
   const searchQ = ((document.getElementById('feedbackSSearch')||{}).value || '').toLowerCase();
   const catColor = cat => CAT_COLORS[cat] || '#6b7280';
 
-  let rows = d.map(r => ({ r, cls: classifyVideo(r) }));
+  let rows = d.map(r => ({ r, cls: classifyVideoShorts(r) }));
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
   if (searchQ) rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ) || (r.creator||'').toLowerCase().includes(searchQ));
 
   const order = ['Escalar','Reembalar','Ajustar entrega','Rever formato'];
   rows.sort((a,b) => {
-    if (feedbackSSortCol === 'status') return feedbackSSortDir * order.indexOf(a.cls.status) - order.indexOf(b.cls.status);
+    if (feedbackSSortCol === 'status') return feedbackSSortDir * (order.indexOf(a.cls.status) - order.indexOf(b.cls.status));
     if (feedbackSSortCol === 'creator') return feedbackSSortDir * (a.r.creator||'').localeCompare(b.r.creator||'');
     if (feedbackSSortCol === 'categoria') return feedbackSSortDir * (a.r.categoria||'').localeCompare(b.r.categoria||'');
     return feedbackSSortDir * ((a.r[feedbackSSortCol]||0) - (b.r[feedbackSSortCol]||0));
@@ -3282,17 +3319,18 @@ function renderFeedbackTableShorts() {
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${formatDuration(r.avgViewDurSec)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.impressoes)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${formatDuration(r.duracao)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares fixos: ≥50K views · CTR% ≥5% · ≥6min avg view duration`;
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥400K views · CTR% ≥74% · Avg View Dur ≥37s`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
