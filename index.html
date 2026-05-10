@@ -422,10 +422,11 @@
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnDash" onclick="switchTab('dashboard')">📊 Dashboard</button>
-  <button class="tab-btn" id="tabBtnAdv" onclick="switchTab('avancada')">🔬 Análise Avançada</button>
-  <button class="tab-btn" id="tabBtnBase" onclick="switchTab('basedados')">📋 Base de Dados</button>
-  <button class="tab-btn" id="tabBtnShorts" onclick="switchTab('shorts')">⚡ Shorts</button>
+  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn"        id="tabBtnAdv"       onclick="switchTab('avancada')">🔬 Análise Avançada</button>
+  <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
+  <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
+  <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
 </div>
 
 <!-- STICKY FILTERS (shared across tabs) -->
@@ -438,20 +439,28 @@
       </select>
     </div>
     <div class="filter-group">
-      <label>Data Início</label>
-      <input type="date" id="filterDateStart">
-    </div>
-    <div class="filter-group">
-      <label>Data Fim</label>
-      <input type="date" id="filterDateEnd">
-    </div>
-    <div class="filter-group">
       <label>Categoria</label>
       <div class="title-search-wrap" id="catWrap">
         <input type="text" id="filterCategoriaInput" placeholder="Todas as categorias..." readonly
           onclick="toggleCatDropdown()" style="cursor:pointer;background:white;">
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
+    </div>
+    <div class="filter-group">
+      <label>Tipo <span style="font-size:9px;color:var(--gray-400);">(Base de Dados)</span></label>
+      <select id="filterTipo">
+        <option value="">Todos os tipos</option>
+        <option value="long">Long Form</option>
+        <option value="shorts">Shorts</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Data Início</label>
+      <input type="date" id="filterDateStart">
+    </div>
+    <div class="filter-group">
+      <label>Data Fim</label>
+      <input type="date" id="filterDateEnd">
     </div>
     <div class="filter-group">
       <label>Semana</label>
@@ -602,6 +611,94 @@
 </div>
 
 <!-- BASE DE DADOS (Tab) -->
+<div id="panelFeedbacks" class="main" style="display:none;">
+
+  <div class="section-header"><div class="section-divider"></div><h2>Feedback Automático · Long Form</h2></div>
+  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: ≥50K views, CTR% ≥5% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3 id="feedbackTitle">Todos os vídeos</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <select id="feedbackStatusFilter" onchange="renderFeedbackTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="">Todos os diagnósticos</option>
+          <option value="Escalar">🟢 Escalar</option>
+          <option value="Ajustar entrega">🟡 Ajustar entrega</option>
+          <option value="Reembalar">🔵 Reembalar</option>
+          <option value="Rever formato">🔴 Rever formato</option>
+        </select>
+        <input type="text" id="feedbackSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTable()"
+          style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:480px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+        <colgroup>
+          <col style="width:30%"><col style="width:6%"><col style="width:9%">
+          <col style="width:7%"><col style="width:7%"><col style="width:6%">
+          <col style="width:6%"><col style="width:8%"><col style="width:10%"><col style="width:11%">
+        </colgroup>
+        <thead><tr>
+          <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+          <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
+          <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categ.</th>
+          <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impr.</th>
+          <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
+          <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
+          <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
+          <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
+        </tr></thead>
+        <tbody id="feedbackBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="feedbackFooter"></div>
+  </div>
+
+  <div class="section-header" style="margin-top:16px;"><div class="section-divider"></div><h2>Feedback Automático · Shorts</h2></div>
+  <p class="section-desc">Classificação de cada Short com limiares fixos: ≥50K views, CTR% ≥5%, ≥6min avg view duration.</p>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3 id="feedbackSTitle">Todos os Shorts</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <select id="feedbackSStatusFilter" onchange="renderFeedbackTableShorts()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="">Todos os diagnósticos</option>
+          <option value="Escalar">🟢 Escalar</option>
+          <option value="Ajustar entrega">🟡 Ajustar entrega</option>
+          <option value="Reembalar">🔵 Reembalar</option>
+          <option value="Rever formato">🔴 Rever formato</option>
+        </select>
+        <input type="text" id="feedbackSSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTableShorts()"
+          style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:480px;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
+        <colgroup>
+          <col style="width:30%"><col style="width:6%"><col style="width:9%">
+          <col style="width:7%"><col style="width:7%"><col style="width:6%">
+          <col style="width:6%"><col style="width:8%"><col style="width:10%"><col style="width:11%">
+        </colgroup>
+        <thead><tr>
+          <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+          <th class="sortable" data-sfcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('creator')">Criador</th>
+          <th class="sortable" data-sfcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('categoria')">Categ.</th>
+          <th class="sortable" data-sfcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('impressoes')">Impr.</th>
+          <th class="sortable" data-sfcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('ctr')">CTR%</th>
+          <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Dur.</th>
+          <th class="sortable" data-sfcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('views')">Views</th>
+          <th class="sortable" data-sfcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('status')">Status</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
+        </tr></thead>
+        <tbody id="feedbackSBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer" id="feedbackSFooter"></div>
+  </div>
+
+</div>
+
 <div class="main" id="panelBaseDados" style="display:none;">
 <!-- BASE DE DADOS COMPLETA -->
   <div class="section-header">
@@ -700,60 +797,7 @@
     </div>
   </div>
 
-  <!-- FEEDBACK TABLE -->
-  <div class="section-header">
-    <div class="section-divider"></div>
-    <h2>Feedback Automático por Vídeo</h2>
-  </div>
-  <p class="section-desc">Classificação de cada vídeo com limiares fixos: ≥50K views, CTR% ≥5% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
-  <div class="table-card" style="margin-bottom:24px;">
-    <div class="table-toolbar">
-      <h3 id="feedbackTitle">Todos os vídeos</h3>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <select id="feedbackStatusFilter" onchange="renderFeedbackTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-          <option value="">Todos os diagnósticos</option>
-          <option value="Escalar">🟢 Escalar</option>
-          <option value="Ajustar entrega">🟡 Ajustar entrega</option>
-          <option value="Reembalar">🔵 Reembalar</option>
-          <option value="Rever formato">🔴 Rever formato</option>
-        </select>
-        <input type="text" id="feedbackSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTable()"
-          style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
-      </div>
-    </div>
-    <div class="table-wrap" style="max-height:480px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-        <colgroup>
-          <col style="width:30%">   <!-- Vídeo -->
-          <col style="width:6%">    <!-- Criador -->
-          <col style="width:9%">    <!-- Categ. -->
-          <col style="width:7%">    <!-- Impr. -->
-          <col style="width:7%">    <!-- Cliques -->
-          <col style="width:6%">    <!-- Dur. -->
-          <col style="width:6%">    <!-- Views -->
-          <col style="width:8%">    <!-- Status -->
-          <col style="width:10%">   <!-- Diagnóstico -->
-          <col style="width:11%">   <!-- Ação sugerida -->
-        </colgroup>
-        <thead>
-          <tr>
-            <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
-            <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;white-space:nowrap;" onclick="sortFeedback('creator')">Criador</th>
-            <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categ.</th>
-            <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impr.</th>
-            <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
-            <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
-            <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
-            <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
-            <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
-            <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
-          </tr>
-        </thead>
-        <tbody id="feedbackBody"></tbody>
-      </table>
-    </div>
-    <div class="table-footer" id="feedbackFooter"></div>
-  </div>
+
 
   <!-- TEMPORAL EVOLUTION -->
 
@@ -1087,17 +1131,20 @@ let activeTab = 'dashboard';
 
 function switchTab(tab) {
   activeTab = tab;
-  document.getElementById('panelDashboard').style.display  = tab === 'dashboard' ? '' : 'none';
-  document.getElementById('panelAvancada').style.display   = tab === 'avancada'  ? '' : 'none';
-  document.getElementById('panelBaseDados').style.display  = tab === 'basedados' ? '' : 'none';
-  document.getElementById('panelShorts').style.display     = tab === 'shorts'    ? '' : 'none';
-  document.getElementById('tabBtnDash').classList.toggle('active',   tab === 'dashboard');
-  document.getElementById('tabBtnAdv').classList.toggle('active',    tab === 'avancada');
-  document.getElementById('tabBtnBase').classList.toggle('active',   tab === 'basedados');
-  document.getElementById('tabBtnShorts').classList.toggle('active', tab === 'shorts');
-  if (tab === 'avancada')  renderAdvanced();
-  if (tab === 'basedados') renderTable();
-  if (tab === 'shorts')    renderShortsAll();
+  document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
+  document.getElementById('panelAvancada').style.display   = tab === 'avancada'   ? '' : 'none';
+  document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
+  document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
+  document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
+  document.getElementById('tabBtnDash').classList.toggle('active',      tab === 'dashboard');
+  document.getElementById('tabBtnAdv').classList.toggle('active',       tab === 'avancada');
+  document.getElementById('tabBtnShorts').classList.toggle('active',    tab === 'shorts');
+  document.getElementById('tabBtnFeedbacks').classList.toggle('active', tab === 'feedbacks');
+  document.getElementById('tabBtnBase').classList.toggle('active',      tab === 'basedados');
+  if (tab === 'avancada')   renderAdvanced();
+  if (tab === 'basedados')  renderTable();
+  if (tab === 'shorts')     renderShortsAll();
+  if (tab === 'feedbacks')  renderFeedbacksTab();
 }
 
 function renderAdvanced() {
@@ -1390,8 +1437,13 @@ function applyFilters() {
   filteredLong   = filteredData; // alias — all Dashboard/Análise Avançada code uses filteredLong
   // Shorts only → used by Shorts tab
   filteredShorts = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && baseFilter(r));
-  // All types → used by Base de Dados tab
-  filteredAll    = allData.filter(baseFilter);
+  // All types → used by Base de Dados tab (respects Tipo filter)
+  const tipo = (document.getElementById('filterTipo')||{}).value || '';
+  filteredAll = allData.filter(r => {
+    if (tipo === 'long'   && !(r.tipo||'').toLowerCase().includes('long'))  return false;
+    if (tipo === 'shorts' && !(r.tipo||'').toLowerCase().includes('short')) return false;
+    return baseFilter(r);
+  });
 
   updateKPIs();
   try { renderCharts(); } catch(e) { console.error('renderCharts error:', e.message); }
@@ -1399,6 +1451,7 @@ function applyFilters() {
   try { renderTable(); } catch(e) { console.error('renderTable error:', e.message); }
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
   try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
+  try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
 }
 
 function clearFilters() {
@@ -2035,8 +2088,11 @@ function renderScatter() {
   const d = filteredLong;
   if (!d.length) return;
 
-  const medDur    = median(d.map(r => r.avgViewDurSec));
-  const medCTR    = median(d.map(r => r.ctr));
+  // Fixed quadrant lines: medians of Long Form 2026 (independent of filters)
+  const lf2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('long') && r.ano === 2026);
+  const base4scatter = lf2026.length > 0 ? lf2026 : d;
+  const medDur = median(base4scatter.map(r => r.avgViewDurSec));
+  const medCTR = median(base4scatter.map(r => r.ctr));
   const maxViews = Math.max(...d.map(r => r.views), 1);
   const minR = 4, maxR = 28;
 
@@ -2851,7 +2907,7 @@ function buildWeekOptions() {
   // Sort year-aware: W1/24 < W2/24 < W1/25
   const sortKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*100 + parseInt(m[1]) : 0; };
   return [...weekMap.entries()]
-    .sort((a,b) => sortKey(a[0]) - sortKey(b[0]))
+    .sort((a,b) => sortKey(b[0]) - sortKey(a[0]))
     .map(([key, v]) => {
       const dates = v.dates.sort();
       const fmt = d => d ? `${d.slice(8,10)}/${d.slice(5,7)}` : '';
@@ -3176,6 +3232,68 @@ function renderShortsFunil() {
     html += '</div></div>';
   });
   container.innerHTML = html || '<p style="color:var(--gray-400);padding:12px;">Sem dados suficientes.</p>';
+}
+
+function renderFeedbacksTab() {
+  renderFeedbackTable();
+  renderFeedbackTableShorts();
+}
+
+let feedbackSSortCol = 'impressoes';
+let feedbackSSortDir = -1;
+
+function sortFeedbackS(col) {
+  feedbackSSortCol = col;
+  feedbackSSortDir = feedbackSSortCol === col ? -feedbackSSortDir : -1;
+  feedbackSSortCol = col;
+  document.querySelectorAll('[data-sfcol]').forEach(th => th.classList.remove('sort-asc','sort-desc'));
+  const el = document.querySelector(`[data-sfcol="${col}"]`);
+  if (el) el.classList.add(feedbackSSortDir === 1 ? 'sort-asc' : 'sort-desc');
+  renderFeedbackTableShorts();
+}
+
+function renderFeedbackTableShorts() {
+  const bodyEl   = document.getElementById('feedbackSBody');
+  const footerEl = document.getElementById('feedbackSFooter');
+  const titleEl  = document.getElementById('feedbackSTitle');
+  if (!bodyEl) return;
+  const d = filteredShorts;
+  if (!d.length) { bodyEl.innerHTML = ''; return; }
+
+  const statusFilter = (document.getElementById('feedbackSStatusFilter')||{}).value || '';
+  const searchQ = ((document.getElementById('feedbackSSearch')||{}).value || '').toLowerCase();
+  const catColor = cat => CAT_COLORS[cat] || '#6b7280';
+
+  let rows = d.map(r => ({ r, cls: classifyVideo(r) }));
+  if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
+  if (searchQ) rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ) || (r.creator||'').toLowerCase().includes(searchQ));
+
+  const order = ['Escalar','Reembalar','Ajustar entrega','Rever formato'];
+  rows.sort((a,b) => {
+    if (feedbackSSortCol === 'status') return feedbackSSortDir * order.indexOf(a.cls.status) - order.indexOf(b.cls.status);
+    if (feedbackSSortCol === 'creator') return feedbackSSortDir * (a.r.creator||'').localeCompare(b.r.creator||'');
+    if (feedbackSSortCol === 'categoria') return feedbackSSortDir * (a.r.categoria||'').localeCompare(b.r.categoria||'');
+    return feedbackSSortDir * ((a.r[feedbackSSortCol]||0) - (b.r[feedbackSSortCol]||0));
+  });
+
+  bodyEl.innerHTML = rows.map(({r, cls}) => `
+    <tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
+        ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
+      </td>
+      <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.impressoes)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${formatDuration(r.avgViewDurSec)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
+    </tr>`).join('');
+
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares fixos: ≥50K views · CTR% ≥5% · ≥6min avg view duration`;
+  if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
