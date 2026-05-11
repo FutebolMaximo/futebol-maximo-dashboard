@@ -526,7 +526,7 @@
     <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartTempViews"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">📊 CTR% Médio</div><div style="height:220px;"><canvas id="chartTempCTR"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartTempRet"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">🔔 Total Inscritos</div><div style="height:220px;"><canvas id="chartTempInsc"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">⏱️ Avg View Duration Média</div><div style="height:220px;"><canvas id="chartTempDur"></canvas></div></div>
   </div>
 
@@ -2417,8 +2417,8 @@ function renderTemporal() {
   const cliquesSum    = keys.map(k => grouped[k].reduce((a,r)=>a+(r.ctr||0),0)/grouped[k].length*100);
   const cliquesMedian = keys.map(k => median(grouped[k].map(r=>(r.ctr||0)*100)));
   const retMean     = keys.map(k => mean(grouped[k].map(r => r.avgViewedPct)));
-  const inscMean    = keys.map(k => mean(grouped[k].map(r => r.inscritos)));
-  const avgDurMean  = keys.map(k => mean(grouped[k].map(r => r.avgViewDurSec)));
+  const inscSum     = keys.map(k => grouped[k].reduce((a,r)=>a+r.inscritos,0));
+  const avgDurMean  = keys.map(k => mean(grouped[k].map(r => r.avgViewDurSec).filter(v=>v!==null)));
 
   const shortKey = k => {
     if (tempMode === 'month') return new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});
@@ -2535,11 +2535,11 @@ function renderTemporal() {
   if (elInsc) {
     chartInstances['chartTempInsc'] = new Chart(elInsc, {
       type: 'line',
-      data: { labels, datasets: [{ label:'Inscritos/vídeo', data: inscMean, borderColor:'#8b5cf6', backgroundColor:'#8b5cf622', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
+      data: { labels, datasets: [{ label:'Total Inscritos', data: inscSum, borderColor:'#8b5cf6', backgroundColor:'#8b5cf622', fill:true, tension:0.3, pointRadius:3, borderWidth:2 }] },
       options: { responsive:true, maintainAspectRatio:false, animation:{duration:300},
         plugins: { legend:{display:false}, tooltip:{ callbacks:{
           title: ctx => weekTitle(ctx[0].dataIndex),
-          label: ctx => ` Inscritos/vídeo: ${fmtNum(ctx.parsed.y)}`
+          label: ctx => ` Total Inscritos: ${fmtNum(ctx.parsed.y)}`
         }}}},
         scales: { x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}}, y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>fmtNum(v)},grid:{color:'#f3f4f6'}} }
     });
@@ -2866,22 +2866,23 @@ function renderDurationAnalysis() {
 
   const binData = DUR_BINS.map(bin => {
     const rows = d.filter(r => r.duracao >= bin.min && r.duracao < bin.max);
-    if (!rows.length) return { ...bin, n:0, medViews:null, medRet:null, avgWatchMin:null, insc1k:null, comm1k:null };
+    if (!rows.length) return { ...bin, n:0, medViews:null, medRet:null, avgDurSec:null, insc1k:null, comm1k:null };
     const views = rows.map(r=>r.views);
     const totalViews = rows.reduce((a,r)=>a+r.views,0);
+    const validDurs = rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
     return {
       ...bin,
       n: rows.length,
       medViews:   median(views),
-      medRet:     median(rows.map(r=>r.avgViewedPct)),
-      avgWatchMin: mean(rows.map(r=>r.avgViewDurSec))/60,
+      medRet:     median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
+      avgDurSec:  validDurs.length ? mean(validDurs) : null,
       insc1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0,
       comm1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0,
     };
   });
 
   // For each column, build array of all non-null values for color scaling
-  const cols = ['medViews','medRet','avgWatchMin','insc1k','comm1k'];
+  const cols = ['medViews','medRet','avgDurSec','insc1k','comm1k'];
 
   const thS = `padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);text-align:right;white-space:nowrap;`;
   const tdS = `padding:7px 10px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;`;
@@ -2892,7 +2893,7 @@ function renderDurationAnalysis() {
       <th style="${thS}">Nº Vídeos</th>
       <th style="${thS}">Views Mediana</th>
       <th style="${thS}">Retenção Média</th>
-      <th style="${thS}">Avg Watch (min)</th>
+      <th style="${thS}">Avg View Dur</th>
       <th style="${thS}">Inscritos/1K views</th>
       <th style="${thS}">Coment./1K views</th>
     </tr></thead><tbody>`;
@@ -2913,7 +2914,7 @@ function renderDurationAnalysis() {
       <td style="${tdS}font-weight:600;color:var(--gray-600);">${row.n}</td>
       ${cell('medViews', v => fmtNum(v))}
       ${cell('medRet',   v => v.toFixed(1)+'%')}
-      ${cell('avgWatchMin', v => v.toFixed(1)+' min')}
+      ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
       ${cell('insc1k',  v => v.toFixed(2))}
       ${cell('comm1k',  v => v.toFixed(2))}
     </tr>`;
