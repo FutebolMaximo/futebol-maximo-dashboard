@@ -614,7 +614,7 @@
 <div id="panelFeedbacks" class="main" style="display:none;">
 
   <div class="section-header"><div class="section-divider"></div><h2>Feedback Automático · Long Form</h2></div>
-  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: ≥50K views, CTR% ≥5% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
+  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: ≥50K views, CTR% ≥6% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -632,19 +632,26 @@
     </div>
     <div class="table-wrap" style="max-height:480px;">
       <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-        <colgroup>
-          <col style="width:30%"><col style="width:6%"><col style="width:9%">
-          <col style="width:7%"><col style="width:7%"><col style="width:6%">
-          <col style="width:6%"><col style="width:8%"><col style="width:10%"><col style="width:11%">
+                <colgroup>
+          <col style="width:28%">
+          <col style="width:7%">
+          <col style="width:9%">
+          <col style="width:7%">
+          <col style="width:7%">
+          <col style="width:8%">
+          <col style="width:8%">
+          <col style="width:9%">
+          <col style="width:8%">
+          <col style="width:9%">
         </colgroup>
         <thead><tr>
-          <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
           <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
-          <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categ.</th>
-          <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impr.</th>
-          <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
-          <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Dur.</th>
+          <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
           <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
+          <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
+          <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg View Dur</th>
+          <th class="sortable" data-ftcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewedPct')">Avg Viewed%</th>
           <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
@@ -656,7 +663,7 @@
   </div>
 
   <div class="section-header" style="margin-top:16px;"><div class="section-divider"></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação com limiares: ≥98.1K views E CTR% ≥74% E Avg View Duration ≥37s = Escalar.</p>
+  <p class="section-desc">Classificação com limiares: ≥98.1K views E CTR% ≥70% E Avg Viewed% ≥75% = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackSTitle">Todos os Shorts</h3>
@@ -674,28 +681,26 @@
     </div>
     <div class="table-wrap" style="max-height:480px;">
       <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-        <colgroup>
-          <col style="width:24%">  <!-- Vídeo -->
-          <col style="width:6%">   <!-- Criador -->
-          <col style="width:7%">   <!-- Views -->
-          <col style="width:7%">   <!-- CTR% -->
-          <col style="width:8%">   <!-- Impressões -->
-          <col style="width:6%">   <!-- Duração -->
-          <col style="width:7%">   <!-- Avg Viewed% -->
-          <col style="width:8%">   <!-- Avg View Duration -->
-          <col style="width:9%">   <!-- Status -->
-          <col style="width:10%">  <!-- Diagnóstico -->
-          <col style="width:8%">   <!-- Ação -->
+                <colgroup>
+          <col style="width:28%">
+          <col style="width:7%">
+          <col style="width:9%">
+          <col style="width:7%">
+          <col style="width:7%">
+          <col style="width:8%">
+          <col style="width:8%">
+          <col style="width:9%">
+          <col style="width:8%">
+          <col style="width:9%">
         </colgroup>
         <thead><tr>
-          <th style="padding:6px 8px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
+          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
           <th class="sortable" data-sfcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('creator')">Criador</th>
+          <th class="sortable" data-sfcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('categoria')">Categoria</th>
           <th class="sortable" data-sfcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('views')">Views</th>
           <th class="sortable" data-sfcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('ctr')">CTR%</th>
-          <th class="sortable" data-sfcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('impressoes')">Impressões</th>
-          <th class="sortable" data-sfcol="duracao" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('duracao')">Duração</th>
-          <th class="sortable" data-sfcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewedPct')">Avg Viewed%</th>
           <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Avg View Dur</th>
+          <th class="sortable" data-sfcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewedPct')">Avg Viewed%</th>
           <th class="sortable" data-sfcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('status')">Status</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
@@ -722,7 +727,7 @@
       </div>
     </div>
     <div class="table-wrap">
-      <table id="dataTable">
+            <table id="dataTable">
         <thead>
           <tr>
             <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
@@ -732,13 +737,13 @@
             <th onclick="sortTable('tipo')" data-col="tipo">Tipo <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('categoria')" data-col="categoria">Categoria <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('views')" data-col="views" class="num sorted">Views <span class="sort-icon">↓</span></th>
+            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg Viewed % <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg Viewed% <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg View Dur <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impressões <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('ctrYT')" data-col="ctrYT" class="num">CTR% YT <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('views')" data-col="views" class="num sorted">Views <span class="sort-icon">↓</span></th>
             <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('inscritos')" data-col="inscritos" class="num">Inscritos <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversao')" data-col="conversao" class="num">Conv. Insc. <span class="sort-icon">↕</span></th>
@@ -754,13 +759,13 @@
             <td><input class="col-filter" data-col="tipo" data-type="text" placeholder="Long Form"></td>
             <td><input class="col-filter" data-col="creator" data-type="text" placeholder="buscar..."></td>
             <td><input class="col-filter" data-col="categoria" data-type="text" placeholder="buscar..."></td>
+            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
+            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
             <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
             <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
             <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
             <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500000"></td>
             <td><input class="col-filter" data-col="ctrYT" data-type="num" placeholder=">5"></td>
-            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
-            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
             <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
             <td><input class="col-filter" data-col="conversao" data-type="num" placeholder=">0.005"></td>
@@ -2062,13 +2067,13 @@ function renderTable() {
       <td style="white-space:nowrap;">${r.tipo||'—'}</td>
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
       <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
+      <td class="num">${fmtNum(r.views)}</td>
+      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
       <td class="num">${duracaoFmt}</td>
       <td class="num">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td class="num">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? avgDurFmt : '—'}</td>
       <td class="num">${fmtNum(r.impressoes)}</td>
       <td class="num">${(r.ctrYT||0).toFixed(2)}%</td>
-      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
-      <td class="num">${fmtNum(r.views)}</td>
       <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
       <td class="num">${r.inscritos.toLocaleString('pt-BR')}</td>
       <td class="num">${(r.conversao*100).toFixed(2)}%</td>
@@ -2238,20 +2243,20 @@ function renderScatter() {
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
 // Shorts-specific classification thresholds
-const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.74, avgViewDurSec: 37 };
+const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.70, avgViewedPct: 75 };
 
 // Long Form classification thresholds
-const THRESHOLDS = { views: 50000, ctr: 0.05, avgViewDurSec: 360 };
+const THRESHOLDS = { views: 50000, ctr: 0.06, avgViewDurSec: 360 };
 
 function classifyVideoShorts(r) {
-  const highViews = r.views           >= THRESHOLDS_SHORTS.views;
-  const highCTR   = r.ctr             >= THRESHOLDS_SHORTS.ctr;
-  const longDur   = (r.avgViewDurSec||0) >= THRESHOLDS_SHORTS.avgViewDurSec;
+  const highViews   = r.views >= THRESHOLDS_SHORTS.views;
+  const highCTR     = r.ctr   >= THRESHOLDS_SHORTS.ctr;
+  const highRet     = (r.avgViewedPct||0) >= THRESHOLDS_SHORTS.avgViewedPct;
 
-  if (highViews && highCTR && longDur) return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto alcance + CTR + Retenção',      acao:'Replicar formato e frequência' };
-  if (highCTR   && !longDur)          return { status:'Ajustar entrega',  color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração assistida', acao:'Melhorar gancho e primeiros 3s' };
-  if (!highCTR  && longDur)           return { status:'Reembalar',        color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Boa retenção',           acao:'Testar nova capa e legenda' };
-  return                               { status:'Rever formato',           color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Baixa retenção',         acao:'Revisar formato e gancho inicial' };
+  if (highViews && highCTR && highRet)  return { status:'Escalar',        color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto alcance + CTR + Retenção',      acao:'Replicar formato e frequência' };
+  if (highCTR   && !highRet)            return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Baixa retenção',          acao:'Melhorar gancho e primeiros 3s' };
+  if (!highCTR  && highRet)             return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Boa retenção',           acao:'Testar nova capa e legenda' };
+  return                                 { status:'Rever formato',          color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Baixa retenção',         acao:'Revisar formato e gancho inicial' };
 }
 
 function classifyVideo(r) {
@@ -2318,17 +2323,17 @@ function renderFeedbackTable() {
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${(r.ctr*100).toFixed(2)}%</td>
-      <td style="padding:6px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Limiares fixos: ≥50K views · CTR% ≥5% · ≥6min avg view duration`;
+    `${rows.length} vídeos · Limiares fixos: ≥50K views · CTR% ≥6% · ≥6min avg view duration`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
@@ -3347,18 +3352,17 @@ function renderFeedbackTableShorts() {
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
+      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.impressoes)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${formatDuration(r.duracao)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · CTR% ≥74% · Avg View Dur ≥37s`;
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · CTR% ≥70% · Avg Viewed% ≥75%`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
