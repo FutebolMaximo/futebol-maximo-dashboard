@@ -1897,7 +1897,7 @@ function renderCharts() {
       if (r) {
         if (durationMode === 'duration') {
           lines.push(` Duração do vídeo: ${formatDuration(r.duracao)}`);
-          lines.push(` Avg Viewed %: ${r.avgViewedPct.toFixed(1)}%`);
+          lines.push(` Avg Viewed %: ${r.avgViewedPct !== null ? r.avgViewedPct.toFixed(1)+'%' : '—'}`);
         } else {
           lines.push(` Avg View Duration: ${formatDuration(r.avgViewDurSec)}`);
           lines.push(` Duração do vídeo: ${formatDuration(r.duracao)}`);
@@ -2039,7 +2039,7 @@ function renderTable() {
       return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     })();
     const avgDurFmt = (() => {
-      if (!r.avgViewDurSec) return '—';
+      if (r.avgViewDurSec === null || r.avgViewDurSec === undefined) return '—';
       const sec = Math.round(r.avgViewDurSec);
       const h = Math.floor(sec / 3600);
       const m = Math.floor((sec % 3600) / 60);
@@ -2063,8 +2063,8 @@ function renderTable() {
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
       <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
       <td class="num">${duracaoFmt}</td>
-      <td class="num">${r.avgViewedPct.toFixed(1)}%</td>
-      <td class="num">${avgDurFmt}</td>
+      <td class="num">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
+      <td class="num">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? avgDurFmt : '—'}</td>
       <td class="num">${fmtNum(r.impressoes)}</td>
       <td class="num">${(r.ctrYT||0).toFixed(2)}%</td>
       <td class="num">${(r.ctr*100).toFixed(2)}%</td>
@@ -2320,7 +2320,7 @@ function renderFeedbackTable() {
       <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.impressoes)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${(r.ctr*100).toFixed(2)}%</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${formatDuration(r.avgViewDurSec)}</td>
+      <td style="padding:6px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
@@ -2634,7 +2634,7 @@ function funnelKPIs(rows) {
   const totalComm  = rows.reduce((a,r)=>a+r.comentarios,0);
   const totalLikes = rows.reduce((a,r)=>a+r.likes,0);
   const totalShares= rows.reduce((a,r)=>a+r.shares,0);
-  const watchHrs   = rows.reduce((a,r)=>a + r.views * r.avgViewDurSec / 3600, 0);
+  const watchHrs   = rows.reduce((a,r)=>a + r.views * (r.avgViewDurSec||0) / 3600, 0);
   const ctr        = totalImpr > 0 ? totalViews/totalImpr*100 : 0;
   const ret        = mean(rows.map(r=>r.avgViewedPct));
   return { totalImpr, totalViews, totalLikes, totalInsc, totalShares, totalComm, watchHrs, ctr, ret, n: rows.length };
@@ -2739,7 +2739,7 @@ function renderFunnelTable() {
   const per1k = (v, views) => views > 0 ? (v/views*1000).toFixed(2) : '—';
 
   bodyEl.innerHTML = rows.map(r => {
-    const watchHrs = (r.views * r.avgViewDurSec / 3600).toFixed(1);
+    const watchHrs = (r.views * (r.avgViewDurSec||0) / 3600).toFixed(1);
     return `<tr style="border-bottom:1px solid var(--gray-100);">
       <td style="padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.3;font-size:11px;">
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
