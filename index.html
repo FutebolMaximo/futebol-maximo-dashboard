@@ -625,13 +625,14 @@
             <div onclick="setPerfMetric('conversaoComments','📬 Conv. Comentários %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📬 Conv. Comentários %</div>
             <div onclick="setPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
             <div onclick="setPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
+            <div onclick="setPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
           </div>
         </div>
-        <div style="position:relative;">
-          <button onclick="togglePerfCatDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-            🏷️ Categorias <span id="perfCatBadge" style="display:none;background:var(--blue-500);color:white;border-radius:8px;padding:1px 6px;font-size:10px;margin-left:2px;"></span> <span style="font-size:10px;opacity:.6;">▾</span>
-          </button>
-          <div id="perfCatDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;max-height:280px;overflow-y:auto;padding:4px 0;"></div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="topn-toggle">
+            <button id="btnPerfVideo" class="toggle-btn active" onclick="setPerfView('video')">Por Vídeo</button>
+            <button id="btnPerfCat" class="toggle-btn" onclick="setPerfView('categoria')">Por Categoria</button>
+          </div>
         </div>
       </div>
       <div class="chart-wrap"><canvas id="chartViews"></canvas></div>
@@ -873,14 +874,6 @@
 
 
 
-  <!-- PIZZA DENTRO DO HEATMAP -->
-  <div class="section-header" style="margin-top:24px;"><div class="section-divider"></div><h2>Análise por Categoria</h2></div>
-  <div class="charts-grid" style="margin-bottom:20px;">
-    <div class="chart-card">
-      <div class="chart-title">🥧 Distribuição por Categoria <span class="chart-badge">Soma Views</span></div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="chartPizza"></canvas></div>
-    </div>
-  </div>
 
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
   <div class="section-header"><div class="section-divider"></div><h2>Heatmap Criador × Categoria</h2></div>
@@ -1942,50 +1935,65 @@ function renderCharts() {
 
   const metricVal = r => {
     const v = r[perfMetric];
-    return v !== null && v !== undefined ? v : 0;
+    return (v !== null && v !== undefined) ? v : 0;
   };
 
-  const yFmtPerf = v => {
-    if (perfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
-    if (perfMetric==='avgViewedPct'||perfMetric==='conversaoComments'||perfMetric==='conversao') return (v*100||v).toFixed(2)+'%';
-    return fmtNum(v);
-  };
   const tooltipFmtPerf = v => {
     if (perfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
     if (perfMetric==='conversaoComments'||perfMetric==='conversao') return (v*100).toFixed(3)+'%';
     if (perfMetric==='avgViewedPct') return v.toFixed(1)+'%';
+    if (perfMetric==='ctr') return (v*100).toFixed(2)+'%';
+    return fmtNum(v);
+  };
+  const tickFmtPerf = v => {
+    if (perfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
+    if (perfMetric==='conversaoComments'||perfMetric==='conversao') return (v*100).toFixed(2)+'%';
+    if (perfMetric==='avgViewedPct') return v.toFixed(1)+'%';
+    if (perfMetric==='ctr') return (v*100).toFixed(1)+'%';
     return fmtNum(v);
   };
 
   const el = document.getElementById('chartViews');
   if (!el) return;
 
-  if (perfSelectedCats.size === 0) {
-    // Top N videos mode (original behavior)
+  if (perfView === 'video') {
+    // Top N videos mode
     const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks } = getChartData(perfMetric);
-    const yFmtTick = perfMetric==='avgViewDurSec' ? v=>formatDuration(Math.round(v)) :
-                     (perfMetric==='conversaoComments'||perfMetric==='conversao') ? v=>(v*100).toFixed(2)+'%' :
-                     perfMetric==='avgViewedPct' ? v=>v.toFixed(1)+'%' : v=>fmtNum(v);
-    const cfg = buildBarConfig(labels, values, meanVal, medianVal, perfMetric, yFmtTick, tooltipFmtPerf, fullLabels, barColors, catNames, barLinks);
+    const cfg = buildBarConfig(labels, values, meanVal, medianVal, perfMetric, tickFmtPerf, tooltipFmtPerf, fullLabels, barColors, catNames, barLinks);
     chartInstances['chartViews'] = new Chart(el, cfg);
   } else {
-    // Category mode: one bar per selected category showing mean
-    const cats = [...perfSelectedCats];
-    const lf2026base = allData.filter(r=>(r.tipo||'').toLowerCase().includes('long')&&r.ano===2026);
-    const baseVals = lf2026base.map(metricVal);
-    const meanVal   = mean(baseVals);
-    const medianVal = median(baseVals);
-
-    const catMeans = cats.map(cat => {
-      const rows = d.filter(r=>(r.categoria||'(Sem categoria)')===cat);
-      return rows.length ? mean(rows.map(metricVal).filter(v=>v!==null&&!isNaN(v))) : 0;
+    // Categoria mode: one bar per category in filteredData
+    const catMap = {};
+    filteredData.forEach(r => {
+      const cat = r.categoria || '(Sem categoria)';
+      if (!catMap[cat]) catMap[cat] = [];
+      catMap[cat].push(r);
     });
-    const barColors = cats.map(c=>(CAT_COLORS[c]||'#2563eb')+'cc');
-    const cfg = buildBarConfig(
-      cats, catMeans, meanVal, medianVal, perfMetric,
-      v => tooltipFmtPerf(v), v => tooltipFmtPerf(v),
-      cats, barColors, cats, []
-    );
+    const cats = Object.keys(catMap).sort((a,b) => {
+      const av = mean(catMap[a].map(metricVal)); const bv = mean(catMap[b].map(metricVal));
+      return chartMode === 'top' ? bv - av : av - bv;
+    });
+    const catMeans   = cats.map(c => mean(catMap[c].map(metricVal)));
+    const catCounts  = cats.map(c => catMap[c].length);
+    const barColors  = cats.map(c => (CAT_COLORS[c]||'#2563eb')+'cc');
+
+    const lf2026base = allData.filter(r=>(r.tipo||'').toLowerCase().includes('long')&&r.ano===2026);
+    const baseVals   = lf2026base.map(metricVal);
+    const meanVal    = mean(baseVals);
+    const medianVal  = median(baseVals);
+
+    const cfg = buildBarConfig(cats, catMeans, meanVal, medianVal, perfMetric, tickFmtPerf, tooltipFmtPerf, cats, barColors, cats, []);
+    // Override tooltip to include count and median
+    cfg.options.plugins.tooltip.callbacks.label = ctx => {
+      const cat = cats[ctx.dataIndex];
+      const rows = catMap[cat]||[];
+      const med = median(rows.map(metricVal));
+      return [
+        ` Média: ${tooltipFmtPerf(ctx.parsed.y)}`,
+        ` Mediana: ${tooltipFmtPerf(med)}`,
+        ` ${rows.length} vídeos`,
+      ];
+    };
     cfg.options.scales.x.ticks.maxRotation = 25;
     chartInstances['chartViews'] = new Chart(el, cfg);
   }
@@ -2521,9 +2529,21 @@ function renderTemporal() {
         legend: { display: tempSelectedCats.size > 0, position:'top', labels:{font:{size:10},boxWidth:12} },
         tooltip: { callbacks: {
           title: ctx => weekTitle(ctx[0].dataIndex),
-          label: ctx => ctx.datasetIndex===datasets.length-1 && hasCountAxis
-            ? ` Qtd Vídeos: ${ctx.parsed.y}`
-            : ` ${ctx.dataset.label}: ${getTooltipFmt(tempMetric, ctx.parsed.y)}`
+          label: ctx => {
+            const ds = ctx.dataset;
+            const val = ctx.parsed.y;
+            const baseLabel = ` ${ds.label}: ${getTooltipFmt(tempMetric, val)}`;
+            // If multi-category mode, add video count for this category+period
+            if (tempSelectedCats.size > 0) {
+              const k = keys[ctx.dataIndex];
+              const cat = ds.label;
+              const count = k ? (grouped[k]||[]).filter(r=>(r.categoria||'(Sem categoria)')===cat).length : 0;
+              return [baseLabel, ` ${count} vídeo(s) publicados`];
+            }
+            return ctx.datasetIndex===datasets.length-1 && hasCountAxis
+              ? ` Qtd Vídeos: ${val}`
+              : baseLabel;
+          }
         }}
       },
       scales: {
@@ -2663,7 +2683,7 @@ function renderFunnel() {
       if(i>=2&&vals[1]>0){const pv=(vals[i]/vals[1]*100);const ib=groupBy!=='all'&&maxCS[i]>0&&Math.abs(pv-maxCS[i])<0.0001;conv=`${pv.toFixed(2)}%${ib?'*':''}`;}
       if(conv){
         const isBold = conv.includes('*');
-        svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${stageColors[i]}" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
+        svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="#111827" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
       }
     });
 
@@ -3337,9 +3357,14 @@ function toggleTempMetricDD() {
 function toggleTempCatDD() {
   const dd = document.getElementById('tempCatDropdown');
   if (dd.style.display !== 'none') { dd.style.display = 'none'; return; }
-  // Build checkbox list
   const cats = [...new Set(filteredData.map(r=>r.categoria).filter(Boolean))].sort();
-  dd.innerHTML = cats.map(c => {
+  const clearBtn = tempSelectedCats.size > 0
+    ? `<div style="padding:6px 12px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:var(--gray-500);">${tempSelectedCats.size} selecionada(s)</span>
+        <button onclick="clearTempCats()" style="background:none;border:none;font-size:12px;color:var(--blue-600);cursor:pointer;font-weight:600;">× Limpar</button>
+       </div>`
+    : '';
+  dd.innerHTML = clearBtn + cats.map(c => {
     const col = CAT_COLORS[c]||'#64748b';
     const checked = tempSelectedCats.has(c) ? 'checked' : '';
     return `<label style="display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:12px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">
@@ -3349,6 +3374,14 @@ function toggleTempCatDD() {
     </label>`;
   }).join('');
   dd.style.display = 'block';
+}
+
+function clearTempCats() {
+  tempSelectedCats.clear();
+  const badge = document.getElementById('tempCatBadge');
+  if (badge) badge.style.display = 'none';
+  document.getElementById('tempCatDropdown').style.display = 'none';
+  renderTemporal();
 }
 
 function toggleTempCat(cat, cb) {
@@ -3363,7 +3396,7 @@ function toggleTempCat(cat, cb) {
 // ── PERFORMANCE METRIC + CATEGORY SELECTORS ────────────────────────────────────
 
 let perfMetric = 'views';
-let perfSelectedCats = new Set();
+let perfView = 'video'; // 'video' | 'categoria'
 
 function setPerfMetric(metric, label) {
   perfMetric = metric;
@@ -3372,35 +3405,20 @@ function setPerfMetric(metric, label) {
   renderCharts();
 }
 
+function setPerfView(view) {
+  perfView = view;
+  document.getElementById('btnPerfVideo').classList.toggle('active', view === 'video');
+  document.getElementById('btnPerfCat').classList.toggle('active', view === 'categoria');
+  renderCharts();
+}
+
 function togglePerfMetricDD() {
   const dd = document.getElementById('perfMetricDropdown');
   dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
 }
 
-function togglePerfCatDD() {
-  const dd = document.getElementById('perfCatDropdown');
-  if (dd.style.display !== 'none') { dd.style.display = 'none'; return; }
-  const cats = [...new Set(filteredData.map(r=>r.categoria).filter(Boolean))].sort();
-  dd.innerHTML = cats.map(c => {
-    const col = CAT_COLORS[c]||'#64748b';
-    const checked = perfSelectedCats.has(c) ? 'checked' : '';
-    return `<label style="display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:12px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">
-      <input type="checkbox" ${checked} onchange="togglePerfCat('${c.replace(/'/g,"\\'")}', this)" style="accent-color:${col};">
-      <span style="width:9px;height:9px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>
-      ${c}
-    </label>`;
-  }).join('');
-  dd.style.display = 'block';
-}
-
-function togglePerfCat(cat, cb) {
-  if (cb.checked) perfSelectedCats.add(cat);
-  else perfSelectedCats.delete(cat);
-  const badge = document.getElementById('perfCatBadge');
-  if (perfSelectedCats.size > 0) { badge.style.display='inline'; badge.textContent=perfSelectedCats.size; }
-  else badge.style.display='none';
-  renderCharts();
-}
+// Keep stub for any lingering calls
+function togglePerfCatDD() {}
 
 // Close dropdowns on outside click
 document.addEventListener('click', e => {
