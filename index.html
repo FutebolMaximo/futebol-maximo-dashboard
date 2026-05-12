@@ -902,15 +902,22 @@
 
   <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
   <div class="section-header"><div class="section-divider"></div><h2>Análise de Duração Ideal</h2></div>
-  <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
-    <label style="font-size:12px;color:var(--gray-500);">Criador:</label>
-    <select id="durCreatorFilter" onchange="renderDurationAnalysis()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;"><option value="">Todos</option></select>
-    <label style="font-size:12px;color:var(--gray-500);margin-left:8px;">Categoria:</label>
-    <select id="durCatFilter" onchange="renderDurationAnalysis()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;"><option value="">Todas</option></select>
-  </div>
+  <!-- hidden stubs for init() code that populates durCreatorFilter/durCatFilter -->
+  <select id="durCreatorFilter" style="display:none;"></select>
+  <select id="durCatFilter" style="display:none;"></select>
   <div class="table-card" style="margin-bottom:32px;">
     <div class="table-toolbar">
-      <h3 id="durTableTitle">Todas as faixas de duração</h3>
+      <div style="position:relative;display:inline-block;">
+        <button onclick="toggleDurGranDD()" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:6px;padding:0;">
+          <h3 id="durTableTitle" style="margin:0;font-size:14px;font-weight:700;">Todas as faixas de duração</h3>
+          <span style="font-size:11px;color:var(--gray-400);">▾</span>
+        </button>
+        <div id="durGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setDurGran('faixas')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixas de Duração</div>
+          <div onclick="setDurGran('criadores')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
+          <div onclick="setDurGran('categorias')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🏷️ Categorias</div>
+        </div>
+      </div>
       <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
     </div>
     <div class="table-wrap"><div id="durationTableContainer"></div></div>
@@ -923,14 +930,7 @@
       <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
       <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViews"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">⏱️ Distribuição de Duração (faixas de 5min)</div>
-      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistDur"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">📈 Média de Views por Faixa de Duração</div>
-      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsAvg"></canvas></div>
-    </div>
+
   </div>
 </div>
 
@@ -1316,46 +1316,14 @@ function renderCategoryPizza() {
 }
 
 function renderHistograms() {
-  const d = filteredLong;
-  const BIN_VIEWS = 10000;
-  const MAX_VIEWS_BINS = 10; // 0-10K, 10-20K, ..., 90-100K, >100K
-
-  // ── Hist 1: Views faixas × Qtd vídeos (last bin = >100K)
-  {
-    const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
-    d.forEach(r => { bins[Math.min(Math.floor(r.views / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
-    const labels = bins.map((_, i) => i < MAX_VIEWS_BINS
-      ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}`
-      : `>100K`);
-    destroyChart('chartHistViews');
-    chartInstances['chartHistViews'] = new Chart(document.getElementById('chartHistViews'),
-      buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(37,99,235,.75)'));
-  }
-
-  // ── Hist 2: Duração (5min bins, last = >25min)
-  {
-    const BIN_DUR = 300;
-    const MAX_BINS = 5;
-    const bins = Array(MAX_BINS + 1).fill(0);
-    d.forEach(r => { bins[Math.min(Math.floor(r.duracao / BIN_DUR), MAX_BINS)]++; });
-    const labels = bins.map((_, i) => i < MAX_BINS ? `${i*5}–${(i+1)*5} min` : `>25 min`);
-    destroyChart('chartHistDur');
-    chartInstances['chartHistDur'] = new Chart(document.getElementById('chartHistDur'),
-      buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(16,185,129,.75)'));
-  }
-
-  // ── Hist 3: Duração faixas × Média de Views (last = >25min)
-  {
-    const BIN_DUR = 300;
-    const MAX_BINS = 5;
-    const binData = Array.from({length: MAX_BINS + 1}, () => []);
-    d.forEach(r => { binData[Math.min(Math.floor(r.duracao / BIN_DUR), MAX_BINS)].push(r.views); });
-    const avgVals = binData.map(arr => arr.length ? mean(arr) : 0);
-    const labels  = binData.map((_, i) => i < MAX_BINS ? `${i*5}–${(i+1)*5} min` : `>25 min`);
-    destroyChart('chartHistViewsAvg');
-    chartInstances['chartHistViewsAvg'] = new Chart(document.getElementById('chartHistViewsAvg'),
-      buildHistConfig(labels, avgVals, 'Média Views', 'rgba(245,158,11,.75)'));
-  }
+  const d = filteredData;
+  const BIN_VIEWS = 10000; const MAX_VIEWS_BINS = 10;
+  const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
+  d.forEach(r => { bins[Math.min(Math.floor(r.views / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
+  const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>100K`);
+  destroyChart('chartHistViews');
+  const el = document.getElementById('chartHistViews');
+  if (el) chartInstances['chartHistViews'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(37,99,235,.75)'));
 }
 
 
@@ -2156,6 +2124,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const dd   = document.getElementById(ddId);
       if (wrap && dd && !wrap.contains(e.target)) dd.classList.remove('open');
     });
+    // Close granularity dropdown
+    const durDD = document.getElementById('durGranDropdown');
+    if (durDD && !e.target.closest('[onclick="toggleDurGranDD()"]') && !durDD.contains(e.target)) durDD.style.display='none';
   });
 });
 
@@ -2822,77 +2793,108 @@ const DUR_BINS = [
 ];
 
 function renderDurationAnalysis() {
-  const crFilter  = document.getElementById('durCreatorFilter').value;
-  const catFilter = document.getElementById('durCatFilter').value;
   const container = document.getElementById('durationTableContainer');
   if (!container) return;
-
-  let d = filteredLong;
-  if (crFilter)  d = d.filter(r=>r.creator===crFilter);
-  if (catFilter) d = d.filter(r=>r.categoria===catFilter);
-
-  document.getElementById('durTableTitle').textContent =
-    [crFilter, catFilter].filter(Boolean).join(' · ') || 'Todas as faixas de duração';
-
-  const binData = DUR_BINS.map(bin => {
-    const rows = d.filter(r => r.duracao >= bin.min && r.duracao < bin.max);
-    if (!rows.length) return { ...bin, n:0, medViews:null, medRet:null, avgDurSec:null, insc1k:null, comm1k:null };
-    const views = rows.map(r=>r.views);
-    const totalViews = rows.reduce((a,r)=>a+r.views,0);
-    const validDurs = rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
-    return {
-      ...bin,
-      n: rows.length,
-      medViews:   median(views),
-      medRet:     median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
-      avgDurSec:  validDurs.length ? mean(validDurs) : null,
-      insc1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0,
-      comm1k:     totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0,
-    };
-  });
-
-  // For each column, build array of all non-null values for color scaling
-  const cols = ['medViews','medRet','avgDurSec','insc1k','comm1k'];
+  const gran = window.durGran || 'faixas';
+  const d = filteredData;
 
   const thS = `padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);text-align:right;white-space:nowrap;`;
-  const tdS = `padding:7px 10px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;`;
+  const thL = thS.replace('text-align:right;', 'text-align:left;');
 
-  let html = `<table style="width:100%;border-collapse:collapse;">
+  const buildRow = (label, rows, allValsPerCol) => {
+    if (!rows.length) return '';
+    const totalViews = rows.reduce((a,r)=>a+r.views,0);
+    const insc1k  = totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0;
+    const comm1k  = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
+    const data = {
+      n:       rows.length,
+      medViews: median(rows.map(r=>r.views)),
+      avgViews: mean(rows.map(r=>r.views)),
+      medRet:   median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
+      avgDurSec:mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)),
+      insc1k, comm1k,
+    };
+    const cols = ['medViews','avgViews','medRet','avgDurSec','insc1k','comm1k'];
+    const cellColor = (col) => heatColor(data[col], allValsPerCol[col]);
+    const cell = (col, fmt) => {
+      if (data[col]===null||isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
+      const c = cellColor(col);
+      return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
+    };
+    return `<tr style="border-bottom:1px solid var(--gray-100);">
+      <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
+      <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
+      ${cell('avgViews', v=>fmtNum(Math.round(v)))}
+      ${cell('medViews', v=>fmtNum(v))}
+      ${cell('medRet',   v=>v.toFixed(1)+'%')}
+      ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
+      ${cell('insc1k',   v=>v.toFixed(2))}
+      ${cell('comm1k',   v=>v.toFixed(2))}
+    </tr>`;
+  };
+
+  let rows_data = [];
+  let firstColLabel = '';
+
+  if (gran === 'faixas') {
+    firstColLabel = 'Faixa Duração';
+    DUR_BINS.forEach(bin => {
+      const binRows = d.filter(r=>r.duracao>=bin.min&&r.duracao<bin.max);
+      rows_data.push({ label: bin.label, rows: binRows });
+    });
+  } else if (gran === 'criadores') {
+    firstColLabel = 'Criador';
+    const creators = [...new Set(d.map(r=>r.creator).filter(Boolean))].sort();
+    creators.forEach(cr => rows_data.push({ label: cr, rows: d.filter(r=>r.creator===cr) }));
+  } else {
+    firstColLabel = 'Categoria';
+    const cats = [...new Set(d.map(r=>r.categoria||'(Sem categoria)'))].sort();
+    cats.forEach(c => rows_data.push({ label: c, rows: d.filter(r=>(r.categoria||'(Sem categoria)')===c) }));
+  }
+
+  // Compute per-column all values for color scaling
+  const allValsPerCol = { medViews:[], avgViews:[], medRet:[], avgDurSec:[], insc1k:[], comm1k:[] };
+  rows_data.forEach(({rows}) => {
+    if (!rows.length) return;
+    const tv = rows.reduce((a,r)=>a+r.views,0);
+    allValsPerCol.medViews.push(median(rows.map(r=>r.views)));
+    allValsPerCol.avgViews.push(mean(rows.map(r=>r.views)));
+    allValsPerCol.medRet.push(median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)));
+    allValsPerCol.avgDurSec.push(mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)));
+    allValsPerCol.insc1k.push(tv>0?rows.reduce((a,r)=>a+r.inscritos,0)/tv*1000:0);
+    allValsPerCol.comm1k.push(tv>0?rows.reduce((a,r)=>a+r.comentarios,0)/tv*1000:0);
+  });
+
+  const html = `<table style="width:100%;border-collapse:collapse;">
     <thead><tr>
-      <th style="${thS}text-align:left;">Faixa Duração</th>
+      <th style="${thL}text-align:left;">${firstColLabel}</th>
       <th style="${thS}">Nº Vídeos</th>
+      <th style="${thS}">Views Média</th>
       <th style="${thS}">Views Mediana</th>
       <th style="${thS}">Retenção Média</th>
       <th style="${thS}">Avg View Dur</th>
-      <th style="${thS}">Inscritos/1K views</th>
-      <th style="${thS}">Coment./1K views</th>
-    </tr></thead><tbody>`;
-
-  binData.forEach(row => {
-    const cellColor = (col) => {
-      const allVals = binData.map(b=>b[col]).filter(v=>v!==null&&!isNaN(v));
-      return heatColor(row[col], allVals);
-    };
-    const cell = (col, fmt) => {
-      if (row.n === 0 || row[col]===null) return `<td style="${tdS}color:var(--gray-300);">—</td>`;
-      const c = cellColor(col);
-      return `<td style="${tdS}background:${c.bg};color:${c.txt};font-weight:600;">${fmt(row[col])}</td>`;
-    };
-
-    html += `<tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${row.label}</td>
-      <td style="${tdS}font-weight:600;color:var(--gray-600);">${row.n}</td>
-      ${cell('medViews', v => fmtNum(v))}
-      ${cell('medRet',   v => v.toFixed(1)+'%')}
-      ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
-      ${cell('insc1k',  v => v.toFixed(2))}
-      ${cell('comm1k',  v => v.toFixed(2))}
-    </tr>`;
-  });
-
-  html += `</tbody></table>`;
+      <th style="${thS}">Inscritos/1K</th>
+      <th style="${thS}">Coment./1K</th>
+    </tr></thead>
+    <tbody>${rows_data.map(({label,rows})=>buildRow(label, rows, allValsPerCol)).join('')}</tbody>
+  </table>`;
   container.innerHTML = html;
 }
+
+function toggleDurGranDD() {
+  const dd = document.getElementById('durGranDropdown');
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function setDurGran(gran) {
+  window.durGran = gran;
+  const labels = { faixas:'Todas as faixas de duração', criadores:'Por Criador', categorias:'Por Categoria' };
+  const el = document.getElementById('durTableTitle');
+  if (el) el.textContent = labels[gran] || 'Todas as faixas de duração';
+  document.getElementById('durGranDropdown').style.display = 'none';
+  renderDurationAnalysis();
+}
+
 
 // ── WEEK FILTER ───────────────────────────────────────────────────────────────
 
