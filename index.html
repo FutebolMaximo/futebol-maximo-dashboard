@@ -350,7 +350,7 @@
     padding: 2px 3px;
     border-bottom: 2px solid var(--blue-200);
     position: sticky;
-    top: 42px;
+    top: 32px;
     z-index: 4;
   }
   .col-filter {
@@ -397,11 +397,11 @@
 
   /* ── TABS ── */
   .tab-nav { background:var(--white); border-bottom:2px solid var(--gray-200); padding:0 32px; display:flex; gap:4px; position:sticky; top:0; z-index:200; }
-  .tab-btn { padding:12px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
+  .tab-btn { padding:10px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
-  .filters-sticky { position:sticky; top:49px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
-  .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:12px 24px; }
+  .filters-sticky { position:sticky; top:45px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
+  .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
 </style>
 </head>
 <body>
@@ -493,6 +493,7 @@
     <div class="section-divider"></div>
     <h2>Visão Geral · KPIs</h2>
   </div>
+  <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos vídeos?</p>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
     <div class="kpi-card">
         <div class="kpi-label">VIEWS</div>
@@ -561,6 +562,7 @@
 
   <!-- EVOLUÇÃO TEMPORAL -->
   <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal</h2></div>
+  <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
       <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
@@ -602,7 +604,7 @@
     <div class="section-divider"></div>
     <h2>Matriz Avg View Duration × CTR%</h2>
   </div>
-  <p class="section-desc">O problema foi o pacote ou o conteúdo? Alto CTR = thumbnail/título funcionou. Alta duração = conteúdo entregou.</p>
+  <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
   <div class="chart-card" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🎯 CTR × Retenção por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
@@ -634,6 +636,7 @@
 
   <!-- GRÁFICOS DE PERFORMANCE -->
   <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance</h2></div>
+  <p class="section-desc">Como os Vídeos &amp; Categorias estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
     <div class="topn-input">
       <label>N Vídeos:</label>
@@ -859,6 +862,7 @@
   <!-- SCATTER: CTR x RETENÇÃO -->
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
   <div class="section-header"><div class="section-divider"></div><h2>Análise de Distribuição Ideal</h2></div>
+  <p class="section-desc">Mapa de calor dos principais indicadores.</p>
   <!-- hidden stubs for init() code that populates durCreatorFilter/durCatFilter -->
   <select id="durCreatorFilter" style="display:none;"></select>
   <select id="durCatFilter" style="display:none;"></select>
@@ -882,6 +886,7 @@
 
   <!-- HISTOGRAMAS DE DISTRIBUIÇÃO -->
   <div class="section-header"><div class="section-divider"></div><h2>Heatmap Criador × Categoria</h2></div>
+  <p class="section-desc">Mapa de calor das principais categorias por criador.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3>Performance por Criador e Categoria</h3>
@@ -908,7 +913,7 @@
   <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
 <!-- FUNIL DE ENGAJAMENTO -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento</h2></div>
-  <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade. Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
+  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), vídeos que dão comunidade (métricas de engajamento fortalecem o canal) e vídeos que dão profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
@@ -925,6 +930,7 @@
   </div>
 
   <div class="section-header"><div class="section-divider"></div><h2>Distribuição de Views</h2></div>
+  <p class="section-desc">Quantos vídeos temos em cada patamar de views?</p>
   <div style="margin-bottom:32px;">
     <div class="chart-card wide">
       <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
@@ -2863,22 +2869,33 @@ const DUR_BINS = [
   { label:'>25 min',  min:1500, max:Infinity },
 ];
 
+let durSortCol = null;
+let durSortDir = -1; // -1 = desc, 1 = asc
+
+function sortDurTable(col) {
+  if (durSortCol === col) durSortDir *= -1;
+  else { durSortCol = col; durSortDir = -1; }
+  renderDurationAnalysis();
+}
+
 function renderDurationAnalysis() {
   const container = document.getElementById('durationTableContainer');
   if (!container) return;
   const gran = window.durGran || 'faixas';
   const d = filteredData;
 
-  const thS = `padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);text-align:right;white-space:nowrap;`;
-  const thL = thS.replace('text-align:right;', 'text-align:left;');
+  const thBase = 'padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);white-space:nowrap;cursor:pointer;user-select:none;';
+  const thL = thBase + 'text-align:left;';
+  const thR = thBase + 'text-align:right;';
+  const sortArrow = col => durSortCol === col ? (durSortDir === -1 ? ' ↓' : ' ↑') : ' ↕';
 
   const buildRow = (label, rows, allValsPerCol) => {
     if (!rows.length) return '';
     const totalViews = rows.reduce((a,r)=>a+r.views,0);
-    const insc1k  = totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0;
-    const comm1k  = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
+    const insc1k = totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0;
+    const comm1k = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
     const data = {
-      n:       rows.length,
+      n:        rows.length,
       medViews: median(rows.map(r=>r.views)),
       avgViews: mean(rows.map(r=>r.views)),
       medRet:   median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
@@ -2886,22 +2903,23 @@ function renderDurationAnalysis() {
       insc1k, comm1k,
     };
     const cols = ['medViews','avgViews','medRet','avgDurSec','insc1k','comm1k'];
-    const cellColor = (col) => heatColor(data[col], allValsPerCol[col]);
+    const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
       if (data[col]===null||isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
       const c = cellColor(col);
       return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
     };
-    return `<tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
-      <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
-      ${cell('avgViews', v=>fmtNum(Math.round(v)))}
-      ${cell('medViews', v=>fmtNum(v))}
-      ${cell('medRet',   v=>v.toFixed(1)+'%')}
-      ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
-      ${cell('insc1k',   v=>v.toFixed(2))}
-      ${cell('comm1k',   v=>v.toFixed(2))}
-    </tr>`;
+    return { label, n: data.n, medViews: data.medViews, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec, insc1k: data.insc1k, comm1k: data.comm1k,
+      html: `<tr style="border-bottom:1px solid var(--gray-100);">
+        <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
+        <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
+        ${cell('avgViews', v=>fmtNum(Math.round(v)))}
+        ${cell('medViews', v=>fmtNum(v))}
+        ${cell('medRet',   v=>v.toFixed(1)+'%')}
+        ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
+        ${cell('insc1k',   v=>v.toFixed(2))}
+        ${cell('comm1k',   v=>v.toFixed(2))}
+      </tr>` };
   };
 
   let rows_data = [];
@@ -2923,7 +2941,6 @@ function renderDurationAnalysis() {
     cats.forEach(c => rows_data.push({ label: c, rows: d.filter(r=>(r.categoria||'(Sem categoria)')===c) }));
   }
 
-  // Compute per-column all values for color scaling
   const allValsPerCol = { medViews:[], avgViews:[], medRet:[], avgDurSec:[], insc1k:[], comm1k:[] };
   rows_data.forEach(({rows}) => {
     if (!rows.length) return;
@@ -2936,21 +2953,35 @@ function renderDurationAnalysis() {
     allValsPerCol.comm1k.push(tv>0?rows.reduce((a,r)=>a+r.comentarios,0)/tv*1000:0);
   });
 
-  const html = `<table style="width:100%;border-collapse:collapse;">
+  // Build row objects with sortable values
+  const built = rows_data.map(({label, rows}) => buildRow(label, rows, allValsPerCol)).filter(Boolean);
+
+  // Sort if column selected
+  if (durSortCol) {
+    built.sort((a,b) => {
+      const av = durSortCol==='label' ? a.label : (a[durSortCol]||0);
+      const bv = durSortCol==='label' ? b.label : (b[durSortCol]||0);
+      if (durSortCol==='label') return durSortDir * av.localeCompare(bv);
+      return durSortDir * (bv - av);
+    });
+  }
+
+  const tableHtml = `<table style="width:100%;border-collapse:collapse;">
     <thead><tr>
-      <th style="${thL}text-align:left;">${firstColLabel}</th>
-      <th style="${thS}">Nº Vídeos</th>
-      <th style="${thS}">Views Média</th>
-      <th style="${thS}">Views Mediana</th>
-      <th style="${thS}">Retenção Média</th>
-      <th style="${thS}">Avg View Dur</th>
-      <th style="${thS}">Inscritos/1K</th>
-      <th style="${thS}">Coment./1K</th>
+      <th onclick="sortDurTable('label')" style="${thL}">${firstColLabel}${sortArrow('label')}</th>
+      <th onclick="sortDurTable('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
+      <th onclick="sortDurTable('avgViews')" style="${thR}">Views Média${sortArrow('avgViews')}</th>
+      <th onclick="sortDurTable('medViews')" style="${thR}">Views Mediana${sortArrow('medViews')}</th>
+      <th onclick="sortDurTable('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
+      <th onclick="sortDurTable('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
+      <th onclick="sortDurTable('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
+      <th onclick="sortDurTable('comm1k')" style="${thR}">Coment./1K${sortArrow('comm1k')}</th>
     </tr></thead>
-    <tbody>${rows_data.map(({label,rows})=>buildRow(label, rows, allValsPerCol)).join('')}</tbody>
+    <tbody>${built.map(r=>r.html).join('')}</tbody>
   </table>`;
-  container.innerHTML = html;
+  container.innerHTML = tableHtml;
 }
+
 
 function toggleDurGranDD() {
   const dd = document.getElementById('durGranDropdown');
