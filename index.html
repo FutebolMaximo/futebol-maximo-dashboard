@@ -168,10 +168,17 @@
   /* SECTION HEADERS */
   .section-header {
     display: flex; align-items: center; gap: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 14px; cursor: pointer; user-select: none;
   }
-  .section-header h2 { font-size: 14px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: .5px; }
-  .section-divider { height: 2px; background: var(--blue-500); width: 28px; border-radius: 2px; }
+  .section-header:hover h2 { color: var(--blue-600); }
+  .section-header h2 { font-size: 14px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: .5px; margin: 0; }
+  .section-divider { height: 2px; background: var(--blue-500); width: 28px; border-radius: 2px; flex-shrink:0; }
+  .section-toggle {
+    margin-left: auto; font-size: 13px; color: var(--gray-400); opacity: .7;
+    transition: transform .2s; flex-shrink: 0; line-height: 1;
+  }
+  .section-header[data-collapsed="true"]  .section-toggle { transform: rotate(-90deg); }
+  .section-header[data-collapsed="false"] .section-toggle { transform: rotate(0deg); }
 
   /* KPI GRID */
   .kpi-grid {
@@ -481,6 +488,7 @@
     <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;">
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
+      <button id="btnEyeToggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo" style="background:white;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:16px;cursor:pointer;line-height:1;transition:background .15s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">👁️</button>
     </div>
   </div>
 </div>
@@ -489,8 +497,8 @@
 <div class="main" id="panelDashboard">
 
   <!-- KPI SECTION -->
-  <div class="section-header">
-    <div class="section-divider"></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true">
+    <div class="section-divider"><span class="section-toggle">▼</span></div>
     <h2>Visão Geral · KPIs</h2>
   </div>
   <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos vídeos?</p>
@@ -561,7 +569,7 @@
 
 
   <!-- EVOLUÇÃO TEMPORAL -->
-  <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Evolução Temporal</h2></div>
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
@@ -600,8 +608,8 @@
 
 
   <!-- SCATTER MATRIX -->
-  <div class="section-header">
-    <div class="section-divider"></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true">
+    <div class="section-divider"><span class="section-toggle">▼</span></div>
     <h2>Matriz Avg View Duration × CTR%</h2>
   </div>
   <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
@@ -635,7 +643,7 @@
 
 
   <!-- GRÁFICOS DE PERFORMANCE -->
-  <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Gráficos de Performance</h2></div>
   <p class="section-desc">Como os Vídeos &amp; Categorias estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
     <div class="topn-input">
@@ -687,7 +695,7 @@
 
 <div id="panelFeedbacks" class="main" style="display:none;">
 
-  <div class="section-header"><div class="section-divider"></div><h2>Feedback Automático · Long Form</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Long Form</h2></div>
   <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: ≥50K views, CTR% ≥6% e ≥6min avg view duration = Alto CTR + Longa Duração.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
@@ -789,8 +797,8 @@
 
 <div class="main" id="panelBaseDados" style="display:none;">
 <!-- BASE DE DADOS COMPLETA -->
-  <div class="section-header">
-    <div class="section-divider"></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true">
+    <div class="section-divider"><span class="section-toggle">▼</span></div>
     <h2>Base de Dados Completa</h2>
   </div>
   <div class="table-card">
@@ -861,7 +869,7 @@
 
   <!-- SCATTER: CTR x RETENÇÃO -->
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
-  <div class="section-header"><div class="section-divider"></div><h2>Análise de Distribuição Ideal</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Análise de Distribuição Ideal</h2></div>
   <p class="section-desc">Mapa de calor dos principais indicadores.</p>
   <!-- hidden stubs for init() code that populates durCreatorFilter/durCatFilter -->
   <select id="durCreatorFilter" style="display:none;"></select>
@@ -885,7 +893,7 @@
   </div>
 
   <!-- HISTOGRAMAS DE DISTRIBUIÇÃO -->
-  <div class="section-header"><div class="section-divider"></div><h2>Heatmap Criador × Categoria</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Criador × Categoria</h2></div>
   <p class="section-desc">Mapa de calor das principais categorias por criador.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
@@ -912,7 +920,7 @@
 
   <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
 <!-- FUNIL DE ENGAJAMENTO -->
-  <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -929,7 +937,7 @@
     <div id="funnelContainer" style="margin-top:16px;max-width:900px;"></div>
   </div>
 
-  <div class="section-header"><div class="section-divider"></div><h2>Distribuição de Views</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Distribuição de Views</h2></div>
   <p class="section-desc">Quantos vídeos temos em cada patamar de views?</p>
   <div style="margin-bottom:32px;">
     <div class="chart-card wide">
@@ -944,7 +952,7 @@
 <div class="main" id="panelShorts" style="display:none;">
 
   <!-- SHORTS KPIs -->
-  <div class="section-header"><div class="section-divider"></div><h2>⚡ Shorts · Visão Geral</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>⚡ Shorts · Visão Geral</h2></div>
   <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos Shorts?</p>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
     <div class="kpi-card">
@@ -1011,7 +1019,7 @@
       </div>
   </div>
   <!-- SHORTS EVOLUÇÃO TEMPORAL -->
-  <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal · Shorts</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Evolução Temporal · Shorts</h2></div>
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
@@ -1043,14 +1051,14 @@
 
   <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <!-- SHORTS SCATTER -->
-  <div class="section-header"><div class="section-divider"></div><h2>Matriz Avg View Duration × CTR%</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Matriz Avg View Duration × CTR%</h2></div>
   <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div style="height:420px;"><canvas id="chartSScatter"></canvas></div>
     <div id="sSScatterLegend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0 4px;"></div>
   </div>
 
-  <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance · Shorts</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Gráficos de Performance · Shorts</h2></div>
   <p class="section-desc">Como os Shorts estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
     <div class="topn-input">
@@ -1094,7 +1102,7 @@
   </div>
 
   <!-- SHORTS FUNIL -->
-  <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento · Shorts</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento · Shorts</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido).</p>
   <div class="chart-card wide" style="margin-bottom:32px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -1533,6 +1541,8 @@ function init() {
   }
 
   applyFilters();
+  // Start with all sections collapsed
+  setTimeout(collapseAllSections, 50);
 }
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
@@ -3707,6 +3717,69 @@ function renderShortsScatter() {
       </span>`;
     }).join('');
   }
+}
+
+// ── COLLAPSIBLE SECTIONS ──────────────────────────────────────────────────────
+
+let allSectionsExpanded = false; // default: all collapsed
+
+function toggleSection(headerEl) {
+  const isCollapsed = headerEl.dataset.collapsed !== 'false';
+  headerEl.dataset.collapsed = isCollapsed ? 'false' : 'true';
+  // Show/hide all siblings until next section-header or end of parent
+  let sib = headerEl.nextElementSibling;
+  while (sib) {
+    if (sib.classList && sib.classList.contains('section-header')) break;
+    sib.style.display = isCollapsed ? '' : 'none';
+    sib = sib.nextElementSibling;
+  }
+  // Resize any charts inside the now-visible section
+  if (isCollapsed) {
+    setTimeout(() => {
+      Object.values(chartInstances).forEach(c => { try { c.resize(); } catch(e){} });
+    }, 50);
+  }
+}
+
+function collapseAllSections() {
+  document.querySelectorAll('.section-header[data-collapsed]').forEach(h => {
+    h.dataset.collapsed = 'true';
+    let sib = h.nextElementSibling;
+    while (sib) {
+      if (sib.classList && sib.classList.contains('section-header')) break;
+      sib.style.display = 'none';
+      sib = sib.nextElementSibling;
+    }
+  });
+  allSectionsExpanded = false;
+  updateEyeBtn();
+}
+
+function expandAllSections() {
+  document.querySelectorAll('.section-header[data-collapsed]').forEach(h => {
+    h.dataset.collapsed = 'false';
+    let sib = h.nextElementSibling;
+    while (sib) {
+      if (sib.classList && sib.classList.contains('section-header')) break;
+      sib.style.display = '';
+      sib = sib.nextElementSibling;
+    }
+  });
+  allSectionsExpanded = true;
+  updateEyeBtn();
+  setTimeout(() => {
+    Object.values(chartInstances).forEach(c => { try { c.resize(); } catch(e){} });
+  }, 80);
+}
+
+function toggleAllSections() {
+  if (allSectionsExpanded) collapseAllSections();
+  else expandAllSections();
+}
+
+function updateEyeBtn() {
+  const btn = document.getElementById('btnEyeToggle');
+  if (btn) btn.title = allSectionsExpanded ? 'Recolher tudo' : 'Expandir tudo';
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
