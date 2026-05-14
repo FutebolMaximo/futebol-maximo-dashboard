@@ -400,7 +400,7 @@
   .tab-btn { padding:10px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
-  .filters-sticky { position:sticky; top:45px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
+  .filters-sticky { position:sticky; top:38px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
 </style>
 </head>
@@ -2956,13 +2956,21 @@ function renderDurationAnalysis() {
   // Build row objects with sortable values
   const built = rows_data.map(({label, rows}) => buildRow(label, rows, allValsPerCol)).filter(Boolean);
 
-  // Sort if column selected
+  // Sort rows
   if (durSortCol) {
     built.sort((a,b) => {
-      const av = durSortCol==='label' ? a.label : (a[durSortCol]||0);
-      const bv = durSortCol==='label' ? b.label : (b[durSortCol]||0);
-      if (durSortCol==='label') return durSortDir * av.localeCompare(bv);
-      return durSortDir * (bv - av);
+      if (durSortCol === 'label') {
+        // For faixas granularity, sort by bin index (natural order), not alphabetically
+        if (gran === 'faixas') {
+          const binLabels = DUR_BINS.map(b => b.label);
+          const ai = binLabels.indexOf(a.label);
+          const bi = binLabels.indexOf(b.label);
+          return durSortDir === 1 ? ai - bi : bi - ai;
+        }
+        return durSortDir * a.label.localeCompare(b.label);
+      }
+      // For non-label columns: always sort by value regardless of granularity
+      return durSortDir * ((b[durSortCol]||0) - (a[durSortCol]||0));
     });
   }
 
