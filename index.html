@@ -913,7 +913,7 @@
   <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
 <!-- FUNIL DE ENGAJAMENTO -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento</h2></div>
-  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), vídeos que dão comunidade (métricas de engajamento fortalecem o canal) e vídeos que dão profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
+  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
@@ -945,6 +945,7 @@
 
   <!-- SHORTS KPIs -->
   <div class="section-header"><div class="section-divider"></div><h2>⚡ Shorts · Visão Geral</h2></div>
+  <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos Shorts?</p>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
     <div class="kpi-card">
         <div class="kpi-label">VIEWS</div>
@@ -1011,6 +1012,7 @@
   </div>
   <!-- SHORTS EVOLUÇÃO TEMPORAL -->
   <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal · Shorts</h2></div>
+  <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
       <button id="btnSTempWeek" class="toggle-btn active" onclick="setSTempMode('week')">Por Semana</button>
@@ -1040,7 +1042,16 @@
   </div>
 
   <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
+  <!-- SHORTS SCATTER -->
+  <div class="section-header"><div class="section-divider"></div><h2>Matriz Avg View Duration × CTR%</h2></div>
+  <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
+  <div class="chart-card wide" style="margin-bottom:24px;">
+    <div style="height:420px;"><canvas id="chartSScatter"></canvas></div>
+    <div id="sSScatterLegend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0 4px;"></div>
+  </div>
+
   <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance · Shorts</h2></div>
+  <p class="section-desc">Como os Shorts estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
     <div class="topn-input">
       <label>N Vídeos:</label>
@@ -1084,7 +1095,7 @@
 
   <!-- SHORTS FUNIL -->
   <div class="section-header"><div class="section-divider"></div><h2>Funil de Engajamento · Shorts</h2></div>
-  <p class="section-desc">Separa vídeos que dão alcance, vídeos que dão comunidade e vídeos que dão profundidade.</p>
+  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido).</p>
   <div class="chart-card wide" style="margin-bottom:32px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
@@ -3169,10 +3180,11 @@ function setSInscritosMode(mode) {
 }
 
 function renderShortsAll() {
-  try { renderShortsKPIs();   } catch(e) { console.error('ShortsKPIs:', e.message); }
-  try { renderShortsTemporal(); } catch(e) { console.error('ShortsTemporal:', e.message); }
-  try { renderShortsCharts(); } catch(e) { console.error('ShortsCharts:', e.message); }
-  try { renderShortsFunil();  } catch(e) { console.error('ShortsFunil:', e.message); }
+  try { renderShortsKPIs();    } catch(e) { console.error('ShortsKPIs:', e.message); }
+  try { renderShortsTemporal();} catch(e) { console.error('ShortsTemporal:', e.message); }
+  try { renderShortsScatter(); } catch(e) { console.error('ShortsScatter:', e.message); }
+  try { renderShortsCharts();  } catch(e) { console.error('ShortsCharts:', e.message); }
+  try { renderShortsFunil();   } catch(e) { console.error('ShortsFunil:', e.message); }
 }
 
 function renderShortsKPIs() {
@@ -3582,6 +3594,119 @@ function setSPerfView(view) {
 function toggleSPerfMetricDD() {
   const dd = document.getElementById('sPerfMetricDropdown');
   dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function renderShortsScatter() {
+  const d = filteredShorts;
+  const el = document.getElementById('chartSScatter');
+  if (!el || !d.length) return;
+
+  // Fixed quadrant lines: medians of Shorts 2026
+  const sh2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && r.ano === 2026);
+  const base = sh2026.length > 0 ? sh2026 : d;
+  const medRet = median(base.map(r => r.avgViewedPct).filter(v => v !== null));
+  const medCTR = median(base.map(r => r.ctr));
+
+  // Group by category for datasets
+  const cats = [...new Set(d.map(r => r.categoria||'(Sem categoria)'))].sort();
+  const datasets = cats.map(cat => {
+    const rows = d.filter(r => (r.categoria||'(Sem categoria)') === cat);
+    const col = CAT_COLORS[cat] || '#64748b';
+    return {
+      label: cat,
+      data: rows.map(r => ({
+        x: r.avgViewedPct ?? null,
+        y: r.ctr !== null ? r.ctr * 100 : null,
+        r: Math.max(4, Math.min(18, Math.sqrt((r.views||0)/8000))),
+        title: r.title, views: r.views, dur: r.avgViewDurSec
+      })).filter(p => p.x !== null && p.y !== null),
+      backgroundColor: col + 'aa',
+      borderColor: col,
+      borderWidth: 1,
+    };
+  });
+
+  // Quadrant plugin
+  const sQuadrantPlugin = {
+    id: 'sQuadrantBg',
+    beforeDatasetsDraw(chart) {
+      const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
+      if (!scales.x || !scales.y) return;
+      const xMed = scales.x.getPixelForValue(medRet);
+      const yMed = scales.y.getPixelForValue(medCTR * 100);
+      c.save();
+      [
+        { x1:xMed, y1:top,   x2:right, y2:yMed,   color:'rgba(220,252,231,0.30)' },
+        { x1:xMed, y1:yMed,  x2:right, y2:bottom, color:'rgba(254,249,195,0.30)' },
+        { x1:left, y1:top,   x2:xMed,  y2:yMed,   color:'rgba(219,234,254,0.30)' },
+        { x1:left, y1:yMed,  x2:xMed,  y2:bottom, color:'rgba(254,226,226,0.30)' },
+      ].forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
+
+      c.strokeStyle = 'rgba(100,100,100,0.55)'; c.lineWidth = 1.5; c.setLineDash([5,4]);
+      c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
+      c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
+      c.setLineDash([]);
+
+      // Label: CTR% median → right side of horizontal line
+      const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
+      c.font = 'bold 10px system-ui,sans-serif';
+      const ctrW = c.measureText(ctrLabel).width + 8;
+      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.beginPath(); c.roundRect(right - ctrW - 2, yMed - 9, ctrW, 16, 3); c.fill();
+      c.fillStyle = '#374151'; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(ctrLabel, right - 6, yMed);
+
+      // Label: Avg Viewed% median → top of vertical line
+      const retLabel = `Ret. ${medRet.toFixed(1)}%`;
+      const retW = c.measureText(retLabel).width + 8;
+      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.beginPath(); c.roundRect(xMed - retW/2, top + 2, retW, 16, 3); c.fill();
+      c.fillStyle = '#374151'; c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText(retLabel, xMed, top + 4);
+
+      c.restore();
+    }
+  };
+
+  destroyChart('chartSScatter');
+  chartInstances['chartSScatter'] = new Chart(el, {
+    type: 'bubble',
+    data: { datasets },
+    plugins: [sQuadrantPlugin],
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          label: ctx => {
+            const p = ctx.raw;
+            return [
+              ` ${p.title ? p.title.slice(0,40)+'…' : ctx.dataset.label}`,
+              ` Avg Viewed%: ${p.x?.toFixed(1)}%`,
+              ` CTR%: ${p.y?.toFixed(2)}%`,
+              ` Views: ${fmtNum(p.views)}`,
+            ];
+          }
+        }}
+      },
+      scales: {
+        x: { title: { display:true, text:'Avg Viewed %', font:{size:11} }, ticks: { callback: v => v+'%' }, grid: { color:'#f3f4f6' } },
+        y: { title: { display:true, text:'CTR%', font:{size:11} }, ticks: { callback: v => v.toFixed(1)+'%' }, grid: { color:'#f3f4f6' } },
+      }
+    }
+  });
+
+  // Legend
+  const legendEl = document.getElementById('sSScatterLegend');
+  if (legendEl) {
+    legendEl.innerHTML = cats.map(cat => {
+      const col = CAT_COLORS[cat]||'#64748b';
+      const n = d.filter(r=>(r.categoria||'(Sem categoria)')===cat).length;
+      return `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
+        <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>${cat} (${n})
+      </span>`;
+    }).join('');
+  }
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
