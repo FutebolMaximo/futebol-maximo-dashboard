@@ -939,19 +939,70 @@
 
   <!-- SHORTS KPIs -->
   <div class="section-header"><div class="section-divider"></div><h2>⚡ Shorts · Visão Geral</h2></div>
-  <div class="kpi-grid" id="kpiGridShorts">
-    <div class="kpi-card"><div class="kpi-label">Impressões</div><div class="kpi-value" id="skImpr">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skImprMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Views</div><div class="kpi-value" id="skViews">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skViewsMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Minutagem Média</div><div class="kpi-value" id="skDurMedia">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skDurMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Avg Viewed %</div><div class="kpi-value" id="skAvgPct">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skAvgPctMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Avg View Duration</div><div class="kpi-value" id="skAvgDur">—</div><div class="kpi-sub">Média dos vídeos</div><div class="kpi-median" id="skAvgDurMed">—</div></div>
-    <div class="kpi-card accent"><div class="kpi-label">Inscritos</div><div class="kpi-value" id="skInsc">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skInscMed">—</div></div>
-    <div class="kpi-card accent"><div class="kpi-label">CTR%</div><div class="kpi-value" id="skCTR">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skCTRMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Likes</div><div class="kpi-value" id="skLikes">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skLikesMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Comentários</div><div class="kpi-value" id="skComm">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skCommMed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Shares</div><div class="kpi-value" id="skShares">—</div><div class="kpi-sub">Média por vídeo</div><div class="kpi-median" id="skSharesMed">—</div></div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
+    <div class="kpi-card">
+        <div class="kpi-label">VIEWS</div>
+        <div class="kpi-value" id="skViews">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skViewsMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">CTR%</div>
+        <div class="kpi-value" id="skCTR">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skCTRMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">AVG VIEW DURATION</div>
+        <div class="kpi-value" id="skAvgDur">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skAvgDurMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">AVG VIEWED %</div>
+        <div class="kpi-value" id="skAvgPct">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skAvgPctMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">MINUTAGEM MÉDIA</div>
+        <div class="kpi-value" id="skDurMedia">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skDurMed">—</div>
+      </div>
   </div>
-
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
+    <div class="kpi-card">
+        <div class="kpi-label">IMPRESSÕES</div>
+        <div class="kpi-value" id="skImpr">—</div>
+        <div class="kpi-sub">Média dos vídeos</div>
+        <div class="kpi-median" id="skImprMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">INSCRITOS</div>
+        <div class="kpi-value" id="skInsc">—</div>
+        <div class="kpi-sub">Média por vídeo</div>
+        <div class="kpi-median" id="skInscMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">LIKES</div>
+        <div class="kpi-value" id="skLikes">—</div>
+        <div class="kpi-sub">Média por vídeo</div>
+        <div class="kpi-median" id="skLikesMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">COMENTÁRIOS</div>
+        <div class="kpi-value" id="skComm">—</div>
+        <div class="kpi-sub">Média por vídeo</div>
+        <div class="kpi-median" id="skCommMed">—</div>
+      </div>
+    <div class="kpi-card">
+        <div class="kpi-label">SHARES</div>
+        <div class="kpi-value" id="skShares">—</div>
+        <div class="kpi-sub">Média por vídeo</div>
+        <div class="kpi-median" id="skSharesMed">—</div>
+      </div>
+  </div>
   <!-- SHORTS EVOLUÇÃO TEMPORAL -->
   <div class="section-header"><div class="section-divider"></div><h2>Evolução Temporal · Shorts</h2></div>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
@@ -960,49 +1011,69 @@
       <button id="btnSTempMonth" class="toggle-btn" onclick="setSTempMode('month')">Por Mês</button>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
-    <div class="chart-card wide" style="grid-column:1/-1;"><div class="chart-title">📈 Soma de Views por Período</div><div style="height:260px;"><canvas id="chartSTempViews"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">📊 CTR% Médio</div><div style="height:220px;"><canvas id="chartSTempCTR"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">👁️ Retenção Média</div><div style="height:220px;"><canvas id="chartSTempRet"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">🔔 Inscritos por Vídeo</div><div style="height:220px;"><canvas id="chartSTempInsc"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">⏱️ Avg View Duration Média</div><div style="height:220px;"><canvas id="chartSTempDur"></canvas></div></div>
+  <div class="chart-card wide" style="margin-bottom:24px;">
+    <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;position:relative;">
+        <button id="btnSTempMetric" onclick="toggleSTempMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+          <span id="sTempMetricLabel">📈 Soma de Views</span> <span style="font-size:10px;opacity:.6;">▾</span>
+        </button>
+        <div id="sTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setSTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
+          <div onclick="setSTempMetric('ctr','📊 CTR% Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% Médio</div>
+          <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
+          <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
+          <div onclick="setSTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:320px;margin-top:8px;"><canvas id="chartSTempViews"></canvas></div>
+    <canvas id="chartSTempCTR" style="display:none;"></canvas>
+    <canvas id="chartSTempRet" style="display:none;"></canvas>
+    <canvas id="chartSTempInsc" style="display:none;"></canvas>
+    <canvas id="chartSTempDur" style="display:none;"></canvas>
   </div>
 
   <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <div class="section-header"><div class="section-divider"></div><h2>Gráficos de Performance · Shorts</h2></div>
-  <div id="charts-controls-shorts" class="charts-controls" style="margin-bottom:16px;">
-    <span style="font-size:12px;color:var(--gray-500);">N Vídeos:</span>
-    <input id="topNInputShorts" type="number" value="20" min="1" max="200" style="width:60px;padding:4px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-    <div class="topn-toggle">
-      <button id="btnTopShorts" class="toggle-btn active" onclick="setChartModeShorts('top')">🏆 Melhores</button>
-      <button id="btnBotShorts" class="toggle-btn" onclick="setChartModeShorts('bottom')">🔍 Piores</button>
+  <div class="charts-controls">
+    <div class="topn-input">
+      <label>N Vídeos:</label>
+      <input type="number" id="topNInputShorts" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+      <div class="topn-toggle">
+        <button id="btnTopShorts" class="toggle-btn active" onclick="setChartModeShorts('top')">🏆 Melhores</button>
+        <button id="btnBotShorts" class="toggle-btn" onclick="setChartModeShorts('bottom')">🔍 Piores</button>
+      </div>
+      <div class="topn-toggle" style="margin-left:8px;">
+        <button id="btnSPerfVideo" class="toggle-btn active" onclick="setSPerfView('video')">Por Vídeo</button>
+        <button id="btnSPerfCat" class="toggle-btn" onclick="setSPerfView('categoria')">Por Categoria</button>
+      </div>
     </div>
-    <button class="btn-primary" style="height:32px;padding:0 12px;font-size:12px;" onclick="renderShortsCharts()">Atualizar</button>
   </div>
-  <div style="margin-bottom:20px;"><div class="chart-card"><div class="chart-title">📊 Views por Vídeo <span class="chart-badge" id="topNBadgeShorts">Top N</span></div><div class="chart-wrap"><canvas id="chartSViews"></canvas></div></div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
-    <div class="chart-card">
-      <div class="chart-title" style="justify-content:space-between;">
-        <span>⏱️ <span id="sDurationChartLabel">Avg View Duration por Vídeo</span></span>
-        <div class="topn-toggle"><button id="sBtnDuration" class="toggle-btn active" onclick="setSDurationMode('duration')">Avg Duration</button><button id="sBtnRetention" class="toggle-btn" onclick="setSDurationMode('retention')">Avg Viewed %</button></div>
+  <div class="charts-grid">
+    <div class="chart-card wide">
+      <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;position:relative;">
+          <button onclick="toggleSPerfMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <span id="sPerfMetricLabel">📊 Views por Vídeo</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          </button>
+          <div id="sPerfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:240px;padding:4px 0;">
+            <div onclick="setSPerfMetric('views','📊 Views por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views por Vídeo</div>
+            <div onclick="setSPerfMetric('avgViewDurSec','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
+            <div onclick="setSPerfMetric('avgViewedPct','👁️ Avg Viewed %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Avg Viewed %</div>
+            <div onclick="setSPerfMetric('comentarios','💬 Comentários')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">💬 Comentários</div>
+            <div onclick="setSPerfMetric('conversaoComments','📬 Conv. Comentários %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📬 Conv. Comentários %</div>
+            <div onclick="setSPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
+            <div onclick="setSPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
+            <div onclick="setSPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
+          </div>
+        </div>
       </div>
-      <div class="chart-wrap"><canvas id="chartSDuration"></canvas></div>
+      <div class="chart-wrap"><canvas id="chartSViews"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title" style="justify-content:space-between;">
-        <span>💬 <span id="sCommentsChartLabel">Comentários por Vídeo</span></span>
-        <div class="topn-toggle"><button id="sBtnComments" class="toggle-btn active" onclick="setSCommentsMode('comments')">Comentários</button><button id="sBtnConvComm" class="toggle-btn" onclick="setSCommentsMode('convComments')">Conv. Comm. %</button></div>
-      </div>
-      <div class="chart-wrap"><canvas id="chartSComments"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title" style="justify-content:space-between;">
-        <span>🔄 <span id="sInscritosChartLabel">Conversão por Vídeo</span> <span id="sInscritosChartSub" style="font-size:11px;font-weight:400;color:var(--gray-500)">(Inscritos/Views %)</span></span>
-        <div class="topn-toggle"><button id="sBtnConversao" class="toggle-btn active" onclick="setSInscritosMode('conversao')">Conversão %</button><button id="sBtnInscritos" class="toggle-btn" onclick="setSInscritosMode('inscritos')">Inscritos</button></div>
-      </div>
-      <div class="chart-wrap"><canvas id="chartSInscritos"></canvas></div>
-    </div>
-    <div class="chart-card"><div class="chart-title">🖱️ CTR% por Vídeo</div><div class="chart-wrap"><canvas id="chartSCTR"></canvas></div></div>
+    <canvas id="chartSDuration" style="display:none;"></canvas>
+    <canvas id="chartSComments" style="display:none;"></canvas>
+    <canvas id="chartSInscritos" style="display:none;"></canvas>
+    <canvas id="chartSCTR" style="display:none;"></canvas>
   </div>
 
   <!-- SHORTS FUNIL -->
@@ -3097,62 +3168,66 @@ function renderShortsTemporal() {
   const grouped = groupByPeriod(d, tempModeShorts);
   const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*1000+parseInt(m[1]) : 0; };
   const keys = Object.keys(grouped).sort((a,b) =>
-    tempModeShorts === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
+    tempModeShorts==='week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
   );
-  const viewsSum    = keys.map(k => grouped[k].reduce((a,r)=>a+r.views,0));
-  const viewsMedian = keys.map(k => median(grouped[k].map(r=>r.views)));
-  const counts      = keys.map(k => grouped[k].length);
-  const ctrMean     = keys.map(k => mean(grouped[k].map(r=>r.ctr))*100);
-  const ctrMedian   = keys.map(k => median(grouped[k].map(r=>r.ctr))*100);
-  const retMean     = keys.map(k => mean(grouped[k].map(r=>r.avgViewedPct)));
-  const inscMean    = keys.map(k => mean(grouped[k].map(r=>r.inscritos)));
-  const avgDurMean  = keys.map(k => mean(grouped[k].map(r=>r.avgViewDurSec)));
-  const shortKey = k => tempModeShorts==='month'
-    ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})
-    : k;
+  const shortKey = k => tempModeShorts==='month' ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}) : k;
   const labels = keys.map(shortKey);
   const wTitle = idx => {
-    if (tempModeShorts !== 'week' || !keys[idx]) return labels[idx]||'';
-    const k = keys[idx];
-    const dates = (grouped[k]||[]).map(r=>r.dataPublicacao).filter(Boolean).sort();
-    const fmt = d => d ? `${d.slice(8,10)}/${d.slice(5,7)}` : '';
-    const range = dates.length >= 2 ? `${fmt(dates[0])} – ${fmt(dates[dates.length-1])}` : '';
-    return range ? `${k} · ${range}` : k;
+    if (tempModeShorts!=='week'||!keys[idx]) return labels[idx]||'';
+    const k=keys[idx]; const dates=(grouped[k]||[]).map(r=>r.dataPublicacao).filter(Boolean).sort();
+    const fmt=d=>d?`${d.slice(8,10)}/${d.slice(5,7)}`:'';
+    const range=dates.length>=2?`${fmt(dates[0])} – ${fmt(dates[dates.length-1])}`:'';
+    return range?`${k} · ${range}`:k;
   };
 
-  // Views dual-axis
+  const getMetricVal = (rows, metric) => {
+    if (metric==='views') return rows.reduce((a,r)=>a+r.views,0);
+    if (metric==='ctr')   return mean(rows.map(r=>r.ctr))*100;
+    if (metric==='ret')   return mean(rows.map(r=>r.avgViewedPct).filter(v=>v!==null));
+    if (metric==='insc')  return rows.reduce((a,r)=>a+r.inscritos,0);
+    if (metric==='dur')   return mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined));
+    return 0;
+  };
+  const getYFmt = metric => {
+    if (metric==='ctr'||metric==='ret') return v=>v.toFixed(1)+'%';
+    if (metric==='dur') return v=>formatDuration(Math.round(v));
+    return v=>fmtNum(v);
+  };
+  const getTooltipFmt = (metric,v) => {
+    if (metric==='ctr') return `CTR%: ${v.toFixed(2)}%`;
+    if (metric==='ret') return `Retenção: ${v.toFixed(1)}%`;
+    if (metric==='dur') return `Avg View Dur: ${formatDuration(Math.round(v))}`;
+    if (metric==='insc') return `Inscritos: ${fmtNum(v)}`;
+    return `Views: ${fmtNum(v)}`;
+  };
+
+  const agg    = keys.map(k => getMetricVal(grouped[k], sTempMetric));
+  const counts = keys.map(k => grouped[k].length);
+  const yFmt   = getYFmt(sTempMetric);
+
   if (chartInstances['chartSTempViews']) { chartInstances['chartSTempViews'].destroy(); delete chartInstances['chartSTempViews']; }
-  const elV = document.getElementById('chartSTempViews');
-  if (elV) {
-    chartInstances['chartSTempViews'] = new Chart(elV, {
-      data: { labels, datasets: [
-        { type:'line', label:'Soma Views', data:viewsSum, borderColor:'#2563eb', backgroundColor:'#2563eb22', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yViews', order:1 },
-        { type:'bar',  label:'Qtd Vídeos', data:counts,  backgroundColor:'#06b6d422', borderColor:'#06b6d4', borderWidth:1, borderRadius:3, yAxisID:'yCount', order:2 }
-      ]},
-      options: { responsive:true, maintainAspectRatio:false, animation:{duration:300},
-        plugins: { legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}},
-          tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex), label:ctx=>ctx.datasetIndex===0?[` Soma Views: ${fmtNum(ctx.parsed.y)}`,` Mediana: ${fmtNum(viewsMedian[ctx.dataIndex])}`]:` Qtd Vídeos: ${ctx.parsed.y}`}}},
-        scales: { x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},
-          yViews:{position:'left',ticks:{font:{size:9},color:'#2563eb',callback:v=>fmtNum(v)},grid:{color:'#f3f4f6'}},
-          yCount:{position:'right',ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)},grid:{drawOnChartArea:false}} }
+  const el = document.getElementById('chartSTempViews');
+  if (!el) return;
+  chartInstances['chartSTempViews'] = new Chart(el, {
+    data: { labels, datasets: [
+      { type:'line', label:'Agregado', data:agg, borderColor:'#10b981', backgroundColor:'#10b98122', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
+      { type:'bar',  label:'Qtd Vídeos', data:counts, backgroundColor:'#06b6d422', borderColor:'#06b6d4', borderWidth:1, borderRadius:3, yAxisID:'yCount', order:2 },
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins: { legend:{display:false}, tooltip:{ callbacks:{
+        title: ctx => wTitle(ctx[0].dataIndex),
+        label: ctx => ctx.datasetIndex===1 ? ` Qtd Vídeos: ${ctx.parsed.y}` : ` ${getTooltipFmt(sTempMetric, ctx.parsed.y)}`
+      }}},
+      scales: {
+        x: { ticks:{font:{size:9},color:'#6b7280',maxRotation:45}, grid:{display:false} },
+        yMain:  { position:'left',  ticks:{font:{size:9},color:'#10b981',callback:yFmt}, grid:{color:'#f3f4f6'} },
+        yCount: { position:'right', ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)}, grid:{drawOnChartArea:false} }
       }
-    });
-  }
-
-  // CTR% médio
-  if (chartInstances['chartSTempCTR']) { chartInstances['chartSTempCTR'].destroy(); delete chartInstances['chartSTempCTR']; }
-  const elC = document.getElementById('chartSTempCTR');
-  if (elC) chartInstances['chartSTempCTR'] = new Chart(elC, {
-    type:'line', data:{labels,datasets:[{label:'CTR% Médio',data:ctrMean,borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
-      plugins:{legend:{display:false},tooltip:{callbacks:{title:ctx=>wTitle(ctx[0].dataIndex),label:ctx=>[` CTR% Médio: ${ctx.parsed.y.toFixed(2)}%`,` Mediana: ${ctrMedian[ctx.dataIndex].toFixed(2)}%`]}}},
-      scales:{x:{ticks:{font:{size:9},color:'#6b7280',maxRotation:45},grid:{display:false}},y:{ticks:{font:{size:9},color:'#6b7280',callback:v=>v.toFixed(1)+'%'},grid:{color:'#f3f4f6'}}}}
+    }
   });
-
-  makeTempChart('chartSTempRet',  labels, retMean,    'Retenção',    '#10b981', 'line', v=>v.toFixed(1)+'%', wTitle);
-  makeTempChart('chartSTempInsc', labels, inscMean,   'Inscritos',   '#8b5cf6', 'line', v=>fmtNum(v),       wTitle);
-  makeTempChart('chartSTempDur',  labels, avgDurMean, 'Avg View Dur','#06b6d4', 'line', v=>formatDuration(v), wTitle);
 }
+
 
 function getChartDataShorts(metric) {
   const n = parseInt(document.getElementById('topNInputShorts').value)||20;
@@ -3176,106 +3251,104 @@ function getChartDataShorts(metric) {
 function renderShortsCharts() {
   const d = filteredShorts;
   if (!d.length) return;
-  document.getElementById('topNBadgeShorts').textContent = chartModeShorts==='top' ? `Top ${document.getElementById('topNInputShorts').value}` : `Bot ${document.getElementById('topNInputShorts').value}`;
 
-  // Views
-  { const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts('views');
-    destroyChart('chartSViews');
-    chartInstances['chartSViews'] = new Chart(document.getElementById('chartSViews'), buildBarConfig(labels,values,meanVal,medianVal,'Views',fmtNum,fmtNum,fullLabels,barColors,catNames,barLinks)); }
+  const metricVal = r => { const v = r[sPerfMetric]; return (v!==null&&v!==undefined)?v:0; };
+  const tooltipFmt = v => {
+    if (sPerfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
+    if (sPerfMetric==='conversaoComments'||sPerfMetric==='conversao') return (v*100).toFixed(3)+'%';
+    if (sPerfMetric==='avgViewedPct') return v.toFixed(1)+'%';
+    if (sPerfMetric==='ctr') return (v*100).toFixed(2)+'%';
+    return fmtNum(v);
+  };
+  const tickFmt = v => {
+    if (sPerfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
+    if (sPerfMetric==='conversaoComments'||sPerfMetric==='conversao') return (v*100).toFixed(2)+'%';
+    if (sPerfMetric==='avgViewedPct') return v.toFixed(1)+'%';
+    if (sPerfMetric==='ctr') return (v*100).toFixed(1)+'%';
+    return fmtNum(v);
+  };
 
-  // Duration / Retention
-  { const metric = durationModeShorts==='duration' ? 'avgViewDurSec' : 'avgViewedPct';
-    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks,barRows} = {...getChartDataShorts(metric), barRows:null};
-    destroyChart('chartSDuration');
-    const cfg = durationModeShorts==='duration'
-      ? buildBarConfig(labels,values,meanVal,medianVal,'Avg View Duration',v=>formatDuration(v),v=>formatDuration(v),fullLabels,barColors,catNames,barLinks)
-      : buildBarConfig(labels,values,meanVal,medianVal,'Avg Viewed %',v=>v.toFixed(1)+'%',v=>v.toFixed(1)+'%',fullLabels,barColors,catNames,barLinks);
-    chartInstances['chartSDuration'] = new Chart(document.getElementById('chartSDuration'), cfg); }
+  destroyChart('chartSViews'); destroyChart('chartSDuration'); destroyChart('chartSComments'); destroyChart('chartSInscritos'); destroyChart('chartSCTR');
+  const el = document.getElementById('chartSViews');
+  if (!el) return;
 
-  // Comments
-  { const metric = commentsModeShorts==='comments' ? 'comentarios' : 'conversaoComments';
-    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts(metric);
-    destroyChart('chartSComments');
-    const cfg = commentsModeShorts==='comments'
-      ? buildBarConfig(labels,values,meanVal,medianVal,'Comentários',v=>Math.round(v).toLocaleString('pt-BR'),v=>Math.round(v).toLocaleString('pt-BR'),fullLabels,barColors,catNames,barLinks)
-      : buildBarConfig(labels,values,meanVal,medianVal,'Conv. Comments',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks);
-    chartInstances['chartSComments'] = new Chart(document.getElementById('chartSComments'), cfg); }
+  // Fixed baseline: Shorts 2026
+  const s2026 = allData.filter(r=>(r.tipo||'').toLowerCase().includes('short')&&r.ano===2026);
+  const base  = s2026.length > 0 ? s2026 : d;
+  const meanVal   = mean(base.map(metricVal));
+  const medianVal = median(base.map(metricVal));
 
-  // Inscritos / Conversao
-  { const metric = inscritosModeShorts==='conversao' ? 'conversao' : 'inscritos';
-    const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts(metric);
-    destroyChart('chartSInscritos');
-    const cfg = inscritosModeShorts==='conversao'
-      ? buildBarConfig(labels,values,meanVal,medianVal,'Conversão',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks)
-      : buildBarConfig(labels,values,meanVal,medianVal,'Inscritos',fmtNum,fmtNum,fullLabels,barColors,catNames,barLinks);
-    chartInstances['chartSInscritos'] = new Chart(document.getElementById('chartSInscritos'), cfg); }
-
-  // CTR%
-  { const {labels,fullLabels,values,meanVal,medianVal,barColors,catNames,barLinks} = getChartDataShorts('ctr');
-    destroyChart('chartSCTR');
-    chartInstances['chartSCTR'] = new Chart(document.getElementById('chartSCTR'),
-      buildBarConfig(labels,values,meanVal,medianVal,'CTR%',v=>(v*100).toFixed(2)+'%',v=>(v*100).toFixed(2)+'%',fullLabels,barColors,catNames,barLinks)); }
+  if (sPerfView === 'video') {
+    const { labels, fullLabels, values, barColors, catNames, barLinks } = getChartDataShorts(sPerfMetric);
+    const cfg = buildBarConfig(labels, values, meanVal, medianVal, sPerfMetric, tickFmt, tooltipFmt, fullLabels, barColors, catNames, barLinks);
+    chartInstances['chartSViews'] = new Chart(el, cfg);
+  } else {
+    const catMap = {};
+    d.forEach(r => { const c=r.categoria||'(Sem categoria)'; if(!catMap[c])catMap[c]=[]; catMap[c].push(r); });
+    const cats = Object.keys(catMap).sort((a,b)=>{
+      const av=mean(catMap[a].map(metricVal)); const bv=mean(catMap[b].map(metricVal));
+      return chartModeShorts==='top'?bv-av:av-bv;
+    });
+    const catMeans = cats.map(c=>mean(catMap[c].map(metricVal)));
+    const barColors = cats.map(c=>(CAT_COLORS[c]||'#10b981')+'cc');
+    const cfg = buildBarConfig(cats, catMeans, meanVal, medianVal, sPerfMetric, tickFmt, tooltipFmt, cats, barColors, cats, []);
+    cfg.options.plugins.tooltip.callbacks.label = ctx => {
+      const cat=cats[ctx.dataIndex]; const rows=catMap[cat]||[];
+      const med=median(rows.map(metricVal));
+      return [` Média: ${tooltipFmt(ctx.parsed.y)}`, ` Mediana: ${tooltipFmt(med)}`, ` ${rows.length} vídeos`];
+    };
+    cfg.options.scales.x.ticks.maxRotation = 25;
+    chartInstances['chartSViews'] = new Chart(el, cfg);
+  }
 }
+
 
 function renderShortsFunil() {
-  const groupBy = document.getElementById('funnelGroupByShorts').value;
   const d = filteredShorts;
-  const container = document.getElementById('funnelContainerShorts');
+  const container = document.getElementById('shortsFunnelContainer');
   if (!container || !d.length) return;
 
-  let groups = {};
-  if (groupBy === 'all') groups = { 'Todos os Shorts': d };
-  else d.forEach(r => {
-    const key = r.creator || '(Sem dados)';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(r);
-  });
-
   const stages = ['Impressões','Views','Likes','Inscritos','Shares','Comentários'];
-  const stageColors = ['#2563eb','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777'];
+  const stageColors = ['#10b981','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777'];
+  const vals = [
+    d.reduce((a,r)=>a+r.impressoes,0),
+    d.reduce((a,r)=>a+r.views,0),
+    d.reduce((a,r)=>a+r.likes,0),
+    d.reduce((a,r)=>a+r.inscritos,0),
+    d.reduce((a,r)=>a+r.shares,0),
+    d.reduce((a,r)=>a+r.comentarios,0)
+  ];
+  const maxV = vals[0]||1;
+  const MAX_W=600, MIN_W=60, STAGE_H=52, GAP=3;
+  const totalH = stages.length*(STAGE_H+GAP)+GAP;
 
-  const allGD = Object.values(groups).map(rows => funnelKPIs(rows)).filter(Boolean);
-  const maxCS = [0,1,2,3,4,5].map(i => {
-    const convs = allGD.map(k => {
-      const v = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm];
-      if (i===0) return 0;
-      if (i===1) return v[0]>0?v[1]/v[0]*100:0;
-      return v[1]>0?v[i]/v[1]*100:0;
-    });
-    return Math.max(...convs);
+  let svgContent = '';
+  // Compute best % for bold
+  const convs = vals.map((v,i) => i===0?null : i===1 ? (vals[0]>0?v/vals[0]*100:0) : (vals[1]>0?v/vals[1]*100:0));
+
+  stages.forEach((stage,i) => {
+    const w = MIN_W + (vals[i]/maxV)*(MAX_W-MIN_W);
+    const nextV = i<stages.length-1 ? vals[i+1] : vals[i]*0.85;
+    const nextW = MIN_W + (nextV/maxV)*(MAX_W-MIN_W);
+    const cx = MAX_W/2; const y = GAP+i*(STAGE_H+GAP);
+    const x1=cx-w/2, x2=cx+w/2, x3=cx+nextW/2, x4=cx-nextW/2;
+    svgContent += `<polygon points="${x1},${y} ${x2},${y} ${x3},${y+STAGE_H} ${x4},${y+STAGE_H}" fill="${stageColors[i]}" opacity="0.88"/>`;
+    const mid = y+STAGE_H/2;
+    svgContent += `<text x="${cx}" y="${mid-5}" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="system-ui,sans-serif">${stage}</text>`;
+    svgContent += `<text x="${cx}" y="${mid+9}" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui,sans-serif">${fmtNum(vals[i])}</text>`;
+    if (i>0) {
+      const conv = i===1?(vals[0]>0?vals[1]/vals[0]*100:0).toFixed(1)+'%':(vals[1]>0?vals[i]/vals[1]*100:0).toFixed(2)+'%';
+      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="#111827" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
+    }
   });
 
-  let html = '';
-  Object.entries(groups).sort(([,a],[,b])=>b.length-a.length).forEach(([name, rows]) => {
-    const k = funnelKPIs(rows);
-    if (!k) return;
-    const vals = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm];
-    const maxV = vals[0]||1;
-    html += `<div style="margin-bottom:20px;">
-      ${groupBy!=='all'?`<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">${name} <span style="font-weight:400;color:var(--gray-400);">(${rows.length} vídeos · CTR ${(k.ctr*100).toFixed(1)}% · Ret ${k.ret.toFixed(1)}%)</span></div>`:''}
-      <div style="display:flex;flex-direction:column;gap:6px;">`;
-    vals.forEach((v,i) => {
-      const pct = Math.max((v/maxV)*100,1);
-      const fmt = fmtNum(v);
-      let conv = '';
-      if (i===1&&vals[0]>0){const pv=(vals[1]/vals[0]*100);const ib=groupBy!=='all'&&maxCS[1]>0&&Math.abs(pv-maxCS[1])<0.001;conv=ib?`<strong style="color:#1e40af;font-size:11px;">${pv.toFixed(1)}%</strong>`:`<span>${pv.toFixed(1)}%</span>`;}
-      if (i>=2&&vals[1]>0){const pv=(v/vals[1]*100);const ib=groupBy!=='all'&&maxCS[i]>0&&Math.abs(pv-maxCS[i])<0.0001;conv=ib?`<strong style="color:#1e40af;font-size:11px;">${pv.toFixed(2)}%</strong>`:`<span>${pv.toFixed(2)}%</span>`;}
-      const textColor = pct>12?'white':stageColors[i];
-      html += `<div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:110px;font-size:11px;color:var(--gray-600);text-align:right;flex-shrink:0;">${stages[i]}</div>
-        <div style="flex:1;height:28px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative;">
-          <div style="width:${pct}%;height:100%;background:${stageColors[i]};border-radius:4px;${pct>12?'display:flex;align-items:center;padding-left:8px;':''}transition:width .4s;">
-            ${pct>12?`<span style="color:${textColor};font-size:11px;font-weight:700;white-space:nowrap;">${fmt}</span>`:''}
-          </div>
-          ${pct<=12?`<span style="position:absolute;left:${Math.min(pct+1,90)}%;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:${stageColors[i]};white-space:nowrap;">${fmt}</span>`:''}
-        </div>
-        ${conv?`<div style="width:60px;font-size:10px;color:var(--gray-500);flex-shrink:0;">${conv}</div>`:'<div style="width:60px;"></div>'}
-      </div>`;
-    });
-    html += '</div></div>';
-  });
-  container.innerHTML = html || '<p style="color:var(--gray-400);padding:12px;">Sem dados suficientes.</p>';
+  container.innerHTML = `<div style="overflow-x:auto;">
+    <svg viewBox="0 0 ${MAX_W+60} ${totalH}" width="100%" style="max-width:680px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+      ${svgContent}
+    </svg>
+  </div>`;
 }
+
 
 function renderFeedbacksTab() {
   renderFeedbackTable();
@@ -3433,6 +3506,44 @@ document.addEventListener('click', e => {
   const perfCatDD = document.getElementById('perfCatDropdown');
   if (perfCatDD && !e.target.closest('[onclick="togglePerfCatDD()"]') && !perfCatDD.contains(e.target)) perfCatDD.style.display='none';
 });
+
+// ── SHORTS TEMPORAL METRIC SELECTOR ──────────────────────────────────────────
+let sTempMetric = 'views';
+
+function setSTempMetric(metric, label) {
+  sTempMetric = metric;
+  document.getElementById('sTempMetricLabel').textContent = label;
+  document.getElementById('sTempMetricDropdown').style.display = 'none';
+  renderShortsTemporal();
+}
+
+function toggleSTempMetricDD() {
+  const dd = document.getElementById('sTempMetricDropdown');
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── SHORTS PERFORMANCE METRIC + VIEW TOGGLE ───────────────────────────────────
+let sPerfMetric = 'views';
+let sPerfView   = 'video';
+
+function setSPerfMetric(metric, label) {
+  sPerfMetric = metric;
+  document.getElementById('sPerfMetricLabel').textContent = label;
+  document.getElementById('sPerfMetricDropdown').style.display = 'none';
+  renderShortsCharts();
+}
+
+function setSPerfView(view) {
+  sPerfView = view;
+  document.getElementById('btnSPerfVideo').classList.toggle('active', view === 'video');
+  document.getElementById('btnSPerfCat').classList.toggle('active', view === 'categoria');
+  renderShortsCharts();
+}
+
+function toggleSPerfMetricDD() {
+  const dd = document.getElementById('sPerfMetricDropdown');
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 
