@@ -1518,10 +1518,11 @@ function init() {
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
     const currentYear = new Date().getFullYear();
+    const today = new Date().toISOString().slice(0, 10);
     const defaultStart = `${currentYear}-01-01`;
     const hasCurrentYear = dates.some(d => d >= defaultStart);
     document.getElementById('filterDateStart').value = hasCurrentYear ? defaultStart : dates[0];
-    document.getElementById('filterDateEnd').value = dates[dates.length-1];
+    document.getElementById('filterDateEnd').value = today; // always up to today
   }
 
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
@@ -1596,8 +1597,10 @@ function clearFilters() {
   document.getElementById('weekDropdown').classList.remove('open');
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
-    document.getElementById('filterDateStart').value = dates[0];
-    document.getElementById('filterDateEnd').value = dates[dates.length-1];
+    const currentYear2 = new Date().getFullYear();
+    const today2 = new Date().toISOString().slice(0, 10);
+    document.getElementById('filterDateStart').value = `${currentYear2}-01-01`;
+    document.getElementById('filterDateEnd').value = today2;
   }
   applyFilters();
 }
