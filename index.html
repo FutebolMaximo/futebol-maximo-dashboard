@@ -872,9 +872,7 @@
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Análise de Distribuição Ideal</h2></div>
   <p class="section-desc">Mapa de calor dos principais indicadores.</p>
-  <!-- hidden stubs for init() code that populates durCreatorFilter/durCatFilter -->
-  <select id="durCreatorFilter" style="display:none;"></select>
-  <select id="durCatFilter" style="display:none;"></select>
+  <!-- hidden stubs kept for init() compatibility -->
   <div class="table-card" style="margin-bottom:32px;">
     <div class="table-toolbar">
       <div style="position:relative;display:inline-block;">
@@ -1529,20 +1527,6 @@ function init() {
   }
 
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
-
-  // Populate duration analysis dropdowns
-  const dcSel = document.getElementById('durCreatorFilter');
-  const dcatSel = document.getElementById('durCatFilter');
-  if (dcSel) {
-    [...new Set(allData.map(r=>r.creator).filter(Boolean))].sort().forEach(c => {
-      const o = document.createElement('option'); o.value=c; o.textContent=c; dcSel.appendChild(o);
-    });
-  }
-  if (dcatSel) {
-    [...new Set(allData.map(r=>r.categoria).filter(Boolean))].sort().forEach(c => {
-      const o = document.createElement('option'); o.value=c; o.textContent=c; dcatSel.appendChild(o);
-    });
-  }
 
   applyFilters();
   // Start with all sections expanded (default)
