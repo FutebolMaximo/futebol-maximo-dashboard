@@ -650,8 +650,9 @@
       <label>N Vídeos:</label>
       <input type="number" id="topNInput" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
       <div class="topn-toggle">
-        <button id="btnTop" class="toggle-btn active" onclick="setChartMode('top')">🏆 Melhores</button>
+        <button id="btnTop" class="toggle-btn" onclick="setChartMode('top')">🏆 Melhores</button>
         <button id="btnBot" class="toggle-btn" onclick="setChartMode('bottom')">🔍 Piores</button>
+        <button id="btnRec" class="toggle-btn active" onclick="setChartMode('recent')">🕐 Recentes</button>
       </div>
       <button class="btn-primary" style="height:32px;padding:0 12px;font-size:12px;" onclick="renderCharts()">Atualizar</button>
     </div>
@@ -1065,8 +1066,9 @@
       <label>N Vídeos:</label>
       <input type="number" id="topNInputShorts" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
       <div class="topn-toggle">
-        <button id="btnTopShorts" class="toggle-btn active" onclick="setChartModeShorts('top')">🏆 Melhores</button>
+        <button id="btnTopShorts" class="toggle-btn" onclick="setChartModeShorts('top')">🏆 Melhores</button>
         <button id="btnBotShorts" class="toggle-btn" onclick="setChartModeShorts('bottom')">🔍 Piores</button>
+        <button id="btnRecShorts" class="toggle-btn active" onclick="setChartModeShorts('recent')">🕐 Recentes</button>
       </div>
       <div class="topn-toggle" style="margin-left:8px;">
         <button id="btnSPerfVideo" class="toggle-btn active" onclick="setSPerfView('video')">Por Vídeo</button>
@@ -1284,7 +1286,7 @@ let sortDir = -1; // -1 = desc, 1 = asc
 
 // chart instances
 const chartInstances = {};
-let chartMode = 'top'; // 'top' or 'bottom'
+let chartMode = 'recent'; // 'top' | 'bottom' | 'recent'
 let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'dashboard';
 
@@ -1323,6 +1325,7 @@ function setChartMode(mode) {
   chartMode = mode;
   document.getElementById('btnTop').classList.toggle('active', mode === 'top');
   document.getElementById('btnBot').classList.toggle('active', mode === 'bottom');
+  document.getElementById('btnRec').classList.toggle('active', mode === 'recent');
   renderCharts();
 }
 
@@ -1967,9 +1970,14 @@ function getTopN() {
 function getChartData(metric) {
   const n = getTopN();
   const metricVal = r => typeof metric === 'function' ? metric(r) : r[metric];
-  let sorted = [...filteredLong].sort((a,b) =>
-    chartMode === 'top' ? metricVal(b) - metricVal(a) : metricVal(a) - metricVal(b)
-  );
+  let sorted;
+  if (chartMode === 'recent') {
+    sorted = [...filteredLong].sort((a,b) => (b.dataPublicacao||'').localeCompare(a.dataPublicacao||''));
+  } else {
+    sorted = [...filteredLong].sort((a,b) =>
+      chartMode === 'top' ? metricVal(b) - metricVal(a) : metricVal(a) - metricVal(b)
+    );
+  }
   const topN = sorted.slice(0, n);
 
   const labels     = topN.map(r => truncateTitle(r.title, 22));
@@ -2040,7 +2048,7 @@ function renderCharts() {
     });
     const cats = Object.keys(catMap).sort((a,b) => {
       const av = mean(catMap[a].map(metricVal)); const bv = mean(catMap[b].map(metricVal));
-      return chartMode === 'top' ? bv - av : av - bv;
+      return (chartMode === 'bottom') ? av - bv : bv - av;
     });
     const catMeans   = cats.map(c => mean(catMap[c].map(metricVal)));
     const catCounts  = cats.map(c => catMap[c].length);
@@ -3148,7 +3156,7 @@ function updateWeekInput() {
 
 // ── SHORTS RENDERING ──────────────────────────────────────────────────────────
 
-let chartModeShorts = 'top';
+let chartModeShorts = 'recent';
 let durationModeShorts = 'duration';
 let commentsModeShorts = 'comments';
 let inscritosModeShorts = 'conversao';
@@ -3165,6 +3173,7 @@ function setChartModeShorts(mode) {
   chartModeShorts = mode;
   document.getElementById('btnTopShorts').classList.toggle('active', mode==='top');
   document.getElementById('btnBotShorts').classList.toggle('active', mode==='bottom');
+  document.getElementById('btnRecShorts').classList.toggle('active', mode==='recent');
   renderShortsCharts();
 }
 function setSDurationMode(mode) {
@@ -3296,7 +3305,12 @@ function renderShortsTemporal() {
 function getChartDataShorts(metric) {
   const n = parseInt(document.getElementById('topNInputShorts').value)||20;
   const metricVal = r => typeof metric==='function' ? metric(r) : r[metric];
-  const sorted = [...filteredShorts].sort((a,b) => chartModeShorts==='top' ? metricVal(b)-metricVal(a) : metricVal(a)-metricVal(b));
+  let sorted;
+  if (chartModeShorts === 'recent') {
+    sorted = [...filteredShorts].sort((a,b) => (b.dataPublicacao||'').localeCompare(a.dataPublicacao||''));
+  } else {
+    sorted = [...filteredShorts].sort((a,b) => chartModeShorts==='top' ? metricVal(b)-metricVal(a) : metricVal(a)-metricVal(b));
+  }
   const topN = sorted.slice(0,n);
   const labels    = topN.map(r=>truncateTitle(r.title,22));
   const fullLabels= topN.map(r=>r.title);
@@ -3351,7 +3365,7 @@ function renderShortsCharts() {
     d.forEach(r => { const c=r.categoria||'(Sem categoria)'; if(!catMap[c])catMap[c]=[]; catMap[c].push(r); });
     const cats = Object.keys(catMap).sort((a,b)=>{
       const av=mean(catMap[a].map(metricVal)); const bv=mean(catMap[b].map(metricVal));
-      return chartModeShorts==='top'?bv-av:av-bv;
+      return (chartModeShorts==='bottom') ? av-bv : bv-av;
     });
     const catMeans = cats.map(c=>mean(catMap[c].map(metricVal)));
     const barColors = cats.map(c=>(CAT_COLORS[c]||'#10b981')+'cc');
