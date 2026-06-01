@@ -2529,7 +2529,7 @@ function renderTemporal() {
   const keys = Object.keys(grouped).sort((a,b) =>
     tempMode === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
   );
-  const shortKey = k => tempMode==='month' ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}) : k;
+  const shortKey = k => tempMode==='month' ? (([y,m]) => new Date(+y, +m-1, 1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}))(k.split('-')) : k;
   const labels = keys.map(shortKey);
   const weekTitle = idx => {
     if (tempMode!=='week'||!keys[idx]) return labels[idx]||'';
@@ -3234,7 +3234,7 @@ function renderShortsTemporal() {
   const keys = Object.keys(grouped).sort((a,b) =>
     tempModeShorts==='week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
   );
-  const shortKey = k => tempModeShorts==='month' ? new Date(k+'-01').toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}) : k;
+  const shortKey = k => tempModeShorts==='month' ? (([y,m]) => new Date(+y, +m-1, 1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}))(k.split('-')) : k;
   const labels = keys.map(shortKey);
   const wTitle = idx => {
     if (tempModeShorts!=='week'||!keys[idx]) return labels[idx]||'';
