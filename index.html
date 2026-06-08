@@ -2388,14 +2388,14 @@ function classifyVideoShorts(r) {
 }
 
 function classifyVideo(r) {
-  const highViews = r.views >= THRESHOLDS.views;
-  const highCTR   = r.ctr   >= THRESHOLDS.ctr;
-  const longDur   = (r.avgViewDurSec||0) >= THRESHOLDS.avgViewDurSec;
+  const highViews  = r.views >= THRESHOLDS.views;
+  const highCTR    = r.ctr   >= THRESHOLDS.ctr;
+  const longDur    = (r.avgViewDurSec||0) >= THRESHOLDS.avgViewDurSec;
+  const highGancho = (r.gancho === null || r.gancho === undefined) ? true : r.gancho >= THRESHOLDS.gancho;
+  const altoCTR    = highViews && highCTR;
 
-  const altoCTR = highViews && highCTR;
-
-  if (altoCTR && longDur && highGancho) return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração + Gancho ≥70%', acao:'Fazer sequência / repetir formato' };
-  if (altoCTR  && longDur)  return { status:'Ajustar Gancho',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração',  acao:'Fazer sequência / repetir formato' };
+  if (altoCTR && longDur && highGancho) return { status:'Escalar',        color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração + Gancho ≥70%', acao:'Fazer sequência / repetir formato' };
+  if (altoCTR && longDur && !highGancho) return { status:'Escalar',       color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Alto CTR + Longa duração (gancho abaixo de 70%)', acao:'Melhorar gancho / primeiros 30s' };
   if (altoCTR  && !longDur) return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Alto CTR + Curta duração',  acao:'Melhorar abertura e primeiros 30s' };
   if (!altoCTR && longDur)  return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Baixo CTR + Longa duração', acao:'Testar nova thumbnail e título' };
   return                     { status:'Rever formato',          color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Baixo CTR + Curta duração', acao:'Revisar pauta / reformular formato' };
