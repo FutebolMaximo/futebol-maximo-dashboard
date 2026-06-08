@@ -277,57 +277,61 @@
     outline: none;
   }
   .table-search input:focus { border-color: var(--blue-500); }
-  .table-wrap { overflow-x: hidden; max-height: 520px; overflow-y: auto; max-width: 100%; }
+  .table-wrap { overflow-x: hidden; max-height: 520px; overflow-y: auto; width: 100%; }
   table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
   thead th {
     background: var(--gray-50);
-    padding: 5px 4px;
-    text-align: left;
-    font-size: 9px;
+    padding: 4px 3px;
+    text-align: center;
+    font-size: 8.5px;
     font-weight: 700;
     color: var(--gray-500);
     text-transform: uppercase;
-    letter-spacing: .2px;
+    letter-spacing: .1px;
     cursor: pointer;
     user-select: none;
     border-bottom: 1px solid var(--gray-200);
     white-space: normal;
     word-break: break-word;
-    line-height: 1.2;
+    line-height: 1.15;
     overflow: hidden;
     position: sticky;
     top: 0;
     z-index: 5;
     vertical-align: bottom;
-    max-height: 2.6em;
+    height: 32px;
+    box-sizing: border-box;
   }
   /* 20-column percentage layout for Base de Dados:
      Data · Semana · Mês_Ano · Título · Tipo · Criador · Categoria ·
      Dur · Avg% · AvgDur · Impr · CTR%YT · CTR% · Views · Likes ·
-     Insc · Conv.Insc · Shares · Coment · Conv.Comm */
-  #dataTable th:nth-child(1)  { width: 4.5%; } /* Data */
-  #dataTable th:nth-child(2)  { width: 4%;   } /* Semana */
-  #dataTable th:nth-child(3)  { width: 4%;   } /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width: 20%;  } /* Título */
-  #dataTable th:nth-child(5)  { width: 5%;   } /* Tipo */
-  #dataTable th:nth-child(6)  { width: 3.5%; } /* Criador */
-  #dataTable th:nth-child(7)  { width: 6%;   } /* Categoria */
-  #dataTable th:nth-child(8)  { width: 3.5%; } /* Duração */
-  #dataTable th:nth-child(9)  { width: 3.5%; } /* Avg Viewed% */
-  #dataTable th:nth-child(10) { width: 3.5%; } /* Avg View Dur */
-  #dataTable th:nth-child(11) { width: 5%;   } /* Impressões */
-  #dataTable th:nth-child(12) { width: 3.5%; } /* CTR% YT */
-  #dataTable th:nth-child(13) { width: 3.5%; } /* CTR% */
-  #dataTable th:nth-child(14) { width: 4%;   } /* Views */
-  #dataTable th:nth-child(15) { width: 3.5%; } /* Likes */
-  #dataTable th:nth-child(16) { width: 4%;   } /* Inscritos */
-  #dataTable th:nth-child(17) { width: 4.5%; } /* Conv. Insc */
-  #dataTable th:nth-child(18) { width: 3.5%; } /* Shares */
-  #dataTable th:nth-child(19) { width: 5%;   } /* Comentários */
-  #dataTable th:nth-child(20) { width: 5%;   } /* Conv. Comm */
+     Insc · Conv.Insc · Shares · Coment · Conv.Comm */ /* Data */ /* Semana */ /* Mês_Ano */ /* Título */ /* Tipo */ /* Criador */ /* Categoria */ /* Duração */ /* Avg Viewed% */ /* Avg View Dur */ /* Impressões */ /* CTR% YT */ /* CTR% */ /* Views */ /* Likes */ /* Inscritos */ /* Conv. Insc */ /* Shares */ /* Comentários */ /* Conv. Comm */
   thead th:hover { background: var(--blue-50); color: var(--blue-600); }
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
+
+  /* 21-column widths for Base de Dados — sum = 100% */
+  #dataTable th:nth-child(1)  { width:4.5%; text-align:left; }  /* Data */
+  #dataTable th:nth-child(2)  { width:4%;   }                    /* Semana */
+  #dataTable th:nth-child(3)  { width:4%;   }                    /* Mês_Ano */
+  #dataTable th:nth-child(4)  { width:21%;  text-align:left; }  /* Título */
+  #dataTable th:nth-child(5)  { width:4%;   }                    /* Tipo */
+  #dataTable th:nth-child(6)  { width:3.5%; }                    /* Criador */
+  #dataTable th:nth-child(7)  { width:6%;   }                    /* Categoria */
+  #dataTable th:nth-child(8)  { width:4%;   }                    /* Views */
+  #dataTable th:nth-child(9)  { width:3.5%; }                    /* CTR% */
+  #dataTable th:nth-child(10) { width:3.5%; }                    /* Avg View Dur */
+  #dataTable th:nth-child(11) { width:3%;   }                    /* Gancho */
+  #dataTable th:nth-child(12) { width:3%;   }                    /* Duração */
+  #dataTable th:nth-child(13) { width:3%;   }                    /* Avg View % */
+  #dataTable th:nth-child(14) { width:5.5%; }                    /* Impr. */
+  #dataTable th:nth-child(15) { width:3.5%; }                    /* CTR% YT */
+  #dataTable th:nth-child(16) { width:3.5%; }                    /* Likes */
+  #dataTable th:nth-child(17) { width:3.5%; }                    /* Inscritos */
+  #dataTable th:nth-child(18) { width:5%;   }                    /* Conv. Insc. */
+  #dataTable th:nth-child(19) { width:3%;   }                    /* Shares */
+  #dataTable th:nth-child(20) { width:4%;   }                    /* Coment. */
+  #dataTable th:nth-child(21) { width:5%;   }                    /* Conv. Comm. */
   tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
   tbody tr:hover { background: var(--blue-50); }
   tbody td { padding: 4px 4px; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
@@ -2937,27 +2941,25 @@ function renderDurationAnalysis() {
     const comm1k = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
     const data = {
       n:        rows.length,
-      medViews: median(rows.map(r=>r.views)),
       avgViews: mean(rows.map(r=>r.views)),
       medRet:   median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
       avgDurSec:mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)),
       ganchoMed: mean(rows.map(r=>r.gancho).filter(v=>v!==null&&v!==undefined))*100,
       insc1k, comm1k,
     };
-    const cols = ['medViews','avgViews','medRet','avgDurSec','ganchoMed','insc1k','comm1k'];
+    const cols = ['avgViews','medRet','avgDurSec','ganchoMed','insc1k','comm1k'];
     const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
       if (data[col]===null||isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
       const c = cellColor(col);
       return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
     };
-    return { label, n: data.n, medViews: data.medViews, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
+    return { label, n: data.n, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
         ${cell('avgViews', v=>fmtNum(Math.round(v)))}
-        ${cell('medViews', v=>fmtNum(v))}
-        ${cell('medRet',   v=>v.toFixed(1)+'%')}
+    ${cell('medRet',   v=>v.toFixed(1)+'%')}
         ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
         ${cell('ganchoMed',v=>v.toFixed(1)+'%')}
         ${cell('insc1k',   v=>v.toFixed(2))}
@@ -2984,11 +2986,10 @@ function renderDurationAnalysis() {
     cats.forEach(c => rows_data.push({ label: c, rows: d.filter(r=>(r.categoria||'(Sem categoria)')===c) }));
   }
 
-  const allValsPerCol = { medViews:[], avgViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[] };
+  const allValsPerCol = { avgViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[] };
   rows_data.forEach(({rows}) => {
     if (!rows.length) return;
     const tv = rows.reduce((a,r)=>a+r.views,0);
-    allValsPerCol.medViews.push(median(rows.map(r=>r.views)));
     allValsPerCol.avgViews.push(mean(rows.map(r=>r.views)));
     allValsPerCol.medRet.push(median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)));
@@ -3013,8 +3014,8 @@ function renderDurationAnalysis() {
         }
         return durSortDir * a.label.localeCompare(b.label);
       }
-      // For non-label columns: always sort by value regardless of granularity
-      return durSortDir * ((b[durSortCol]||0) - (a[durSortCol]||0));
+      // For non-label columns: durSortDir=-1 = descending, 1 = ascending
+      return durSortDir * ((a[durSortCol]||0) - (b[durSortCol]||0));
     });
   }
 
@@ -3023,8 +3024,7 @@ function renderDurationAnalysis() {
       <th onclick="sortDurTable('label')" style="${thL}">${firstColLabel}${sortArrow('label')}</th>
       <th onclick="sortDurTable('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
       <th onclick="sortDurTable('avgViews')" style="${thR}">Views Média${sortArrow('avgViews')}</th>
-      <th onclick="sortDurTable('medViews')" style="${thR}">Views Mediana${sortArrow('medViews')}</th>
-      <th onclick="sortDurTable('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
+<th onclick="sortDurTable('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortDurTable('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
       <th onclick="sortDurTable('ganchoMed')" style="${thR}">Gancho Médio${sortArrow('ganchoMed')}</th>
       <th onclick="sortDurTable('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
