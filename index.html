@@ -299,6 +299,7 @@
     top: 0;
     z-index: 5;
     vertical-align: bottom;
+    max-height: 2.6em;
   }
   /* 20-column percentage layout for Base de Dados:
      Data · Semana · Mês_Ano · Título · Tipo · Criador · Categoria ·
@@ -828,14 +829,14 @@
             <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg View Dur <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('gancho')" data-col="gancho" class="num">Gancho <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg Viewed% <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impressões <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg View % <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impr. <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('ctrYT')" data-col="ctrYT" class="num">CTR% YT <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('inscritos')" data-col="inscritos" class="num">Inscritos <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversao')" data-col="conversao" class="num">Conv. Insc. <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Comentários <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Coment. <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
           </tr>
           <tr class="filter-row">
@@ -852,7 +853,7 @@
             <td><input class="col-filter" data-col="gancho" data-type="num" placeholder=">0.70"></td>
             <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
             <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500000"></td>
+            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500K"></td>
             <td><input class="col-filter" data-col="ctrYT" data-type="num" placeholder=">5"></td>
             <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
             <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
@@ -1314,6 +1315,11 @@ function switchTab(tab) {
 }
 
 function renderAdvanced() {
+  if (!window.durGran) {
+    window.durGran = 'categorias';
+    const el = document.getElementById('durTableTitle');
+    if (el) el.textContent = 'Por Categoria';
+  }
   const fns = [
     ['renderScatter', renderScatter],
     ['renderFeedbackTable', renderFeedbackTable],
@@ -2904,8 +2910,8 @@ const DUR_BINS = [
   { label:'>25 min',  min:1500, max:Infinity },
 ];
 
-let durSortCol = null;
-let durSortDir = -1; // -1 = desc, 1 = asc
+let durSortCol = 'n';
+let durSortDir = -1; // descending = more videos first
 
 function sortDurTable(col) {
   if (durSortCol === col) durSortDir *= -1;
