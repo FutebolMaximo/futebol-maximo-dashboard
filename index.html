@@ -1240,7 +1240,7 @@ function parseCSVText(text) {
       conversaoComments: parseFloat(obj.conversaoComments)||0,
       tipo: obj.tipo||'',
       semana: obj.semana||'',
-      gancho: (obj.gancho && obj.gancho.trim()) ? parseFloat(obj.gancho.replace('%',''))/100 : null,
+      gancho: (obj.gancho && obj.gancho.trim()) ? (obj.gancho.includes('%') ? parseFloat(obj.gancho.replace('%',''))/100 : parseFloat(obj.gancho)) : null,
     });
   }
   return rows;
