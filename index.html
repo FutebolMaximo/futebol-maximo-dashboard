@@ -1230,7 +1230,15 @@ function parseCSVText(text) {
       shares: parseInt(obj.shares)||0, comentarios: parseInt(obj.comentarios)||0,
       views: parseInt(obj.views)||0, impressoes: parseInt(obj.impressoes)||0,
       ctr: parseFloat(obj.ctr)||0, avgViewDuration: obj.avgViewDuration||'0:00',
-      ano: parseInt(obj.ano)||0, dataPublicacao: obj.dataPublicacao||'',
+      ano: parseInt(obj.ano)||0, dataPublicacao: (d => {
+        if (!d) return '';
+        // Already ISO: YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+        // US format: M/D/YYYY or MM/DD/YYYY
+        const p = d.split('/');
+        if (p.length === 3) return `${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`;
+        return d;
+      })(obj.dataPublicacao),
       mesAno: obj.mesAno||'', creator: obj.creator||'', categoria: obj.categoria||'',
       conversao: parseFloat(obj.conversao)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
