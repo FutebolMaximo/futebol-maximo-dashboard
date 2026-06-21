@@ -2401,21 +2401,22 @@ const THRESHOLDS = {
 };
 
 function classifyVideo(r) {
-  // Score: count met criteria among non-null ones (need >= 3)
+  // Gate obrigatório: sem views mínimas, não pode ser Escalar
+  const highViews = r.views >= THRESHOLDS.views;
+
+  // Score dos outros 4 critérios (null = ignorado)
   let score = 0;
-  if (r.views >= THRESHOLDS.views) score++;
   if (r.ctr   >= THRESHOLDS.ctr)   score++;
   if (r.avgViewedPct !== null && r.avgViewedPct !== undefined && r.avgViewedPct >= THRESHOLDS.avgViewedPct) score++;
   if (r.gancho !== null && r.gancho !== undefined && r.gancho >= THRESHOLDS.gancho) score++;
   if (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec) score++;
 
   // Helper flags for secondary statuses
-  const highViews   = r.views >= THRESHOLDS.views;
   const highCTR     = r.ctr   >= THRESHOLDS.ctr;
   const highAvgView = (r.avgViewedPct === null || r.avgViewedPct === undefined) ? true : r.avgViewedPct >= THRESHOLDS.avgViewedPct;
   const highGancho  = (r.gancho === null || r.gancho === undefined) ? true : r.gancho >= THRESHOLDS.gancho;
 
-  if (score >= 3)
+  if (highViews && score >= 3)
     return { status:'Escalar',        color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',   acao:'Fazer sequencia e replicar o formato' };
   if (!highViews && !highCTR && highGancho && highAvgView)
     return { status:'Reembalar',      color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
