@@ -704,7 +704,7 @@
 <div id="panelFeedbacks" class="main" style="display:none;">
 
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Long Form</h2></div>
-  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: Views ≥47K, CTR% ≥7.6%, Avg Viewed % ≥40% e Gancho ≥70%.</p>
+  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: Views ≥48K, CTR% ≥7.6%, Avg Viewed % ≥40%, Avg View Duration ≥6:00 e Gancho ≥70%. Score ≥3 critérios = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -2393,37 +2393,35 @@ const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.70, avgViewedPct: 75 };
 
 // Long Form classification thresholds
 const THRESHOLDS = {
-  views:       47000,
-  ctr:         0.076,
-  avgViewedPct:40,
-  gancho:      0.70,
+  views:        48000,   // >=48K views
+  ctr:          0.076,   // >=7.6% CTR
+  avgViewedPct: 40,      // >=40% avg viewed
+  gancho:       0.70,    // >=70% gancho
+  avgViewDurSec:360,     // >=6:00 avg view duration
 };
 
 function classifyVideo(r) {
-  // Score: count how many non-null criteria are met (need >= 3)
+  // Score: count met criteria among non-null ones (need >= 3)
   let score = 0;
-  if (r.views >= THRESHOLDS.views)  score++;
-  if (r.ctr   >= THRESHOLDS.ctr)    score++;
-  if (r.avgViewedPct !== null && r.avgViewedPct !== undefined) {
-    if (r.avgViewedPct >= THRESHOLDS.avgViewedPct) score++;
-  }
-  if (r.gancho !== null && r.gancho !== undefined) {
-    if (r.gancho >= THRESHOLDS.gancho) score++;
-  }
+  if (r.views >= THRESHOLDS.views) score++;
+  if (r.ctr   >= THRESHOLDS.ctr)   score++;
+  if (r.avgViewedPct !== null && r.avgViewedPct !== undefined && r.avgViewedPct >= THRESHOLDS.avgViewedPct) score++;
+  if (r.gancho !== null && r.gancho !== undefined && r.gancho >= THRESHOLDS.gancho) score++;
+  if (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec) score++;
 
-  // Helper flags for secondary classification
+  // Helper flags for secondary statuses
   const highViews   = r.views >= THRESHOLDS.views;
   const highCTR     = r.ctr   >= THRESHOLDS.ctr;
   const highAvgView = (r.avgViewedPct === null || r.avgViewedPct === undefined) ? true : r.avgViewedPct >= THRESHOLDS.avgViewedPct;
   const highGancho  = (r.gancho === null || r.gancho === undefined) ? true : r.gancho >= THRESHOLDS.gancho;
 
   if (score >= 3)
-    return { status:'Escalar',        color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',    acao:'Fazer sequencia e replicar o formato' };
+    return { status:'Escalar',        color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',   acao:'Fazer sequencia e replicar o formato' };
   if (!highViews && !highCTR && highGancho && highAvgView)
-    return { status:'Reembalar',      color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Trocar Thumb & Titulo',  acao:'Testar nova thumbnail e titulo' };
+    return { status:'Reembalar',      color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
   if (!highViews && !highCTR && !highGancho && !highAvgView)
-    return { status:'Rever Formato',  color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',    acao:'Revisar pauta e reformular formato' };
-  return { status:'Ajustar Entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',       acao:'Verificar metrica mais fraca' };
+    return { status:'Rever Formato',  color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',  acao:'Revisar pauta e reformular formato' };
+  return { status:'Ajustar Entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',     acao:'Verificar metrica mais fraca' };
 }
 
 let feedbackSortCol = 'status';
@@ -2488,7 +2486,7 @@ function renderFeedbackTable() {
     </tr>`).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Limiares: ≥47K views · CTR% ≥7.6% · Avg Viewed% ≥40% · Gancho ≥70%`;
+    `${rows.length} vídeos · Score ≥3: Views ≥48K · CTR% ≥7.6% · Avg Viewed% ≥40% · Avg View Dur ≥6:00 · Gancho ≥70%`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
