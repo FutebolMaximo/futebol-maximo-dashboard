@@ -1258,8 +1258,8 @@ async function loadData() {
   const badge = document.getElementById('dataBadge');
   try {
     badge.textContent = 'Carregando dados...';
-    const csvUrl = 'dados.csv';
-    const resp = await fetch(csvUrl);
+    const csvUrl = 'dados.csv?v=' + Date.now();
+    const resp = await fetch(csvUrl, { cache: 'no-store' });
     if (!resp.ok) throw new Error(`Arquivo não encontrado (HTTP ${resp.status}). Verifique se "dados.csv" está na raiz do repositório.`);
     const text = await resp.text();
     allData = parseCSVText(text);
