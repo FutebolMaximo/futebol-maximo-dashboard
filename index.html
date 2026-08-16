@@ -435,7 +435,6 @@
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
   <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
-  <button class="tab-btn"        id="tabBtnAdv"       onclick="switchTab('avancada')">🔬 Análise Avançada</button>
   <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
@@ -699,6 +698,84 @@
     <canvas id="chartInscritos" style="display:none;"></canvas>
   </div>
 
+  <!-- SCATTER: CTR x RETENÇÃO -->
+  <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Análise de Distribuição Ideal</h2></div>
+  <p class="section-desc">Mapa de calor dos principais indicadores.</p>
+  <!-- hidden stubs kept for init() compatibility -->
+  <div class="table-card" style="margin-bottom:32px;">
+    <div class="table-toolbar">
+      <div style="position:relative;display:inline-block;">
+        <button onclick="toggleDurGranDD()" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:6px;padding:0;">
+          <h3 id="durTableTitle" style="margin:0;font-size:14px;font-weight:700;">Todas as faixas de duração</h3>
+          <span style="font-size:11px;color:var(--gray-400);">▾</span>
+        </button>
+        <div id="durGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setDurGran('faixas')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixas de Duração</div>
+          <div onclick="setDurGran('criadores')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
+          <div onclick="setDurGran('categorias')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🏷️ Categorias</div>
+        </div>
+      </div>
+      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+    </div>
+    <div class="table-wrap"><div id="durationTableContainer"></div></div>
+  </div>
+
+  <!-- HISTOGRAMAS DE DISTRIBUIÇÃO -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Criador × Categoria</h2></div>
+  <p class="section-desc">Mapa de calor das principais categorias por criador.</p>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-toolbar">
+      <h3>Performance por Criador e Categoria</h3>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Colorir por:</label>
+        <select id="heatmapMetric" onchange="renderHeatmap()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="views">Views mediana</option>
+          <option value="ctr">CTR médio</option>
+          <option value="ret">Retenção média</option>
+          <option value="insc1k">Inscritos/1K views</option>
+          <option value="gancho">Gancho médio</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:500px;overflow-x:auto;"><div id="heatmapContainer"></div></div>
+    <div style="margin-top:8px;padding:8px 12px;font-size:11px;color:var(--gray-500);display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+      <span>Intensidade da cor = performance relativa:</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#dcfce7;border:1px solid #16a34a;border-radius:2px;display:inline-block;"></span>Top 25%</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fef9c3;border:1px solid #ca8a04;border-radius:2px;display:inline-block;"></span>Mediana</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fee2e2;border:1px solid #dc2626;border-radius:2px;display:inline-block;"></span>Bottom 25%</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:2px;display:inline-block;"></span>Sem dados</span>
+    </div>
+  </div>
+
+  <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
+<!-- FUNIL DE ENGAJAMENTO -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento</h2></div>
+  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
+  <div class="chart-card wide" style="margin-bottom:24px;">
+    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
+        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+          <option value="all">Geral (todos os vídeos)</option>
+          <option value="creator">Por Criador</option>
+          <option value="categoria">Por Categoria</option>
+        </select>
+      </div>
+    </div>
+    <div id="funnelContainer" style="margin-top:16px;max-width:900px;"></div>
+  </div>
+
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Distribuição de Views</h2></div>
+  <p class="section-desc">Quantos vídeos temos em cada patamar de views?</p>
+  <div style="margin-bottom:32px;">
+    <div class="chart-card wide">
+      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViews"></canvas></div>
+    </div>
+  </div>
+
 </div>
 
 <div id="panelFeedbacks" class="main" style="display:none;">
@@ -871,89 +948,6 @@
       </table>
     </div>
     <div class="table-footer" id="tableFooter"></div>
-  </div>
-
-</div>
-
-<!-- ANÁLISE AVANÇADA (Tab) -->
-<div class="main" id="panelAvancada" style="display:none;">
-
-  <!-- SCATTER: CTR x RETENÇÃO -->
-  <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Análise de Distribuição Ideal</h2></div>
-  <p class="section-desc">Mapa de calor dos principais indicadores.</p>
-  <!-- hidden stubs kept for init() compatibility -->
-  <div class="table-card" style="margin-bottom:32px;">
-    <div class="table-toolbar">
-      <div style="position:relative;display:inline-block;">
-        <button onclick="toggleDurGranDD()" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:6px;padding:0;">
-          <h3 id="durTableTitle" style="margin:0;font-size:14px;font-weight:700;">Todas as faixas de duração</h3>
-          <span style="font-size:11px;color:var(--gray-400);">▾</span>
-        </button>
-        <div id="durGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
-          <div onclick="setDurGran('faixas')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixas de Duração</div>
-          <div onclick="setDurGran('criadores')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
-          <div onclick="setDurGran('categorias')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🏷️ Categorias</div>
-        </div>
-      </div>
-      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
-    </div>
-    <div class="table-wrap"><div id="durationTableContainer"></div></div>
-  </div>
-
-  <!-- HISTOGRAMAS DE DISTRIBUIÇÃO -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Criador × Categoria</h2></div>
-  <p class="section-desc">Mapa de calor das principais categorias por criador.</p>
-  <div class="table-card" style="margin-bottom:24px;">
-    <div class="table-toolbar">
-      <h3>Performance por Criador e Categoria</h3>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <label style="font-size:12px;color:var(--gray-500);">Colorir por:</label>
-        <select id="heatmapMetric" onchange="renderHeatmap()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-          <option value="views">Views mediana</option>
-          <option value="ctr">CTR médio</option>
-          <option value="ret">Retenção média</option>
-          <option value="insc1k">Inscritos/1K views</option>
-          <option value="gancho">Gancho médio</option>
-        </select>
-      </div>
-    </div>
-    <div class="table-wrap" style="max-height:500px;overflow-x:auto;"><div id="heatmapContainer"></div></div>
-    <div style="margin-top:8px;padding:8px 12px;font-size:11px;color:var(--gray-500);display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-      <span>Intensidade da cor = performance relativa:</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#dcfce7;border:1px solid #16a34a;border-radius:2px;display:inline-block;"></span>Top 25%</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fef9c3;border:1px solid #ca8a04;border-radius:2px;display:inline-block;"></span>Mediana</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#fee2e2;border:1px solid #dc2626;border-radius:2px;display:inline-block;"></span>Bottom 25%</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:2px;display:inline-block;"></span>Sem dados</span>
-    </div>
-  </div>
-
-  <!-- ── ITEM 4: ANÁLISE DE DURAÇÃO IDEAL ─────────────────────────────────── -->
-<!-- FUNIL DE ENGAJAMENTO -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento</h2></div>
-  <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários.</p>
-  <div class="chart-card wide" style="margin-bottom:24px;">
-    <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários</span>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
-        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-          <option value="all">Geral (todos os vídeos)</option>
-          <option value="creator">Por Criador</option>
-          <option value="categoria">Por Categoria</option>
-        </select>
-      </div>
-    </div>
-    <div id="funnelContainer" style="margin-top:16px;max-width:900px;"></div>
-  </div>
-
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Distribuição de Views</h2></div>
-  <p class="section-desc">Quantos vídeos temos em cada patamar de views?</p>
-  <div style="margin-bottom:32px;">
-    <div class="chart-card wide">
-      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
-      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViews"></canvas></div>
-    </div>
   </div>
 
 </div>
@@ -1311,16 +1305,13 @@ let activeTab = 'dashboard';
 function switchTab(tab) {
   activeTab = tab;
   document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
-  document.getElementById('panelAvancada').style.display   = tab === 'avancada'   ? '' : 'none';
   document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
   document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
   document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
   document.getElementById('tabBtnDash').classList.toggle('active',      tab === 'dashboard');
-  document.getElementById('tabBtnAdv').classList.toggle('active',       tab === 'avancada');
   document.getElementById('tabBtnShorts').classList.toggle('active',    tab === 'shorts');
   document.getElementById('tabBtnFeedbacks').classList.toggle('active', tab === 'feedbacks');
   document.getElementById('tabBtnBase').classList.toggle('active',      tab === 'basedados');
-  if (tab === 'avancada')   renderAdvanced();
   if (tab === 'basedados')  renderTable();
   if (tab === 'shorts')     renderShortsAll();
   if (tab === 'feedbacks')  renderFeedbacksTab();
