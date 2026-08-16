@@ -1352,13 +1352,7 @@ function setChartMode(mode) {
   renderCharts();
 }
 
-// ── PIZZA & HISTOGRAMS ────────────────────────────────────────────────────────
-
-const PIE_COLORS = [
-  '#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6',
-  '#06b6d4','#f97316','#84cc16','#ec4899','#6366f1',
-  '#14b8a6','#fb923c','#a3e635','#e879f9','#38bdf8'
-];
+// ── HISTOGRAMS ────────────────────────────────────────────────────────────────
 
 function buildHistConfig(labels, values, yLabel, bgColor) {
   return {
@@ -1379,62 +1373,6 @@ function buildHistConfig(labels, values, yLabel, bgColor) {
       }
     }
   };
-}
-
-function renderCategoryPizza() {
-  destroyChart('chartPizza');
-  const d = filteredLong;
-  const catMap = {};
-  d.forEach(r => {
-    const cat = r.categoria || '(Sem categoria)';
-    if (!catMap[cat]) catMap[cat] = { count: 0, views: 0, viewsArr: [] };
-    catMap[cat].count++;
-    catMap[cat].views += r.views;
-    catMap[cat].viewsArr.push(r.views);
-  });
-  const cats    = Object.keys(catMap).sort((a,b) => catMap[b].views - catMap[a].views);
-  const values  = cats.map(c => catMap[c].views);
-  const medians = cats.map(c => median(catMap[c].viewsArr));
-  const means   = cats.map(c => mean(catMap[c].viewsArr));
-  const counts  = cats.map(c => catMap[c].count);
-  const bgColors = cats.map(c => CAT_COLORS[c] || '#64748b');
-
-  chartInstances['chartPizza'] = new Chart(document.getElementById('chartPizza'), {
-    type: 'pie',
-    data: {
-      labels: cats,
-      datasets: [{ data: values, backgroundColor: bgColors, borderWidth: 2, borderColor: '#fff' }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            font: { size: 11 }, padding: 10, boxWidth: 12,
-            generateLabels: chart => cats.map((cat, i) => ({
-              text: cat, fillStyle: bgColors[i], strokeStyle: '#fff',
-              lineWidth: 2, index: i, hidden: false
-            }))
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              const i = ctx.dataIndex;
-              const total = values.reduce((a,b)=>a+b,0);
-              const pct = total > 0 ? (values[i]/total*100).toFixed(1) : 0;
-              return [
-                ` ${fmtNum(values[i])} views (${pct}%) · ${counts[i]} vídeos`,
-                ` Média views: ${fmtNum(Math.round(means[i]))}`,
-                ` Mediana views: ${fmtNum(medians[i])}`
-              ];
-            }
-          }
-        }
-      }
-    }
-  });
 }
 
 function renderHistograms() {
@@ -2016,7 +1954,6 @@ function getChartData(metric) {
 function renderCharts() {
   const d = filteredData;
   if (!d.length) return;
-  renderCategoryPizza();
   renderHistograms();
 
   // Performance chart: variable metric + category mode
@@ -2423,6 +2360,22 @@ function classifyVideo(r) {
   if (!highViews && !highCTR && !highGancho && !highAvgView)
     return { status:'Rever Formato',  color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',  acao:'Revisar pauta e reformular formato' };
   return { status:'Ajustar Entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',     acao:'Verificar metrica mais fraca' };
+}
+
+function classifyVideoShorts(r) {
+  const highViews = r.views >= THRESHOLDS_SHORTS.views;
+  const highCTR   = r.ctr   >= THRESHOLDS_SHORTS.ctr;
+  const highAvgView = (r.avgViewedPct !== null && r.avgViewedPct !== undefined && !Number.isNaN(r.avgViewedPct))
+    ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct
+    : false;
+
+  if (highViews && highCTR && highAvgView)
+    return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',    acao:'Fazer sequencia e replicar o formato' };
+  if (!highViews && !highCTR && highAvgView)
+    return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
+  if (!highViews && !highCTR && !highAvgView)
+    return { status:'Rever formato',   color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',   acao:'Revisar pauta e reformular formato' };
+  return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',      acao:'Verificar metrica mais fraca' };
 }
 
 let feedbackSortCol = 'status';
