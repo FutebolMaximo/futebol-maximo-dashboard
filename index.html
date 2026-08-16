@@ -700,7 +700,7 @@
 
   <!-- SCATTER: CTR x RETENÇÃO -->
   <!-- ── ITEM 3: HEATMAP CRIADOR × CATEGORIA ──────────────────────────────── -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Análise de Distribuição Ideal</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
   <p class="section-desc">Mapa de calor dos principais indicadores.</p>
   <!-- hidden stubs kept for init() compatibility -->
   <div class="table-card" style="margin-bottom:32px;">
@@ -3435,11 +3435,11 @@ function renderShortsIndicatorsHeatmap() {
   const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
   const rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr) }));
 
-  const allValsPerCol = { avgViews:[], medRet:[], avgDurSec:[], ctrMed:[], insc1k:[], comm1k:[] };
+  const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ctrMed:[], insc1k:[], comm1k:[] };
   rows_data.forEach(({ rows }) => {
     if (!rows.length) return;
     const tv = rows.reduce((a, r) => a + r.views, 0);
-    allValsPerCol.avgViews.push(mean(rows.map(r => r.views)));
+    allValsPerCol.medianViews.push(median(rows.map(r => r.views)));
     allValsPerCol.medRet.push(median(rows.map(r => r.avgViewedPct).filter(v => v !== null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)));
     allValsPerCol.ctrMed.push(mean(rows.map(r => r.ctr)) * 100);
@@ -3452,7 +3452,7 @@ function renderShortsIndicatorsHeatmap() {
     const totalViews = rows.reduce((a, r) => a + r.views, 0);
     const data = {
       n: rows.length,
-      avgViews: mean(rows.map(r => r.views)),
+      medianViews: median(rows.map(r => r.views)),
       medRet: median(rows.map(r => r.avgViewedPct).filter(v => v !== null)),
       avgDurSec: mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)),
       ctrMed: mean(rows.map(r => r.ctr)) * 100,
@@ -3466,12 +3466,12 @@ function renderShortsIndicatorsHeatmap() {
       return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
     };
     return {
-      label, n: data.n, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
+      label, n: data.n, medianViews: data.medianViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
       ctrMed: data.ctrMed, insc1k: data.insc1k, comm1k: data.comm1k,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
-        ${cell('avgViews', v => fmtNum(Math.round(v)))}
+        ${cell('medianViews', v => fmtNum(Math.round(v)))}
         ${cell('medRet', v => v.toFixed(1) + '%')}
         ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
         ${cell('ctrMed', v => v.toFixed(2) + '%')}
@@ -3497,7 +3497,7 @@ function renderShortsIndicatorsHeatmap() {
     <thead><tr>
       <th onclick="sortShortsIndicators('label')" style="${thL}">Criador${sortArrow('label')}</th>
       <th onclick="sortShortsIndicators('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
-      <th onclick="sortShortsIndicators('avgViews')" style="${thR}">Views Média${sortArrow('avgViews')}</th>
+      <th onclick="sortShortsIndicators('medianViews')" style="${thR}">Views Mediana${sortArrow('medianViews')}</th>
       <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortShortsIndicators('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
       <th onclick="sortShortsIndicators('ctrMed')" style="${thR}">CTR % Médio${sortArrow('ctrMed')}</th>
