@@ -434,7 +434,7 @@
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Long Form</button>
   <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
@@ -458,7 +458,7 @@
       </div>
     </div>
     <div class="filter-group">
-      <label>Tipo <span style="font-size:9px;color:var(--gray-400);">(Base de Dados)</span></label>
+      <label>TIPO</label>
       <select id="filterTipo">
         <option value="">Todos os tipos</option>
         <option value="long">Long Form</option>
@@ -830,7 +830,7 @@
     <div class="table-footer" id="feedbackFooter"></div>
   </div>
 
-  <div class="section-header" style="margin-top:16px;"><div class="section-divider"></div><h2>Feedback Automático · Shorts</h2></div>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true" style="margin-top:16px;"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Shorts</h2></div>
   <p class="section-desc">Classificação com limiares: ≥98.1K views E CTR% ≥70% E Avg Viewed% ≥75% = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
@@ -1121,6 +1121,17 @@
       </div>
     </div>
     <div id="funnelContainerShorts" style="margin-top:16px;max-width:900px;"></div>
+  </div>
+
+  <!-- HEATMAP INDICADORES · SHORTS -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
+  <p class="section-desc">Performance agregada por Creator (somente Shorts).</p>
+  <div class="table-card" style="margin-bottom:32px;">
+    <div class="table-toolbar">
+      <h3 id="shortsIndicatorsTitle" style="margin:0;font-size:14px;font-weight:700;">Por Creator</h3>
+      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+    </div>
+    <div class="table-wrap"><div id="shortsIndicatorsContainer"></div></div>
   </div>
 
 </div>
@@ -3178,6 +3189,7 @@ function renderShortsAll() {
   try { renderShortsScatter(); } catch(e) { console.error('ShortsScatter:', e.message); }
   try { renderShortsCharts();  } catch(e) { console.error('ShortsCharts:', e.message); }
   try { renderShortsFunil();   } catch(e) { console.error('ShortsFunil:', e.message); }
+  try { renderShortsIndicatorsHeatmap(); } catch(e) { console.error('ShortsIndicators:', e.message); }
 }
 
 function renderShortsKPIs() {
@@ -3396,6 +3408,104 @@ function renderShortsFunil() {
       ${svgContent}
     </svg>
   </div>`;
+}
+
+// ── SHORTS · HEATMAP INDICADORES (por Creator) ─────────────────────────────────
+
+let shortsIndSortCol = 'n';
+let shortsIndSortDir = -1;
+
+function sortShortsIndicators(col) {
+  if (shortsIndSortCol === col) shortsIndSortDir *= -1;
+  else { shortsIndSortCol = col; shortsIndSortDir = -1; }
+  renderShortsIndicatorsHeatmap();
+}
+
+function renderShortsIndicatorsHeatmap() {
+  const container = document.getElementById('shortsIndicatorsContainer');
+  if (!container) return;
+  const d = filteredShorts;
+  if (!d.length) { container.innerHTML = ''; return; }
+
+  const thBase = 'padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);white-space:nowrap;cursor:pointer;user-select:none;';
+  const thL = thBase + 'text-align:left;';
+  const thR = thBase + 'text-align:right;';
+  const sortArrow = col => shortsIndSortCol === col ? (shortsIndSortDir === -1 ? ' ↓' : ' ↑') : ' ↕';
+
+  const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
+  const rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr) }));
+
+  const allValsPerCol = { avgViews:[], medRet:[], avgDurSec:[], ctrMed:[], insc1k:[], comm1k:[] };
+  rows_data.forEach(({ rows }) => {
+    if (!rows.length) return;
+    const tv = rows.reduce((a, r) => a + r.views, 0);
+    allValsPerCol.avgViews.push(mean(rows.map(r => r.views)));
+    allValsPerCol.medRet.push(median(rows.map(r => r.avgViewedPct).filter(v => v !== null)));
+    allValsPerCol.avgDurSec.push(mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)));
+    allValsPerCol.ctrMed.push(mean(rows.map(r => r.ctr)) * 100);
+    allValsPerCol.insc1k.push(tv > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / tv * 1000 : 0);
+    allValsPerCol.comm1k.push(tv > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / tv * 1000 : 0);
+  });
+
+  const buildRow = (label, rows) => {
+    if (!rows.length) return null;
+    const totalViews = rows.reduce((a, r) => a + r.views, 0);
+    const data = {
+      n: rows.length,
+      avgViews: mean(rows.map(r => r.views)),
+      medRet: median(rows.map(r => r.avgViewedPct).filter(v => v !== null)),
+      avgDurSec: mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)),
+      ctrMed: mean(rows.map(r => r.ctr)) * 100,
+      insc1k: totalViews > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / totalViews * 1000 : 0,
+      comm1k: totalViews > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / totalViews * 1000 : 0,
+    };
+    const cellColor = col => heatColor(data[col], allValsPerCol[col]);
+    const cell = (col, fmt) => {
+      if (data[col] === null || isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
+      const c = cellColor(col);
+      return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
+    };
+    return {
+      label, n: data.n, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
+      ctrMed: data.ctrMed, insc1k: data.insc1k, comm1k: data.comm1k,
+      html: `<tr style="border-bottom:1px solid var(--gray-100);">
+        <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
+        <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
+        ${cell('avgViews', v => fmtNum(Math.round(v)))}
+        ${cell('medRet', v => v.toFixed(1) + '%')}
+        ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
+        ${cell('ctrMed', v => v.toFixed(2) + '%')}
+        ${cell('insc1k', v => v.toFixed(2))}
+        ${cell('comm1k', v => v.toFixed(2))}
+      </tr>`
+    };
+  };
+
+  const built = rows_data.map(({ label, rows }) => buildRow(label, rows)).filter(Boolean);
+
+  if (shortsIndSortCol) {
+    built.sort((a, b) => {
+      if (shortsIndSortCol === 'label') return shortsIndSortDir * a.label.localeCompare(b.label);
+      return shortsIndSortDir * ((a[shortsIndSortCol] || 0) - (b[shortsIndSortCol] || 0));
+    });
+  }
+
+  const titleEl = document.getElementById('shortsIndicatorsTitle');
+  if (titleEl) titleEl.textContent = `${built.length} Creators · ${d.length} Shorts`;
+
+  container.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr>
+      <th onclick="sortShortsIndicators('label')" style="${thL}">Criador${sortArrow('label')}</th>
+      <th onclick="sortShortsIndicators('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
+      <th onclick="sortShortsIndicators('avgViews')" style="${thR}">Views Média${sortArrow('avgViews')}</th>
+      <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
+      <th onclick="sortShortsIndicators('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
+      <th onclick="sortShortsIndicators('ctrMed')" style="${thR}">CTR % Médio${sortArrow('ctrMed')}</th>
+      <th onclick="sortShortsIndicators('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
+      <th onclick="sortShortsIndicators('comm1k')" style="${thR}">Coment./1K${sortArrow('comm1k')}</th>
+    </tr></thead>
+    <tbody>${built.map(r => r.html).join('')}</tbody>
+  </table>`;
 }
 
 
