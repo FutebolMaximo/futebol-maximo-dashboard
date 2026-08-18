@@ -414,6 +414,78 @@
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
   .filters-sticky { position:sticky; top:38px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
+
+  /* ── VELHO GALLERY ── */
+  .velho-toolbar {
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:16px; flex-wrap:wrap;
+  }
+  .velho-toolbar h3 { font-size:14px; font-weight:700; color:var(--gray-700); margin:0; text-transform:uppercase; letter-spacing:.4px; }
+  .velho-toolbar span { font-size:12px; color:var(--gray-500); }
+  .velho-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:18px 14px;
+    min-width:0;
+  }
+  @media (min-width: 1600px) {
+    .velho-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media (max-width: 1100px) {
+    .velho-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  }
+  @media (max-width: 700px) {
+    .velho-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .velho-grid { grid-template-columns: 1fr; }
+  }
+  .velho-card {
+    background:var(--white);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .velho-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+  .velho-thumb-wrap {
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio:16/9;
+    background:var(--gray-100);
+    overflow:hidden;
+  }
+  .velho-thumb-wrap img {
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .velho-dur {
+    position:absolute; right:6px; bottom:6px;
+    background:rgba(0,0,0,.82); color:#fff;
+    font-size:11px; font-weight:700; line-height:1;
+    padding:3px 5px; border-radius:3px;
+    font-variant-numeric:tabular-nums;
+  }
+  .velho-body { padding:10px 12px 12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .velho-title {
+    font-size:13px; font-weight:700; color:var(--gray-900); line-height:1.35;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden; text-decoration:none;
+  }
+  .velho-title:hover { color:var(--blue-600); }
+  .velho-date { font-size:11px; color:var(--gray-500); }
+  .velho-metrics { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; }
+  .velho-metric-label { font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.3px; }
+  .velho-metric-val { font-size:14px; font-weight:800; color:var(--gray-900); line-height:1.15; }
+  .velho-metric-val.sec { font-size:12px; font-weight:600; color:var(--gray-700); }
+  .velho-empty {
+    grid-column:1 / -1;
+    background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:32px 20px; text-align:center; color:var(--gray-500); font-size:14px;
+  }
 </style>
 </head>
 <body>
@@ -438,6 +510,7 @@
   <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
+  <button class="tab-btn"        id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
 </div>
 
 <!-- STICKY FILTERS (shared across tabs) -->
@@ -1136,6 +1209,15 @@
 
 </div>
 
+<!-- VELHO (Tab) -->
+<div class="main" id="panelVelho" style="display:none;">
+  <div class="velho-toolbar">
+    <h3>Galeria</h3>
+    <span id="velhoCount"></span>
+  </div>
+  <div id="velhoGrid" class="velho-grid"></div>
+</div>
+
 <script>
 // ── UTILS (must come first) ───────────────────────────────────────────────────
 
@@ -1183,6 +1265,24 @@ function truncateTitle(str, max) {
   return str.length > max ? str.slice(0, max) + '…' : str;
 }
 
+function extractYouTubeVideoId(url) {
+  if (!url || typeof url !== 'string') return null;
+  const u = url.trim();
+  if (!u) return null;
+  const patterns = [
+    /(?:youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/i,
+    /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+    /(?:[?&]v=)([A-Za-z0-9_-]{11})/i,
+    /(?:youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/i,
+    /(?:youtube\.com\/live\/)([A-Za-z0-9_-]{11})/i,
+  ];
+  for (const re of patterns) {
+    const m = u.match(re);
+    if (m && m[1]) return m[1];
+  }
+  return null;
+}
+
 // ── DATA LOADING ─────────────────────────────────────────────────────────────
 
 let allData = [];
@@ -1190,6 +1290,8 @@ let filteredData = [];
 let filteredLong   = [];
 let filteredShorts = [];
 let filteredAll = [];
+let medianViews2026Long = null;
+let medianViews2026Shorts = null;
 
 function parseCSVText(text) {
   const lines = text.split(/\r?\n/);
@@ -1206,6 +1308,7 @@ function parseCSVText(text) {
     'conversao comments': 'conversaoComments', 'convers\u00e3o comments': 'conversaoComments',
     'conversao': 'conversao', 'convers\u00e3o': 'conversao', 'content': 'id',
     'tipo': 'tipo', 'semana': 'semana', 'gancho': 'gancho',
+    'url video': 'urlVideo',
   };
   const rawHeader = lines[0].split(',').map(h => h.replace(/["\']/g,'').trim().toLowerCase());
   const mapped = rawHeader.map(h => colMap[h] || h);
@@ -1230,6 +1333,8 @@ function parseCSVText(text) {
     if (!obj.title && !obj.id) continue;
     rows.push({
       id: obj.id||'', title: obj.title||'', link: obj.link||'',
+      urlVideo: (obj.urlVideo||'').trim(),
+      videoId: extractYouTubeVideoId(obj.urlVideo),
       duracao: parseInt(obj.duracao)||0, inscritos: parseInt(obj.inscritos)||0,
       avgViewedPct: (obj.avgViewedPct !== '' && obj.avgViewedPct !== undefined) ? (parseFloat(obj.avgViewedPct)||0) : null, likes: parseInt(obj.likes)||0,
       shares: parseInt(obj.shares)||0, comentarios: parseInt(obj.comentarios)||0,
@@ -1259,6 +1364,32 @@ function parseCSVText(text) {
   return rows;
 }
 
+function assignFixedOutliers(data) {
+  const lfViews = data
+    .filter(r => (r.tipo||'').toLowerCase().includes('long') && r.ano === 2026)
+    .map(r => r.views)
+    .filter(v => Number.isFinite(v) && v > 0);
+  const shViews = data
+    .filter(r => (r.tipo||'').toLowerCase().includes('short') && r.ano === 2026)
+    .map(r => r.views)
+    .filter(v => Number.isFinite(v) && v > 0);
+  medianViews2026Long   = lfViews.length ? median(lfViews) : null;
+  medianViews2026Shorts = shViews.length ? median(shViews) : null;
+
+  data.forEach(r => {
+    const isLF = (r.tipo||'').toLowerCase().includes('long');
+    const isSH = (r.tipo||'').toLowerCase().includes('short');
+    const ref = isLF ? medianViews2026Long : isSH ? medianViews2026Shorts : null;
+    const views = r.views;
+    if (!Number.isFinite(views) || views <= 0 || ref === null || ref === undefined || !Number.isFinite(ref) || ref <= 0) {
+      r.outlier = null;
+      return;
+    }
+    const v = views / ref;
+    r.outlier = Number.isFinite(v) ? v : null;
+  });
+}
+
 async function loadData() {
   const badge = document.getElementById('dataBadge');
   try {
@@ -1270,6 +1401,7 @@ async function loadData() {
     allData = parseCSVText(text);
     filteredData = [...allData];
     if (!allData.length) throw new Error('O arquivo dados.csv está vazio ou mal formatado.');
+    assignFixedOutliers(allData);
     badge.textContent = `${allData.length} vídeos`;
     init();
   } catch(err) {
@@ -1319,13 +1451,16 @@ function switchTab(tab) {
   document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
   document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
   document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
+  document.getElementById('panelVelho').style.display      = tab === 'velho'      ? '' : 'none';
   document.getElementById('tabBtnDash').classList.toggle('active',      tab === 'dashboard');
   document.getElementById('tabBtnShorts').classList.toggle('active',    tab === 'shorts');
   document.getElementById('tabBtnFeedbacks').classList.toggle('active', tab === 'feedbacks');
   document.getElementById('tabBtnBase').classList.toggle('active',      tab === 'basedados');
+  document.getElementById('tabBtnVelho').classList.toggle('active',     tab === 'velho');
   if (tab === 'basedados')  renderTable();
   if (tab === 'shorts')     renderShortsAll();
   if (tab === 'feedbacks')  renderFeedbacksTab();
+  if (tab === 'velho')      renderVelho();
 }
 
 function renderAdvanced() {
@@ -1534,6 +1669,7 @@ function applyFilters() {
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
   try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
   try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
+  try { renderVelho(); } catch(e) { console.error('renderVelho error:', e.message); }
 }
 
 function clearFilters() {
@@ -3892,6 +4028,71 @@ function updateEyeBtn() {
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
+
+function velhoThumbFallback(img) {
+  if (img.dataset.fb === '1') { img.onerror = null; return; }
+  img.dataset.fb = '1';
+  const id = img.dataset.vid;
+  if (id) img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+  else img.onerror = null;
+}
+
+function isVelhoEligible(r) {
+  return !!(r && r.urlVideo && String(r.urlVideo).trim()
+    && r.videoId && /^[A-Za-z0-9_-]{11}$/.test(r.videoId)
+    && r.outlier !== null && r.outlier !== undefined && Number.isFinite(r.outlier));
+}
+
+function renderVelho() {
+  const grid = document.getElementById('velhoGrid');
+  const countEl = document.getElementById('velhoCount');
+  if (!grid) return;
+
+  const escapeHtml = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmtDateBR = iso => {
+    if (!iso) return '—';
+    const p = String(iso).split('-');
+    return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
+  };
+
+  const combined = [...(filteredLong || []), ...(filteredShorts || [])].filter(isVelhoEligible);
+  combined.sort((a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || ''));
+  const eligible = combined.length;
+  const rows = combined.slice(0, 30);
+
+  if (countEl) countEl.textContent = eligible ? `Mostrando ${rows.length} de ${eligible} vídeos` : '';
+
+  if (!rows.length) {
+    grid.innerHTML = '<div class="velho-empty">Nenhum vídeo encontrado com os filtros atuais.</div>';
+    return;
+  }
+
+  grid.innerHTML = rows.map(r => {
+    const id = r.videoId;
+    const href = r.link || '#';
+    const dur = (r.duracao !== null && r.duracao !== undefined) ? formatDuration(r.duracao) : '—';
+    const outlier = Number.isFinite(r.outlier) ? r.outlier.toFixed(2) + 'x' : '—';
+    const ctr = Number.isFinite(r.ctr) ? (r.ctr * 100).toFixed(2) + '%' : '—';
+    const avgDur = (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined) ? formatDuration(r.avgViewDurSec) : '—';
+    const title = escapeHtml(r.title);
+    return `<article class="velho-card">
+      <a class="velho-thumb-wrap" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">
+        <img src="https://i.ytimg.com/vi/${escapeHtml(id)}/maxresdefault.jpg" data-vid="${escapeHtml(id)}" alt="" onerror="velhoThumbFallback(this)">
+        <span class="velho-dur">${escapeHtml(dur)}</span>
+      </a>
+      <div class="velho-body">
+        <a class="velho-title" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${title}</a>
+        <div class="velho-date">${escapeHtml(fmtDateBR(r.dataPublicacao))}</div>
+        <div class="velho-metrics">
+          <div><div class="velho-metric-label">Views</div><div class="velho-metric-val">${fmtNum(r.views)}</div></div>
+          <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val">${outlier}</div></div>
+          <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
+          <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
 
 document.addEventListener('DOMContentLoaded', loadData);
 </script>
