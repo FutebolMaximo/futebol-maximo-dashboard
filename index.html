@@ -415,13 +415,117 @@
   .filters-sticky { position:sticky; top:38px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
 
+  /* Dual range filters (Views / Outlier) */
+  .filter-ranges-row {
+    flex: 1 1 100%;
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    min-width: 0;
+    align-items: flex-end;
+  }
+  .filter-range-group {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+  .filter-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .filter-range input[type=number] {
+    width: 96px;
+    min-width: 72px;
+    padding: 7px 6px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-range-group[data-range="outlier"] input[type=number] { width: 72px; }
+  .filter-range-track-wrap {
+    position: relative;
+    flex: 1;
+    height: 36px;
+    min-width: 72px;
+  }
+  .filter-range-rail,
+  .filter-range-fill {
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 4px;
+    margin-top: -2px;
+    border-radius: 99px;
+    pointer-events: none;
+  }
+  .filter-range-rail { background: var(--gray-300); }
+  .filter-range-fill { background: var(--blue-500); right: auto; }
+  .filter-range-track-wrap input[type=range] {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: 36px;
+    margin: 0;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .filter-range-track-wrap input[type=range]::-webkit-slider-runnable-track {
+    height: 36px; background: transparent; border: none;
+  }
+  .filter-range-track-wrap input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: auto;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--blue-500);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(15,35,86,.28);
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .filter-range-track-wrap input[type=range]::-moz-range-track {
+    height: 4px; background: transparent; border: none;
+  }
+  .filter-range-track-wrap input[type=range]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--blue-500);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(15,35,86,.28);
+    cursor: pointer;
+  }
+  .filter-range-track-wrap input[type=range]:focus { outline: none; }
+  .filter-range-track-wrap input[type=range]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(37,99,235,.22);
+  }
+  @media (max-width: 700px) {
+    .filter-ranges-row { flex-direction: column; }
+    .filter-range-group { min-width: 0; width: 100%; }
+  }
+
   /* ── VELHO GALLERY ── */
   .velho-toolbar {
-    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
     margin-bottom:16px; flex-wrap:wrap;
   }
   .velho-toolbar h3 { font-size:14px; font-weight:700; color:var(--gray-700); margin:0; text-transform:uppercase; letter-spacing:.4px; }
   .velho-toolbar span { font-size:12px; color:var(--gray-500); }
+  .velho-sort {
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:600; color:var(--gray-600);
+    margin-left:auto;
+  }
+  .velho-sort select {
+    height:32px; padding:0 10px; border:1px solid var(--gray-300); border-radius:6px;
+    font-size:13px; color:var(--gray-800); background:white; cursor:pointer; outline:none;
+  }
+  .velho-sort select:focus { border-color:var(--blue-500); box-shadow:0 0 0 2px rgba(37,99,235,.12); }
+  .velho-loadmore-wrap { display:flex; justify-content:center; margin:24px 0 8px; }
+  .velho-loadmore-wrap[hidden] { display:none; }
   .velho-grid {
     display:grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -566,6 +670,34 @@
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
       <button id="btnEyeToggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo" style="background:white;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:16px;cursor:pointer;line-height:1;transition:background .15s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">👁️</button>
+    </div>
+    <div class="filter-ranges-row">
+      <div class="filter-group filter-range-group" data-range="views">
+        <label>Views</label>
+        <div class="filter-range">
+          <input type="number" id="filterViewsMin" step="1" inputmode="numeric">
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterViewsFill"></div>
+            <input type="range" id="filterViewsMinRange" min="0" max="1000" step="1" aria-label="Views mínimo">
+            <input type="range" id="filterViewsMaxRange" min="0" max="1000" step="1" aria-label="Views máximo">
+          </div>
+          <input type="number" id="filterViewsMax" step="1" inputmode="numeric">
+        </div>
+      </div>
+      <div class="filter-group filter-range-group" data-range="outlier">
+        <label>Outlier</label>
+        <div class="filter-range">
+          <input type="number" id="filterOutlierMin" step="0.1" inputmode="decimal">
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterOutlierFill"></div>
+            <input type="range" id="filterOutlierMinRange" min="0" max="1000" step="1" aria-label="Outlier mínimo">
+            <input type="range" id="filterOutlierMaxRange" min="0" max="1000" step="1" aria-label="Outlier máximo">
+          </div>
+          <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal">
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1212,10 +1344,19 @@
 <!-- VELHO (Tab) -->
 <div class="main" id="panelVelho" style="display:none;">
   <div class="velho-toolbar">
-    <h3>Galeria</h3>
     <span id="velhoCount"></span>
+    <label class="velho-sort">Ordenar por
+      <select id="velhoSortSelect" onchange="setVelhoSort(this.value)">
+        <option value="date" selected>Data</option>
+        <option value="outlier">Outlier</option>
+        <option value="views">Views</option>
+      </select>
+    </label>
   </div>
   <div id="velhoGrid" class="velho-grid"></div>
+  <div id="velhoLoadMoreWrap" class="velho-loadmore-wrap" hidden>
+    <button type="button" class="btn-primary" id="velhoLoadMoreBtn" onclick="loadMoreVelho()">Carregar mais</button>
+  </div>
 </div>
 
 <script>
@@ -1245,6 +1386,11 @@ function fmtNum(n) {
   if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
   if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
   return Math.round(n).toLocaleString('pt-BR');
+}
+
+function fmtOutlier(n) {
+  if (!Number.isFinite(n)) return '—';
+  return n.toFixed(1) + 'x';
 }
 
 function mean(arr) {
@@ -1628,6 +1774,7 @@ function init() {
 
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
 
+  initRangeFilters();
   applyFilters();
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
@@ -1635,10 +1782,317 @@ function init() {
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
 
+const RANGE_SLIDER_MAX = 1000;
+let viewsBoundMin = 0;
+let viewsBoundMax = 0;
+let outlierBoundMin = 0;
+let outlierBoundMax = 0;
+let rangeFiltersReady = false;
+
+function clampNum(n, lo, hi) {
+  return Math.min(Math.max(n, lo), hi);
+}
+function roundOutlier1(n) {
+  return Math.round(n * 10) / 10;
+}
+function logLerp(min, max, t) {
+  if (!(min > 0) || !(max > 0)) return min + (max - min) * t;
+  if (min === max) return min;
+  return min * Math.pow(max / min, t);
+}
+function logUnlerp(min, max, value) {
+  if (!(min > 0) || !(max > 0) || min === max) {
+    if (max === min) return 0;
+    return clampNum((value - min) / (max - min), 0, 1);
+  }
+  const v = clampNum(value, min, max);
+  return Math.log(v / min) / Math.log(max / min);
+}
+
+function viewsFromSlider(sliderVal) {
+  const t = Number(sliderVal) / RANGE_SLIDER_MAX;
+  if (t <= 0) return viewsBoundMin;
+  if (t >= 1) return viewsBoundMax;
+  return Math.round(logLerp(viewsBoundMin, viewsBoundMax, t));
+}
+function viewsToSlider(value) {
+  if (viewsBoundMax <= viewsBoundMin) return 0;
+  const v = clampNum(value, viewsBoundMin, viewsBoundMax);
+  return Math.round(logUnlerp(viewsBoundMin, viewsBoundMax, v) * RANGE_SLIDER_MAX);
+}
+function outlierLogStart() {
+  return outlierBoundMin < 0.1 ? 0.1 : outlierBoundMin;
+}
+function outlierFromSlider(sliderVal) {
+  const t = Number(sliderVal);
+  if (t <= 0) return outlierBoundMin;
+  const logLo = outlierLogStart();
+  const u = (t - 1) / (RANGE_SLIDER_MAX - 1);
+  return roundOutlier1(logLerp(logLo, outlierBoundMax, clampNum(u, 0, 1)));
+}
+function outlierToSlider(value) {
+  if (outlierBoundMax <= outlierBoundMin) return 0;
+  if (value <= outlierBoundMin + 1e-9) return 0;
+  const logLo = outlierLogStart();
+  const v = clampNum(Math.max(value, logLo), logLo, outlierBoundMax);
+  return Math.round(1 + logUnlerp(logLo, outlierBoundMax, v) * (RANGE_SLIDER_MAX - 1));
+}
+
+function updateRangeFill(fillId, minSlider, maxSlider) {
+  const fill = document.getElementById(fillId);
+  if (!fill || !minSlider || !maxSlider) return;
+  const max = Number(minSlider.max) || RANGE_SLIDER_MAX;
+  const a = Number(minSlider.value);
+  const b = Number(maxSlider.value);
+  const left = (Math.min(a, b) / max) * 100;
+  const right = (Math.max(a, b) / max) * 100;
+  fill.style.left = left + '%';
+  fill.style.width = (right - left) + '%';
+}
+
+function syncRangeFills() {
+  updateRangeFill('filterViewsFill',
+    document.getElementById('filterViewsMinRange'),
+    document.getElementById('filterViewsMaxRange'));
+  updateRangeFill('filterOutlierFill',
+    document.getElementById('filterOutlierMinRange'),
+    document.getElementById('filterOutlierMaxRange'));
+}
+
+function setViewsUI(min, max, writeInputs) {
+  min = Math.round(clampNum(min, viewsBoundMin, viewsBoundMax));
+  max = Math.round(clampNum(max, viewsBoundMin, viewsBoundMax));
+  if (min > max) min = max;
+  const minRange = document.getElementById('filterViewsMinRange');
+  const maxRange = document.getElementById('filterViewsMaxRange');
+  if (minRange) minRange.value = viewsToSlider(min);
+  if (maxRange) maxRange.value = viewsToSlider(max);
+  if (writeInputs) {
+    const minEl = document.getElementById('filterViewsMin');
+    const maxEl = document.getElementById('filterViewsMax');
+    if (minEl) minEl.value = min;
+    if (maxEl) maxEl.value = max;
+  }
+  syncRangeFills();
+}
+
+function setOutlierUI(min, max, writeInputs) {
+  min = roundOutlier1(clampNum(min, outlierBoundMin, outlierBoundMax));
+  max = roundOutlier1(clampNum(max, outlierBoundMin, outlierBoundMax));
+  if (min > max) min = max;
+  const minRange = document.getElementById('filterOutlierMinRange');
+  const maxRange = document.getElementById('filterOutlierMaxRange');
+  if (minRange) minRange.value = outlierToSlider(min);
+  if (maxRange) maxRange.value = outlierToSlider(max);
+  if (writeInputs) {
+    const minEl = document.getElementById('filterOutlierMin');
+    const maxEl = document.getElementById('filterOutlierMax');
+    if (minEl) minEl.value = min.toFixed(1);
+    if (maxEl) maxEl.value = max.toFixed(1);
+  }
+  syncRangeFills();
+}
+
+function parseViewsInput(el, fallback) {
+  if (!el) return fallback;
+  const n = parseInt(String(el.value).replace(/\s/g, ''), 10);
+  return Number.isFinite(n) ? n : fallback;
+}
+function parseOutlierInput(el, fallback) {
+  if (!el) return fallback;
+  const n = parseFloat(String(el.value).replace(',', '.'));
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function readRangeFilterValues(writeBack) {
+  let viewsMin = parseViewsInput(document.getElementById('filterViewsMin'), viewsBoundMin);
+  let viewsMax = parseViewsInput(document.getElementById('filterViewsMax'), viewsBoundMax);
+  viewsMin = Math.round(clampNum(viewsMin, viewsBoundMin, viewsBoundMax));
+  viewsMax = Math.round(clampNum(viewsMax, viewsBoundMin, viewsBoundMax));
+  if (viewsMin > viewsMax) { const t = viewsMin; viewsMin = viewsMax; viewsMax = t; }
+
+  let outlierMin = parseOutlierInput(document.getElementById('filterOutlierMin'), outlierBoundMin);
+  let outlierMax = parseOutlierInput(document.getElementById('filterOutlierMax'), outlierBoundMax);
+  outlierMin = roundOutlier1(clampNum(outlierMin, outlierBoundMin, outlierBoundMax));
+  outlierMax = roundOutlier1(clampNum(outlierMax, outlierBoundMin, outlierBoundMax));
+  if (outlierMin > outlierMax) { const t = outlierMin; outlierMin = outlierMax; outlierMax = t; }
+
+  if (writeBack) {
+    setViewsUI(viewsMin, viewsMax, true);
+    setOutlierUI(outlierMin, outlierMax, true);
+  }
+  return { viewsMin, viewsMax, outlierMin, outlierMax };
+}
+
+function resetRangeFiltersToBounds() {
+  setViewsUI(viewsBoundMin, viewsBoundMax, true);
+  setOutlierUI(outlierBoundMin, outlierBoundMax, true);
+}
+
+function bumpRangeZ(activeEl) {
+  if (!activeEl || !activeEl.parentElement) return;
+  activeEl.parentElement.querySelectorAll('input[type=range]').forEach(el => { el.style.zIndex = el === activeEl ? '4' : '3'; });
+}
+
+function initRangeFilters() {
+  const views = (allData || []).map(r => r.views).filter(v => Number.isFinite(v));
+  const outliers = (allData || []).map(r => r.outlier).filter(v => Number.isFinite(v));
+  viewsBoundMin = views.length ? Math.min(...views) : 0;
+  viewsBoundMax = views.length ? Math.max(...views) : 0;
+  const oMin = outliers.length ? Math.min(...outliers) : 0;
+  const oMax = outliers.length ? Math.max(...outliers) : 0;
+  outlierBoundMin = roundOutlier1(Math.floor(oMin * 10) / 10);
+  outlierBoundMax = roundOutlier1(Math.ceil(oMax * 10) / 10);
+
+  const vMinEl = document.getElementById('filterViewsMin');
+  const vMaxEl = document.getElementById('filterViewsMax');
+  const oMinEl = document.getElementById('filterOutlierMin');
+  const oMaxEl = document.getElementById('filterOutlierMax');
+  const vMinR = document.getElementById('filterViewsMinRange');
+  const vMaxR = document.getElementById('filterViewsMaxRange');
+  const oMinR = document.getElementById('filterOutlierMinRange');
+  const oMaxR = document.getElementById('filterOutlierMaxRange');
+
+  [vMinEl, vMaxEl].forEach(el => {
+    if (!el) return;
+    el.min = viewsBoundMin;
+    el.max = viewsBoundMax;
+    el.step = 1;
+  });
+  [oMinEl, oMaxEl].forEach(el => {
+    if (!el) return;
+    el.min = outlierBoundMin.toFixed(1);
+    el.max = outlierBoundMax.toFixed(1);
+    el.step = 0.1;
+  });
+  [vMinR, vMaxR, oMinR, oMaxR].forEach(el => {
+    if (!el) return;
+    el.min = 0;
+    el.max = RANGE_SLIDER_MAX;
+    el.step = 1;
+  });
+
+  resetRangeFiltersToBounds();
+
+  if (rangeFiltersReady) return;
+  rangeFiltersReady = true;
+
+  if (vMinR) vMinR.addEventListener('input', () => {
+    bumpRangeZ(vMinR);
+    let min = viewsFromSlider(vMinR.value);
+    const max = parseViewsInput(vMaxEl, viewsBoundMax);
+    if (min > max) {
+      min = max;
+      vMinR.value = viewsToSlider(min);
+    }
+    if (vMinEl) vMinEl.value = min;
+    syncRangeFills();
+  });
+  if (vMaxR) vMaxR.addEventListener('input', () => {
+    bumpRangeZ(vMaxR);
+    const min = parseViewsInput(vMinEl, viewsBoundMin);
+    let max = viewsFromSlider(vMaxR.value);
+    if (max < min) {
+      max = min;
+      vMaxR.value = viewsToSlider(max);
+    }
+    if (vMaxEl) vMaxEl.value = max;
+    syncRangeFills();
+  });
+  if (oMinR) oMinR.addEventListener('input', () => {
+    bumpRangeZ(oMinR);
+    let min = outlierFromSlider(oMinR.value);
+    const max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
+    if (min > max) {
+      min = max;
+      oMinR.value = outlierToSlider(min);
+    }
+    if (oMinEl) oMinEl.value = min.toFixed(1);
+    syncRangeFills();
+  });
+  if (oMaxR) oMaxR.addEventListener('input', () => {
+    bumpRangeZ(oMaxR);
+    const min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
+    let max = outlierFromSlider(oMaxR.value);
+    if (max < min) {
+      max = min;
+      oMaxR.value = outlierToSlider(max);
+    }
+    if (oMaxEl) oMaxEl.value = max.toFixed(1);
+    syncRangeFills();
+  });
+
+  if (vMinEl) {
+    vMinEl.addEventListener('input', () => {
+      const parsed = parseInt(String(vMinEl.value).replace(/\s/g, ''), 10);
+      if (!Number.isFinite(parsed)) return;
+      const max = parseViewsInput(vMaxEl, viewsBoundMax);
+      const min = clampNum(parsed, viewsBoundMin, Math.min(viewsBoundMax, max));
+      if (vMinR) vMinR.value = viewsToSlider(min);
+      syncRangeFills();
+    });
+    vMinEl.addEventListener('blur', () => {
+      const max = parseViewsInput(vMaxEl, viewsBoundMax);
+      let min = parseViewsInput(vMinEl, viewsBoundMin);
+      min = Math.round(clampNum(min, viewsBoundMin, Math.min(viewsBoundMax, max)));
+      setViewsUI(min, max, true);
+    });
+  }
+  if (vMaxEl) {
+    vMaxEl.addEventListener('input', () => {
+      const parsed = parseInt(String(vMaxEl.value).replace(/\s/g, ''), 10);
+      if (!Number.isFinite(parsed)) return;
+      const min = parseViewsInput(vMinEl, viewsBoundMin);
+      const max = clampNum(parsed, Math.max(viewsBoundMin, min), viewsBoundMax);
+      if (vMaxR) vMaxR.value = viewsToSlider(max);
+      syncRangeFills();
+    });
+    vMaxEl.addEventListener('blur', () => {
+      const min = parseViewsInput(vMinEl, viewsBoundMin);
+      let max = parseViewsInput(vMaxEl, viewsBoundMax);
+      max = Math.round(clampNum(max, Math.max(viewsBoundMin, min), viewsBoundMax));
+      setViewsUI(min, max, true);
+    });
+  }
+  if (oMinEl) {
+    oMinEl.addEventListener('input', () => {
+      const parsed = parseFloat(String(oMinEl.value).replace(',', '.'));
+      if (!Number.isFinite(parsed)) return;
+      const max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
+      const min = roundOutlier1(clampNum(parsed, outlierBoundMin, Math.min(outlierBoundMax, max)));
+      if (oMinR) oMinR.value = outlierToSlider(min);
+      syncRangeFills();
+    });
+    oMinEl.addEventListener('blur', () => {
+      const max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
+      let min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
+      min = roundOutlier1(clampNum(min, outlierBoundMin, Math.min(outlierBoundMax, max)));
+      setOutlierUI(min, max, true);
+    });
+  }
+  if (oMaxEl) {
+    oMaxEl.addEventListener('input', () => {
+      const parsed = parseFloat(String(oMaxEl.value).replace(',', '.'));
+      if (!Number.isFinite(parsed)) return;
+      const min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
+      const max = roundOutlier1(clampNum(parsed, Math.max(outlierBoundMin, min), outlierBoundMax));
+      if (oMaxR) oMaxR.value = outlierToSlider(max);
+      syncRangeFills();
+    });
+    oMaxEl.addEventListener('blur', () => {
+      const min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
+      let max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
+      max = roundOutlier1(clampNum(max, Math.max(outlierBoundMin, min), outlierBoundMax));
+      setOutlierUI(min, max, true);
+    });
+  }
+}
+
 function applyFilters() {
   const creator   = document.getElementById('filterCreator').value;
   const dateStart = document.getElementById('filterDateStart').value;
   const dateEnd   = document.getElementById('filterDateEnd').value;
+  const rangeVals = readRangeFilterValues(true);
 
   const baseFilter = r => {
     if (creator && r.creator !== creator) return false;
@@ -1647,6 +2101,8 @@ function applyFilters() {
     if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
     if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
     if (selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
+    if (Number.isFinite(r.views) && (r.views < rangeVals.viewsMin || r.views > rangeVals.viewsMax)) return false;
+    if (Number.isFinite(r.outlier) && (r.outlier < rangeVals.outlierMin || r.outlier > rangeVals.outlierMax)) return false;
     return true;
   };
   // Long Form only → used by Dashboard and Análise Avançada
@@ -1669,6 +2125,7 @@ function applyFilters() {
   try { renderAdvanced(); } catch(e) { console.error('renderAdvanced error:', e.message); }
   try { renderShortsAll(); } catch(e) { console.error('renderShorts error:', e.message); }
   try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
+  velhoVisibleCount = 30;
   try { renderVelho(); } catch(e) { console.error('renderVelho error:', e.message); }
 }
 
@@ -1683,6 +2140,7 @@ function clearFilters() {
   selectedWeeks.clear();
   updateWeekInput();
   document.getElementById('weekDropdown').classList.remove('open');
+  resetRangeFiltersToBounds();
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
     const currentYear2 = new Date().getFullYear();
@@ -4043,9 +4501,49 @@ function isVelhoEligible(r) {
     && r.outlier !== null && r.outlier !== undefined && Number.isFinite(r.outlier));
 }
 
+let velhoSort = 'date';
+let velhoVisibleCount = 30;
+
+function setVelhoSort(mode) {
+  if (mode !== 'date' && mode !== 'outlier' && mode !== 'views') mode = 'date';
+  velhoSort = mode;
+  const sel = document.getElementById('velhoSortSelect');
+  if (sel && sel.value !== mode) sel.value = mode;
+  velhoVisibleCount = 30;
+  renderVelho();
+}
+
+function loadMoreVelho() {
+  velhoVisibleCount += 30;
+  renderVelho();
+}
+
+function getVelhoSortedRows() {
+  const rows = [...(filteredAll || [])].filter(isVelhoEligible);
+  const dateCmp = (a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
+  const viewsCmp = (a, b) => (b.views || 0) - (a.views || 0);
+  const outCmp = (a, b) => (b.outlier || 0) - (a.outlier || 0);
+  rows.sort((a, b) => {
+    if (velhoSort === 'outlier') {
+      const o = outCmp(a, b); if (o) return o;
+      const v = viewsCmp(a, b); if (v) return v;
+      return dateCmp(a, b);
+    }
+    if (velhoSort === 'views') {
+      const v = viewsCmp(a, b); if (v) return v;
+      const o = outCmp(a, b); if (o) return o;
+      return dateCmp(a, b);
+    }
+    const d = dateCmp(a, b); if (d) return d;
+    return viewsCmp(a, b);
+  });
+  return rows;
+}
+
 function renderVelho() {
   const grid = document.getElementById('velhoGrid');
   const countEl = document.getElementById('velhoCount');
+  const moreWrap = document.getElementById('velhoLoadMoreWrap');
   if (!grid) return;
 
   const escapeHtml = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -4055,12 +4553,12 @@ function renderVelho() {
     return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
   };
 
-  const combined = [...(filteredLong || []), ...(filteredShorts || [])].filter(isVelhoEligible);
-  combined.sort((a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || ''));
+  const combined = getVelhoSortedRows();
   const eligible = combined.length;
-  const rows = combined.slice(0, 30);
+  const rows = combined.slice(0, velhoVisibleCount);
 
   if (countEl) countEl.textContent = eligible ? `Mostrando ${rows.length} de ${eligible} vídeos` : '';
+  if (moreWrap) moreWrap.hidden = !(eligible > rows.length);
 
   if (!rows.length) {
     grid.innerHTML = '<div class="velho-empty">Nenhum vídeo encontrado com os filtros atuais.</div>';
@@ -4071,11 +4569,11 @@ function renderVelho() {
     const id = r.videoId;
     const href = r.link || '#';
     const dur = (r.duracao !== null && r.duracao !== undefined) ? formatDuration(r.duracao) : '—';
-    const outlier = Number.isFinite(r.outlier) ? r.outlier.toFixed(2) + 'x' : '—';
+    const outlier = fmtOutlier(r.outlier);
     const ctr = Number.isFinite(r.ctr) ? (r.ctr * 100).toFixed(2) + '%' : '—';
     const avgDur = (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined) ? formatDuration(r.avgViewDurSec) : '—';
     const title = escapeHtml(r.title);
-    return `<article class="velho-card">
+    return `<article class="velho-card" data-videoid="${escapeHtml(id)}">
       <a class="velho-thumb-wrap" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">
         <img src="https://i.ytimg.com/vi/${escapeHtml(id)}/maxresdefault.jpg" data-vid="${escapeHtml(id)}" alt="" onerror="velhoThumbFallback(this)">
         <span class="velho-dur">${escapeHtml(dur)}</span>
