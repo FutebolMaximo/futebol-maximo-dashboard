@@ -16,23 +16,78 @@
     --blue-100: #dbeafe;
     --blue-50:  #eff6ff;
     --gray-900: #111827;
+    --gray-800: #1f2937;
     --gray-700: #374151;
+    --gray-600: #4b5563;
     --gray-500: #6b7280;
+    --gray-400: #9ca3af;
     --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
     --gray-100: #f3f4f6;
     --gray-50:  #f9fafb;
     --white: #ffffff;
     --green: #059669;
     --amber: #d97706;
     --red: #dc2626;
+    --performance-good: #059669;
+    --performance-mid: #d97706;
+    --performance-bad: #dc2626;
+    --surface-bg: var(--gray-50);
+    --surface-card: var(--white);
+    --surface-hover: var(--gray-100);
+    --chart-tick: #6b7280;
+    --chart-grid: #f3f4f6;
+    --chart-label-bg: rgba(255,255,255,0.88);
+    --chart-tooltip-bg: #ffffff;
+    --chart-tooltip-text: #111827;
+    --input-bg: var(--white);
+    --sticky-bg: var(--white);
     --radius: 12px;
     --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
     --shadow-lg: 0 4px 16px rgba(0,0,0,.12);
   }
+  [data-theme="dark"] {
+    --blue-900: #1e3a8a;
+    --blue-800: #1d4ed8;
+    --blue-600: #3b82f6;
+    --blue-500: #60a5fa;
+    --blue-400: #93c5fd;
+    --blue-100: #1e3a5f;
+    --blue-50:  #172554;
+    --gray-900: #f1f5f9;
+    --gray-800: #e2e8f0;
+    --gray-700: #cbd5e1;
+    --gray-600: #94a3b8;
+    --gray-500: #94a3b8;
+    --gray-400: #64748b;
+    --gray-300: #475569;
+    --gray-200: #334155;
+    --gray-100: #1e293b;
+    --gray-50:  #0f172a;
+    --white: #1e293b;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --performance-good: #34d399;
+    --performance-mid: #fbbf24;
+    --performance-bad: #f87171;
+    --surface-bg: #0f172a;
+    --surface-card: #1e293b;
+    --surface-hover: #334155;
+    --chart-tick: #94a3b8;
+    --chart-grid: #334155;
+    --chart-label-bg: rgba(30,41,59,0.92);
+    --chart-tooltip-bg: #1e293b;
+    --chart-tooltip-text: #f1f5f9;
+    --input-bg: #0f172a;
+    --sticky-bg: #1e293b;
+    --shadow: 0 1px 3px rgba(0,0,0,.35), 0 4px 12px rgba(0,0,0,.28);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,.4);
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    background: var(--gray-50);
+    background: var(--surface-bg);
     color: var(--gray-900);
     min-height: 100vh;
     overflow-x: hidden;
@@ -112,7 +167,7 @@
     padding: 7px 10px;
     font-size: 13px;
     color: var(--gray-900);
-    background: var(--white);
+    background: var(--input-bg);
     outline: none;
     transition: border-color .2s;
     height: 36px;
@@ -141,7 +196,7 @@
   .title-dropdown {
     position: absolute;
     top: 100%; left: 0;
-    background: white;
+    background: var(--surface-card);
     border: 1px solid var(--gray-300);
     border-radius: 8px;
     box-shadow: var(--shadow-lg);
@@ -412,41 +467,70 @@
   .tab-btn { padding:10px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
-  .filters-sticky { position:sticky; top:38px; z-index:190; background:white; box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
+  .filters-sticky { position:sticky; top:38px; z-index:190; background:var(--sticky-bg); box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
+  .btn-icon-toggle {
+    background:var(--input-bg); border:1px solid var(--gray-300); border-radius:6px;
+    padding:4px 10px; font-size:16px; cursor:pointer; line-height:1; height:36px;
+    color:var(--gray-700); transition:background .15s, border-color .15s;
+  }
+  .btn-icon-toggle:hover { background:var(--surface-hover); border-color:var(--blue-400); }
+  .btn-theme-icon { font-size:18px; line-height:1; display:inline-block; }
 
-  /* Dual range filters (Views / Outlier) */
-  .filter-ranges-row {
+  /* Dual range filters — compact 3×2 grid */
+  .filter-ranges-grid {
     flex: 1 1 100%;
     width: 100%;
-    display: flex;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px 10px;
+    align-items: end;
     min-width: 0;
-    align-items: flex-end;
   }
   .filter-range-group {
-    flex: 1 1 0;
-    min-width: 260px;
+    min-width: 0;
+    gap: 3px;
   }
+  .filter-range-group .filter-group label { font-size: 10px; letter-spacing: .4px; }
   .filter-range {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
   }
   .filter-range input[type=number] {
-    width: 96px;
-    min-width: 72px;
-    padding: 7px 6px;
+    width: 64px;
+    min-width: 52px;
+    padding: 5px 4px;
     text-align: center;
+    font-size: 12px;
     font-variant-numeric: tabular-nums;
+    height: 32px;
   }
-  .filter-range-group[data-range="outlier"] input[type=number] { width: 72px; }
+  .filter-range-group[data-range="outlier"] input[type=number],
+  .filter-range-group[data-range="ctr"] input[type=number],
+  .filter-range-group[data-range="gancho"] input[type=number],
+  .filter-range-group[data-range="avgviewed"] input[type=number] { width: 56px; min-width: 48px; }
+  .filter-range-time {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .filter-range-time input[type=number] {
+    width: 34px;
+    min-width: 30px;
+    padding: 5px 2px;
+    font-size: 12px;
+    height: 32px;
+  }
+  .filter-range-time input.time-sec { width: 30px; min-width: 28px; }
+  .filter-range-time .time-sep { font-size: 12px; font-weight: 700; color: var(--gray-500); line-height: 1; }
   .filter-range-track-wrap {
     position: relative;
     flex: 1;
-    height: 36px;
-    min-width: 72px;
+    height: 32px;
+    min-width: 48px;
   }
   .filter-range-rail,
   .filter-range-fill {
@@ -464,7 +548,7 @@
     position: absolute;
     left: 0; top: 0;
     width: 100%;
-    height: 36px;
+    height: 32px;
     margin: 0;
     background: none;
     pointer-events: none;
@@ -472,29 +556,29 @@
     appearance: none;
   }
   .filter-range-track-wrap input[type=range]::-webkit-slider-runnable-track {
-    height: 36px; background: transparent; border: none;
+    height: 32px; background: transparent; border: none;
   }
   .filter-range-track-wrap input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     pointer-events: auto;
-    width: 16px; height: 16px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     background: var(--blue-500);
-    border: 2px solid #fff;
+    border: 2px solid var(--surface-card);
     box-shadow: 0 1px 4px rgba(15,35,86,.28);
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 9px;
   }
   .filter-range-track-wrap input[type=range]::-moz-range-track {
     height: 4px; background: transparent; border: none;
   }
   .filter-range-track-wrap input[type=range]::-moz-range-thumb {
     pointer-events: auto;
-    width: 16px; height: 16px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     background: var(--blue-500);
-    border: 2px solid #fff;
+    border: 2px solid var(--surface-card);
     box-shadow: 0 1px 4px rgba(15,35,86,.28);
     cursor: pointer;
   }
@@ -502,9 +586,18 @@
   .filter-range-track-wrap input[type=range]:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(37,99,235,.22);
   }
-  @media (max-width: 700px) {
-    .filter-ranges-row { flex-direction: column; }
-    .filter-range-group { min-width: 0; width: 100%; }
+  @media (max-width: 1100px) {
+    .filter-ranges-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .filter-ranges-grid { grid-template-columns: 1fr; }
+  }
+
+  #filterCategoriaInput, #filterWeekInput { background: var(--input-bg) !important; cursor: pointer; }
+  #tempMetricDropdown, #tempCatDropdown, #perfMetricDropdown, #durGranDropdown,
+  #sTempMetricDropdown, #sPerfMetricDropdown {
+    background: var(--surface-card) !important;
+    border-color: var(--gray-300) !important;
   }
 
   /* ── VELHO GALLERY ── */
@@ -521,8 +614,11 @@
   }
   .velho-sort select {
     height:32px; padding:0 10px; border:1px solid var(--gray-300); border-radius:6px;
-    font-size:13px; color:var(--gray-800); background:white; cursor:pointer; outline:none;
+    font-size:13px; color:var(--gray-800); background:var(--input-bg); cursor:pointer; outline:none;
   }
+  .velho-metric-val.perf-good { color: var(--performance-good); }
+  .velho-metric-val.perf-mid { color: var(--performance-mid); }
+  .velho-metric-val.perf-bad { color: var(--performance-bad); }
   .velho-sort select:focus { border-color:var(--blue-500); box-shadow:0 0 0 2px rgba(37,99,235,.12); }
   .velho-loadmore-wrap { display:flex; justify-content:center; margin:24px 0 8px; }
   .velho-loadmore-wrap[hidden] { display:none; }
@@ -582,6 +678,8 @@
   .velho-title:hover { color:var(--blue-600); }
   .velho-date { font-size:11px; color:var(--gray-500); }
   .velho-metrics { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; }
+  .velho-metrics.lf-five { grid-template-columns:repeat(3, 1fr); }
+  .velho-metrics.lf-five .velho-metric-span2 { grid-column:span 2; }
   .velho-metric-label { font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.3px; }
   .velho-metric-val { font-size:14px; font-weight:800; color:var(--gray-900); line-height:1.15; }
   .velho-metric-val.sec { font-size:12px; font-weight:600; color:var(--gray-700); }
@@ -669,9 +767,10 @@
     <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;">
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
-      <button id="btnEyeToggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo" style="background:white;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:16px;cursor:pointer;line-height:1;transition:background .15s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">👁️</button>
+      <button id="btnEyeToggle" class="btn-icon-toggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo">👁️</button>
+      <button id="btnThemeToggle" class="btn-icon-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro"><span class="btn-theme-icon">◐</span></button>
     </div>
-    <div class="filter-ranges-row">
+    <div class="filter-ranges-grid">
       <div class="filter-group filter-range-group" data-range="views">
         <label>Views</label>
         <div class="filter-range">
@@ -696,6 +795,66 @@
             <input type="range" id="filterOutlierMaxRange" min="0" max="1000" step="1" aria-label="Outlier máximo">
           </div>
           <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal">
+        </div>
+      </div>
+      <div class="filter-group filter-range-group" data-range="ctr">
+        <label>CTR %</label>
+        <div class="filter-range">
+          <input type="number" id="filterCtrMin" step="0.1" inputmode="decimal">
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterCtrFill"></div>
+            <input type="range" id="filterCtrMinRange" min="0" max="1000" step="1" aria-label="CTR mínimo">
+            <input type="range" id="filterCtrMaxRange" min="0" max="1000" step="1" aria-label="CTR máximo">
+          </div>
+          <input type="number" id="filterCtrMax" step="0.1" inputmode="decimal">
+        </div>
+      </div>
+      <div class="filter-group filter-range-group" data-range="duration">
+        <label>Avg View Duration</label>
+        <div class="filter-range">
+          <div class="filter-range-time">
+            <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" aria-label="Duração mínima minutos">
+            <span class="time-sep">:</span>
+            <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" aria-label="Duração mínima segundos">
+          </div>
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterDurFill"></div>
+            <input type="range" id="filterDurMinRange" min="0" max="1000" step="1" aria-label="Avg View Duration mínimo">
+            <input type="range" id="filterDurMaxRange" min="0" max="1000" step="1" aria-label="Avg View Duration máximo">
+          </div>
+          <div class="filter-range-time">
+            <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" aria-label="Duração máxima minutos">
+            <span class="time-sep">:</span>
+            <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" aria-label="Duração máxima segundos">
+          </div>
+        </div>
+      </div>
+      <div class="filter-group filter-range-group" data-range="gancho">
+        <label>Gancho %</label>
+        <div class="filter-range">
+          <input type="number" id="filterGanchoMin" step="0.1" inputmode="decimal">
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterGanchoFill"></div>
+            <input type="range" id="filterGanchoMinRange" min="0" max="1000" step="1" aria-label="Gancho mínimo">
+            <input type="range" id="filterGanchoMaxRange" min="0" max="1000" step="1" aria-label="Gancho máximo">
+          </div>
+          <input type="number" id="filterGanchoMax" step="0.1" inputmode="decimal">
+        </div>
+      </div>
+      <div class="filter-group filter-range-group" data-range="avgviewed">
+        <label>Avg Viewed %</label>
+        <div class="filter-range">
+          <input type="number" id="filterAvgViewedMin" step="0.1" inputmode="decimal">
+          <div class="filter-range-track-wrap">
+            <div class="filter-range-rail"></div>
+            <div class="filter-range-fill" id="filterAvgViewedFill"></div>
+            <input type="range" id="filterAvgViewedMinRange" min="0" max="1000" step="1" aria-label="Avg Viewed mínimo">
+            <input type="range" id="filterAvgViewedMaxRange" min="0" max="1000" step="1" aria-label="Avg Viewed máximo">
+          </div>
+          <input type="number" id="filterAvgViewedMax" step="0.1" inputmode="decimal">
         </div>
       </div>
     </div>
@@ -1036,7 +1195,7 @@
   </div>
 
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true" style="margin-top:16px;"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação com limiares: ≥98.1K views E CTR% ≥70% E Avg Viewed% ≥75% = Escalar.</p>
+  <p class="section-desc">Classificação com limiares: ≥98.1K views E Gancho ≥70% E Avg Viewed% ≥75% = Escalar.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackSTitle">Todos os Shorts</h3>
@@ -1071,7 +1230,7 @@
           <th class="sortable" data-sfcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('creator')">Criador</th>
           <th class="sortable" data-sfcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('categoria')">Categoria</th>
           <th class="sortable" data-sfcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('views')">Views</th>
-          <th class="sortable" data-sfcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('ctr')">CTR%</th>
+          <th class="sortable" data-sfcol="gancho" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('gancho')">Gancho</th>
           <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Avg View Dur</th>
           <th class="sortable" data-sfcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewedPct')">Avg Viewed%</th>
           <th class="sortable" data-sfcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('status')">Status</th>
@@ -1171,7 +1330,7 @@
         <div class="kpi-median" id="skViewsMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">CTR%</div>
+        <div class="kpi-label">GANCHO %</div>
         <div class="kpi-value" id="skCTR">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skCTRMed">—</div>
@@ -1244,7 +1403,7 @@
         </button>
         <div id="sTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
           <div onclick="setSTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
-          <div onclick="setSTempMetric('ctr','📊 CTR% Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% Médio</div>
+          <div onclick="setSTempMetric('gancho','📊 Gancho % Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % Médio</div>
           <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
           <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
           <div onclick="setSTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
@@ -1260,8 +1419,8 @@
 
   <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <!-- SHORTS SCATTER -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Matriz Avg View Duration × CTR%</h2></div>
-  <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Matriz Avg View Duration × Gancho %</h2></div>
+  <p class="section-desc">O problema foi o Pacote, Gancho (abertura) ou Retenção?</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div style="height:420px;"><canvas id="chartSScatter"></canvas></div>
     <div id="sSScatterLegend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0 4px;"></div>
@@ -1299,7 +1458,7 @@
             <div onclick="setSPerfMetric('conversaoComments','📬 Conv. Comentários %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📬 Conv. Comentários %</div>
             <div onclick="setSPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
             <div onclick="setSPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
-            <div onclick="setSPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
+            <div onclick="setSPerfMetric('gancho','📊 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % por Vídeo</div>
           </div>
         </div>
       </div>
@@ -1360,6 +1519,13 @@
 </div>
 
 <script>
+(function() {
+  try {
+    if (localStorage.getItem('futebolMaximoTheme') === 'dark')
+      document.documentElement.setAttribute('data-theme', 'dark');
+  } catch(e) {}
+})();
+
 // ── UTILS (must come first) ───────────────────────────────────────────────────
 
 function parseDuration(str) {
@@ -1393,6 +1559,78 @@ function fmtOutlier(n) {
   return n.toFixed(1) + 'x';
 }
 
+function outlierDisplayValue(n) {
+  if (!Number.isFinite(n)) return null;
+  return Math.round(n * 10) / 10;
+}
+
+function outlierPerformanceClass(n) {
+  const d = outlierDisplayValue(n);
+  if (d === null) return '';
+  if (d >= 1.5) return 'perf-good';
+  if (d >= 1.0) return 'perf-mid';
+  return 'perf-bad';
+}
+
+const THEME_STORAGE_KEY = 'futebolMaximoTheme';
+
+function getTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+
+function getChartTheme() {
+  const cs = getComputedStyle(document.documentElement);
+  return {
+    tick: cs.getPropertyValue('--chart-tick').trim() || '#6b7280',
+    grid: cs.getPropertyValue('--chart-grid').trim() || '#f3f4f6',
+    labelBg: cs.getPropertyValue('--chart-label-bg').trim() || 'rgba(255,255,255,0.88)',
+    tooltipBg: cs.getPropertyValue('--chart-tooltip-bg').trim() || '#ffffff',
+    tooltipText: cs.getPropertyValue('--chart-tooltip-text').trim() || '#111827',
+  };
+}
+
+function chartTooltipTheme() {
+  const t = getChartTheme();
+  return {
+    backgroundColor: t.tooltipBg,
+    titleColor: t.tooltipText,
+    bodyColor: t.tooltipText,
+    borderColor: t.grid,
+    borderWidth: 1,
+  };
+}
+
+function chartScaleOpts(formatTick) {
+  const t = getChartTheme();
+  return {
+    ticks: {
+      font: { size: 10 },
+      color: t.tick,
+      callback: formatTick || (v => fmtNum(v)),
+    },
+    grid: { color: t.grid },
+  };
+}
+
+function refreshChartsForTheme() {
+  if (!allData || !allData.length) return;
+  try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
+  try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
+  try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
+  try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+}
+
+function setTheme(theme) {
+  if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
+  try { localStorage.setItem(THEME_STORAGE_KEY, theme === 'dark' ? 'dark' : 'light'); } catch(e) {}
+  refreshChartsForTheme();
+}
+
+function toggleTheme() {
+  setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+}
+
 function mean(arr) {
   const valid = arr.filter(v => v !== null && v !== undefined && !isNaN(v));
   if (!valid.length) return 0;
@@ -1404,6 +1642,31 @@ function median(arr) {
   if (!valid.length) return 0;
   const m = Math.floor(valid.length/2);
   return valid.length % 2 ? valid[m] : (valid[m-1]+valid[m])/2;
+}
+
+function parseOptionalDecimal(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).trim();
+  if (s === '') return null;
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+function isLongForm(r) {
+  return (r.tipo || '').toLowerCase().includes('long');
+}
+
+function isShortForm(r) {
+  return (r.tipo || '').toLowerCase().includes('short');
+}
+
+function fmtCtrCell(r) {
+  return Number.isFinite(r.ctr) ? (r.ctr * 100).toFixed(2) + '%' : '—';
+}
+
+function fmtGanchoCell(r, digits) {
+  const d = digits === undefined ? 1 : digits;
+  return Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(d) + '%' : '—';
 }
 
 function truncateTitle(str, max) {
@@ -1485,7 +1748,7 @@ function parseCSVText(text) {
       avgViewedPct: (obj.avgViewedPct !== '' && obj.avgViewedPct !== undefined) ? (parseFloat(obj.avgViewedPct)||0) : null, likes: parseInt(obj.likes)||0,
       shares: parseInt(obj.shares)||0, comentarios: parseInt(obj.comentarios)||0,
       views: parseInt(obj.views)||0, impressoes: parseInt(obj.impressoes)||0,
-      ctr: parseFloat(obj.ctr)||0, avgViewDuration: obj.avgViewDuration||'0:00',
+      avgViewDuration: obj.avgViewDuration||'0:00',
       ano: parseInt(obj.ano)||0, dataPublicacao: (d => {
         if (!d) return '';
         // Already ISO: YYYY-MM-DD
@@ -1498,13 +1761,12 @@ function parseCSVText(text) {
       mesAno: obj.mesAno||'', creator: obj.creator||'', categoria: obj.categoria||'',
       conversao: parseFloat(obj.conversao)||0,
       conversaoComments: parseFloat(obj.conversaoComments)||0,
-      ctr: parseFloat(obj.ctr)||0,
+      ctr: parseOptionalDecimal(obj.ctr),
       ctrYT: parseFloat(obj.ctrYT)||0,
       avgViewDurSec: (obj.avgViewDuration !== '' && obj.avgViewDuration !== undefined && obj.avgViewDuration !== '0') ? (parseInt(obj.avgViewDuration)||null) : null,
-      conversaoComments: parseFloat(obj.conversaoComments)||0,
       tipo: obj.tipo||'',
       semana: obj.semana||'',
-      gancho: (obj.gancho && obj.gancho.trim()) ? (obj.gancho.includes('%') ? parseFloat(obj.gancho.replace('%',''))/100 : parseFloat(obj.gancho)) : null,
+      gancho: parseOptionalDecimal(obj.gancho),
     });
   }
   return rows;
@@ -1638,6 +1900,7 @@ function setChartMode(mode) {
 // ── HISTOGRAMS ────────────────────────────────────────────────────────────────
 
 function buildHistConfig(labels, values, yLabel, bgColor) {
+  const ct = getChartTheme();
   return {
     type: 'bar',
     data: {
@@ -1648,11 +1911,11 @@ function buildHistConfig(labels, values, yLabel, bgColor) {
       responsive: true, maintainAspectRatio: false, animation: { duration: 350 },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${yLabel}: ${fmtNum(Math.round(ctx.parsed.y))}` } }
+        tooltip: { ...chartTooltipTheme(), callbacks: { label: ctx => ` ${yLabel}: ${fmtNum(Math.round(ctx.parsed.y))}` } }
       },
       scales: {
-        x: { ticks: { font: { size: 10 }, color: '#6b7280', maxRotation: 35 }, grid: { display: false } },
-        y: { ticks: { font: { size: 10 }, color: '#6b7280', precision: 0, callback: v => fmtNum(v) }, grid: { color: '#f3f4f6' } }
+        x: { ticks: { font: { size: 10 }, color: ct.tick, maxRotation: 35 }, grid: { display: false } },
+        y: { ticks: { font: { size: 10 }, color: ct.tick, precision: 0, callback: v => fmtNum(v) }, grid: { color: ct.grid } }
       }
     }
   };
@@ -1783,18 +2046,19 @@ function init() {
 // ── FILTERS ───────────────────────────────────────────────────────────────────
 
 const RANGE_SLIDER_MAX = 1000;
-let viewsBoundMin = 0;
-let viewsBoundMax = 0;
-let outlierBoundMin = 0;
-let outlierBoundMax = 0;
+let viewsBoundMin = 0, viewsBoundMax = 0;
+let outlierBoundMin = 0, outlierBoundMax = 0;
+let ctrBoundMin = 0, ctrBoundMax = 0;
+let ganchoBoundMin = 0, ganchoBoundMax = 0;
+let avgViewedBoundMin = 0, avgViewedBoundMax = 0;
+let durBoundMin = 0, durBoundMax = 0;
 let rangeFiltersReady = false;
 
 function clampNum(n, lo, hi) {
   return Math.min(Math.max(n, lo), hi);
 }
-function roundOutlier1(n) {
-  return Math.round(n * 10) / 10;
-}
+function roundOutlier1(n) { return Math.round(n * 10) / 10; }
+function roundPct1(n) { return Math.round(n * 10) / 10; }
 function logLerp(min, max, t) {
   if (!(min > 0) || !(max > 0)) return min + (max - min) * t;
   if (min === max) return min;
@@ -1808,6 +2072,29 @@ function logUnlerp(min, max, value) {
   const v = clampNum(value, min, max);
   return Math.log(v / min) / Math.log(max / min);
 }
+function linearFromSlider(sliderVal, boundMin, boundMax) {
+  const t = clampNum(Number(sliderVal) / RANGE_SLIDER_MAX, 0, 1);
+  return boundMin + (boundMax - boundMin) * t;
+}
+function linearToSlider(value, boundMin, boundMax) {
+  if (boundMax <= boundMin) return 0;
+  return Math.round(clampNum((value - boundMin) / (boundMax - boundMin), 0, 1) * RANGE_SLIDER_MAX);
+}
+function rangeIsRestricted(min, max, bMin, bMax, eps) {
+  eps = eps !== undefined ? eps : 0.05;
+  return min > bMin + eps - 1e-9 || max < bMax - eps + 1e-9;
+}
+function secToMMSSParts(sec) {
+  sec = Math.round(clampNum(sec, 0, 999999));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return { m, s: String(s).padStart(2, '0') };
+}
+function mmssPartsToSec(m, s) {
+  const mi = Math.max(0, parseInt(m, 10) || 0);
+  const se = clampNum(parseInt(s, 10) || 0, 0, 59);
+  return mi * 60 + se;
+}
 
 function viewsFromSlider(sliderVal) {
   const t = Number(sliderVal) / RANGE_SLIDER_MAX;
@@ -1820,9 +2107,7 @@ function viewsToSlider(value) {
   const v = clampNum(value, viewsBoundMin, viewsBoundMax);
   return Math.round(logUnlerp(viewsBoundMin, viewsBoundMax, v) * RANGE_SLIDER_MAX);
 }
-function outlierLogStart() {
-  return outlierBoundMin < 0.1 ? 0.1 : outlierBoundMin;
-}
+function outlierLogStart() { return outlierBoundMin < 0.1 ? 0.1 : outlierBoundMin; }
 function outlierFromSlider(sliderVal) {
   const t = Number(sliderVal);
   if (t <= 0) return outlierBoundMin;
@@ -1836,6 +2121,23 @@ function outlierToSlider(value) {
   const logLo = outlierLogStart();
   const v = clampNum(Math.max(value, logLo), logLo, outlierBoundMax);
   return Math.round(1 + logUnlerp(logLo, outlierBoundMax, v) * (RANGE_SLIDER_MAX - 1));
+}
+function durFromSlider(sliderVal) {
+  const t = Number(sliderVal) / RANGE_SLIDER_MAX;
+  if (t <= 0) return durBoundMin;
+  if (t >= 1) return durBoundMax;
+  return Math.round(logLerp(durBoundMin, durBoundMax, t));
+}
+function durToSlider(value) {
+  if (durBoundMax <= durBoundMin) return 0;
+  const v = clampNum(value, durBoundMin, durBoundMax);
+  return Math.round(logUnlerp(durBoundMin, durBoundMax, v) * RANGE_SLIDER_MAX);
+}
+function pctFromSlider(sliderVal, bMin, bMax) {
+  return roundPct1(linearFromSlider(sliderVal, bMin, bMax));
+}
+function pctToSlider(value, bMin, bMax) {
+  return linearToSlider(clampNum(value, bMin, bMax), bMin, bMax);
 }
 
 function updateRangeFill(fillId, minSlider, maxSlider) {
@@ -1851,12 +2153,17 @@ function updateRangeFill(fillId, minSlider, maxSlider) {
 }
 
 function syncRangeFills() {
-  updateRangeFill('filterViewsFill',
-    document.getElementById('filterViewsMinRange'),
-    document.getElementById('filterViewsMaxRange'));
-  updateRangeFill('filterOutlierFill',
-    document.getElementById('filterOutlierMinRange'),
-    document.getElementById('filterOutlierMaxRange'));
+  const pairs = [
+    ['filterViewsFill', 'filterViewsMinRange', 'filterViewsMaxRange'],
+    ['filterOutlierFill', 'filterOutlierMinRange', 'filterOutlierMaxRange'],
+    ['filterCtrFill', 'filterCtrMinRange', 'filterCtrMaxRange'],
+    ['filterDurFill', 'filterDurMinRange', 'filterDurMaxRange'],
+    ['filterGanchoFill', 'filterGanchoMinRange', 'filterGanchoMaxRange'],
+    ['filterAvgViewedFill', 'filterAvgViewedMinRange', 'filterAvgViewedMaxRange'],
+  ];
+  pairs.forEach(([fill, minId, maxId]) => {
+    updateRangeFill(fill, document.getElementById(minId), document.getElementById(maxId));
+  });
 }
 
 function setViewsUI(min, max, writeInputs) {
@@ -1893,6 +2200,43 @@ function setOutlierUI(min, max, writeInputs) {
   syncRangeFills();
 }
 
+function setPctUI(prefix, bMin, bMax, min, max, writeInputs) {
+  min = roundPct1(clampNum(min, bMin, bMax));
+  max = roundPct1(clampNum(max, bMin, bMax));
+  if (min > max) min = max;
+  const minRange = document.getElementById(prefix + 'MinRange');
+  const maxRange = document.getElementById(prefix + 'MaxRange');
+  if (minRange) minRange.value = pctToSlider(min, bMin, bMax);
+  if (maxRange) maxRange.value = pctToSlider(max, bMin, bMax);
+  if (writeInputs) {
+    const minEl = document.getElementById(prefix + 'Min');
+    const maxEl = document.getElementById(prefix + 'Max');
+    if (minEl) minEl.value = min.toFixed(1);
+    if (maxEl) maxEl.value = max.toFixed(1);
+  }
+  syncRangeFills();
+}
+
+function setDurUI(minSec, maxSec, writeInputs) {
+  minSec = Math.round(clampNum(minSec, durBoundMin, durBoundMax));
+  maxSec = Math.round(clampNum(maxSec, durBoundMin, durBoundMax));
+  if (minSec > maxSec) minSec = maxSec;
+  const minRange = document.getElementById('filterDurMinRange');
+  const maxRange = document.getElementById('filterDurMaxRange');
+  if (minRange) minRange.value = durToSlider(minSec);
+  if (maxRange) maxRange.value = durToSlider(maxSec);
+  if (writeInputs) {
+    const pMin = secToMMSSParts(minSec);
+    const pMax = secToMMSSParts(maxSec);
+    const el = id => document.getElementById(id);
+    if (el('filterDurMinM')) el('filterDurMinM').value = pMin.m;
+    if (el('filterDurMinS')) el('filterDurMinS').value = pMin.s;
+    if (el('filterDurMaxM')) el('filterDurMaxM').value = pMax.m;
+    if (el('filterDurMaxS')) el('filterDurMaxS').value = pMax.s;
+  }
+  syncRangeFills();
+}
+
 function parseViewsInput(el, fallback) {
   if (!el) return fallback;
   const n = parseInt(String(el.value).replace(/\s/g, ''), 10);
@@ -1903,6 +2247,18 @@ function parseOutlierInput(el, fallback) {
   const n = parseFloat(String(el.value).replace(',', '.'));
   return Number.isFinite(n) ? n : fallback;
 }
+function parsePctInput(el, fallback) {
+  if (!el) return fallback;
+  const n = parseFloat(String(el.value).replace(',', '.'));
+  return Number.isFinite(n) ? n : fallback;
+}
+function parseDurInputs(mEl, sEl, fallback) {
+  if (!mEl || !sEl) return fallback;
+  const m = mEl.value;
+  const s = sEl.value;
+  if (m === '' && s === '') return fallback;
+  return mmssPartsToSec(m, s);
+}
 
 function readRangeFilterValues(writeBack) {
   let viewsMin = parseViewsInput(document.getElementById('filterViewsMin'), viewsBoundMin);
@@ -1911,22 +2267,57 @@ function readRangeFilterValues(writeBack) {
   viewsMax = Math.round(clampNum(viewsMax, viewsBoundMin, viewsBoundMax));
   if (viewsMin > viewsMax) { const t = viewsMin; viewsMin = viewsMax; viewsMax = t; }
 
-  let outlierMin = parseOutlierInput(document.getElementById('filterOutlierMin'), outlierBoundMin);
-  let outlierMax = parseOutlierInput(document.getElementById('filterOutlierMax'), outlierBoundMax);
-  outlierMin = roundOutlier1(clampNum(outlierMin, outlierBoundMin, outlierBoundMax));
-  outlierMax = roundOutlier1(clampNum(outlierMax, outlierBoundMin, outlierBoundMax));
+  let outlierMin = roundOutlier1(clampNum(parseOutlierInput(document.getElementById('filterOutlierMin'), outlierBoundMin), outlierBoundMin, outlierBoundMax));
+  let outlierMax = roundOutlier1(clampNum(parseOutlierInput(document.getElementById('filterOutlierMax'), outlierBoundMax), outlierBoundMin, outlierBoundMax));
   if (outlierMin > outlierMax) { const t = outlierMin; outlierMin = outlierMax; outlierMax = t; }
+
+  let ctrMinUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterCtrMin'), ctrBoundMin), ctrBoundMin, ctrBoundMax));
+  let ctrMaxUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterCtrMax'), ctrBoundMax), ctrBoundMin, ctrBoundMax));
+  if (ctrMinUi > ctrMaxUi) { const t = ctrMinUi; ctrMinUi = ctrMaxUi; ctrMaxUi = t; }
+
+  let ganchoMinUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterGanchoMin'), ganchoBoundMin), ganchoBoundMin, ganchoBoundMax));
+  let ganchoMaxUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterGanchoMax'), ganchoBoundMax), ganchoBoundMin, ganchoBoundMax));
+  if (ganchoMinUi > ganchoMaxUi) { const t = ganchoMinUi; ganchoMinUi = ganchoMaxUi; ganchoMaxUi = t; }
+
+  let avgViewedMin = roundPct1(clampNum(parsePctInput(document.getElementById('filterAvgViewedMin'), avgViewedBoundMin), avgViewedBoundMin, avgViewedBoundMax));
+  let avgViewedMax = roundPct1(clampNum(parsePctInput(document.getElementById('filterAvgViewedMax'), avgViewedBoundMax), avgViewedBoundMin, avgViewedBoundMax));
+  if (avgViewedMin > avgViewedMax) { const t = avgViewedMin; avgViewedMin = avgViewedMax; avgViewedMax = t; }
+
+  let durMin = parseDurInputs(document.getElementById('filterDurMinM'), document.getElementById('filterDurMinS'), durBoundMin);
+  let durMax = parseDurInputs(document.getElementById('filterDurMaxM'), document.getElementById('filterDurMaxS'), durBoundMax);
+  durMin = Math.round(clampNum(durMin, durBoundMin, durBoundMax));
+  durMax = Math.round(clampNum(durMax, durBoundMin, durBoundMax));
+  if (durMin > durMax) { const t = durMin; durMin = durMax; durMax = t; }
 
   if (writeBack) {
     setViewsUI(viewsMin, viewsMax, true);
     setOutlierUI(outlierMin, outlierMax, true);
+    setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrMinUi, ctrMaxUi, true);
+    setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoMinUi, ganchoMaxUi, true);
+    setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedMin, avgViewedMax, true);
+    setDurUI(durMin, durMax, true);
   }
-  return { viewsMin, viewsMax, outlierMin, outlierMax };
+
+  return {
+    viewsMin, viewsMax, outlierMin, outlierMax,
+    ctrMinUi, ctrMaxUi, ctrMin: ctrMinUi / 100, ctrMax: ctrMaxUi / 100,
+    ganchoMinUi, ganchoMaxUi, ganchoMin: ganchoMinUi / 100, ganchoMax: ganchoMaxUi / 100,
+    avgViewedMin, avgViewedMax,
+    durMin, durMax,
+    ctrActive: rangeIsRestricted(ctrMinUi, ctrMaxUi, ctrBoundMin, ctrBoundMax),
+    ganchoActive: rangeIsRestricted(ganchoMinUi, ganchoMaxUi, ganchoBoundMin, ganchoBoundMax),
+    avgViewedActive: rangeIsRestricted(avgViewedMin, avgViewedMax, avgViewedBoundMin, avgViewedBoundMax),
+    durActive: rangeIsRestricted(durMin, durMax, durBoundMin, durBoundMax, 1),
+  };
 }
 
 function resetRangeFiltersToBounds() {
   setViewsUI(viewsBoundMin, viewsBoundMax, true);
   setOutlierUI(outlierBoundMin, outlierBoundMax, true);
+  setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrBoundMin, ctrBoundMax, true);
+  setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoBoundMin, ganchoBoundMax, true);
+  setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedBoundMin, avgViewedBoundMax, true);
+  setDurUI(durBoundMin, durBoundMax, true);
 }
 
 function bumpRangeZ(activeEl) {
@@ -1934,9 +2325,127 @@ function bumpRangeZ(activeEl) {
   activeEl.parentElement.querySelectorAll('input[type=range]').forEach(el => { el.style.zIndex = el === activeEl ? '4' : '3'; });
 }
 
+function bindPctRange(prefix, bMin, bMax, fromSlider, toSlider) {
+  const minEl = document.getElementById(prefix + 'Min');
+  const maxEl = document.getElementById(prefix + 'Max');
+  const minR = document.getElementById(prefix + 'MinRange');
+  const maxR = document.getElementById(prefix + 'MaxRange');
+  if (minR) minR.addEventListener('input', () => {
+    bumpRangeZ(minR);
+    let min = fromSlider(minR.value);
+    const max = roundPct1(parsePctInput(maxEl, bMax));
+    if (min > max) { min = max; minR.value = toSlider(min, bMin, bMax); }
+    if (minEl) minEl.value = min.toFixed(1);
+    syncRangeFills();
+  });
+  if (maxR) maxR.addEventListener('input', () => {
+    bumpRangeZ(maxR);
+    const min = roundPct1(parsePctInput(minEl, bMin));
+    let max = fromSlider(maxR.value);
+    if (max < min) { max = min; maxR.value = toSlider(max, bMin, bMax); }
+    if (maxEl) maxEl.value = max.toFixed(1);
+    syncRangeFills();
+  });
+  if (minEl) {
+    minEl.addEventListener('input', () => {
+      const parsed = parseFloat(String(minEl.value).replace(',', '.'));
+      if (!Number.isFinite(parsed)) return;
+      const max = roundPct1(parsePctInput(maxEl, bMax));
+      const min = roundPct1(clampNum(parsed, bMin, Math.min(bMax, max)));
+      if (minR) minR.value = toSlider(min, bMin, bMax);
+      syncRangeFills();
+    });
+    minEl.addEventListener('blur', () => {
+      const max = roundPct1(parsePctInput(maxEl, bMax));
+      let min = roundPct1(parsePctInput(minEl, bMin));
+      min = roundPct1(clampNum(min, bMin, Math.min(bMax, max)));
+      setPctUI(prefix, bMin, bMax, min, max, true);
+    });
+  }
+  if (maxEl) {
+    maxEl.addEventListener('input', () => {
+      const parsed = parseFloat(String(maxEl.value).replace(',', '.'));
+      if (!Number.isFinite(parsed)) return;
+      const min = roundPct1(parsePctInput(minEl, bMin));
+      const max = roundPct1(clampNum(parsed, Math.max(bMin, min), bMax));
+      if (maxR) maxR.value = toSlider(max, bMin, bMax);
+      syncRangeFills();
+    });
+    maxEl.addEventListener('blur', () => {
+      const min = roundPct1(parsePctInput(minEl, bMin));
+      let max = roundPct1(parsePctInput(maxEl, bMax));
+      max = roundPct1(clampNum(max, Math.max(bMin, min), bMax));
+      setPctUI(prefix, bMin, bMax, min, max, true);
+    });
+  }
+}
+
+function bindDurRange() {
+  const ids = ['filterDurMinM','filterDurMinS','filterDurMaxM','filterDurMaxS'];
+  const minM = document.getElementById('filterDurMinM');
+  const minS = document.getElementById('filterDurMinS');
+  const maxM = document.getElementById('filterDurMaxM');
+  const maxS = document.getElementById('filterDurMaxS');
+  const minR = document.getElementById('filterDurMinRange');
+  const maxR = document.getElementById('filterDurMaxRange');
+
+  const syncFromDurInputs = (which) => {
+    const minSec = parseDurInputs(minM, minS, durBoundMin);
+    const maxSec = parseDurInputs(maxM, maxS, durBoundMax);
+    let lo = Math.round(clampNum(minSec, durBoundMin, durBoundMax));
+    let hi = Math.round(clampNum(maxSec, durBoundMin, durBoundMax));
+    if (which === 'min' && lo > hi) lo = hi;
+    if (which === 'max' && hi < lo) hi = lo;
+    if (minR) minR.value = durToSlider(lo);
+    if (maxR) maxR.value = durToSlider(hi);
+    syncRangeFills();
+  };
+
+  if (minR) minR.addEventListener('input', () => {
+    bumpRangeZ(minR);
+    let min = durFromSlider(minR.value);
+    const max = parseDurInputs(maxM, maxS, durBoundMax);
+    if (min > max) { min = max; minR.value = durToSlider(min); }
+    setDurUI(min, max, true);
+  });
+  if (maxR) maxR.addEventListener('input', () => {
+    bumpRangeZ(maxR);
+    const min = parseDurInputs(minM, minS, durBoundMin);
+    let max = durFromSlider(maxR.value);
+    if (max < min) { max = min; maxR.value = durToSlider(max); }
+    setDurUI(min, max, true);
+  });
+
+  [minM, minS].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', () => syncFromDurInputs('min'));
+    el.addEventListener('blur', () => {
+      let min = parseDurInputs(minM, minS, durBoundMin);
+      const max = parseDurInputs(maxM, maxS, durBoundMax);
+      min = Math.round(clampNum(min, durBoundMin, Math.min(durBoundMax, max)));
+      setDurUI(min, max, true);
+    });
+  });
+  [maxM, maxS].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', () => syncFromDurInputs('max'));
+    el.addEventListener('blur', () => {
+      const min = parseDurInputs(minM, minS, durBoundMin);
+      let max = parseDurInputs(maxM, maxS, durBoundMax);
+      max = Math.round(clampNum(max, Math.max(durBoundMin, min), durBoundMax));
+      setDurUI(min, max, true);
+    });
+  });
+}
+
 function initRangeFilters() {
   const views = (allData || []).map(r => r.views).filter(v => Number.isFinite(v));
   const outliers = (allData || []).map(r => r.outlier).filter(v => Number.isFinite(v));
+  const ctrs = (allData || []).filter(isLongForm).map(r => r.ctr).filter(v => Number.isFinite(v));
+  const ganchos = (allData || []).map(r => r.gancho).filter(v => Number.isFinite(v));
+  const avgVieweds = (allData || []).map(r => r.avgViewedPct).filter(v => Number.isFinite(v));
+  const durs = (allData || []).map(r => r.avgViewDurSec).filter(v => Number.isFinite(v));
+
   viewsBoundMin = views.length ? Math.min(...views) : 0;
   viewsBoundMax = views.length ? Math.max(...views) : 0;
   const oMin = outliers.length ? Math.min(...outliers) : 0;
@@ -1944,32 +2453,44 @@ function initRangeFilters() {
   outlierBoundMin = roundOutlier1(Math.floor(oMin * 10) / 10);
   outlierBoundMax = roundOutlier1(Math.ceil(oMax * 10) / 10);
 
-  const vMinEl = document.getElementById('filterViewsMin');
-  const vMaxEl = document.getElementById('filterViewsMax');
-  const oMinEl = document.getElementById('filterOutlierMin');
-  const oMaxEl = document.getElementById('filterOutlierMax');
-  const vMinR = document.getElementById('filterViewsMinRange');
-  const vMaxR = document.getElementById('filterViewsMaxRange');
-  const oMinR = document.getElementById('filterOutlierMinRange');
-  const oMaxR = document.getElementById('filterOutlierMaxRange');
+  const cMin = ctrs.length ? Math.min(...ctrs) : 0;
+  const cMax = ctrs.length ? Math.max(...ctrs) : 0;
+  ctrBoundMin = roundPct1(Math.floor(cMin * 1000) / 10);
+  ctrBoundMax = roundPct1(Math.ceil(cMax * 1000) / 10);
 
-  [vMinEl, vMaxEl].forEach(el => {
-    if (!el) return;
-    el.min = viewsBoundMin;
-    el.max = viewsBoundMax;
-    el.step = 1;
+  if (ganchos.length) {
+    ganchoBoundMin = roundPct1(Math.floor(Math.min(...ganchos) * 1000) / 10);
+    ganchoBoundMax = roundPct1(Math.ceil(Math.max(...ganchos) * 1000) / 10);
+  } else {
+    ganchoBoundMin = 0; ganchoBoundMax = 100;
+  }
+
+  if (avgVieweds.length) {
+    avgViewedBoundMin = roundPct1(Math.floor(Math.min(...avgVieweds) * 10) / 10);
+    avgViewedBoundMax = roundPct1(Math.ceil(Math.max(...avgVieweds) * 10) / 10);
+  } else {
+    avgViewedBoundMin = 0; avgViewedBoundMax = 100;
+  }
+
+  durBoundMin = durs.length ? Math.min(...durs) : 0;
+  durBoundMax = durs.length ? Math.max(...durs) : 0;
+
+  [document.getElementById('filterViewsMin'), document.getElementById('filterViewsMax')].forEach(el => {
+    if (!el) return; el.min = viewsBoundMin; el.max = viewsBoundMax; el.step = 1;
   });
-  [oMinEl, oMaxEl].forEach(el => {
-    if (!el) return;
-    el.min = outlierBoundMin.toFixed(1);
-    el.max = outlierBoundMax.toFixed(1);
-    el.step = 0.1;
+  [document.getElementById('filterOutlierMin'), document.getElementById('filterOutlierMax')].forEach(el => {
+    if (!el) return; el.min = outlierBoundMin.toFixed(1); el.max = outlierBoundMax.toFixed(1); el.step = 0.1;
   });
-  [vMinR, vMaxR, oMinR, oMaxR].forEach(el => {
-    if (!el) return;
-    el.min = 0;
-    el.max = RANGE_SLIDER_MAX;
-    el.step = 1;
+  ['filterCtr', 'filterGancho', 'filterAvgViewed'].forEach(prefix => {
+    const bMin = prefix === 'filterCtr' ? ctrBoundMin : prefix === 'filterGancho' ? ganchoBoundMin : avgViewedBoundMin;
+    const bMax = prefix === 'filterCtr' ? ctrBoundMax : prefix === 'filterGancho' ? ganchoBoundMax : avgViewedBoundMax;
+    [document.getElementById(prefix + 'Min'), document.getElementById(prefix + 'Max')].forEach(el => {
+      if (!el) return; el.min = bMin.toFixed(1); el.max = bMax.toFixed(1); el.step = 0.1;
+    });
+  });
+
+  document.querySelectorAll('.filter-range-track-wrap input[type=range]').forEach(el => {
+    el.min = 0; el.max = RANGE_SLIDER_MAX; el.step = 1;
   });
 
   resetRangeFiltersToBounds();
@@ -1977,14 +2498,20 @@ function initRangeFilters() {
   if (rangeFiltersReady) return;
   rangeFiltersReady = true;
 
+  const vMinEl = document.getElementById('filterViewsMin');
+  const vMaxEl = document.getElementById('filterViewsMax');
+  const vMinR = document.getElementById('filterViewsMinRange');
+  const vMaxR = document.getElementById('filterViewsMaxRange');
+  const oMinEl = document.getElementById('filterOutlierMin');
+  const oMaxEl = document.getElementById('filterOutlierMax');
+  const oMinR = document.getElementById('filterOutlierMinRange');
+  const oMaxR = document.getElementById('filterOutlierMaxRange');
+
   if (vMinR) vMinR.addEventListener('input', () => {
     bumpRangeZ(vMinR);
     let min = viewsFromSlider(vMinR.value);
     const max = parseViewsInput(vMaxEl, viewsBoundMax);
-    if (min > max) {
-      min = max;
-      vMinR.value = viewsToSlider(min);
-    }
+    if (min > max) { min = max; vMinR.value = viewsToSlider(min); }
     if (vMinEl) vMinEl.value = min;
     syncRangeFills();
   });
@@ -1992,10 +2519,7 @@ function initRangeFilters() {
     bumpRangeZ(vMaxR);
     const min = parseViewsInput(vMinEl, viewsBoundMin);
     let max = viewsFromSlider(vMaxR.value);
-    if (max < min) {
-      max = min;
-      vMaxR.value = viewsToSlider(max);
-    }
+    if (max < min) { max = min; vMaxR.value = viewsToSlider(max); }
     if (vMaxEl) vMaxEl.value = max;
     syncRangeFills();
   });
@@ -2003,10 +2527,7 @@ function initRangeFilters() {
     bumpRangeZ(oMinR);
     let min = outlierFromSlider(oMinR.value);
     const max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
-    if (min > max) {
-      min = max;
-      oMinR.value = outlierToSlider(min);
-    }
+    if (min > max) { min = max; oMinR.value = outlierToSlider(min); }
     if (oMinEl) oMinEl.value = min.toFixed(1);
     syncRangeFills();
   });
@@ -2014,10 +2535,7 @@ function initRangeFilters() {
     bumpRangeZ(oMaxR);
     const min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
     let max = outlierFromSlider(oMaxR.value);
-    if (max < min) {
-      max = min;
-      oMaxR.value = outlierToSlider(max);
-    }
+    if (max < min) { max = min; oMaxR.value = outlierToSlider(max); }
     if (oMaxEl) oMaxEl.value = max.toFixed(1);
     syncRangeFills();
   });
@@ -2086,6 +2604,11 @@ function initRangeFilters() {
       setOutlierUI(min, max, true);
     });
   }
+
+  bindPctRange('filterCtr', ctrBoundMin, ctrBoundMax, v => pctFromSlider(v, ctrBoundMin, ctrBoundMax), pctToSlider);
+  bindPctRange('filterGancho', ganchoBoundMin, ganchoBoundMax, v => pctFromSlider(v, ganchoBoundMin, ganchoBoundMax), pctToSlider);
+  bindPctRange('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, v => pctFromSlider(v, avgViewedBoundMin, avgViewedBoundMax), pctToSlider);
+  bindDurRange();
 }
 
 function applyFilters() {
@@ -2103,6 +2626,22 @@ function applyFilters() {
     if (selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
     if (Number.isFinite(r.views) && (r.views < rangeVals.viewsMin || r.views > rangeVals.viewsMax)) return false;
     if (Number.isFinite(r.outlier) && (r.outlier < rangeVals.outlierMin || r.outlier > rangeVals.outlierMax)) return false;
+    if (rangeVals.ctrActive && isLongForm(r)) {
+      if (!Number.isFinite(r.ctr)) return false;
+      if (r.ctr < rangeVals.ctrMin || r.ctr > rangeVals.ctrMax) return false;
+    }
+    if (rangeVals.durActive) {
+      if (!Number.isFinite(r.avgViewDurSec)) return false;
+      if (r.avgViewDurSec < rangeVals.durMin || r.avgViewDurSec > rangeVals.durMax) return false;
+    }
+    if (rangeVals.ganchoActive) {
+      if (!Number.isFinite(r.gancho)) return false;
+      if (r.gancho < rangeVals.ganchoMin || r.gancho > rangeVals.ganchoMax) return false;
+    }
+    if (rangeVals.avgViewedActive) {
+      if (!Number.isFinite(r.avgViewedPct)) return false;
+      if (r.avgViewedPct < rangeVals.avgViewedMin || r.avgViewedPct > rangeVals.avgViewedMax) return false;
+    }
     return true;
   };
   // Long Form only → used by Dashboard and Análise Avançada
@@ -2400,6 +2939,7 @@ function destroyChart(id) {
 }
 
 function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, formatTooltip, fullLabels, barColors, catNames, barLinks) {
+  const ct = getChartTheme();
   return {
     type: 'bar',
     data: {
@@ -2427,6 +2967,7 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
       plugins: {
         legend: { display: false },
         tooltip: {
+          ...chartTooltipTheme(),
           callbacks: {
             label: ctx => {
               const val = formatTooltip ? formatTooltip(ctx.parsed.y) : fmtNum(ctx.parsed.y);
@@ -2448,17 +2989,17 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
             font: { size: 10 },
             maxRotation: 35,
             minRotation: 0,
-            color: '#6b7280',
+            color: ct.tick,
           },
           grid: { display: false },
         },
         y: {
           ticks: {
             font: { size: 10 },
-            color: '#6b7280',
+            color: ct.tick,
             callback: formatTick || (v => fmtNum(v)),
           },
-          grid: { color: '#f3f4f6' },
+          grid: { color: ct.grid },
         },
         yMeanMedian: {
           display: false,
@@ -2492,7 +3033,7 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
           const pad = 4;
           const bx = labelSide === 'right' ? right - textW - pad*2 - 2 : left + 2;
           const by = y - 14;
-          ctx.fillStyle = 'rgba(255,255,255,0.88)';
+          ctx.fillStyle = ct.labelBg;
           ctx.beginPath();
           ctx.roundRect(bx, by, textW + pad*2, 14, 3);
           ctx.fill();
@@ -2701,8 +3242,13 @@ function renderTable() {
 
   rows.sort((a,b) => {
     let av = a[sortCol], bv = b[sortCol];
-    if (typeof av === 'string') return sortDir * av.localeCompare(bv);
-    return sortDir * ((av||0) - (bv||0));
+    if (typeof av === 'string' || typeof bv === 'string') return sortDir * String(av||'').localeCompare(String(bv||''));
+    const aNull = av === null || av === undefined || (typeof av === 'number' && !Number.isFinite(av));
+    const bNull = bv === null || bv === undefined || (typeof bv === 'number' && !Number.isFinite(bv));
+    if (aNull && bNull) return 0;
+    if (aNull) return sortDir;
+    if (bNull) return -sortDir;
+    return sortDir * (av - bv);
   });
 
   const tbody = document.getElementById('tableBody');
@@ -2743,7 +3289,7 @@ function renderTable() {
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
       <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
       <td class="num">${fmtNum(r.views)}</td>
-      <td class="num">${(r.ctr*100).toFixed(2)}%</td>
+      <td class="num">${fmtCtrCell(r)}</td>
       <td class="num">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? avgDurFmt : '—'}</td>
       <td class="num">${r.gancho !== null && r.gancho !== undefined ? (r.gancho*100).toFixed(1)+'%' : '—'}</td>
       <td class="num">${duracaoFmt}</td>
@@ -2796,6 +3342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderScatter() {
   const d = filteredLong;
   if (!d.length) return;
+  const ct = getChartTheme();
 
   // Fixed quadrant lines: medians of Long Form 2026 (independent of filters)
   const lf2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('long') && r.ano === 2026);
@@ -2859,18 +3406,18 @@ function renderScatter() {
       const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
       c.font = 'bold 10px system-ui, sans-serif';
       const ctrW = c.measureText(ctrLabel).width + 8;
-      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.fillStyle = ct.labelBg;
       c.beginPath(); c.roundRect(right - ctrW - 2, yMed - 9, ctrW, 16, 3); c.fill();
-      c.fillStyle = '#374151';
+      c.fillStyle = ct.tick;
       c.textAlign = 'right'; c.textBaseline = 'middle';
       c.fillText(ctrLabel, right - 6, yMed);
 
       // Label: Avg View Duration median → top extremity of vertical line
       const durLabel = `${formatDuration(medDur)}`;
       const durW = c.measureText(durLabel).width + 8;
-      c.fillStyle = 'rgba(255,255,255,0.92)';
+      c.fillStyle = ct.labelBg;
       c.beginPath(); c.roundRect(xMed - durW/2, top + 2, durW, 16, 3); c.fill();
-      c.fillStyle = '#374151';
+      c.fillStyle = ct.tick;
       c.textAlign = 'center'; c.textBaseline = 'top';
       c.fillText(durLabel, xMed, top + 4);
 
@@ -2889,7 +3436,7 @@ function renderScatter() {
       },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: {
+        tooltip: { ...chartTooltipTheme(), callbacks: {
           label: ctx => {
             const p = ctx.raw;
             return [
@@ -2905,14 +3452,14 @@ function renderScatter() {
       },
       scales: {
         x: {
-          title: { display:true, text:'Avg View Duration', font:{size:11}, color:'#6b7280' },
-          ticks: { callback: v => formatDuration(v), font:{size:10}, color:'#6b7280' },
-          grid: { color:'#f3f4f6' },
+          title: { display:true, text:'Avg View Duration', font:{size:11}, color: ct.tick },
+          ticks: { callback: v => formatDuration(v), font:{size:10}, color: ct.tick },
+          grid: { color: ct.grid },
         },
         y: {
-          title: { display:true, text:'CTR%', font:{size:11}, color:'#6b7280' },
-          ticks: { callback: v => (v*100).toFixed(1)+'%', font:{size:10}, color:'#6b7280' },
-          grid: { color:'#f3f4f6' },
+          title: { display:true, text:'CTR%', font:{size:11}, color: ct.tick },
+          ticks: { callback: v => (v*100).toFixed(1)+'%', font:{size:10}, color: ct.tick },
+          grid: { color: ct.grid },
         }
       }
     }
@@ -2922,7 +3469,7 @@ function renderScatter() {
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
 // Shorts-specific classification thresholds
-const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.70, avgViewedPct: 75 };
+const THRESHOLDS_SHORTS = { views: 98100, gancho: 0.70, avgViewedPct: 75 };
 
 // Long Form classification thresholds
 const THRESHOLDS = {
@@ -2939,13 +3486,13 @@ function classifyVideo(r) {
 
   // Score dos outros 4 critérios (null = ignorado)
   let score = 0;
-  if (r.ctr   >= THRESHOLDS.ctr)   score++;
+  if (Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr) score++;
   if (r.avgViewedPct !== null && r.avgViewedPct !== undefined && r.avgViewedPct >= THRESHOLDS.avgViewedPct) score++;
   if (r.gancho !== null && r.gancho !== undefined && r.gancho >= THRESHOLDS.gancho) score++;
   if (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec) score++;
 
   // Helper flags for secondary statuses
-  const highCTR     = r.ctr   >= THRESHOLDS.ctr;
+  const highCTR     = Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr;
   const highAvgView = (r.avgViewedPct === null || r.avgViewedPct === undefined) ? true : r.avgViewedPct >= THRESHOLDS.avgViewedPct;
   const highGancho  = (r.gancho === null || r.gancho === undefined) ? true : r.gancho >= THRESHOLDS.gancho;
 
@@ -2960,18 +3507,18 @@ function classifyVideo(r) {
 
 function classifyVideoShorts(r) {
   const highViews = r.views >= THRESHOLDS_SHORTS.views;
-  const highCTR   = r.ctr   >= THRESHOLDS_SHORTS.ctr;
+  const highGancho = Number.isFinite(r.gancho) && r.gancho >= THRESHOLDS_SHORTS.gancho;
   const highAvgView = (r.avgViewedPct !== null && r.avgViewedPct !== undefined && !Number.isNaN(r.avgViewedPct))
     ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct
     : false;
 
-  if (highViews && highCTR && highAvgView)
-    return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',    acao:'Fazer sequencia e replicar o formato' };
-  if (!highViews && !highCTR && highAvgView)
-    return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
-  if (!highViews && !highCTR && !highAvgView)
-    return { status:'Rever formato',   color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',   acao:'Revisar pauta e reformular formato' };
-  return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',      acao:'Verificar metrica mais fraca' };
+  if (highViews && highGancho && highAvgView)
+    return { status:'Escalar',         color:'#15803d', bg:'#dcfce7', icon:'🟢', diag:'Estudar & Replicar',       acao:'Fazer sequencia e replicar o formato' };
+  if (!highViews && !highGancho && highAvgView)
+    return { status:'Reembalar',       color:'#1e40af', bg:'#dbeafe', icon:'🔵', diag:'Melhorar abertura / hook', acao:'Revisar primeiros segundos e hook' };
+  if (!highViews && !highGancho && !highAvgView)
+    return { status:'Rever formato',   color:'#991b1b', bg:'#fee2e2', icon:'🔴', diag:'Aperfeicoar Formato',      acao:'Revisar pauta e reformular formato' };
+  return { status:'Ajustar entrega', color:'#92400e', bg:'#fef3c7', icon:'🟡', diag:'Ajuste necessario',         acao:'Verificar metrica mais fraca' };
 }
 
 let feedbackSortCol = 'status';
@@ -3080,6 +3627,7 @@ function makeTempChart(id, labels, data, label, color, type='line', yFmt, wTitle
   if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
   const el = document.getElementById(id);
   if (!el) return;
+  const ct = getChartTheme();
   chartInstances[id] = new Chart(el, {
     type,
     data: {
@@ -3091,11 +3639,11 @@ function makeTempChart(id, labels, data, label, color, type='line', yFmt, wTitle
       responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
       plugins: {
         legend: { display: false },
-        tooltip: wTitle ? { callbacks: { title: ctx => wTitle(ctx[0].dataIndex) } } : {}
+        tooltip: wTitle ? { ...chartTooltipTheme(), callbacks: { title: ctx => wTitle(ctx[0].dataIndex) } } : chartTooltipTheme()
       },
       scales: {
-        x: { ticks: { font:{size:9}, color:'#6b7280', maxRotation:45 }, grid:{ display:false } },
-        y: { ticks: { font:{size:9}, color:'#6b7280', callback: yFmt || (v => fmtNum(v)) }, grid:{ color:'#f3f4f6' } }
+        x: { ticks: { font:{size:9}, color: ct.tick, maxRotation:45 }, grid:{ display:false } },
+        y: { ticks: { font:{size:9}, color: ct.tick, callback: yFmt || (v => fmtNum(v)) }, grid:{ color: ct.grid } }
       }
     }
   });
@@ -3151,6 +3699,7 @@ function renderTemporal() {
   if (chartInstances['chartTempViews']) { chartInstances['chartTempViews'].destroy(); delete chartInstances['chartTempViews']; }
   const el = document.getElementById('chartTempViews');
   if (!el) return;
+  const ct = getChartTheme();
 
   let datasets = [];
   if (tempSelectedCats.size === 0) {
@@ -3182,7 +3731,7 @@ function renderTemporal() {
       responsive:true, maintainAspectRatio:false, animation:{duration:300},
       plugins: {
         legend: { display: tempSelectedCats.size > 0, position:'top', labels:{font:{size:10},boxWidth:12} },
-        tooltip: { callbacks: {
+        tooltip: { ...chartTooltipTheme(), callbacks: {
           title: ctx => weekTitle(ctx[0].dataIndex),
           label: ctx => {
             const ds = ctx.dataset;
@@ -3202,8 +3751,8 @@ function renderTemporal() {
         }}
       },
       scales: {
-        x: { ticks:{font:{size:9},color:'#6b7280',maxRotation:45}, grid:{display:false} },
-        yMain: { position:'left', ticks:{font:{size:9},color:'#2563eb',callback:yFmt}, grid:{color:'#f3f4f6'} },
+        x: { ticks:{font:{size:9},color:ct.tick,maxRotation:45}, grid:{display:false} },
+        yMain: { position:'left', ticks:{font:{size:9},color:'#2563eb',callback:yFmt}, grid:{color:ct.grid} },
         yCount: hasCountAxis
           ? { position:'right', ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)}, grid:{drawOnChartArea:false} }
           : { display:false }
@@ -3219,8 +3768,8 @@ function renderCategoryMix(keys, grouped, labels) {
   const cats = [...new Set(filteredLong.map(r => r.categoria||'(Sem categoria)'))].sort();
 
   let html = `<table style="width:100%;font-size:10px;border-collapse:collapse;">
-    <thead><tr><th style="padding:4px 6px;text-align:left;color:var(--gray-500);font-weight:700;position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);">Período</th>
-    ${cats.map(c => `<th style="padding:4px 3px;text-align:center;color:${CAT_COLORS[c]||'#6b7280'};font-weight:700;position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);writing-mode:vertical-lr;font-size:9px;max-width:22px;" title="${c}">${c.slice(0,4)}</th>`).join('')}
+    <thead><tr><th style="padding:4px 6px;text-align:left;color:var(--gray-500);font-weight:700;position:sticky;top:0;background:var(--surface-card);border-bottom:1px solid var(--gray-200);">Período</th>
+    ${cats.map(c => `<th style="padding:4px 3px;text-align:center;color:${CAT_COLORS[c]||'#6b7280'};font-weight:700;position:sticky;top:0;background:var(--surface-card);border-bottom:1px solid var(--gray-200);writing-mode:vertical-lr;font-size:9px;max-width:22px;" title="${c}">${c.slice(0,4)}</th>`).join('')}
     </tr></thead><tbody>`;
 
   keys.forEach((k, i) => {
@@ -3806,7 +4355,7 @@ function renderShortsKPIs() {
   setS('skAvgPct',  mean(d.map(r=>r.avgViewedPct)).toFixed(1)+'%', 'skAvgPctMed', median(d.map(r=>r.avgViewedPct)).toFixed(1)+'%');
   setS('skAvgDur',  formatDuration(mean(d.map(r=>r.avgViewDurSec))), 'skAvgDurMed', formatDuration(median(d.map(r=>r.avgViewDurSec))));
   setS('skInsc',    fmtNum(mean(d.map(r=>r.inscritos))),     'skInscMed',    fmtNum(median(d.map(r=>r.inscritos))));
-  setS('skCTR',     (mean(d.map(r=>r.ctr))*100).toFixed(2)+'%', 'skCTRMed', (median(d.map(r=>r.ctr))*100).toFixed(2)+'%');
+  setS('skCTR',     (mean(d.map(r=>r.gancho).filter(Number.isFinite))*100).toFixed(2)+'%', 'skCTRMed', (median(d.map(r=>r.gancho).filter(Number.isFinite))*100).toFixed(2)+'%');
   setS('skLikes',   fmtNum(mean(d.map(r=>r.likes))),         'skLikesMed',   fmtNum(median(d.map(r=>r.likes))));
   setS('skComm',    fmtNum(mean(d.map(r=>r.comentarios))),   'skCommMed',    fmtNum(median(d.map(r=>r.comentarios))));
   setS('skShares',  fmtNum(mean(d.map(r=>r.shares))),        'skSharesMed',  fmtNum(median(d.map(r=>r.shares))));
@@ -3832,19 +4381,19 @@ function renderShortsTemporal() {
 
   const getMetricVal = (rows, metric) => {
     if (metric==='views') return rows.reduce((a,r)=>a+r.views,0);
-    if (metric==='ctr')   return mean(rows.map(r=>r.ctr))*100;
+    if (metric==='gancho') return mean(rows.map(r=>r.gancho).filter(Number.isFinite))*100;
     if (metric==='ret')   return mean(rows.map(r=>r.avgViewedPct).filter(v=>v!==null));
     if (metric==='insc')  return rows.reduce((a,r)=>a+r.inscritos,0);
     if (metric==='dur')   return mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined));
     return 0;
   };
   const getYFmt = metric => {
-    if (metric==='ctr'||metric==='ret') return v=>v.toFixed(1)+'%';
+    if (metric==='gancho'||metric==='ret') return v=>v.toFixed(1)+'%';
     if (metric==='dur') return v=>formatDuration(Math.round(v));
     return v=>fmtNum(v);
   };
   const getTooltipFmt = (metric,v) => {
-    if (metric==='ctr') return `CTR%: ${v.toFixed(2)}%`;
+    if (metric==='gancho') return `Gancho %: ${v.toFixed(2)}%`;
     if (metric==='ret') return `Retenção: ${v.toFixed(1)}%`;
     if (metric==='dur') return `Avg View Dur: ${formatDuration(Math.round(v))}`;
     if (metric==='insc') return `Inscritos: ${fmtNum(v)}`;
@@ -3858,6 +4407,7 @@ function renderShortsTemporal() {
   if (chartInstances['chartSTempViews']) { chartInstances['chartSTempViews'].destroy(); delete chartInstances['chartSTempViews']; }
   const el = document.getElementById('chartSTempViews');
   if (!el) return;
+  const ct = getChartTheme();
   chartInstances['chartSTempViews'] = new Chart(el, {
     data: { labels, datasets: [
       { type:'line', label:'Agregado', data:agg, borderColor:'#10b981', backgroundColor:'#10b98122', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
@@ -3865,13 +4415,13 @@ function renderShortsTemporal() {
     ]},
     options: {
       responsive:true, maintainAspectRatio:false, animation:{duration:300},
-      plugins: { legend:{display:false}, tooltip:{ callbacks:{
+      plugins: { legend:{display:false}, tooltip:{ ...chartTooltipTheme(), callbacks:{
         title: ctx => wTitle(ctx[0].dataIndex),
         label: ctx => ctx.datasetIndex===1 ? ` Qtd Vídeos: ${ctx.parsed.y}` : ` ${getTooltipFmt(sTempMetric, ctx.parsed.y)}`
       }}},
       scales: {
-        x: { ticks:{font:{size:9},color:'#6b7280',maxRotation:45}, grid:{display:false} },
-        yMain:  { position:'left',  ticks:{font:{size:9},color:'#10b981',callback:yFmt}, grid:{color:'#f3f4f6'} },
+        x: { ticks:{font:{size:9},color:ct.tick,maxRotation:45}, grid:{display:false} },
+        yMain:  { position:'left',  ticks:{font:{size:9},color:'#10b981',callback:yFmt}, grid:{color:ct.grid} },
         yCount: { position:'right', ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)}, grid:{drawOnChartArea:false} }
       }
     }
@@ -3886,7 +4436,14 @@ function getChartDataShorts(metric) {
   if (chartModeShorts === 'recent') {
     sorted = [...filteredShorts].sort((a,b) => (b.dataPublicacao||'').localeCompare(a.dataPublicacao||''));
   } else {
-    sorted = [...filteredShorts].sort((a,b) => chartModeShorts==='top' ? metricVal(b)-metricVal(a) : metricVal(a)-metricVal(b));
+    sorted = [...filteredShorts].sort((a,b) => {
+      const av = metricVal(a), bv = metricVal(b);
+      const aNull = av === null, bNull = bv === null;
+      if (aNull && bNull) return 0;
+      if (aNull) return 1;
+      if (bNull) return -1;
+      return chartModeShorts==='top' ? bv - av : av - bv;
+    });
   }
   const topN = sorted.slice(0,n);
   const labels    = topN.map(r=>truncateTitle(r.title,22));
@@ -3907,19 +4464,24 @@ function renderShortsCharts() {
   const d = filteredShorts;
   if (!d.length) return;
 
-  const metricVal = r => { const v = r[sPerfMetric]; return (v!==null&&v!==undefined)?v:0; };
+  const metricVal = r => {
+    const v = r[sPerfMetric];
+    return (v !== null && v !== undefined && Number.isFinite(v)) ? v : null;
+  };
   const tooltipFmt = v => {
+    if (v === null || v === undefined || !Number.isFinite(v)) return '—';
     if (sPerfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
     if (sPerfMetric==='conversaoComments'||sPerfMetric==='conversao') return (v*100).toFixed(3)+'%';
     if (sPerfMetric==='avgViewedPct') return v.toFixed(1)+'%';
-    if (sPerfMetric==='ctr') return (v*100).toFixed(2)+'%';
+    if (sPerfMetric==='gancho') return (v*100).toFixed(2)+'%';
     return fmtNum(v);
   };
   const tickFmt = v => {
+    if (v === null || v === undefined || !Number.isFinite(v)) return '';
     if (sPerfMetric==='avgViewDurSec') return formatDuration(Math.round(v));
     if (sPerfMetric==='conversaoComments'||sPerfMetric==='conversao') return (v*100).toFixed(2)+'%';
     if (sPerfMetric==='avgViewedPct') return v.toFixed(1)+'%';
-    if (sPerfMetric==='ctr') return (v*100).toFixed(1)+'%';
+    if (sPerfMetric==='gancho') return (v*100).toFixed(1)+'%';
     return fmtNum(v);
   };
 
@@ -4029,14 +4591,14 @@ function renderShortsIndicatorsHeatmap() {
   const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
   const rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr) }));
 
-  const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ctrMed:[], insc1k:[], comm1k:[] };
+  const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[] };
   rows_data.forEach(({ rows }) => {
     if (!rows.length) return;
     const tv = rows.reduce((a, r) => a + r.views, 0);
     allValsPerCol.medianViews.push(median(rows.map(r => r.views)));
     allValsPerCol.medRet.push(median(rows.map(r => r.avgViewedPct).filter(v => v !== null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)));
-    allValsPerCol.ctrMed.push(mean(rows.map(r => r.ctr)) * 100);
+    allValsPerCol.ganchoMed.push(mean(rows.map(r => r.gancho).filter(Number.isFinite)) * 100);
     allValsPerCol.insc1k.push(tv > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / tv * 1000 : 0);
     allValsPerCol.comm1k.push(tv > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / tv * 1000 : 0);
   });
@@ -4049,7 +4611,7 @@ function renderShortsIndicatorsHeatmap() {
       medianViews: median(rows.map(r => r.views)),
       medRet: median(rows.map(r => r.avgViewedPct).filter(v => v !== null)),
       avgDurSec: mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)),
-      ctrMed: mean(rows.map(r => r.ctr)) * 100,
+      ganchoMed: mean(rows.map(r => r.gancho).filter(Number.isFinite)) * 100,
       insc1k: totalViews > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / totalViews * 1000 : 0,
       comm1k: totalViews > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / totalViews * 1000 : 0,
     };
@@ -4061,14 +4623,14 @@ function renderShortsIndicatorsHeatmap() {
     };
     return {
       label, n: data.n, medianViews: data.medianViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
-      ctrMed: data.ctrMed, insc1k: data.insc1k, comm1k: data.comm1k,
+      ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
         ${cell('medianViews', v => fmtNum(Math.round(v)))}
         ${cell('medRet', v => v.toFixed(1) + '%')}
         ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
-        ${cell('ctrMed', v => v.toFixed(2) + '%')}
+        ${cell('ganchoMed', v => v.toFixed(2) + '%')}
         ${cell('insc1k', v => v.toFixed(2))}
         ${cell('comm1k', v => v.toFixed(2))}
       </tr>`
@@ -4094,7 +4656,7 @@ function renderShortsIndicatorsHeatmap() {
       <th onclick="sortShortsIndicators('medianViews')" style="${thR}">Views Mediana${sortArrow('medianViews')}</th>
       <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortShortsIndicators('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
-      <th onclick="sortShortsIndicators('ctrMed')" style="${thR}">CTR % Médio${sortArrow('ctrMed')}</th>
+      <th onclick="sortShortsIndicators('ganchoMed')" style="${thR}">Gancho Médio${sortArrow('ganchoMed')}</th>
       <th onclick="sortShortsIndicators('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
       <th onclick="sortShortsIndicators('comm1k')" style="${thR}">Coment./1K${sortArrow('comm1k')}</th>
     </tr></thead>
@@ -4153,7 +4715,7 @@ function renderFeedbackTableShorts() {
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtGanchoCell(r, 2)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
@@ -4161,7 +4723,7 @@ function renderFeedbackTableShorts() {
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`).join('');
 
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · CTR% ≥70% · Avg Viewed% ≥75%`;
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · Gancho ≥70% · Avg Viewed% ≥75%`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
@@ -4302,12 +4864,13 @@ function renderShortsScatter() {
   const d = filteredShorts;
   const el = document.getElementById('chartSScatter');
   if (!el || !d.length) return;
+  const ct = getChartTheme();
 
   // Fixed quadrant lines: medians of Shorts 2026
-  const sh2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && r.ano === 2026);
+  const sh2026 = allData.filter(r => isShortForm(r) && r.ano === 2026);
   const base = sh2026.length > 0 ? sh2026 : d;
-  const medRet = median(base.map(r => r.avgViewedPct).filter(v => v !== null));
-  const medCTR = median(base.map(r => r.ctr));
+  const medDur = median(base.map(r => r.avgViewDurSec).filter(v => Number.isFinite(v)));
+  const medGancho = median(base.map(r => r.gancho).filter(Number.isFinite));
 
   // Group by category for datasets
   const cats = [...new Set(d.map(r => r.categoria||'(Sem categoria)'))].sort();
@@ -4317,10 +4880,10 @@ function renderShortsScatter() {
     return {
       label: cat,
       data: rows.map(r => ({
-        x: r.avgViewedPct ?? null,
-        y: r.ctr !== null ? r.ctr * 100 : null,
+        x: r.avgViewDurSec ?? null,
+        y: Number.isFinite(r.gancho) ? r.gancho * 100 : null,
         r: Math.max(4, Math.min(18, Math.sqrt((r.views||0)/8000))),
-        title: r.title, views: r.views, dur: r.avgViewDurSec
+        title: r.title, views: r.views, gancho: r.gancho
       })).filter(p => p.x !== null && p.y !== null),
       backgroundColor: col + 'aa',
       borderColor: col,
@@ -4334,8 +4897,8 @@ function renderShortsScatter() {
     beforeDatasetsDraw(chart) {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
-      const xMed = scales.x.getPixelForValue(medRet);
-      const yMed = scales.y.getPixelForValue(medCTR * 100);
+      const xMed = scales.x.getPixelForValue(medDur);
+      const yMed = scales.y.getPixelForValue(medGancho * 100);
       c.save();
       [
         { x1:xMed, y1:top,   x2:right, y2:yMed,   color:'rgba(220,252,231,0.30)' },
@@ -4349,22 +4912,20 @@ function renderShortsScatter() {
       c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
       c.setLineDash([]);
 
-      // Label: CTR% median → right side of horizontal line
-      const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
+      const ganchoLabel = `Gancho ${(medGancho*100).toFixed(1)}%`;
       c.font = 'bold 10px system-ui,sans-serif';
-      const ctrW = c.measureText(ctrLabel).width + 8;
-      c.fillStyle = 'rgba(255,255,255,0.92)';
-      c.beginPath(); c.roundRect(right - ctrW - 2, yMed - 9, ctrW, 16, 3); c.fill();
-      c.fillStyle = '#374151'; c.textAlign = 'right'; c.textBaseline = 'middle';
-      c.fillText(ctrLabel, right - 6, yMed);
+      const ganchoW = c.measureText(ganchoLabel).width + 8;
+      c.fillStyle = ct.labelBg;
+      c.beginPath(); c.roundRect(right - ganchoW - 2, yMed - 9, ganchoW, 16, 3); c.fill();
+      c.fillStyle = ct.tick; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(ganchoLabel, right - 6, yMed);
 
-      // Label: Avg Viewed% median → top of vertical line
-      const retLabel = `Ret. ${medRet.toFixed(1)}%`;
-      const retW = c.measureText(retLabel).width + 8;
-      c.fillStyle = 'rgba(255,255,255,0.92)';
-      c.beginPath(); c.roundRect(xMed - retW/2, top + 2, retW, 16, 3); c.fill();
-      c.fillStyle = '#374151'; c.textAlign = 'center'; c.textBaseline = 'top';
-      c.fillText(retLabel, xMed, top + 4);
+      const durLabel = `Dur. ${formatDuration(Math.round(medDur))}`;
+      const durW = c.measureText(durLabel).width + 8;
+      c.fillStyle = ct.labelBg;
+      c.beginPath(); c.roundRect(xMed - durW/2, top + 2, durW, 16, 3); c.fill();
+      c.fillStyle = ct.tick; c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText(durLabel, xMed, top + 4);
 
       c.restore();
     }
@@ -4379,21 +4940,21 @@ function renderShortsScatter() {
       responsive: true, maintainAspectRatio: false, animation: { duration: 300 },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: {
+        tooltip: { ...chartTooltipTheme(), callbacks: {
           label: ctx => {
             const p = ctx.raw;
             return [
               ` ${p.title ? p.title.slice(0,40)+'…' : ctx.dataset.label}`,
-              ` Avg Viewed%: ${p.x?.toFixed(1)}%`,
-              ` CTR%: ${p.y?.toFixed(2)}%`,
+              ` Avg View Duration: ${formatDuration(Math.round(p.x))}`,
+              ` Gancho %: ${p.y?.toFixed(1)}%`,
               ` Views: ${fmtNum(p.views)}`,
             ];
           }
         }}
       },
       scales: {
-        x: { title: { display:true, text:'Avg Viewed %', font:{size:11} }, ticks: { callback: v => v+'%' }, grid: { color:'#f3f4f6' } },
-        y: { title: { display:true, text:'CTR%', font:{size:11} }, ticks: { callback: v => v.toFixed(1)+'%' }, grid: { color:'#f3f4f6' } },
+        x: { title: { display:true, text:'Avg View Duration', font:{size:11}, color: ct.tick }, ticks: { callback: v => formatDuration(Math.round(v)), color: ct.tick }, grid: { color: ct.grid } },
+        y: { title: { display:true, text:'Gancho %', font:{size:11}, color: ct.tick }, ticks: { callback: v => v.toFixed(1)+'%', color: ct.tick }, grid: { color: ct.grid } },
       }
     }
   });
@@ -4401,13 +4962,19 @@ function renderShortsScatter() {
   // Legend
   const legendEl = document.getElementById('sSScatterLegend');
   if (legendEl) {
-    legendEl.innerHTML = cats.map(cat => {
+    const catLegend = cats.map(cat => {
       const col = CAT_COLORS[cat]||'#64748b';
       const n = d.filter(r=>(r.categoria||'(Sem categoria)')===cat).length;
       return `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
         <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>${cat} (${n})
       </span>`;
     }).join('');
+    legendEl.innerHTML = catLegend + `<div style="width:100%;margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10px;color:var(--gray-500);">
+      <span>↗ Alto Gancho + Alta duração — Forte abertura + forte retenção</span>
+      <span>↘ Alto Gancho + Baixa duração — Boa abertura, perde atenção depois</span>
+      <span>↖ Baixo Gancho + Alta duração — Quem fica assiste bem; abertura fraca</span>
+      <span>↙ Baixo Gancho + Baixa duração — Rever hook/formato</span>
+    </div>`;
   }
 }
 
@@ -4570,9 +5137,26 @@ function renderVelho() {
     const href = r.link || '#';
     const dur = (r.duracao !== null && r.duracao !== undefined) ? formatDuration(r.duracao) : '—';
     const outlier = fmtOutlier(r.outlier);
+    const perfCls = outlierPerformanceClass(r.outlier);
     const ctr = Number.isFinite(r.ctr) ? (r.ctr * 100).toFixed(2) + '%' : '—';
+    const gancho = fmtGanchoCell(r, 1);
     const avgDur = (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined) ? formatDuration(r.avgViewDurSec) : '—';
     const title = escapeHtml(r.title);
+    const lf = isLongForm(r);
+    const metricsHtml = lf
+      ? `<div class="velho-metrics lf-five">
+          <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
+          <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
+          <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
+          <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
+          <div class="velho-metric-span2"><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
+        </div>`
+      : `<div class="velho-metrics">
+          <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
+          <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
+          <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
+          <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
+        </div>`;
     return `<article class="velho-card" data-videoid="${escapeHtml(id)}">
       <a class="velho-thumb-wrap" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">
         <img src="https://i.ytimg.com/vi/${escapeHtml(id)}/maxresdefault.jpg" data-vid="${escapeHtml(id)}" alt="" onerror="velhoThumbFallback(this)">
@@ -4581,12 +5165,7 @@ function renderVelho() {
       <div class="velho-body">
         <a class="velho-title" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${title}</a>
         <div class="velho-date">${escapeHtml(fmtDateBR(r.dataPublicacao))}</div>
-        <div class="velho-metrics">
-          <div><div class="velho-metric-label">Views</div><div class="velho-metric-val">${fmtNum(r.views)}</div></div>
-          <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val">${outlier}</div></div>
-          <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
-          <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
-        </div>
+        ${metricsHtml}
       </div>
     </article>`;
   }).join('');
