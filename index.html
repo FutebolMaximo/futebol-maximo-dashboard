@@ -639,6 +639,16 @@
   .filter-range-track-wrap input[type=range]:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(37,99,235,.22);
   }
+  .filter-range input[type=number]::placeholder,
+  .filter-range-time input[type=number]::placeholder {
+    color: var(--gray-400);
+    opacity: 1;
+    font-weight: 500;
+  }
+  [data-theme="dark"] .filter-range input[type=number]::placeholder,
+  [data-theme="dark"] .filter-range-time input[type=number]::placeholder {
+    color: var(--gray-500);
+  }
 
   #filterCategoriaInput, #filterWeekInput { background: var(--input-bg) !important; cursor: pointer; }
   #tempMetricDropdown, #tempCatDropdown, #perfMetricDropdown, #durGranDropdown,
@@ -725,8 +735,11 @@
   .velho-title:hover { color:var(--blue-600); }
   .velho-date { font-size:11px; color:var(--gray-500); }
   .velho-metrics { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; }
-  .velho-metrics.lf-five { grid-template-columns:repeat(3, 1fr); }
-  .velho-metrics.lf-five .velho-metric-span2 { grid-column:span 2; }
+  .velho-metrics.lf { display:flex; flex-direction:column; gap:6px; }
+  .velho-mrow { display:grid; gap:6px 10px; min-width:0; }
+  .velho-mrow.cols-2 { grid-template-columns:1fr 1fr; }
+  .velho-mrow.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+  .velho-mrow > div { min-width:0; }
   .velho-metric-label { font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.3px; }
   .velho-metric-val { font-size:14px; font-weight:800; color:var(--gray-900); line-height:1.15; }
   .velho-metric-val.sec { font-size:12px; font-weight:600; color:var(--gray-700); }
@@ -821,49 +834,49 @@
       <div class="filter-group filter-range-group" data-range="views">
         <label>Views</label>
         <div class="filter-range">
-          <input type="number" id="filterViewsMin" step="1" inputmode="numeric">
+          <input type="number" id="filterViewsMin" step="1" inputmode="numeric" placeholder="-">
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
             <div class="filter-range-fill" id="filterViewsFill"></div>
             <input type="range" id="filterViewsMinRange" min="0" max="1000" step="1" aria-label="Views mínimo">
             <input type="range" id="filterViewsMaxRange" min="0" max="1000" step="1" aria-label="Views máximo">
           </div>
-          <input type="number" id="filterViewsMax" step="1" inputmode="numeric">
+          <input type="number" id="filterViewsMax" step="1" inputmode="numeric" placeholder="-">
         </div>
       </div>
       <div class="filter-group filter-range-group" data-range="outlier">
         <label>Outlier</label>
         <div class="filter-range">
-          <input type="number" id="filterOutlierMin" step="0.1" inputmode="decimal">
+          <input type="number" id="filterOutlierMin" step="0.1" inputmode="decimal" placeholder="-">
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
             <div class="filter-range-fill" id="filterOutlierFill"></div>
             <input type="range" id="filterOutlierMinRange" min="0" max="1000" step="1" aria-label="Outlier mínimo">
             <input type="range" id="filterOutlierMaxRange" min="0" max="1000" step="1" aria-label="Outlier máximo">
           </div>
-          <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal">
+          <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal" placeholder="-">
         </div>
       </div>
       <div class="filter-group filter-range-group" data-range="ctr">
         <label>CTR %</label>
         <div class="filter-range">
-          <input type="number" id="filterCtrMin" step="0.1" inputmode="decimal">
+          <input type="number" id="filterCtrMin" step="0.1" inputmode="decimal" placeholder="-">
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
             <div class="filter-range-fill" id="filterCtrFill"></div>
             <input type="range" id="filterCtrMinRange" min="0" max="1000" step="1" aria-label="CTR mínimo">
             <input type="range" id="filterCtrMaxRange" min="0" max="1000" step="1" aria-label="CTR máximo">
           </div>
-          <input type="number" id="filterCtrMax" step="0.1" inputmode="decimal">
+          <input type="number" id="filterCtrMax" step="0.1" inputmode="decimal" placeholder="-">
         </div>
       </div>
       <div class="filter-group filter-range-group" data-range="duration">
         <label>Avg View Duration</label>
         <div class="filter-range">
           <div class="filter-range-time">
-            <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" aria-label="Duração mínima minutos">
+            <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima minutos">
             <span class="time-sep">:</span>
-            <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" aria-label="Duração mínima segundos">
+            <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima segundos">
           </div>
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
@@ -872,36 +885,36 @@
             <input type="range" id="filterDurMaxRange" min="0" max="1000" step="1" aria-label="Avg View Duration máximo">
           </div>
           <div class="filter-range-time">
-            <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" aria-label="Duração máxima minutos">
+            <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima minutos">
             <span class="time-sep">:</span>
-            <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" aria-label="Duração máxima segundos">
+            <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima segundos">
           </div>
         </div>
       </div>
       <div class="filter-group filter-range-group" data-range="gancho">
         <label>Gancho %</label>
         <div class="filter-range">
-          <input type="number" id="filterGanchoMin" step="0.1" inputmode="decimal">
+          <input type="number" id="filterGanchoMin" step="0.1" inputmode="decimal" placeholder="-">
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
             <div class="filter-range-fill" id="filterGanchoFill"></div>
             <input type="range" id="filterGanchoMinRange" min="0" max="1000" step="1" aria-label="Gancho mínimo">
             <input type="range" id="filterGanchoMaxRange" min="0" max="1000" step="1" aria-label="Gancho máximo">
           </div>
-          <input type="number" id="filterGanchoMax" step="0.1" inputmode="decimal">
+          <input type="number" id="filterGanchoMax" step="0.1" inputmode="decimal" placeholder="-">
         </div>
       </div>
       <div class="filter-group filter-range-group" data-range="avgviewed">
         <label>Avg Viewed %</label>
         <div class="filter-range">
-          <input type="number" id="filterAvgViewedMin" step="0.1" inputmode="decimal">
+          <input type="number" id="filterAvgViewedMin" step="0.1" inputmode="decimal" placeholder="-">
           <div class="filter-range-track-wrap">
             <div class="filter-range-rail"></div>
             <div class="filter-range-fill" id="filterAvgViewedFill"></div>
             <input type="range" id="filterAvgViewedMinRange" min="0" max="1000" step="1" aria-label="Avg Viewed mínimo">
             <input type="range" id="filterAvgViewedMaxRange" min="0" max="1000" step="1" aria-label="Avg Viewed máximo">
           </div>
-          <input type="number" id="filterAvgViewedMax" step="0.1" inputmode="decimal">
+          <input type="number" id="filterAvgViewedMax" step="0.1" inputmode="decimal" placeholder="-">
         </div>
       </div>
     </div>
@@ -1556,6 +1569,10 @@
         <option value="date" selected>Data</option>
         <option value="outlier">Outlier</option>
         <option value="views">Views</option>
+        <option value="ctr">CTR %</option>
+        <option value="gancho">Gancho %</option>
+        <option value="avgViewDur">Avg View Duration</option>
+        <option value="avgViewed">Avg Viewed %</option>
       </select>
     </label>
   </div>
@@ -2221,12 +2238,10 @@ function setViewsUI(min, max, writeInputs) {
   const maxRange = document.getElementById('filterViewsMaxRange');
   if (minRange) minRange.value = viewsToSlider(min);
   if (maxRange) maxRange.value = viewsToSlider(max);
-  if (writeInputs) {
-    const minEl = document.getElementById('filterViewsMin');
-    const maxEl = document.getElementById('filterViewsMax');
-    if (minEl) minEl.value = min;
-    if (maxEl) maxEl.value = max;
-  }
+  const minEl = document.getElementById('filterViewsMin');
+  const maxEl = document.getElementById('filterViewsMax');
+  if (writeInputs === true || writeInputs === 'min') { if (minEl) minEl.value = min; }
+  if (writeInputs === true || writeInputs === 'max') { if (maxEl) maxEl.value = max; }
   syncRangeFills();
 }
 
@@ -2238,12 +2253,10 @@ function setOutlierUI(min, max, writeInputs) {
   const maxRange = document.getElementById('filterOutlierMaxRange');
   if (minRange) minRange.value = outlierToSlider(min);
   if (maxRange) maxRange.value = outlierToSlider(max);
-  if (writeInputs) {
-    const minEl = document.getElementById('filterOutlierMin');
-    const maxEl = document.getElementById('filterOutlierMax');
-    if (minEl) minEl.value = min.toFixed(1);
-    if (maxEl) maxEl.value = max.toFixed(1);
-  }
+  const minEl = document.getElementById('filterOutlierMin');
+  const maxEl = document.getElementById('filterOutlierMax');
+  if (writeInputs === true || writeInputs === 'min') { if (minEl) minEl.value = min.toFixed(1); }
+  if (writeInputs === true || writeInputs === 'max') { if (maxEl) maxEl.value = max.toFixed(1); }
   syncRangeFills();
 }
 
@@ -2255,12 +2268,10 @@ function setPctUI(prefix, bMin, bMax, min, max, writeInputs) {
   const maxRange = document.getElementById(prefix + 'MaxRange');
   if (minRange) minRange.value = pctToSlider(min, bMin, bMax);
   if (maxRange) maxRange.value = pctToSlider(max, bMin, bMax);
-  if (writeInputs) {
-    const minEl = document.getElementById(prefix + 'Min');
-    const maxEl = document.getElementById(prefix + 'Max');
-    if (minEl) minEl.value = min.toFixed(1);
-    if (maxEl) maxEl.value = max.toFixed(1);
-  }
+  const minEl = document.getElementById(prefix + 'Min');
+  const maxEl = document.getElementById(prefix + 'Max');
+  if (writeInputs === true || writeInputs === 'min') { if (minEl) minEl.value = min.toFixed(1); }
+  if (writeInputs === true || writeInputs === 'max') { if (maxEl) maxEl.value = max.toFixed(1); }
   syncRangeFills();
 }
 
@@ -2272,16 +2283,45 @@ function setDurUI(minSec, maxSec, writeInputs) {
   const maxRange = document.getElementById('filterDurMaxRange');
   if (minRange) minRange.value = durToSlider(minSec);
   if (maxRange) maxRange.value = durToSlider(maxSec);
-  if (writeInputs) {
+  const el = id => document.getElementById(id);
+  if (writeInputs === true || writeInputs === 'min') {
     const pMin = secToMMSSParts(minSec);
-    const pMax = secToMMSSParts(maxSec);
-    const el = id => document.getElementById(id);
     if (el('filterDurMinM')) el('filterDurMinM').value = pMin.m;
     if (el('filterDurMinS')) el('filterDurMinS').value = pMin.s;
+  }
+  if (writeInputs === true || writeInputs === 'max') {
+    const pMax = secToMMSSParts(maxSec);
     if (el('filterDurMaxM')) el('filterDurMaxM').value = pMax.m;
     if (el('filterDurMaxS')) el('filterDurMaxS').value = pMax.s;
   }
   syncRangeFills();
+}
+
+function inputHasRestriction(el) {
+  if (!el) return false;
+  const s = String(el.value).trim();
+  if (s === '') return false;
+  const n = parseFloat(s.replace(',', '.'));
+  return Number.isFinite(n);
+}
+
+function durSideHasRestriction(mEl, sEl) {
+  if (!mEl || !sEl) return false;
+  return String(mEl.value).trim() !== '' || String(sEl.value).trim() !== '';
+}
+
+function clearRangeFilterInputs() {
+  [
+    'filterViewsMin','filterViewsMax',
+    'filterOutlierMin','filterOutlierMax',
+    'filterCtrMin','filterCtrMax',
+    'filterGanchoMin','filterGanchoMax',
+    'filterAvgViewedMin','filterAvgViewedMax',
+    'filterDurMinM','filterDurMinS','filterDurMaxM','filterDurMaxS',
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
 }
 
 function parseViewsInput(el, fallback) {
@@ -2308,63 +2348,105 @@ function parseDurInputs(mEl, sEl, fallback) {
 }
 
 function readRangeFilterValues(writeBack) {
-  let viewsMin = parseViewsInput(document.getElementById('filterViewsMin'), viewsBoundMin);
-  let viewsMax = parseViewsInput(document.getElementById('filterViewsMax'), viewsBoundMax);
-  viewsMin = Math.round(clampNum(viewsMin, viewsBoundMin, viewsBoundMax));
-  viewsMax = Math.round(clampNum(viewsMax, viewsBoundMin, viewsBoundMax));
-  if (viewsMin > viewsMax) { const t = viewsMin; viewsMin = viewsMax; viewsMax = t; }
+  const vMinEl = document.getElementById('filterViewsMin');
+  const vMaxEl = document.getElementById('filterViewsMax');
+  const oMinEl = document.getElementById('filterOutlierMin');
+  const oMaxEl = document.getElementById('filterOutlierMax');
+  const cMinEl = document.getElementById('filterCtrMin');
+  const cMaxEl = document.getElementById('filterCtrMax');
+  const gMinEl = document.getElementById('filterGanchoMin');
+  const gMaxEl = document.getElementById('filterGanchoMax');
+  const aMinEl = document.getElementById('filterAvgViewedMin');
+  const aMaxEl = document.getElementById('filterAvgViewedMax');
+  const dMinM = document.getElementById('filterDurMinM');
+  const dMinS = document.getElementById('filterDurMinS');
+  const dMaxM = document.getElementById('filterDurMaxM');
+  const dMaxS = document.getElementById('filterDurMaxS');
 
-  let outlierMin = roundOutlier1(clampNum(parseOutlierInput(document.getElementById('filterOutlierMin'), outlierBoundMin), outlierBoundMin, outlierBoundMax));
-  let outlierMax = roundOutlier1(clampNum(parseOutlierInput(document.getElementById('filterOutlierMax'), outlierBoundMax), outlierBoundMin, outlierBoundMax));
-  if (outlierMin > outlierMax) { const t = outlierMin; outlierMin = outlierMax; outlierMax = t; }
+  const viewsMinSet = inputHasRestriction(vMinEl);
+  const viewsMaxSet = inputHasRestriction(vMaxEl);
+  let viewsMin = viewsMinSet ? Math.round(clampNum(parseViewsInput(vMinEl, viewsBoundMin), viewsBoundMin, viewsBoundMax)) : viewsBoundMin;
+  let viewsMax = viewsMaxSet ? Math.round(clampNum(parseViewsInput(vMaxEl, viewsBoundMax), viewsBoundMin, viewsBoundMax)) : viewsBoundMax;
+  if (viewsMinSet && viewsMaxSet && viewsMin > viewsMax) { const t = viewsMin; viewsMin = viewsMax; viewsMax = t; }
 
-  let ctrMinUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterCtrMin'), ctrBoundMin), ctrBoundMin, ctrBoundMax));
-  let ctrMaxUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterCtrMax'), ctrBoundMax), ctrBoundMin, ctrBoundMax));
-  if (ctrMinUi > ctrMaxUi) { const t = ctrMinUi; ctrMinUi = ctrMaxUi; ctrMaxUi = t; }
+  const outlierMinSet = inputHasRestriction(oMinEl);
+  const outlierMaxSet = inputHasRestriction(oMaxEl);
+  let outlierMin = outlierMinSet ? roundOutlier1(clampNum(parseOutlierInput(oMinEl, outlierBoundMin), outlierBoundMin, outlierBoundMax)) : outlierBoundMin;
+  let outlierMax = outlierMaxSet ? roundOutlier1(clampNum(parseOutlierInput(oMaxEl, outlierBoundMax), outlierBoundMin, outlierBoundMax)) : outlierBoundMax;
+  if (outlierMinSet && outlierMaxSet && outlierMin > outlierMax) { const t = outlierMin; outlierMin = outlierMax; outlierMax = t; }
 
-  let ganchoMinUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterGanchoMin'), ganchoBoundMin), ganchoBoundMin, ganchoBoundMax));
-  let ganchoMaxUi = roundPct1(clampNum(parsePctInput(document.getElementById('filterGanchoMax'), ganchoBoundMax), ganchoBoundMin, ganchoBoundMax));
-  if (ganchoMinUi > ganchoMaxUi) { const t = ganchoMinUi; ganchoMinUi = ganchoMaxUi; ganchoMaxUi = t; }
+  const ctrMinSet = inputHasRestriction(cMinEl);
+  const ctrMaxSet = inputHasRestriction(cMaxEl);
+  let ctrMinUi = ctrMinSet ? roundPct1(clampNum(parsePctInput(cMinEl, ctrBoundMin), ctrBoundMin, ctrBoundMax)) : ctrBoundMin;
+  let ctrMaxUi = ctrMaxSet ? roundPct1(clampNum(parsePctInput(cMaxEl, ctrBoundMax), ctrBoundMin, ctrBoundMax)) : ctrBoundMax;
+  if (ctrMinSet && ctrMaxSet && ctrMinUi > ctrMaxUi) { const t = ctrMinUi; ctrMinUi = ctrMaxUi; ctrMaxUi = t; }
 
-  let avgViewedMin = roundPct1(clampNum(parsePctInput(document.getElementById('filterAvgViewedMin'), avgViewedBoundMin), avgViewedBoundMin, avgViewedBoundMax));
-  let avgViewedMax = roundPct1(clampNum(parsePctInput(document.getElementById('filterAvgViewedMax'), avgViewedBoundMax), avgViewedBoundMin, avgViewedBoundMax));
-  if (avgViewedMin > avgViewedMax) { const t = avgViewedMin; avgViewedMin = avgViewedMax; avgViewedMax = t; }
+  const ganchoMinSet = inputHasRestriction(gMinEl);
+  const ganchoMaxSet = inputHasRestriction(gMaxEl);
+  let ganchoMinUi = ganchoMinSet ? roundPct1(clampNum(parsePctInput(gMinEl, ganchoBoundMin), ganchoBoundMin, ganchoBoundMax)) : ganchoBoundMin;
+  let ganchoMaxUi = ganchoMaxSet ? roundPct1(clampNum(parsePctInput(gMaxEl, ganchoBoundMax), ganchoBoundMin, ganchoBoundMax)) : ganchoBoundMax;
+  if (ganchoMinSet && ganchoMaxSet && ganchoMinUi > ganchoMaxUi) { const t = ganchoMinUi; ganchoMinUi = ganchoMaxUi; ganchoMaxUi = t; }
 
-  let durMin = parseDurInputs(document.getElementById('filterDurMinM'), document.getElementById('filterDurMinS'), durBoundMin);
-  let durMax = parseDurInputs(document.getElementById('filterDurMaxM'), document.getElementById('filterDurMaxS'), durBoundMax);
-  durMin = Math.round(clampNum(durMin, durBoundMin, durBoundMax));
-  durMax = Math.round(clampNum(durMax, durBoundMin, durBoundMax));
-  if (durMin > durMax) { const t = durMin; durMin = durMax; durMax = t; }
+  const avgViewedMinSet = inputHasRestriction(aMinEl);
+  const avgViewedMaxSet = inputHasRestriction(aMaxEl);
+  let avgViewedMin = avgViewedMinSet ? roundPct1(clampNum(parsePctInput(aMinEl, avgViewedBoundMin), avgViewedBoundMin, avgViewedBoundMax)) : avgViewedBoundMin;
+  let avgViewedMax = avgViewedMaxSet ? roundPct1(clampNum(parsePctInput(aMaxEl, avgViewedBoundMax), avgViewedBoundMin, avgViewedBoundMax)) : avgViewedBoundMax;
+  if (avgViewedMinSet && avgViewedMaxSet && avgViewedMin > avgViewedMax) { const t = avgViewedMin; avgViewedMin = avgViewedMax; avgViewedMax = t; }
+
+  const durMinSet = durSideHasRestriction(dMinM, dMinS);
+  const durMaxSet = durSideHasRestriction(dMaxM, dMaxS);
+  let durMin = durMinSet ? Math.round(clampNum(parseDurInputs(dMinM, dMinS, durBoundMin), durBoundMin, durBoundMax)) : durBoundMin;
+  let durMax = durMaxSet ? Math.round(clampNum(parseDurInputs(dMaxM, dMaxS, durBoundMax), durBoundMin, durBoundMax)) : durBoundMax;
+  if (durMinSet && durMaxSet && durMin > durMax) { const t = durMin; durMin = durMax; durMax = t; }
 
   if (writeBack) {
-    setViewsUI(viewsMin, viewsMax, true);
-    setOutlierUI(outlierMin, outlierMax, true);
-    setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrMinUi, ctrMaxUi, true);
-    setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoMinUi, ganchoMaxUi, true);
-    setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedMin, avgViewedMax, true);
-    setDurUI(durMin, durMax, true);
+    setViewsUI(viewsMin, viewsMax, false);
+    setOutlierUI(outlierMin, outlierMax, false);
+    setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrMinUi, ctrMaxUi, false);
+    setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoMinUi, ganchoMaxUi, false);
+    setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedMin, avgViewedMax, false);
+    setDurUI(durMin, durMax, false);
+    if (viewsMinSet) setViewsUI(viewsMin, viewsMax, 'min');
+    if (viewsMaxSet) setViewsUI(viewsMin, viewsMax, 'max');
+    if (outlierMinSet) setOutlierUI(outlierMin, outlierMax, 'min');
+    if (outlierMaxSet) setOutlierUI(outlierMin, outlierMax, 'max');
+    if (ctrMinSet) setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrMinUi, ctrMaxUi, 'min');
+    if (ctrMaxSet) setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrMinUi, ctrMaxUi, 'max');
+    if (ganchoMinSet) setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoMinUi, ganchoMaxUi, 'min');
+    if (ganchoMaxSet) setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoMinUi, ganchoMaxUi, 'max');
+    if (avgViewedMinSet) setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedMin, avgViewedMax, 'min');
+    if (avgViewedMaxSet) setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedMin, avgViewedMax, 'max');
+    if (durMinSet) setDurUI(durMin, durMax, 'min');
+    if (durMaxSet) setDurUI(durMin, durMax, 'max');
   }
 
   return {
-    viewsMin, viewsMax, outlierMin, outlierMax,
+    viewsMin, viewsMax, viewsMinSet, viewsMaxSet,
+    viewsActive: viewsMinSet || viewsMaxSet,
+    outlierMin, outlierMax, outlierMinSet, outlierMaxSet,
+    outlierActive: outlierMinSet || outlierMaxSet,
     ctrMinUi, ctrMaxUi, ctrMin: ctrMinUi / 100, ctrMax: ctrMaxUi / 100,
+    ctrMinSet, ctrMaxSet,
+    ctrActive: ctrMinSet || ctrMaxSet,
     ganchoMinUi, ganchoMaxUi, ganchoMin: ganchoMinUi / 100, ganchoMax: ganchoMaxUi / 100,
-    avgViewedMin, avgViewedMax,
-    durMin, durMax,
-    ctrActive: rangeIsRestricted(ctrMinUi, ctrMaxUi, ctrBoundMin, ctrBoundMax),
-    ganchoActive: rangeIsRestricted(ganchoMinUi, ganchoMaxUi, ganchoBoundMin, ganchoBoundMax),
-    avgViewedActive: rangeIsRestricted(avgViewedMin, avgViewedMax, avgViewedBoundMin, avgViewedBoundMax),
-    durActive: rangeIsRestricted(durMin, durMax, durBoundMin, durBoundMax, 1),
+    ganchoMinSet, ganchoMaxSet,
+    ganchoActive: ganchoMinSet || ganchoMaxSet,
+    avgViewedMin, avgViewedMax, avgViewedMinSet, avgViewedMaxSet,
+    avgViewedActive: avgViewedMinSet || avgViewedMaxSet,
+    durMin, durMax, durMinSet, durMaxSet,
+    durActive: durMinSet || durMaxSet,
   };
 }
 
 function resetRangeFiltersToBounds() {
-  setViewsUI(viewsBoundMin, viewsBoundMax, true);
-  setOutlierUI(outlierBoundMin, outlierBoundMax, true);
-  setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrBoundMin, ctrBoundMax, true);
-  setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoBoundMin, ganchoBoundMax, true);
-  setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedBoundMin, avgViewedBoundMax, true);
-  setDurUI(durBoundMin, durBoundMax, true);
+  setViewsUI(viewsBoundMin, viewsBoundMax, false);
+  setOutlierUI(outlierBoundMin, outlierBoundMax, false);
+  setPctUI('filterCtr', ctrBoundMin, ctrBoundMax, ctrBoundMin, ctrBoundMax, false);
+  setPctUI('filterGancho', ganchoBoundMin, ganchoBoundMax, ganchoBoundMin, ganchoBoundMax, false);
+  setPctUI('filterAvgViewed', avgViewedBoundMin, avgViewedBoundMax, avgViewedBoundMin, avgViewedBoundMax, false);
+  setDurUI(durBoundMin, durBoundMax, false);
+  clearRangeFilterInputs();
+  syncRangeFills();
 }
 
 function bumpRangeZ(activeEl) {
@@ -2403,10 +2485,16 @@ function bindPctRange(prefix, bMin, bMax, fromSlider, toSlider) {
       syncRangeFills();
     });
     minEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(minEl)) {
+        minEl.value = '';
+        if (minR) minR.value = toSlider(bMin, bMin, bMax);
+        syncRangeFills();
+        return;
+      }
       const max = roundPct1(parsePctInput(maxEl, bMax));
       let min = roundPct1(parsePctInput(minEl, bMin));
       min = roundPct1(clampNum(min, bMin, Math.min(bMax, max)));
-      setPctUI(prefix, bMin, bMax, min, max, true);
+      setPctUI(prefix, bMin, bMax, min, max, 'min');
     });
   }
   if (maxEl) {
@@ -2419,16 +2507,21 @@ function bindPctRange(prefix, bMin, bMax, fromSlider, toSlider) {
       syncRangeFills();
     });
     maxEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(maxEl)) {
+        maxEl.value = '';
+        if (maxR) maxR.value = toSlider(bMax, bMin, bMax);
+        syncRangeFills();
+        return;
+      }
       const min = roundPct1(parsePctInput(minEl, bMin));
       let max = roundPct1(parsePctInput(maxEl, bMax));
       max = roundPct1(clampNum(max, Math.max(bMin, min), bMax));
-      setPctUI(prefix, bMin, bMax, min, max, true);
+      setPctUI(prefix, bMin, bMax, min, max, 'max');
     });
   }
 }
 
 function bindDurRange() {
-  const ids = ['filterDurMinM','filterDurMinS','filterDurMaxM','filterDurMaxS'];
   const minM = document.getElementById('filterDurMinM');
   const minS = document.getElementById('filterDurMinS');
   const maxM = document.getElementById('filterDurMaxM');
@@ -2453,34 +2546,48 @@ function bindDurRange() {
     let min = durFromSlider(minR.value);
     const max = parseDurInputs(maxM, maxS, durBoundMax);
     if (min > max) { min = max; minR.value = durToSlider(min); }
-    setDurUI(min, max, true);
+    setDurUI(min, max, 'min');
   });
   if (maxR) maxR.addEventListener('input', () => {
     bumpRangeZ(maxR);
     const min = parseDurInputs(minM, minS, durBoundMin);
     let max = durFromSlider(maxR.value);
     if (max < min) { max = min; maxR.value = durToSlider(max); }
-    setDurUI(min, max, true);
+    setDurUI(min, max, 'max');
   });
 
   [minM, minS].forEach(el => {
     if (!el) return;
     el.addEventListener('input', () => syncFromDurInputs('min'));
     el.addEventListener('blur', () => {
+      if (!durSideHasRestriction(minM, minS)) {
+        if (minM) minM.value = '';
+        if (minS) minS.value = '';
+        if (minR) minR.value = durToSlider(durBoundMin);
+        syncRangeFills();
+        return;
+      }
       let min = parseDurInputs(minM, minS, durBoundMin);
       const max = parseDurInputs(maxM, maxS, durBoundMax);
       min = Math.round(clampNum(min, durBoundMin, Math.min(durBoundMax, max)));
-      setDurUI(min, max, true);
+      setDurUI(min, max, 'min');
     });
   });
   [maxM, maxS].forEach(el => {
     if (!el) return;
     el.addEventListener('input', () => syncFromDurInputs('max'));
     el.addEventListener('blur', () => {
+      if (!durSideHasRestriction(maxM, maxS)) {
+        if (maxM) maxM.value = '';
+        if (maxS) maxS.value = '';
+        if (maxR) maxR.value = durToSlider(durBoundMax);
+        syncRangeFills();
+        return;
+      }
       const min = parseDurInputs(minM, minS, durBoundMin);
       let max = parseDurInputs(maxM, maxS, durBoundMax);
       max = Math.round(clampNum(max, Math.max(durBoundMin, min), durBoundMax));
-      setDurUI(min, max, true);
+      setDurUI(min, max, 'max');
     });
   });
 }
@@ -2597,10 +2704,16 @@ function initRangeFilters() {
       syncRangeFills();
     });
     vMinEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(vMinEl)) {
+        vMinEl.value = '';
+        if (vMinR) vMinR.value = viewsToSlider(viewsBoundMin);
+        syncRangeFills();
+        return;
+      }
       const max = parseViewsInput(vMaxEl, viewsBoundMax);
       let min = parseViewsInput(vMinEl, viewsBoundMin);
       min = Math.round(clampNum(min, viewsBoundMin, Math.min(viewsBoundMax, max)));
-      setViewsUI(min, max, true);
+      setViewsUI(min, max, 'min');
     });
   }
   if (vMaxEl) {
@@ -2613,10 +2726,16 @@ function initRangeFilters() {
       syncRangeFills();
     });
     vMaxEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(vMaxEl)) {
+        vMaxEl.value = '';
+        if (vMaxR) vMaxR.value = viewsToSlider(viewsBoundMax);
+        syncRangeFills();
+        return;
+      }
       const min = parseViewsInput(vMinEl, viewsBoundMin);
       let max = parseViewsInput(vMaxEl, viewsBoundMax);
       max = Math.round(clampNum(max, Math.max(viewsBoundMin, min), viewsBoundMax));
-      setViewsUI(min, max, true);
+      setViewsUI(min, max, 'max');
     });
   }
   if (oMinEl) {
@@ -2629,10 +2748,16 @@ function initRangeFilters() {
       syncRangeFills();
     });
     oMinEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(oMinEl)) {
+        oMinEl.value = '';
+        if (oMinR) oMinR.value = outlierToSlider(outlierBoundMin);
+        syncRangeFills();
+        return;
+      }
       const max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
       let min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
       min = roundOutlier1(clampNum(min, outlierBoundMin, Math.min(outlierBoundMax, max)));
-      setOutlierUI(min, max, true);
+      setOutlierUI(min, max, 'min');
     });
   }
   if (oMaxEl) {
@@ -2645,10 +2770,16 @@ function initRangeFilters() {
       syncRangeFills();
     });
     oMaxEl.addEventListener('blur', () => {
+      if (!inputHasRestriction(oMaxEl)) {
+        oMaxEl.value = '';
+        if (oMaxR) oMaxR.value = outlierToSlider(outlierBoundMax);
+        syncRangeFills();
+        return;
+      }
       const min = roundOutlier1(parseOutlierInput(oMinEl, outlierBoundMin));
       let max = roundOutlier1(parseOutlierInput(oMaxEl, outlierBoundMax));
       max = roundOutlier1(clampNum(max, Math.max(outlierBoundMin, min), outlierBoundMax));
-      setOutlierUI(min, max, true);
+      setOutlierUI(min, max, 'max');
     });
   }
 
@@ -2671,23 +2802,29 @@ function applyFilters() {
     if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
     if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
     if (selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
-    if (Number.isFinite(r.views) && (r.views < rangeVals.viewsMin || r.views > rangeVals.viewsMax)) return false;
-    if (Number.isFinite(r.outlier) && (r.outlier < rangeVals.outlierMin || r.outlier > rangeVals.outlierMax)) return false;
+    if (rangeVals.viewsMinSet && Number.isFinite(r.views) && r.views < rangeVals.viewsMin) return false;
+    if (rangeVals.viewsMaxSet && Number.isFinite(r.views) && r.views > rangeVals.viewsMax) return false;
+    if (rangeVals.outlierMinSet && Number.isFinite(r.outlier) && r.outlier < rangeVals.outlierMin) return false;
+    if (rangeVals.outlierMaxSet && Number.isFinite(r.outlier) && r.outlier > rangeVals.outlierMax) return false;
     if (rangeVals.ctrActive && isLongForm(r)) {
       if (!Number.isFinite(r.ctr)) return false;
-      if (r.ctr < rangeVals.ctrMin || r.ctr > rangeVals.ctrMax) return false;
+      if (rangeVals.ctrMinSet && r.ctr < rangeVals.ctrMin) return false;
+      if (rangeVals.ctrMaxSet && r.ctr > rangeVals.ctrMax) return false;
     }
     if (rangeVals.durActive) {
       if (!Number.isFinite(r.avgViewDurSec)) return false;
-      if (r.avgViewDurSec < rangeVals.durMin || r.avgViewDurSec > rangeVals.durMax) return false;
+      if (rangeVals.durMinSet && r.avgViewDurSec < rangeVals.durMin) return false;
+      if (rangeVals.durMaxSet && r.avgViewDurSec > rangeVals.durMax) return false;
     }
     if (rangeVals.ganchoActive) {
       if (!Number.isFinite(r.gancho)) return false;
-      if (r.gancho < rangeVals.ganchoMin || r.gancho > rangeVals.ganchoMax) return false;
+      if (rangeVals.ganchoMinSet && r.gancho < rangeVals.ganchoMin) return false;
+      if (rangeVals.ganchoMaxSet && r.gancho > rangeVals.ganchoMax) return false;
     }
     if (rangeVals.avgViewedActive) {
       if (!Number.isFinite(r.avgViewedPct)) return false;
-      if (r.avgViewedPct < rangeVals.avgViewedMin || r.avgViewedPct > rangeVals.avgViewedMax) return false;
+      if (rangeVals.avgViewedMinSet && r.avgViewedPct < rangeVals.avgViewedMin) return false;
+      if (rangeVals.avgViewedMaxSet && r.avgViewedPct > rangeVals.avgViewedMax) return false;
     }
     return true;
   };
@@ -5119,7 +5256,8 @@ let velhoSort = 'date';
 let velhoVisibleCount = 30;
 
 function setVelhoSort(mode) {
-  if (mode !== 'date' && mode !== 'outlier' && mode !== 'views') mode = 'date';
+  const allowed = new Set(['date','outlier','views','ctr','gancho','avgViewDur','avgViewed']);
+  if (!allowed.has(mode)) mode = 'date';
   velhoSort = mode;
   const sel = document.getElementById('velhoSortSelect');
   if (sel && sel.value !== mode) sel.value = mode;
@@ -5137,6 +5275,17 @@ function getVelhoSortedRows() {
   const dateCmp = (a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
   const viewsCmp = (a, b) => (b.views || 0) - (a.views || 0);
   const outCmp = (a, b) => (b.outlier || 0) - (a.outlier || 0);
+  const metricCmpDesc = (a, b, getVal) => {
+    const av = getVal(a), bv = getVal(b);
+    const aOk = Number.isFinite(av), bOk = Number.isFinite(bv);
+    if (aOk && bOk) {
+      if (bv !== av) return bv - av;
+      return 0;
+    }
+    if (aOk && !bOk) return -1;
+    if (!aOk && bOk) return 1;
+    return 0;
+  };
   rows.sort((a, b) => {
     if (velhoSort === 'outlier') {
       const o = outCmp(a, b); if (o) return o;
@@ -5146,6 +5295,26 @@ function getVelhoSortedRows() {
     if (velhoSort === 'views') {
       const v = viewsCmp(a, b); if (v) return v;
       const o = outCmp(a, b); if (o) return o;
+      return dateCmp(a, b);
+    }
+    if (velhoSort === 'ctr') {
+      const c = metricCmpDesc(a, b, r => r.ctr); if (c) return c;
+      const v = viewsCmp(a, b); if (v) return v;
+      return dateCmp(a, b);
+    }
+    if (velhoSort === 'gancho') {
+      const g = metricCmpDesc(a, b, r => r.gancho); if (g) return g;
+      const v = viewsCmp(a, b); if (v) return v;
+      return dateCmp(a, b);
+    }
+    if (velhoSort === 'avgViewDur') {
+      const d = metricCmpDesc(a, b, r => r.avgViewDurSec); if (d) return d;
+      const v = viewsCmp(a, b); if (v) return v;
+      return dateCmp(a, b);
+    }
+    if (velhoSort === 'avgViewed') {
+      const p = metricCmpDesc(a, b, r => r.avgViewedPct); if (p) return p;
+      const v = viewsCmp(a, b); if (v) return v;
       return dateCmp(a, b);
     }
     const d = dateCmp(a, b); if (d) return d;
@@ -5191,12 +5360,16 @@ function renderVelho() {
     const title = escapeHtml(r.title);
     const lf = isLongForm(r);
     const metricsHtml = lf
-      ? `<div class="velho-metrics lf-five">
-          <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
-          <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
-          <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
-          <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
-          <div class="velho-metric-span2"><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
+      ? `<div class="velho-metrics lf">
+          <div class="velho-mrow cols-2">
+            <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
+            <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
+          </div>
+          <div class="velho-mrow cols-3">
+            <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
+            <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
+            <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
+          </div>
         </div>`
       : `<div class="velho-metrics">
           <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
