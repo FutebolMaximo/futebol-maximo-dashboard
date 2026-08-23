@@ -468,7 +468,7 @@
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
   .filters-sticky { position:sticky; top:38px; z-index:190; background:var(--sticky-bg); box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
-  .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:10px 24px; }
+  .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:8px 20px; gap:10px 12px; }
   .btn-icon-toggle {
     background:var(--input-bg); border:1px solid var(--gray-300); border-radius:6px;
     padding:4px 10px; font-size:16px; cursor:pointer; line-height:1; height:36px;
@@ -477,60 +477,113 @@
   .btn-icon-toggle:hover { background:var(--surface-hover); border-color:var(--blue-400); }
   .btn-theme-icon { font-size:18px; line-height:1; display:inline-block; }
 
-  /* Dual range filters — compact 3×2 grid */
+  /* Dual range filters — single horizontal row (6 across) */
   .filter-ranges-grid {
     flex: 1 1 100%;
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
     align-items: end;
     min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
   }
-  .filter-range-group {
-    min-width: 0;
-    gap: 3px;
-  }
-  .filter-range-group .filter-group label { font-size: 10px; letter-spacing: .4px; }
-  .filter-range {
-    display: flex;
+  .filter-group.filter-range-group {
+    display: grid;
+    grid-template-columns: auto minmax(36px, 1fr) auto;
+    grid-template-rows: auto auto;
+    column-gap: 4px;
+    row-gap: 1px;
     align-items: center;
-    gap: 6px;
-    min-width: 0;
+    flex: 1 1 0;
+    min-width: 148px;
+  }
+  .filter-range-group > label {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: .35px;
+    line-height: 1.15;
+    margin: 0;
+    white-space: nowrap;
+    overflow: visible;
+    z-index: 1;
+  }
+  /* Promote min | slider | max into the parent 3-col grid so the label sits on the slider column */
+  .filter-range {
+    display: contents;
+  }
+  .filter-range > input[type=number]:first-of-type,
+  .filter-range > .filter-range-time:first-child {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .filter-range > .filter-range-track-wrap {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .filter-range > input[type=number]:last-of-type,
+  .filter-range > .filter-range-time:last-child {
+    grid-column: 3;
+    grid-row: 2;
   }
   .filter-range input[type=number] {
-    width: 64px;
-    min-width: 52px;
-    padding: 5px 4px;
+    width: 58px;
+    min-width: 48px;
+    padding: 4px 3px;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     font-variant-numeric: tabular-nums;
-    height: 32px;
+    height: 28px;
+    border-radius: 6px;
   }
-  .filter-range-group[data-range="outlier"] input[type=number],
-  .filter-range-group[data-range="ctr"] input[type=number],
-  .filter-range-group[data-range="gancho"] input[type=number],
-  .filter-range-group[data-range="avgviewed"] input[type=number] { width: 56px; min-width: 48px; }
+  .filter-range-group[data-range="views"] {
+    flex: 1.2 1 0;
+    min-width: 168px;
+  }
+  .filter-range-group[data-range="views"] .filter-range > input[type=number] {
+    width: 78px;
+    min-width: 68px;
+    font-size: 11px;
+    padding: 4px 2px;
+  }
+  .filter-range-group[data-range="outlier"] .filter-range > input[type=number],
+  .filter-range-group[data-range="ctr"] .filter-range > input[type=number],
+  .filter-range-group[data-range="gancho"] .filter-range > input[type=number],
+  .filter-range-group[data-range="avgviewed"] .filter-range > input[type=number] {
+    width: 48px;
+    min-width: 42px;
+  }
+  .filter-range-group[data-range="duration"] {
+    flex: 1.15 1 0;
+    min-width: 176px;
+  }
   .filter-range-time {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
     flex-shrink: 0;
   }
   .filter-range-time input[type=number] {
-    width: 34px;
-    min-width: 30px;
-    padding: 5px 2px;
-    font-size: 12px;
-    height: 32px;
+    width: 30px;
+    min-width: 28px;
+    padding: 4px 1px;
+    font-size: 11px;
+    height: 28px;
+    border-radius: 6px;
   }
-  .filter-range-time input.time-sec { width: 30px; min-width: 28px; }
-  .filter-range-time .time-sep { font-size: 12px; font-weight: 700; color: var(--gray-500); line-height: 1; }
+  .filter-range-time input.time-sec { width: 28px; min-width: 26px; }
+  .filter-range-time .time-sep { font-size: 11px; font-weight: 700; color: var(--gray-500); line-height: 1; }
   .filter-range-track-wrap {
     position: relative;
-    flex: 1;
-    height: 32px;
-    min-width: 48px;
+    width: 100%;
+    height: 28px;
+    min-width: 36px;
   }
   .filter-range-rail,
   .filter-range-fill {
@@ -548,7 +601,7 @@
     position: absolute;
     left: 0; top: 0;
     width: 100%;
-    height: 32px;
+    height: 28px;
     margin: 0;
     background: none;
     pointer-events: none;
@@ -556,26 +609,26 @@
     appearance: none;
   }
   .filter-range-track-wrap input[type=range]::-webkit-slider-runnable-track {
-    height: 32px; background: transparent; border: none;
+    height: 28px; background: transparent; border: none;
   }
   .filter-range-track-wrap input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     pointer-events: auto;
-    width: 14px; height: 14px;
+    width: 13px; height: 13px;
     border-radius: 50%;
     background: var(--blue-500);
     border: 2px solid var(--surface-card);
     box-shadow: 0 1px 4px rgba(15,35,86,.28);
     cursor: pointer;
-    margin-top: 9px;
+    margin-top: 7.5px;
   }
   .filter-range-track-wrap input[type=range]::-moz-range-track {
     height: 4px; background: transparent; border: none;
   }
   .filter-range-track-wrap input[type=range]::-moz-range-thumb {
     pointer-events: auto;
-    width: 14px; height: 14px;
+    width: 13px; height: 13px;
     border-radius: 50%;
     background: var(--blue-500);
     border: 2px solid var(--surface-card);
@@ -585,12 +638,6 @@
   .filter-range-track-wrap input[type=range]:focus { outline: none; }
   .filter-range-track-wrap input[type=range]:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(37,99,235,.22);
-  }
-  @media (max-width: 1100px) {
-    .filter-ranges-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 640px) {
-    .filter-ranges-grid { grid-template-columns: 1fr; }
   }
 
   #filterCategoriaInput, #filterWeekInput { background: var(--input-bg) !important; cursor: pointer; }
