@@ -787,7 +787,7 @@
     <div class="filter-group">
       <label>Categoria</label>
       <div class="title-search-wrap" id="catWrap">
-        <input type="text" id="filterCategoriaInput" placeholder="Todas as categorias..." readonly
+        <input type="text" id="filterCategoriaInput" placeholder="Todas as Categorias" readonly
           onclick="toggleCatDropdown()" style="cursor:pointer;background:white;">
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
@@ -811,7 +811,7 @@
     <div class="filter-group">
       <label>Semana</label>
       <div class="title-search-wrap" id="weekWrap">
-        <input type="text" id="filterWeekInput" placeholder="Todas as semanas..." readonly
+        <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
           onclick="toggleWeekDropdown()" style="cursor:pointer;background:white;">
         <div class="title-dropdown" id="weekDropdown"></div>
       </div>
@@ -819,7 +819,7 @@
     <div class="filter-group">
       <label>Título do Vídeo</label>
       <div class="title-search-wrap" id="titleWrap">
-        <input type="text" id="filterTitleSearch" placeholder="Buscar título..." autocomplete="off"
+        <input type="text" id="filterTitleSearch" placeholder="Todos os Títulos" autocomplete="off"
           oninput="onTitleSearchInput()" onfocus="onTitleFocus()" onblur="onTitleBlur()">
         <div class="title-dropdown" id="titleDropdown"></div>
       </div>
@@ -1018,6 +1018,7 @@
         </button>
         <div id="tempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
           <div onclick="setTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
+          <div onclick="setTempMetric('viewsMedian','📊 Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views Mediana</div>
           <div onclick="setTempMetric('ctr','📊 CTR% Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% Médio</div>
           <div onclick="setTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
           <div onclick="setTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
@@ -1906,8 +1907,12 @@ async function loadData() {
   }
 }
 
-let selectedTitles = new Set();   // multi-select titles
-let selectedCats   = new Set();   // multi-select categories
+let selectedTitles = new Set();   // multi-select titles (only when titleAllSelected === false)
+let selectedCats   = new Set();   // multi-select categories (only when catAllSelected === false)
+let selectedWeeks  = new Set();   // multi-select weeks (only when weekAllSelected === false)
+let catAllSelected   = true;      // default: no category restriction
+let weekAllSelected  = true;      // default: no week restriction
+let titleAllSelected = true;      // default: no title restriction
 let sortCol = 'dataPublicacao';
 let sortDir = -1; // -1 = desc, 1 = asc
 
@@ -2010,15 +2015,14 @@ function renderCatLegend() {
 function populateCatDropdown() {
   const dd = document.getElementById('catDropdown');
   const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
-  const allSelected = cats.every(c => selectedCats.has(c));
-  const allChecked = allSelected ? 'checked' : '';
+  const allChecked = catAllSelected ? 'checked' : '';
 
   dd.innerHTML = `
     <div class="title-option cat-select-all" onclick="toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
-      <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as categorias
+      <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as Categorias
     </div>
     ${cats.map(c => {
-      const checked = selectedCats.has(c) ? 'checked' : '';
+      const checked = (catAllSelected || selectedCats.has(c)) ? 'checked' : '';
       const color = CAT_COLORS[c] || '#64748b';
       const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div class="title-option" onclick="toggleCatCheck('${safeC}', this)">
@@ -2030,28 +2034,26 @@ function populateCatDropdown() {
 
 function toggleAllCats(el) {
   const cb = el.querySelector('input[type=checkbox]');
-  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
-  const allSelected = cats.every(c => selectedCats.has(c));
-  if (allSelected) {
+  if (catAllSelected) {
+    catAllSelected = false;
     selectedCats.clear();
-    if(cb) cb.checked = false;
+    if (cb) cb.checked = false;
   } else {
-    cats.forEach(c => selectedCats.add(c));
-    if(cb) cb.checked = true;
+    catAllSelected = true;
+    selectedCats.clear();
+    if (cb) cb.checked = true;
   }
   updateCatInput();
-  populateCatDropdown(); // re-render to update all checkboxes
+  populateCatDropdown();
 }
 
 function updateCatInput() {
   const inp = document.getElementById('filterCategoriaInput');
   if (!inp) return;
-  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
-  const allSelected = cats.every(c => selectedCats.has(c));
-  if (selectedCats.size === 0) {
-    inp.value = ''; inp.placeholder = 'Todas as categorias...';
-  } else if (allSelected) {
-    inp.value = 'Todas as categorias selecionadas'; inp.placeholder = '';
+  if (catAllSelected) {
+    inp.value = ''; inp.placeholder = 'Todas as Categorias';
+  } else if (selectedCats.size === 0) {
+    inp.value = ''; inp.placeholder = 'Nenhuma categoria selecionada';
   } else {
     inp.value = `${selectedCats.size} categoria(s) selecionada(s)`; inp.placeholder = '';
   }
@@ -2067,15 +2069,23 @@ function toggleCatDropdown() {
 
 function toggleCatCheck(cat, el) {
   const cb = el.querySelector('input[type=checkbox]');
-  if (selectedCats.has(cat)) { selectedCats.delete(cat); if(cb) cb.checked=false; }
-  else { selectedCats.add(cat); if(cb) cb.checked=true; }
-  updateCatInput();
-  // Update "all" checkbox
-  const allEl = document.querySelector('.cat-select-all input');
-  if (allEl) {
-    const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
-    allEl.checked = cats.every(c => selectedCats.has(c));
+  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  if (catAllSelected) {
+    // Leaving "all": keep every category except the one just unchecked
+    catAllSelected = false;
+    selectedCats.clear();
+    cats.forEach(c => { if (c !== cat) selectedCats.add(c); });
+    if (cb) cb.checked = false;
+  } else {
+    if (selectedCats.has(cat)) { selectedCats.delete(cat); if (cb) cb.checked = false; }
+    else { selectedCats.add(cat); if (cb) cb.checked = true; }
+    if (cats.length > 0 && cats.every(c => selectedCats.has(c))) {
+      catAllSelected = true;
+      selectedCats.clear();
+    }
   }
+  updateCatInput();
+  populateCatDropdown();
 }
 
 function init() {
@@ -2102,6 +2112,9 @@ function init() {
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
 
   initRangeFilters();
+  updateCatInput();
+  updateWeekInput();
+  updateTitleInput();
   applyFilters();
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
@@ -2797,11 +2810,11 @@ function applyFilters() {
 
   const baseFilter = r => {
     if (creator && r.creator !== creator) return false;
-    if (selectedCats.size > 0 && !selectedCats.has(r.categoria || '(Sem categoria)')) return false;
+    if (!catAllSelected && selectedCats.size > 0 && !selectedCats.has(r.categoria || '(Sem categoria)')) return false;
     if (dateStart && r.dataPublicacao < dateStart) return false;
     if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
-    if (selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
-    if (selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
+    if (!titleAllSelected && selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
+    if (!weekAllSelected && selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
     if (rangeVals.viewsMinSet && Number.isFinite(r.views) && r.views < rangeVals.viewsMin) return false;
     if (rangeVals.viewsMaxSet && Number.isFinite(r.views) && r.views > rangeVals.viewsMax) return false;
     if (rangeVals.outlierMinSet && Number.isFinite(r.outlier) && r.outlier < rangeVals.outlierMin) return false;
@@ -2858,10 +2871,15 @@ function clearFilters() {
   if (tipoEl) tipoEl.value = '';
   selectedCats.clear();
   selectedTitles.clear();
+  selectedWeeks.clear();
+  catAllSelected = true;
+  weekAllSelected = true;
+  titleAllSelected = true;
   updateCatInput();
   updateTitleInput();
-  selectedWeeks.clear();
   updateWeekInput();
+  populateCatDropdown();
+  populateWeekDropdown();
   document.getElementById('weekDropdown').classList.remove('open');
   resetRangeFiltersToBounds();
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
@@ -2894,20 +2912,22 @@ function onTitleSearchInput() {
 function renderTitleDropdown(items) {
   const dropdown = document.getElementById('titleDropdown');
   const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-  // "All" checkbox = are ALL matching titles in the full dataset selected?
   const allTitles = [...new Set(allData.map(r => r.title))];
   const targetTitles = q ? allTitles.filter(t => t.toLowerCase().includes(q)) : allTitles;
-  const allSelected = targetTitles.length > 0 && targetTitles.every(t => selectedTitles.has(t));
-  const label = q ? `Todos os resultados (${targetTitles.length})` : `Todos os vídeos (${targetTitles.length})`;
+  // Master means all titles in dataset (semantic), not just search results
+  const masterChecked = titleAllSelected;
+  const label = q
+    ? (titleAllSelected ? `Todos os Títulos (${allTitles.length})` : `Resultados (${targetTitles.length})`)
+    : `Todos os Títulos (${allTitles.length})`;
 
   dropdown.innerHTML = `
     <div class="title-option title-select-all" onclick="toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
-      <input type="checkbox" ${allSelected ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
+      <input type="checkbox" ${masterChecked ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
     </div>
     ${items.map(r => {
-      const checked = selectedTitles.has(r.title) ? 'checked' : '';
+      const checked = (titleAllSelected || selectedTitles.has(r.title)) ? 'checked' : '';
       const safeT = r.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option${selectedTitles.has(r.title) ? ' selected' : ''}"
+      return `<div class="title-option${(titleAllSelected || selectedTitles.has(r.title)) ? ' selected' : ''}"
         onclick="toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${r.dataPublicacao}</span>${r.title}
@@ -2918,16 +2938,17 @@ function renderTitleDropdown(items) {
 
 function toggleAllTitles(el) {
   const cb = el.querySelector('input[type=checkbox]');
-  // Get ALL unique titles from full dataset (not just rendered 60)
-  const allTitles = [...new Set(allData.map(r => r.title))];
-  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-  // If there's a search query, only toggle matching titles; otherwise toggle all
-  const targetTitles = q ? allTitles.filter(t => t.toLowerCase().includes(q)) : allTitles;
-  const allSel = targetTitles.every(t => selectedTitles.has(t));
-  if (allSel) { targetTitles.forEach(t => selectedTitles.delete(t)); }
-  else        { targetTitles.forEach(t => selectedTitles.add(t)); }
+  if (titleAllSelected) {
+    titleAllSelected = false;
+    selectedTitles.clear();
+    if (cb) cb.checked = false;
+  } else {
+    titleAllSelected = true;
+    selectedTitles.clear();
+    if (cb) cb.checked = true;
+  }
   updateTitleInput();
-  // Re-render the dropdown with updated state
+  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
   const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
   const unique = []; const seen = new Set();
   sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
@@ -2948,29 +2969,54 @@ function onTitleBlur() {
 
 function toggleTitleCheck(title, el) {
   const cb = el.querySelector('input[type=checkbox]');
-  if (selectedTitles.has(title)) { selectedTitles.delete(title); el.classList.remove('selected'); if(cb) cb.checked=false; }
-  else { selectedTitles.add(title); el.classList.add('selected'); if(cb) cb.checked=true; }
-  updateTitleInput();
-  const allEl = document.querySelector('.title-select-all input');
-  if (allEl) {
-    const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-    const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
-    const unique = []; const seen = new Set();
-    sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
-    const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
-    allEl.checked = items.every(r => selectedTitles.has(r.title));
+  const allTitles = [...new Set(allData.map(r => r.title))];
+  if (titleAllSelected) {
+    // Leaving "all": keep every title except the one unchecked — but avoid huge Set.
+    // For performance: start empty subset mode with all EXCEPT this title only if
+    // we can afford it. Prefer: enter subset with allTitles minus one.
+    // Dataset has ~2300 titles — Set of ~2300 strings is acceptable when user
+    // intentionally leaves "all". Still avoid keeping it when titleAllSelected.
+    titleAllSelected = false;
+    selectedTitles.clear();
+    allTitles.forEach(t => { if (t !== title) selectedTitles.add(t); });
+    if (cb) cb.checked = false;
+    el.classList.remove('selected');
+  } else {
+    if (selectedTitles.has(title)) {
+      selectedTitles.delete(title);
+      el.classList.remove('selected');
+      if (cb) cb.checked = false;
+    } else {
+      selectedTitles.add(title);
+      el.classList.add('selected');
+      if (cb) cb.checked = true;
+    }
+    if (allTitles.length > 0 && allTitles.every(t => selectedTitles.has(t))) {
+      titleAllSelected = true;
+      selectedTitles.clear();
+    }
   }
+  updateTitleInput();
+  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
+  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
+  const unique = []; const seen = new Set();
+  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
+  renderTitleDropdown(items);
 }
 
 function updateTitleInput() {
   const ts = document.getElementById('filterTitleSearch');
   if (!ts) return;
-  if (selectedTitles.size > 0) {
+  if (titleAllSelected) {
+    ts.value = '';
+    ts.placeholder = 'Todos os Títulos';
+  } else if (selectedTitles.size > 0) {
     ts.value = '';
     ts.placeholder = `${selectedTitles.size} vídeo(s) selecionado(s)`;
   } else {
     ts.value = '';
-    ts.placeholder = 'Buscar título...';
+    ts.placeholder = 'Nenhum título selecionado';
   }
 }
 
@@ -3854,6 +3900,7 @@ function renderTemporal() {
 
   const getMetricVal = (rows, metric) => {
     if (metric==='views') return rows.reduce((a,r)=>a+r.views,0);
+    if (metric==='viewsMedian') return median(rows.map(r=>r.views).filter(v=>Number.isFinite(v)));
     if (metric==='ctr')   return mean(rows.map(r=>r.ctr))*100;
     if (metric==='ret')   return mean(rows.map(r=>r.avgViewedPct).filter(v=>v!==null));
     if (metric==='insc')  return rows.reduce((a,r)=>a+r.inscritos,0);
@@ -3869,6 +3916,7 @@ function renderTemporal() {
   };
 
   const getTooltipFmt = (metric, v) => {
+    if (metric==='viewsMedian') return `Views Mediana: ${fmtNum(Math.round(v))}`;
     if (metric==='ctr') return `CTR%: ${v.toFixed(2)}%`;
     if (metric==='ret') return `Retenção: ${v.toFixed(1)}%`;
     if (metric==='dur') return `Avg View Dur: ${formatDuration(Math.round(v))}`;
@@ -3890,8 +3938,9 @@ function renderTemporal() {
     // Single aggregate line + counts bar
     const agg = keys.map(k => getMetricVal(grouped[k], tempMetric));
     const counts = keys.map(k => grouped[k].length);
+    const lineLabel = tempMetric === 'viewsMedian' ? 'Views Mediana' : 'Agregado';
     datasets = [
-      { type:'line', label:'Agregado', data:agg, borderColor:'#2563eb', backgroundColor:'#2563eb22', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
+      { type:'line', label:lineLabel, data:agg, borderColor:'#2563eb', backgroundColor:'#2563eb22', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
       { type:'bar',  label:'Qtd Vídeos', data:counts, backgroundColor:'#06b6d422', borderColor:'#06b6d4', borderWidth:1, borderRadius:3, yAxisID:'yCount', order:2 },
     ];
   } else {
@@ -3920,17 +3969,25 @@ function renderTemporal() {
           label: ctx => {
             const ds = ctx.dataset;
             const val = ctx.parsed.y;
+            if (tempSelectedCats.size === 0 && ctx.datasetIndex === datasets.length - 1 && hasCountAxis)
+              return ` Qtd Vídeos: ${val}`;
+            if (tempMetric === 'viewsMedian') {
+              const tip = ` ${getTooltipFmt(tempMetric, val)}`;
+              if (tempSelectedCats.size > 0) {
+                const k = keys[ctx.dataIndex];
+                const count = k ? (grouped[k]||[]).filter(r=>(r.categoria||'(Sem categoria)')===ds.label).length : 0;
+                return [tip, ` ${count} vídeo(s) publicados`];
+              }
+              return tip;
+            }
             const baseLabel = ` ${ds.label}: ${getTooltipFmt(tempMetric, val)}`;
-            // If multi-category mode, add video count for this category+period
             if (tempSelectedCats.size > 0) {
               const k = keys[ctx.dataIndex];
               const cat = ds.label;
               const count = k ? (grouped[k]||[]).filter(r=>(r.categoria||'(Sem categoria)')===cat).length : 0;
               return [baseLabel, ` ${count} vídeo(s) publicados`];
             }
-            return ctx.datasetIndex===datasets.length-1 && hasCountAxis
-              ? ` Qtd Vídeos: ${val}`
-              : baseLabel;
+            return baseLabel;
           }
         }}
       },
@@ -4237,24 +4294,24 @@ function renderDurationAnalysis() {
     const comm1k = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
     const data = {
       n:        rows.length,
-      avgViews: mean(rows.map(r=>r.views)),
+      viewsMed: median(rows.map(r=>r.views).filter(v=>Number.isFinite(v))),
       medRet:   median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
       avgDurSec:mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)),
       ganchoMed: mean(rows.map(r=>r.gancho).filter(v=>v!==null&&v!==undefined))*100,
       insc1k, comm1k,
     };
-    const cols = ['avgViews','medRet','avgDurSec','ganchoMed','insc1k','comm1k'];
+    const cols = ['viewsMed','medRet','avgDurSec','ganchoMed','insc1k','comm1k'];
     const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
       if (data[col]===null||isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
       const c = cellColor(col);
       return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
     };
-    return { label, n: data.n, avgViews: data.avgViews, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
+    return { label, n: data.n, viewsMed: data.viewsMed, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
-        ${cell('avgViews', v=>fmtNum(Math.round(v)))}
+        ${cell('viewsMed', v=>fmtNum(Math.round(v)))}
     ${cell('medRet',   v=>v.toFixed(1)+'%')}
         ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
         ${cell('ganchoMed',v=>v.toFixed(1)+'%')}
@@ -4282,11 +4339,11 @@ function renderDurationAnalysis() {
     cats.forEach(c => rows_data.push({ label: c, rows: d.filter(r=>(r.categoria||'(Sem categoria)')===c) }));
   }
 
-  const allValsPerCol = { avgViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[] };
+  const allValsPerCol = { viewsMed:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[] };
   rows_data.forEach(({rows}) => {
     if (!rows.length) return;
     const tv = rows.reduce((a,r)=>a+r.views,0);
-    allValsPerCol.avgViews.push(mean(rows.map(r=>r.views)));
+    allValsPerCol.viewsMed.push(median(rows.map(r=>r.views).filter(v=>Number.isFinite(v))));
     allValsPerCol.medRet.push(median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)));
     allValsPerCol.ganchoMed.push(mean(rows.map(r=>r.gancho).filter(v=>v!==null&&v!==undefined))*100);
@@ -4319,7 +4376,7 @@ function renderDurationAnalysis() {
     <thead><tr>
       <th onclick="sortDurTable('label')" style="${thL}">${firstColLabel}${sortArrow('label')}</th>
       <th onclick="sortDurTable('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
-      <th onclick="sortDurTable('avgViews')" style="${thR}">Views Média${sortArrow('avgViews')}</th>
+      <th onclick="sortDurTable('viewsMed')" style="${thR}">Views Mediana${sortArrow('viewsMed')}</th>
 <th onclick="sortDurTable('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortDurTable('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
       <th onclick="sortDurTable('ganchoMed')" style="${thR}">Gancho Médio${sortArrow('ganchoMed')}</th>
@@ -4348,8 +4405,6 @@ function setDurGran(gran) {
 
 
 // ── WEEK FILTER ───────────────────────────────────────────────────────────────
-
-let selectedWeeks = new Set();
 
 function getWeekKey(dateStr) {
   if (!dateStr) return null;
@@ -4409,13 +4464,12 @@ function buildWeekOptions() {
 function populateWeekDropdown() {
   const dd = document.getElementById('weekDropdown');
   const weeks = buildWeekOptions();
-  const allSel = weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key));
   dd.innerHTML = `
     <div class="title-option week-select-all" onclick="toggleAllWeeks(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
-      <input type="checkbox" ${allSel ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">Todas as semanas (${weeks.length})
+      <input type="checkbox" ${weekAllSelected ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">Todas as Semanas (${weeks.length})
     </div>
     ${weeks.map(w => {
-      const checked = selectedWeeks.has(w.key) ? 'checked' : '';
+      const checked = (weekAllSelected || selectedWeeks.has(w.key)) ? 'checked' : '';
       return `<div class="title-option" onclick="toggleWeekCheck('${w.key}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${w.label}</span>
@@ -4433,31 +4487,47 @@ function toggleWeekDropdown() {
 }
 
 function toggleAllWeeks(el) {
-  const weeks = buildWeekOptions();
-  const allSel = weeks.every(w => selectedWeeks.has(w.key));
-  if (allSel) weeks.forEach(w => selectedWeeks.delete(w.key));
-  else        weeks.forEach(w => selectedWeeks.add(w.key));
+  const cb = el.querySelector('input[type=checkbox]');
+  if (weekAllSelected) {
+    weekAllSelected = false;
+    selectedWeeks.clear();
+    if (cb) cb.checked = false;
+  } else {
+    weekAllSelected = true;
+    selectedWeeks.clear();
+    if (cb) cb.checked = true;
+  }
   updateWeekInput();
   populateWeekDropdown();
 }
 
 function toggleWeekCheck(key, el) {
   const cb = el.querySelector('input[type=checkbox]');
-  if (selectedWeeks.has(key)) { selectedWeeks.delete(key); if(cb) cb.checked=false; }
-  else { selectedWeeks.add(key); if(cb) cb.checked=true; }
-  updateWeekInput();
-  const allEl = document.querySelector('.week-select-all input');
-  if (allEl) {
-    const weeks = buildWeekOptions();
-    allEl.checked = weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key));
+  const weeks = buildWeekOptions();
+  if (weekAllSelected) {
+    weekAllSelected = false;
+    selectedWeeks.clear();
+    weeks.forEach(w => { if (w.key !== key) selectedWeeks.add(w.key); });
+    if (cb) cb.checked = false;
+  } else {
+    if (selectedWeeks.has(key)) { selectedWeeks.delete(key); if (cb) cb.checked = false; }
+    else { selectedWeeks.add(key); if (cb) cb.checked = true; }
+    if (weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key))) {
+      weekAllSelected = true;
+      selectedWeeks.clear();
+    }
   }
+  updateWeekInput();
+  populateWeekDropdown();
 }
 
 function updateWeekInput() {
   const inp = document.getElementById('filterWeekInput');
   if (!inp) return;
-  if (selectedWeeks.size === 0) {
-    inp.value = ''; inp.placeholder = 'Todas as semanas...';
+  if (weekAllSelected) {
+    inp.value = ''; inp.placeholder = 'Todas as Semanas';
+  } else if (selectedWeeks.size === 0) {
+    inp.value = ''; inp.placeholder = 'Nenhuma semana selecionada';
   } else {
     inp.value = `${selectedWeeks.size} semana(s) selecionada(s)`; inp.placeholder = '';
   }
@@ -4913,7 +4983,7 @@ function renderFeedbackTableShorts() {
 
 // ── TEMPORAL METRIC + CATEGORY SELECTORS ──────────────────────────────────────
 
-let tempMetric = 'views'; // 'views' | 'ctr' | 'ret' | 'insc' | 'dur'
+let tempMetric = 'views'; // 'views' | 'viewsMedian' | 'ctr' | 'ret' | 'insc' | 'dur' | 'gancho'
 let tempSelectedCats = new Set(); // empty = aggregate line
 
 function setTempMetric(metric, label) {
