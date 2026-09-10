@@ -12,8 +12,9 @@ Tudo — HTML, CSS, JavaScript — deve permanecer em um único arquivo.
 ---
 
 ## Arquivos do projeto
-- `index.html` — dashboard completo
-- `dados.csv` — base de dados dos vídeos (2258+ linhas)
+- `index.html` — dashboard completo (HTML/CSS/JS em um único arquivo)
+- `dados.csv` — base de dados dos vídeos (~2330 registros)
+- `fantasy.csv` — interações Fantasy (~2249 registros)
 - `CONTEXTO.md` — este arquivo
 
 ---
@@ -36,17 +37,18 @@ Link, Gancho
 ---
 
 ## Abas do Dashboard (ordem)
-1. **Dashboard** — KPIs (2 linhas × 5 cards), Scatter, Temporal, Performance
-2. **Análise Avançada** — Distribuição Ideal, Heatmap, Funil, Distribuição de Views
-3. **Shorts** — KPIs, Temporal, Scatter, Performance, Funil
-4. **Feedbacks** — Classificação automática Long Form e Shorts
-5. **Base de Dados** — Tabela completa 21 colunas com filtros por coluna
+1. **Long Form** — KPIs, Evolução Temporal, Scatter, Performance, Heatmaps
+2. **Shorts** — KPIs, Temporal, Scatter, Performance, Heatmap, Feedback
+3. **Feedbacks** — Classificação automática Long Form e Shorts
+4. **Base de Dados** — Tabela completa com filtros por coluna
+5. **VELHO** — Galeria de cards (main dataset)
+6. **Fantasy** — KPIs, breakdown e ranking a partir de `fantasy.csv`
 
 ---
 
 ## Fluxo de dados (variáveis principais)
 ```
-allData          → todos os vídeos parseados do CSV
+allData          → todos os vídeos parseados de dados.csv
 filteredData     → Long Form filtrados pelos filtros globais
 filteredLong     → mesmo que filteredData (alias)
 filteredShorts   → Shorts filtrados pelos filtros globais
@@ -56,11 +58,13 @@ filteredAll      → todos os tipos (usado só na Base de Dados)
 ---
 
 ## Filtros globais (sticky, afetam todas as abas)
-Criador | Categoria | Tipo (só Base de Dados) | Data Início | Data Fim | Semana | Título
+Criador | Categoria | Tipo | Data Início | Data Fim | Semana | Título
 
 - **Default**: Data Início = 01/01/ano atual, Data Fim = hoje
 - **Limpar**: reseta para o mesmo default (não para todo o histórico)
 - Botão 👁️ ao lado de Limpar: expande/recolhe todas as seções
+- **Tipo no Main**: continua afetando Base / VELHO conforme a lógica existente (não redefine Long Form / Shorts)
+- **Ranges numéricos** (Views, Outlier, CTR, Avg View Duration, Gancho, Avg Viewed): afetam o pipeline Main; na aba Fantasy ficam disabled e são ignorados
 
 ---
 
@@ -76,6 +80,7 @@ Todas as seções têm `onclick="toggleSection(this)"` no `.section-header`.
 - Instâncias guardadas em `chartInstances{}` — sempre destruir antes de recriar
 - `destroyChart(id)` antes de `new Chart(...)`
 - Cores por categoria em `CAT_COLORS{}`
+- Fantasy: `fantasyBreakdownChart` com destroy próprio antes de recriar
 
 ---
 
@@ -150,6 +155,137 @@ Coment. | Conv. Comm.
 
 ---
 
+## Fantasy (pipeline independente)
+
+### Pipelines
+```
+dados.csv
+→ parseCSVText()
+→ allData
+→ filtros Main
+→ Long Form / Shorts / Feedbacks / Base / VELHO
+
+fantasy.csv
+→ parseFantasyCSV()
+→ allFantasyData
+→ applyFantasyFilters()
+→ filteredFantasy
+→ KPIs / breakdown / ranking Fantasy
+```
+
+- Carregamento paralelo e isolado (`loadData()` + `loadFantasyData()`).
+- **Sem** `Promise.all` obrigatório entre os dois.
+- Falha em `fantasy.csv` **não** derruba o Main; Fantasy mostra erro próprio.
+- Fantasy **nunca** entra em `allData` / `filteredLong` / `filteredShorts` / `filteredAll`.
+- Outlier continua calculado só com dados Main.
+
+### Headers de fantasy.csv
+```
+Data Publicação, Mês_Ano, Ano, Semana, Video title, Tipo, Categoria,
+Creator, Views, Link, URL Video, ID do Vídeo, Formato, Dispositivo,
+Visitor ID, Destino
+```
+
+- Cada linha = uma interação com `Visitor ID`.
+- Cache-busting: `fetch('fantasy.csv?v=' + Date.now(), { cache: 'no-store' })`.
+
+### kind (classificação)
+- `bio` → `videoIdRaw === 'BIO'`
+- `video` → ID válido + title + Views numérico + Data Publicação válidos
+- `unidentified` → demais (sem ID, ou ID sem metadados mínimos)
+
+Counts de referência atuais (`allFantasyData` = 2249):
+- video rows = 1774
+- bio = 82
+- unidentified = 393
+
+### Filtros compartilhados que afetam Fantasy
+Data | Semana | Categoria | Creator | Tipo | Título
+
+- Mesmos controles sticky do dashboard.
+- Opções reconstruídas por aba (`allData` ↔ `allFantasyData`).
+- Seleções preservadas ao trocar de aba (incluindo ghost/indisponível).
+- Master **Todos/Todas** = sem restrição semântica (`catAllSelected` / `weekAllSelected` / `titleAllSelected`).
+
+### Ranges numéricos na Fantasy
+Views | Outlier | CTR | Avg View Duration | Gancho | Avg Viewed
+
+- Visualmente disabled na aba Fantasy.
+- Valores preservados.
+- **Não** entram em `applyFantasyFilters()`.
+
+### Regra de Data
+- Com Data preenchida (início e/ou fim): registros **sem** `dataPublicacao` ficam fora (inclui BIO / unidentified sem data).
+- Com ambos os inputs vazios (all-time real): registros sem Data podem entrar.
+
+### KPIs Fantasy (sobre `filteredFantasy`)
+1. **UNIQUE VISITORS** — `COUNT DISTINCT visitorId` (inclui video + bio + unidentified)
+2. **VÍDEOS QUE GERARAM VISITANTES** — `COUNT DISTINCT` vídeo válido (`kind === 'video'`)
+3. **CONVERSION RATE** — UV total ÷ SUM Views **1× por vídeo válido**
+4. **APP UNIQUE VISITORS** — UV com `destino === 'App'`
+5. **WEB UNIQUE VISITORS** — UV com `destino === 'Web'`
+
+Conversion Rate:
+- Numerador: todos os Unique Visitors do recorte (BIO/unidentified incluídos).
+- Denominador: Views deduplicadas só de `kind === 'video'`.
+- BIO/unidentified **não** somam Views.
+- Formatter: `fmtFantasyCR()` (preserva CRs muito pequenos; não virar 0%).
+
+### Breakdown (1 gráfico)
+Dimensões: Creator | Categoria | Tipo | Destino | Dispositivo  
+Métrica: `COUNT DISTINCT visitorId` por grupo (overlap permitido; soma das barras pode > KPI global).
+
+Labels de fallback:
+- BIO sem Creator/Categoria/Tipo → **BIO**
+- unidentified / vídeo sem dimensão → **Não identificado**
+- Destino vazio → **Não rastreado**
+- Dispositivo vazio → **Não identificado**
+
+Estado: `fantasyBreakdownDimension` (default `creator`) · `fantasyBreakdownChart`
+
+### Ranking de vídeos
+- Somente `kind === 'video'` a partir de `filteredFantasy`.
+- Card: thumbnail · título · data · Unique Visitors · Conversion Rate · Views.
+- Link (thumb + título): YouTube Studio (`r.link`), `target="_blank"` `rel="noopener noreferrer"`.
+- Thumb: `maxresdefault` → fallback `hqdefault` (`velhoThumbFallback`).
+- Sort (`fantasySort`): visitors | conversion | views | date (todos DESC; nulls no fim).
+- Paginação (`fantasyVisibleCount`): 30 + Carregar mais (+30).
+- Empty state quando não há vídeos válidos (mesmo se UV > 0 só com BIO/unidentified).
+
+### Estados Fantasy principais
+```
+allFantasyData
+filteredFantasy
+fantasyLoaded
+fantasyLoadError
+fantasySort                 // default: 'visitors'
+fantasyVisibleCount         // default: 30
+fantasyBreakdownDimension   // default: 'creator'
+fantasyBreakdownChart
+```
+
+### Counts de referência
+```
+allData            = 2330
+allFantasyData     = 2249
+
+Default 2026:
+  filteredFantasy  = 1586
+  Unique Visitors  = 1586
+  vídeos válidos   = 122
+  Views únicas     = 61702805
+  App UV / Web UV  = 360 / 344
+
+All-time (Data vazia):
+  filteredFantasy  = 2249
+  Unique Visitors  = 2249
+  vídeos válidos   = 159
+  Views únicas     = 126193509
+  App UV / Web UV  = 567 / 533
+```
+
+---
+
 ## Correções de bugs conhecidas (não reverter)
 1. **Fuso horário nos labels do gráfico temporal**: usar `new Date(+y, +m-1, 1)` e NÃO `new Date(k+'-01')` para evitar labels com mês errado
 2. **Gancho zerado**: parser detecta formato automaticamente (com % ou decimal)
@@ -159,7 +295,8 @@ Coment. | Conv. Comm.
 ---
 
 ## Como fazer alterações com segurança
-1. Sempre testar no browser após cada mudança (abrir index.html diretamente)
+1. Sempre testar no browser após cada mudança (servidor local: `python -m http.server 8765 --bind 127.0.0.1`)
 2. Verificar console (F12) para erros JS
-3. Nunca remover `destroyChart()` antes de criar novo gráfico
+3. Nunca remover `destroyChart()` / destroy do chart Fantasy antes de criar novo gráfico
 4. Manter sempre exatamente 3 `<script>` e 3 `</script>` no arquivo
+5. Não misturar `fantasy.csv` no pipeline `allData`

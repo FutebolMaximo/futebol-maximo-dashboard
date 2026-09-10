@@ -748,6 +748,146 @@
     background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow);
     padding:32px 20px; text-align:center; color:var(--gray-500); font-size:14px;
   }
+  .fantasy-placeholder {
+    background: var(--surface-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    max-width: 520px;
+  }
+  .fantasy-placeholder h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-800);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .fantasy-placeholder p {
+    margin: 0 0 6px;
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.45;
+  }
+  .fantasy-placeholder .fantasy-error {
+    color: var(--red);
+    font-weight: 600;
+  }
+  .filter-ranges-grid.ranges-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+  }
+  .filter-ranges-grid.ranges-disabled input {
+    cursor: not-allowed;
+  }
+  .title-option.filter-ghost {
+    opacity: 0.65;
+    font-style: italic;
+  }
+  .title-option.filter-ghost .ghost-tag {
+    font-size: 10px;
+    color: var(--amber);
+    margin-left: 4px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  #filterCreator option.filter-ghost-opt,
+  #filterTipo option.filter-ghost-opt {
+    font-style: italic;
+    color: var(--gray-500);
+  }
+  .fantasy-dashboard { display: block; }
+  .fantasy-dashboard[hidden] { display: none !important; }
+  .fantasy-status-box {
+    background: var(--surface-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    max-width: 520px;
+  }
+  .fantasy-status-box h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-800);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .fantasy-status-box p { margin: 0; font-size: 14px; color: var(--gray-600); line-height: 1.45; }
+  .fantasy-status-box .fantasy-error { color: var(--red); font-weight: 600; }
+  .fantasy-kpi-label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .fantasy-kpi-label-row .kpi-label { margin-bottom: 0; }
+  .fantasy-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--gray-400);
+    color: var(--gray-500);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: help;
+    flex-shrink: 0;
+  }
+  .fantasy-chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .fantasy-chart-controls select {
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-700);
+    background: var(--input-bg);
+    height: 32px;
+  }
+  .fantasy-chart-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+  }
+  .fantasy-ranking-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .fantasy-ranking-count {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 600;
+  }
+  .fantasy-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .fantasy-thumb-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-100);
+    color: var(--gray-400);
+    font-size: 12px;
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -773,6 +913,7 @@
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
   <button class="tab-btn"        id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
+  <button class="tab-btn"        id="tabBtnFantasy"   onclick="switchTab('fantasy')">🎯 Fantasy</button>
 </div>
 
 <!-- STICKY FILTERS (shared across tabs) -->
@@ -1583,6 +1724,97 @@
   </div>
 </div>
 
+<!-- FANTASY (Tab) -->
+<div class="main" id="panelFantasy" style="display:none;">
+  <div class="fantasy-status-box" id="fantasyStatus" hidden>
+    <h2>Fantasy</h2>
+    <p>Carregando dados Fantasy...</p>
+  </div>
+
+  <div class="fantasy-dashboard" id="fantasyDashboard" hidden>
+    <div class="section-header" data-collapsed="false" style="cursor:default;">
+      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+      <h2>Fantasy · KPIs</h2>
+    </div>
+    <p class="section-desc">Visitantes únicos e conversão dos vídeos no recorte filtrado.</p>
+    <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
+      <div class="kpi-card accent">
+        <div class="kpi-label">UNIQUE VISITORS</div>
+        <div class="kpi-value" id="fkUniqueVisitors">—</div>
+        <div class="kpi-sub">Visitantes distintos no recorte</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">VÍDEOS QUE GERARAM VISITANTES</div>
+        <div class="kpi-value" id="fkVideos">—</div>
+        <div class="kpi-sub">Vídeos válidos distintos</div>
+      </div>
+      <div class="kpi-card">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">CONVERSION RATE</div>
+          <span class="fantasy-info" title="Unique Visitors no recorte ÷ soma das Views dos vídeos únicos válidos. BIO e Não identificado entram no numerador, mesmo sem Views próprias no denominador.">i</span>
+        </div>
+        <div class="kpi-value" id="fkCR">—</div>
+        <div class="kpi-sub" id="fkCRSub">UV ÷ Views únicas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">APP UNIQUE VISITORS</div>
+        <div class="kpi-value" id="fkAppUV">—</div>
+        <div class="kpi-sub">Destino = App</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">WEB UNIQUE VISITORS</div>
+        <div class="kpi-value" id="fkWebUV">—</div>
+        <div class="kpi-sub">Destino = Web</div>
+      </div>
+    </div>
+
+    <div class="section-header" data-collapsed="false" style="cursor:default;">
+      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+      <h2>Unique Visitors por Granularidade</h2>
+    </div>
+    <p class="section-desc">Contagem distinta de Visitor ID por dimensão. A soma das barras pode superar o KPI global.</p>
+    <div class="chart-card wide" style="margin-bottom:24px;">
+      <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span>UNIQUE VISITORS POR GRANULARIDADE</span>
+        <div class="fantasy-chart-controls">
+          <label for="fantasyBreakdownSelect">Dimensão</label>
+          <select id="fantasyBreakdownSelect" onchange="setFantasyBreakdownDimension(this.value)">
+            <option value="creator" selected>Creator</option>
+            <option value="categoria">Categoria</option>
+            <option value="tipo">Tipo</option>
+            <option value="destino">Destino</option>
+            <option value="dispositivo">Dispositivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="fantasy-chart-wrap" id="fantasyChartWrap">
+        <canvas id="chartFantasyBreakdown"></canvas>
+      </div>
+    </div>
+
+    <div class="section-header" data-collapsed="false" style="cursor:default;">
+      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+      <h2>Ranking de Vídeos</h2>
+    </div>
+    <p class="section-desc">Performance por vídeo válido no recorte filtrado (BIO e Não identificado excluídos).</p>
+    <div class="fantasy-ranking-toolbar">
+      <span class="fantasy-ranking-count" id="fantasyRankingCount"></span>
+      <label class="velho-sort">Ordenar por
+        <select id="fantasySortSelect" onchange="setFantasySort(this.value)">
+          <option value="visitors" selected>Unique Visitors</option>
+          <option value="conversion">Conversion Rate</option>
+          <option value="views">Views</option>
+          <option value="date">Data</option>
+        </select>
+      </label>
+    </div>
+    <div id="fantasyRankingGrid" class="velho-grid"></div>
+    <div id="fantasyLoadMoreWrap" class="velho-loadmore-wrap" hidden>
+      <button type="button" class="btn-primary" id="fantasyLoadMoreBtn" onclick="loadMoreFantasy()">Carregar mais</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function() {
   try {
@@ -1678,11 +1910,15 @@ function chartScaleOpts(formatTick) {
 }
 
 function refreshChartsForTheme() {
-  if (!allData || !allData.length) return;
-  try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
-  try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
-  try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
-  try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+  if (allData && allData.length) {
+    try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
+    try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
+    try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
+    try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+  }
+  if (fantasyLoaded && !fantasyLoadError) {
+    try { renderFantasyBreakdownChart(); } catch(e) { console.error('renderFantasyBreakdownChart theme:', e.message); }
+  }
 }
 
 function setTheme(theme) {
@@ -1766,6 +2002,611 @@ let filteredShorts = [];
 let filteredAll = [];
 let medianViews2026Long = null;
 let medianViews2026Shorts = null;
+
+// Fantasy — pipeline independente (não misturar com allData)
+let allFantasyData = [];
+let filteredFantasy = [];
+let fantasyLoadError = null;
+let fantasyLoaded = false;
+let fantasySort = 'visitors';
+let fantasyVisibleCount = 30;
+let fantasyBreakdownDimension = 'creator';
+let fantasyBreakdownChart = null;
+
+function parseFantasyDate(d) {
+  if (!d) return '';
+  const s = String(d).trim();
+  if (!s) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const p = s.split('/');
+  if (p.length === 3) return `${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`;
+  return s;
+}
+
+function parseFantasyViews(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).trim().replace(/,/g, '');
+  if (s === '') return null;
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+function classifyFantasyKind(videoIdRaw, title, views, dataPublicacao) {
+  if (videoIdRaw === 'BIO') return 'bio';
+  const hasId = !!videoIdRaw;
+  const hasTitle = !!(title && String(title).trim());
+  const hasViews = Number.isFinite(views);
+  const hasDate = !!(dataPublicacao && String(dataPublicacao).trim());
+  if (hasId && hasTitle && hasViews && hasDate) return 'video';
+  return 'unidentified';
+}
+
+function parseFantasyCSV(text) {
+  const lines = text.split(/\r?\n/);
+  if (!lines.length) return [];
+
+  const parseCSVLine = line => {
+    const result = []; let cur = ''; let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQ = !inQ; continue; }
+      if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+      cur += line[i];
+    }
+    result.push(cur);
+    return result;
+  };
+
+  const colMap = {
+    'data publicacao': 'dataPublicacao', 'data publica\u00e7\u00e3o': 'dataPublicacao',
+    'mes_ano': 'mesAno', 'm\u00eas_ano': 'mesAno',
+    'ano': 'ano', 'semana': 'semana',
+    'video title': 'title', 'tipo': 'tipo', 'categoria': 'categoria',
+    'creator': 'creator', 'views': 'views', 'link': 'link',
+    'url video': 'urlVideo',
+    'id do video': 'videoIdRaw', 'id do v\u00eddeo': 'videoIdRaw',
+    'formato': 'formato', 'dispositivo': 'dispositivo',
+    'visitor id': 'visitorId', 'destino': 'destino',
+  };
+  const rawHeader = parseCSVLine(lines[0]).map(h => h.replace(/["']/g, '').trim().toLowerCase());
+  const mapped = rawHeader.map(h => colMap[h] || h);
+
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const cols = parseCSVLine(lines[i]);
+    const obj = {};
+    mapped.forEach((k, j) => { obj[k] = (cols[j] || '').trim(); });
+
+    const videoIdRaw = (obj.videoIdRaw || '').trim();
+    const title = (obj.title || '').trim();
+    const views = parseFantasyViews(obj.views);
+    const dataPublicacao = parseFantasyDate(obj.dataPublicacao);
+    const urlVideo = (obj.urlVideo || '').trim();
+    const kind = classifyFantasyKind(videoIdRaw, title, views, dataPublicacao);
+
+    let videoId = null;
+    if (kind !== 'bio' && videoIdRaw && videoIdRaw !== 'BIO') {
+      videoId = extractYouTubeVideoId(urlVideo) || extractYouTubeVideoId(obj.link) || videoIdRaw;
+    }
+
+    rows.push({
+      dataPublicacao,
+      mesAno: (obj.mesAno || '').trim(),
+      ano: parseInt(obj.ano, 10) || 0,
+      semana: (obj.semana || '').trim(),
+      title,
+      tipo: (obj.tipo || '').trim(),
+      categoria: (obj.categoria || '').trim(),
+      creator: (obj.creator || '').trim(),
+      views,
+      link: (obj.link || '').trim(),
+      urlVideo,
+      videoIdRaw,
+      videoId,
+      formato: (obj.formato || '').trim(),
+      dispositivo: (obj.dispositivo || '').trim(),
+      visitorId: (obj.visitorId || '').trim(),
+      destino: (obj.destino || '').trim(),
+      kind,
+    });
+  }
+  return rows;
+}
+
+function fantasyVideoKey(r) {
+  const raw = (r.videoIdRaw || '').trim();
+  if (raw && raw !== 'BIO') return raw;
+  const id = (r.videoId || '').trim();
+  return id || '';
+}
+
+function getFantasyUniqueVideoStats(rows) {
+  const byVideo = new Map();
+  (rows || []).forEach(r => {
+    if (r.kind !== 'video') return;
+    const key = fantasyVideoKey(r);
+    if (!key) return;
+    if (byVideo.has(key)) return;
+    byVideo.set(key, {
+      videoId: key,
+      title: r.title || '',
+      views: Number.isFinite(r.views) ? r.views : null,
+      creator: r.creator || '',
+      categoria: r.categoria || '',
+      tipo: r.tipo || '',
+    });
+  });
+  let sumViews = 0;
+  let videosWithViews = 0;
+  byVideo.forEach(v => {
+    if (Number.isFinite(v.views) && v.views > 0) {
+      sumViews += v.views;
+      videosWithViews++;
+    }
+  });
+  return {
+    videoCount: byVideo.size,
+    sumViews,
+    videosWithViews,
+    byVideo,
+  };
+}
+
+function countFantasyUniqueVisitors(rows, predicate) {
+  const set = new Set();
+  (rows || []).forEach(r => {
+    if (predicate && !predicate(r)) return;
+    if (r.visitorId) set.add(r.visitorId);
+  });
+  return set.size;
+}
+
+function fmtFantasyCR(rate) {
+  if (!Number.isFinite(rate) || rate < 0) return '—';
+  const pct = rate * 100;
+  if (pct === 0) return '0%';
+  if (pct >= 1) return pct.toFixed(2).replace('.', ',') + '%';
+  if (pct >= 0.1) return pct.toFixed(3).replace('.', ',') + '%';
+  if (pct >= 0.01) return pct.toFixed(4).replace('.', ',') + '%';
+  return pct.toFixed(5).replace('.', ',') + '%';
+}
+
+function getFantasyDimensionLabel(r, dimension) {
+  if (dimension === 'destino') {
+    const d = (r.destino || '').trim();
+    if (d === 'App') return 'App';
+    if (d === 'Web') return 'Web';
+    if (!d) return 'Não rastreado';
+    return d;
+  }
+  if (dimension === 'dispositivo') {
+    const d = (r.dispositivo || '').trim();
+    return d || 'Não identificado';
+  }
+  // creator / categoria / tipo
+  const raw = dimension === 'creator' ? (r.creator || '').trim()
+    : dimension === 'categoria' ? (r.categoria || '').trim()
+    : (r.tipo || '').trim();
+  if (raw) return raw;
+  if (r.kind === 'bio') return 'BIO';
+  return 'Não identificado';
+}
+
+function buildFantasyBreakdown(rows, dimension) {
+  const groups = new Map();
+  (rows || []).forEach(r => {
+    const label = getFantasyDimensionLabel(r, dimension);
+    if (!groups.has(label)) groups.set(label, new Set());
+    if (r.visitorId) groups.get(label).add(r.visitorId);
+  });
+  return [...groups.entries()]
+    .map(([label, set]) => ({ label, value: set.size }))
+    .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label, 'pt-BR'));
+}
+
+function computeFantasyKPIs(rows) {
+  const uniqueVisitors = countFantasyUniqueVisitors(rows);
+  const videoStats = getFantasyUniqueVideoStats(rows);
+  const sumViews = videoStats.sumViews;
+  const cr = sumViews > 0 ? uniqueVisitors / sumViews : null;
+  return {
+    uniqueVisitors,
+    videos: videoStats.videoCount,
+    sumViews,
+    conversionRate: cr,
+    appUV: countFantasyUniqueVisitors(rows, r => (r.destino || '').trim() === 'App'),
+    webUV: countFantasyUniqueVisitors(rows, r => (r.destino || '').trim() === 'Web'),
+  };
+}
+
+function setFantasyKPI(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function renderFantasyKPIs() {
+  if (!fantasyLoaded || fantasyLoadError) {
+    setFantasyKPI('fkUniqueVisitors', '—');
+    setFantasyKPI('fkVideos', '—');
+    setFantasyKPI('fkCR', '—');
+    setFantasyKPI('fkAppUV', '—');
+    setFantasyKPI('fkWebUV', '—');
+    const sub = document.getElementById('fkCRSub');
+    if (sub) sub.textContent = 'UV ÷ Views únicas';
+    return;
+  }
+  const k = computeFantasyKPIs(filteredFantasy);
+  setFantasyKPI('fkUniqueVisitors', fmtNum(k.uniqueVisitors));
+  setFantasyKPI('fkVideos', fmtNum(k.videos));
+  setFantasyKPI('fkCR', fmtFantasyCR(k.conversionRate));
+  setFantasyKPI('fkAppUV', fmtNum(k.appUV));
+  setFantasyKPI('fkWebUV', fmtNum(k.webUV));
+  const sub = document.getElementById('fkCRSub');
+  if (sub) {
+    sub.textContent = Number.isFinite(k.conversionRate)
+      ? `Denom.: ${fmtNum(k.sumViews)} Views únicas`
+      : 'Sem Views únicas no recorte';
+  }
+}
+
+function setFantasyBreakdownDimension(dim) {
+  const allowed = ['creator', 'categoria', 'tipo', 'destino', 'dispositivo'];
+  fantasyBreakdownDimension = allowed.includes(dim) ? dim : 'creator';
+  const sel = document.getElementById('fantasyBreakdownSelect');
+  if (sel && sel.value !== fantasyBreakdownDimension) sel.value = fantasyBreakdownDimension;
+  renderFantasyBreakdownChart();
+}
+
+function destroyFantasyBreakdownChart() {
+  if (fantasyBreakdownChart) {
+    try { fantasyBreakdownChart.destroy(); } catch (e) {}
+    fantasyBreakdownChart = null;
+  }
+}
+
+function renderFantasyBreakdownChart() {
+  const canvas = document.getElementById('chartFantasyBreakdown');
+  const wrap = document.getElementById('fantasyChartWrap');
+  if (!canvas || !wrap) return;
+  destroyFantasyBreakdownChart();
+
+  if (!fantasyLoaded || fantasyLoadError) return;
+
+  const rows = buildFantasyBreakdown(filteredFantasy, fantasyBreakdownDimension);
+  const labels = rows.map(r => r.label);
+  const values = rows.map(r => r.value);
+  const barH = 28;
+  const height = Math.max(320, 60 + labels.length * barH);
+  wrap.style.height = height + 'px';
+
+  const ct = getChartTheme();
+  const ctx = canvas.getContext('2d');
+  fantasyBreakdownChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Unique Visitors',
+        data: values,
+        backgroundColor: 'rgba(37, 99, 235, 0.72)',
+        borderColor: 'rgba(37, 99, 235, 1)',
+        borderWidth: 1,
+        borderRadius: 4,
+        barThickness: 18,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...chartTooltipTheme(),
+          callbacks: {
+            title: items => (items[0] && items[0].label) || '',
+            label: ctx => ` Unique Visitors: ${fmtNum(ctx.parsed.x)}`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0,
+            color: ct.tick,
+            font: { size: 10 },
+            callback: v => fmtNum(v),
+          },
+          grid: { color: ct.grid },
+        },
+        y: {
+          ticks: {
+            color: ct.tick,
+            font: { size: 11 },
+            autoSkip: false,
+          },
+          grid: { display: false },
+        },
+      },
+    },
+  });
+}
+
+function renderFantasyDashboard() {
+  const statusEl = document.getElementById('fantasyStatus');
+  const dashEl = document.getElementById('fantasyDashboard');
+  if (!statusEl || !dashEl) return;
+
+  if (fantasyLoadError) {
+    dashEl.hidden = true;
+    statusEl.hidden = false;
+    statusEl.innerHTML = `<h2>Fantasy</h2><p class="fantasy-error">Não foi possível carregar os dados de Fantasy.</p>`;
+    destroyFantasyBreakdownChart();
+    return;
+  }
+  if (!fantasyLoaded) {
+    dashEl.hidden = true;
+    statusEl.hidden = false;
+    statusEl.innerHTML = `<h2>Fantasy</h2><p>Carregando dados Fantasy...</p>`;
+    destroyFantasyBreakdownChart();
+    return;
+  }
+
+  statusEl.hidden = true;
+  dashEl.hidden = false;
+  const sel = document.getElementById('fantasyBreakdownSelect');
+  if (sel) sel.value = fantasyBreakdownDimension;
+  const sortSel = document.getElementById('fantasySortSelect');
+  if (sortSel) sortSel.value = fantasySort;
+  renderFantasyKPIs();
+  renderFantasyBreakdownChart();
+  renderFantasyRanking();
+}
+
+function buildFantasyVideoRanking(rows) {
+  const byVideo = new Map();
+  (rows || []).forEach(r => {
+    if (r.kind !== 'video') return;
+    const key = fantasyVideoKey(r);
+    if (!key) return;
+    let agg = byVideo.get(key);
+    if (!agg) {
+      agg = {
+        videoId: (r.videoId && /^[A-Za-z0-9_-]{11}$/.test(r.videoId)) ? r.videoId : key,
+        videoIdRaw: key,
+        title: r.title || '',
+        dataPublicacao: r.dataPublicacao || '',
+        views: Number.isFinite(r.views) ? r.views : null,
+        link: (r.link || '').trim(),
+        urlVideo: (r.urlVideo || '').trim(),
+        _visitors: new Set(),
+      };
+      byVideo.set(key, agg);
+    }
+    if (r.visitorId) agg._visitors.add(r.visitorId);
+    if (!Number.isFinite(agg.views) && Number.isFinite(r.views)) agg.views = r.views;
+    if (!agg.title && r.title) agg.title = r.title;
+    if (!agg.dataPublicacao && r.dataPublicacao) agg.dataPublicacao = r.dataPublicacao;
+    if (!agg.link && r.link) agg.link = String(r.link).trim();
+    if (!agg.urlVideo && r.urlVideo) agg.urlVideo = String(r.urlVideo).trim();
+  });
+
+  const list = [];
+  byVideo.forEach(agg => {
+    const uniqueVisitors = agg._visitors.size;
+    const views = Number.isFinite(agg.views) ? agg.views : null;
+    const conversionRate = (views !== null && views > 0) ? (uniqueVisitors / views) : null;
+    list.push({
+      videoId: agg.videoId,
+      videoIdRaw: agg.videoIdRaw,
+      title: agg.title,
+      dataPublicacao: agg.dataPublicacao,
+      views,
+      link: agg.link,
+      urlVideo: agg.urlVideo,
+      uniqueVisitors,
+      conversionRate,
+    });
+  });
+  return list;
+}
+
+function sortFantasyRanking(list, mode) {
+  const arr = [...(list || [])];
+  const nullLast = (a, b, cmp) => {
+    const aN = a == null || (typeof a === 'number' && !Number.isFinite(a));
+    const bN = b == null || (typeof b === 'number' && !Number.isFinite(b));
+    if (aN && bN) return 0;
+    if (aN) return 1;
+    if (bN) return -1;
+    return cmp(a, b);
+  };
+  const byUV = (a, b) => nullLast(b.uniqueVisitors, a.uniqueVisitors, (x, y) => x - y);
+  const byViews = (a, b) => nullLast(b.views, a.views, (x, y) => x - y);
+  const byDate = (a, b) => nullLast(b.dataPublicacao || null, a.dataPublicacao || null, (x, y) => String(x).localeCompare(String(y)));
+  const byCR = (a, b) => nullLast(b.conversionRate, a.conversionRate, (x, y) => x - y);
+
+  arr.sort((a, b) => {
+    if (mode === 'conversion') {
+      return byCR(a, b) || byUV(a, b) || byViews(a, b) || byDate(a, b);
+    }
+    if (mode === 'views') {
+      return byViews(a, b) || byUV(a, b) || byDate(a, b);
+    }
+    if (mode === 'date') {
+      return byDate(a, b) || byUV(a, b) || byViews(a, b);
+    }
+    // visitors (default)
+    return byUV(a, b) || byViews(a, b) || byDate(a, b);
+  });
+  return arr;
+}
+
+function setFantasySort(mode) {
+  const allowed = new Set(['visitors', 'conversion', 'views', 'date']);
+  fantasySort = allowed.has(mode) ? mode : 'visitors';
+  const sel = document.getElementById('fantasySortSelect');
+  if (sel && sel.value !== fantasySort) sel.value = fantasySort;
+  fantasyVisibleCount = 30;
+  renderFantasyRanking();
+}
+
+function loadMoreFantasy() {
+  fantasyVisibleCount += 30;
+  renderFantasyRanking();
+}
+
+function fmtFantasyInt(n) {
+  if (!Number.isFinite(n)) return '—';
+  return Math.round(n).toLocaleString('pt-BR');
+}
+
+function renderFantasyRanking() {
+  const grid = document.getElementById('fantasyRankingGrid');
+  const countEl = document.getElementById('fantasyRankingCount');
+  const moreWrap = document.getElementById('fantasyLoadMoreWrap');
+  if (!grid) return;
+
+  if (!fantasyLoaded || fantasyLoadError) {
+    grid.innerHTML = '';
+    if (countEl) countEl.textContent = '';
+    if (moreWrap) moreWrap.hidden = true;
+    return;
+  }
+
+  const aggregated = buildFantasyVideoRanking(filteredFantasy);
+  const sorted = sortFantasyRanking(aggregated, fantasySort);
+  const total = sorted.length;
+  if (countEl) countEl.textContent = total === 1 ? '1 vídeo' : `${fmtFantasyInt(total)} vídeos`;
+
+  if (total === 0) {
+    grid.innerHTML = `<div class="velho-empty">Nenhum vídeo encontrado para os filtros selecionados.</div>`;
+    if (moreWrap) moreWrap.hidden = true;
+    return;
+  }
+
+  const escapeHtml = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmtDateBR = iso => {
+    if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '—';
+    const [y, m, d] = iso.slice(0, 10).split('-');
+    return `${d}/${m}/${y}`;
+  };
+
+  const visible = sorted.slice(0, fantasyVisibleCount);
+  grid.innerHTML = visible.map(v => {
+    const title = escapeHtml(v.title || '(Sem título)');
+    const href = v.link || '';
+    const hasLink = !!href;
+    const id = (v.videoId && /^[A-Za-z0-9_-]{11}$/.test(v.videoId)) ? v.videoId : '';
+    const thumbInner = id
+      ? `<img src="https://i.ytimg.com/vi/${escapeHtml(id)}/maxresdefault.jpg" data-vid="${escapeHtml(id)}" alt="" onerror="velhoThumbFallback(this)">`
+      : `<div class="fantasy-thumb-fallback">Sem imagem</div>`;
+    const thumb = hasLink
+      ? `<a class="velho-thumb-wrap" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${thumbInner}</a>`
+      : `<div class="velho-thumb-wrap">${thumbInner}</div>`;
+    const titleEl = hasLink
+      ? `<a class="velho-title" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${title}</a>`
+      : `<div class="velho-title" title="${title}">${title}</div>`;
+    return `<article class="velho-card" data-videoid="${escapeHtml(v.videoIdRaw)}">
+      ${thumb}
+      <div class="velho-body">
+        ${titleEl}
+        <div class="velho-date">${escapeHtml(fmtDateBR(v.dataPublicacao))}</div>
+        <div class="fantasy-metrics">
+          <div>
+            <div class="velho-metric-label">Unique Visitors</div>
+            <div class="velho-metric-val">${fmtFantasyInt(v.uniqueVisitors)}</div>
+          </div>
+          <div>
+            <div class="velho-metric-label">Conversion Rate</div>
+            <div class="velho-metric-val">${fmtFantasyCR(v.conversionRate)}</div>
+          </div>
+          <div>
+            <div class="velho-metric-label">Views</div>
+            <div class="velho-metric-val">${fmtNum(v.views)}</div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (moreWrap) moreWrap.hidden = fantasyVisibleCount >= total;
+}
+
+function renderFantasyStatus() {
+  renderFantasyDashboard();
+}
+
+function applyFantasyFilters() {
+  if (!fantasyLoaded || fantasyLoadError) {
+    filteredFantasy = [];
+    return;
+  }
+  const creator   = (document.getElementById('filterCreator') || {}).value || '';
+  const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
+  const dateEnd   = (document.getElementById('filterDateEnd') || {}).value || '';
+  const tipo      = (document.getElementById('filterTipo') || {}).value || '';
+
+  filteredFantasy = allFantasyData.filter(r => {
+    // Data: active range excludes rows without valid date
+    if (dateStart || dateEnd) {
+      if (!r.dataPublicacao) return false;
+      if (dateStart && r.dataPublicacao < dateStart) return false;
+      if (dateEnd && r.dataPublicacao > dateEnd) return false;
+    }
+    if (!weekAllSelected) {
+      if (selectedWeeks.size === 0) return false;
+      if (!r.semana || !selectedWeeks.has(r.semana)) return false;
+    }
+    if (!catAllSelected) {
+      if (selectedCats.size === 0) return false;
+      const cat = r.categoria || '(Sem categoria)';
+      if (!selectedCats.has(cat)) return false;
+    }
+    if (creator) {
+      if (!r.creator || r.creator !== creator) return false;
+    }
+    if (tipo === 'long' && !(r.tipo || '').toLowerCase().includes('long')) return false;
+    if (tipo === 'shorts' && !(r.tipo || '').toLowerCase().includes('short')) return false;
+    if (!titleAllSelected) {
+      if (selectedTitles.size === 0) return false;
+      if (!r.title || !selectedTitles.has(r.title)) return false;
+    }
+    return true;
+  });
+}
+
+async function loadFantasyData() {
+  fantasyLoadError = null;
+  fantasyLoaded = false;
+  allFantasyData = [];
+  filteredFantasy = [];
+  renderFantasyDashboard();
+  try {
+    const csvUrl = 'fantasy.csv?v=' + Date.now();
+    const resp = await fetch(csvUrl, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`fantasy.csv HTTP ${resp.status}`);
+    const text = await resp.text();
+    allFantasyData = parseFantasyCSV(text);
+    if (!allFantasyData.length) throw new Error('fantasy.csv vazio ou mal formatado');
+    fantasyLoaded = true;
+    fantasyLoadError = null;
+    applyFantasyFilters();
+    if (activeTab === 'fantasy') {
+      rebuildSharedFilterOptions('fantasy');
+      setNumericRangesEnabled(false);
+      renderFantasyDashboard();
+    }
+  } catch (err) {
+    fantasyLoaded = false;
+    fantasyLoadError = err;
+    allFantasyData = [];
+    filteredFantasy = [];
+    renderFantasyDashboard();
+    console.error('Erro ao carregar fantasy.csv (isolado):', err);
+  }
+}
 
 function parseCSVText(text) {
   const lines = text.split(/\r?\n/);
@@ -1923,21 +2764,155 @@ let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'dashboard';
 
 function switchTab(tab) {
+  const prevTab = activeTab;
   activeTab = tab;
   document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
   document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
   document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
   document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
   document.getElementById('panelVelho').style.display      = tab === 'velho'      ? '' : 'none';
+  document.getElementById('panelFantasy').style.display    = tab === 'fantasy'    ? '' : 'none';
   document.getElementById('tabBtnDash').classList.toggle('active',      tab === 'dashboard');
   document.getElementById('tabBtnShorts').classList.toggle('active',    tab === 'shorts');
   document.getElementById('tabBtnFeedbacks').classList.toggle('active', tab === 'feedbacks');
   document.getElementById('tabBtnBase').classList.toggle('active',      tab === 'basedados');
   document.getElementById('tabBtnVelho').classList.toggle('active',     tab === 'velho');
+  document.getElementById('tabBtnFantasy').classList.toggle('active',   tab === 'fantasy');
+
+  if (tab === 'fantasy') {
+    rebuildSharedFilterOptions('fantasy');
+    setNumericRangesEnabled(false);
+    applyFantasyFilters();
+    renderFantasyDashboard();
+  } else if (prevTab === 'fantasy') {
+    rebuildSharedFilterOptions('main');
+    setNumericRangesEnabled(true);
+  }
+
   if (tab === 'basedados')  renderTable();
   if (tab === 'shorts')     renderShortsAll();
   if (tab === 'feedbacks')  renderFeedbacksTab();
   if (tab === 'velho')      renderVelho();
+}
+
+// ── Shared filter options (Main ↔ Fantasy) ───────────────────────────────────
+
+function getFilterSourceRows() {
+  return activeTab === 'fantasy' ? allFantasyData : allData;
+}
+
+function getSourceCategories() {
+  return [...new Set(getFilterSourceRows().map(r => r.categoria || '(Sem categoria)'))].sort();
+}
+
+function getSourceCreators() {
+  return [...new Set(getFilterSourceRows().map(r => r.creator).filter(Boolean))].sort();
+}
+
+function getSourceTitlesList() {
+  return [...new Set(getFilterSourceRows().map(r => r.title).filter(Boolean))];
+}
+
+function getSourceTitleRecords() {
+  const sorted = [...getFilterSourceRows()].sort((a, b) =>
+    (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '')
+  );
+  const unique = [];
+  const seen = new Set();
+  sorted.forEach(r => {
+    if (!r.title || seen.has(r.title)) return;
+    seen.add(r.title);
+    unique.push(r);
+  });
+  return unique;
+}
+
+function setNumericRangesEnabled(enabled) {
+  const grid = document.querySelector('.filter-ranges-grid');
+  if (!grid) return;
+  grid.classList.toggle('ranges-disabled', !enabled);
+  grid.querySelectorAll('input').forEach(inp => {
+    inp.disabled = !enabled;
+  });
+}
+
+function rebuildCreatorOptions() {
+  const sel = document.getElementById('filterCreator');
+  if (!sel) return;
+  const current = sel.value;
+  const creators = getSourceCreators();
+  sel.innerHTML = '<option value="">Todos os Criadores</option>';
+  creators.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  if (current && !creators.includes(current)) {
+    const ghost = document.createElement('option');
+    ghost.value = current;
+    ghost.textContent = `${current} (indisponível)`;
+    ghost.className = 'filter-ghost-opt';
+    sel.appendChild(ghost);
+  }
+  sel.value = current;
+}
+
+function rebuildTipoOptions() {
+  const sel = document.getElementById('filterTipo');
+  if (!sel) return;
+  const current = sel.value;
+  const rows = getFilterSourceRows();
+  const hasLong = rows.some(r => (r.tipo || '').toLowerCase().includes('long'));
+  const hasShort = rows.some(r => (r.tipo || '').toLowerCase().includes('short'));
+
+  // Main always exposes Long Form / Shorts (current product semantics).
+  // Fantasy exposes only types present in fantasy.csv (still using long/shorts values).
+  const showLong = activeTab !== 'fantasy' || hasLong;
+  const showShort = activeTab !== 'fantasy' || hasShort;
+
+  sel.innerHTML = '<option value="">Todos os tipos</option>';
+  if (showLong) {
+    const opt = document.createElement('option');
+    opt.value = 'long';
+    opt.textContent = 'Long Form';
+    sel.appendChild(opt);
+  }
+  if (showShort) {
+    const opt = document.createElement('option');
+    opt.value = 'shorts';
+    opt.textContent = 'Shorts';
+    sel.appendChild(opt);
+  }
+  if (current === 'long' && !showLong) {
+    const ghost = document.createElement('option');
+    ghost.value = 'long';
+    ghost.textContent = 'Long Form (indisponível)';
+    ghost.className = 'filter-ghost-opt';
+    sel.appendChild(ghost);
+  }
+  if (current === 'shorts' && !showShort) {
+    const ghost = document.createElement('option');
+    ghost.value = 'shorts';
+    ghost.textContent = 'Shorts (indisponível)';
+    ghost.className = 'filter-ghost-opt';
+    sel.appendChild(ghost);
+  }
+  sel.value = current;
+}
+
+function rebuildSharedFilterOptions(source) {
+  // source is informational; activeTab already drives getFilterSourceRows()
+  rebuildCreatorOptions();
+  rebuildTipoOptions();
+  populateCatDropdown();
+  populateWeekDropdown();
+  updateCatInput();
+  updateWeekInput();
+  updateTitleInput();
+  // Refresh title dropdown list if open / keep UI consistent
+  const titleDd = document.getElementById('titleDropdown');
+  if (titleDd && titleDd.classList.contains('open')) onTitleSearchInput();
 }
 
 function renderAdvanced() {
@@ -2014,13 +2989,21 @@ function renderCatLegend() {
 
 function populateCatDropdown() {
   const dd = document.getElementById('catDropdown');
-  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const cats = getSourceCategories();
+  const ghosts = catAllSelected ? [] : [...selectedCats].filter(c => !cats.includes(c)).sort();
   const allChecked = catAllSelected ? 'checked' : '';
 
   dd.innerHTML = `
     <div class="title-option cat-select-all" onclick="toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as Categorias
     </div>
+    ${ghosts.map(c => {
+      const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<div class="title-option filter-ghost" onclick="toggleCatCheck('${safeC}', this)">
+        <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
+        ${c}<span class="ghost-tag">(indisponível)</span>
+      </div>`;
+    }).join('')}
     ${cats.map(c => {
       const checked = (catAllSelected || selectedCats.has(c)) ? 'checked' : '';
       const color = CAT_COLORS[c] || '#64748b';
@@ -2069,7 +3052,7 @@ function toggleCatDropdown() {
 
 function toggleCatCheck(cat, el) {
   const cb = el.querySelector('input[type=checkbox]');
-  const cats = [...new Set(allData.map(r => r.categoria || '(Sem categoria)'))].sort();
+  const cats = getSourceCategories();
   if (catAllSelected) {
     // Leaving "all": keep every category except the one just unchecked
     catAllSelected = false;
@@ -2079,7 +3062,8 @@ function toggleCatCheck(cat, el) {
   } else {
     if (selectedCats.has(cat)) { selectedCats.delete(cat); if (cb) cb.checked = false; }
     else { selectedCats.add(cat); if (cb) cb.checked = true; }
-    if (cats.length > 0 && cats.every(c => selectedCats.has(c))) {
+    const ghosts = [...selectedCats].filter(c => !cats.includes(c));
+    if (ghosts.length === 0 && cats.length > 0 && cats.every(c => selectedCats.has(c))) {
       catAllSelected = true;
       selectedCats.clear();
     }
@@ -2092,12 +3076,8 @@ function init() {
   CAT_COLORS = buildCatColorMap(allData);
   renderCatLegend();
 
-  const creators = [...new Set(allData.map(r => r.creator).filter(Boolean))].sort();
-  const sel = document.getElementById('filterCreator');
-  creators.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c; sel.appendChild(opt);
-  });
+  rebuildCreatorOptions();
+  rebuildTipoOptions();
 
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
@@ -2863,6 +3843,13 @@ function applyFilters() {
   try { renderFeedbacksTab(); } catch(e) { console.error('renderFeedbacks error:', e.message); }
   velhoVisibleCount = 30;
   try { renderVelho(); } catch(e) { console.error('renderVelho error:', e.message); }
+
+  // Fantasy shares date/semana/categoria/creator/tipo/título — never numeric ranges
+  try {
+    applyFantasyFilters();
+    fantasyVisibleCount = 30; // reset ranking pagination on apply/clear; keep fantasySort
+    if (activeTab === 'fantasy') renderFantasyDashboard();
+  } catch(e) { console.error('applyFantasyFilters error:', e.message); }
 }
 
 function clearFilters() {
@@ -2878,10 +3865,11 @@ function clearFilters() {
   updateCatInput();
   updateTitleInput();
   updateWeekInput();
-  populateCatDropdown();
-  populateWeekDropdown();
+  rebuildSharedFilterOptions(activeTab === 'fantasy' ? 'fantasy' : 'main');
   document.getElementById('weekDropdown').classList.remove('open');
   resetRangeFiltersToBounds();
+  // If on Fantasy, ranges stay visually disabled but values are reset (state preserved pattern)
+  if (activeTab === 'fantasy') setNumericRangesEnabled(false);
   const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
   if (dates.length) {
     const currentYear2 = new Date().getFullYear();
@@ -2899,11 +3887,7 @@ let titleBlurTimer = null;
 function onTitleSearchInput() {
   const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
   const dropdown = document.getElementById('titleDropdown');
-  // Sort chronologically (most recent first)
-  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
-  const unique = [];
-  const seen = new Set();
-  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const unique = getSourceTitleRecords();
   const matches = q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique;
   renderTitleDropdown(matches.slice(0, 60));
   dropdown.classList.toggle('open', true);
@@ -2912,25 +3896,35 @@ function onTitleSearchInput() {
 function renderTitleDropdown(items) {
   const dropdown = document.getElementById('titleDropdown');
   const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-  const allTitles = [...new Set(allData.map(r => r.title))];
+  const allTitles = getSourceTitlesList();
   const targetTitles = q ? allTitles.filter(t => t.toLowerCase().includes(q)) : allTitles;
-  // Master means all titles in dataset (semantic), not just search results
   const masterChecked = titleAllSelected;
   const label = q
     ? (titleAllSelected ? `Todos os Títulos (${allTitles.length})` : `Resultados (${targetTitles.length})`)
     : `Todos os Títulos (${allTitles.length})`;
 
+  const ghosts = titleAllSelected ? [] : [...selectedTitles]
+    .filter(t => !allTitles.includes(t) && (!q || t.toLowerCase().includes(q)))
+    .sort();
+
   dropdown.innerHTML = `
     <div class="title-option title-select-all" onclick="toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${masterChecked ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
     </div>
+    ${ghosts.map(t => {
+      const safeT = t.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<div class="title-option filter-ghost selected" onclick="toggleTitleCheck('${safeT}', this)">
+        <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
+        ${t}<span class="ghost-tag">(indisponível)</span>
+      </div>`;
+    }).join('')}
     ${items.map(r => {
       const checked = (titleAllSelected || selectedTitles.has(r.title)) ? 'checked' : '';
       const safeT = r.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div class="title-option${(titleAllSelected || selectedTitles.has(r.title)) ? ' selected' : ''}"
         onclick="toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
-        <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${r.dataPublicacao}</span>${r.title}
+        <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${r.dataPublicacao || '—'}</span>${r.title}
       </div>`;
     }).join('')}
     ${targetTitles.length > 60 ? `<div style="padding:8px 12px;font-size:11px;color:var(--gray-400);background:var(--gray-50);border-top:1px solid var(--gray-200);">Mostrando 60 de ${targetTitles.length}. Refine a busca para ver mais.</div>` : ''}`;
@@ -2949,9 +3943,7 @@ function toggleAllTitles(el) {
   }
   updateTitleInput();
   const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
-  const unique = []; const seen = new Set();
-  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
 }
@@ -2969,13 +3961,8 @@ function onTitleBlur() {
 
 function toggleTitleCheck(title, el) {
   const cb = el.querySelector('input[type=checkbox]');
-  const allTitles = [...new Set(allData.map(r => r.title))];
+  const allTitles = getSourceTitlesList();
   if (titleAllSelected) {
-    // Leaving "all": keep every title except the one unchecked — but avoid huge Set.
-    // For performance: start empty subset mode with all EXCEPT this title only if
-    // we can afford it. Prefer: enter subset with allTitles minus one.
-    // Dataset has ~2300 titles — Set of ~2300 strings is acceptable when user
-    // intentionally leaves "all". Still avoid keeping it when titleAllSelected.
     titleAllSelected = false;
     selectedTitles.clear();
     allTitles.forEach(t => { if (t !== title) selectedTitles.add(t); });
@@ -2991,16 +3978,15 @@ function toggleTitleCheck(title, el) {
       el.classList.add('selected');
       if (cb) cb.checked = true;
     }
-    if (allTitles.length > 0 && allTitles.every(t => selectedTitles.has(t))) {
+    const ghosts = [...selectedTitles].filter(t => !allTitles.includes(t));
+    if (ghosts.length === 0 && allTitles.length > 0 && allTitles.every(t => selectedTitles.has(t))) {
       titleAllSelected = true;
       selectedTitles.clear();
     }
   }
   updateTitleInput();
   const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
-  const sorted = [...allData].sort((a,b) => b.dataPublicacao.localeCompare(a.dataPublicacao));
-  const unique = []; const seen = new Set();
-  sorted.forEach(r => { if (!seen.has(r.title)) { seen.add(r.title); unique.push(r); } });
+  const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
 }
@@ -4440,10 +5426,10 @@ function buildWeekOptions() {
   const dateStart = document.getElementById('filterDateStart').value;
   const dateEnd   = document.getElementById('filterDateEnd').value;
   const weekMap = new Map();
-  allData.forEach(r => {
+  getFilterSourceRows().forEach(r => {
     if (!r.semana) return;
-    if (dateStart && r.dataPublicacao < dateStart) return;
-    if (dateEnd   && r.dataPublicacao > dateEnd)   return;
+    if (dateStart && (!r.dataPublicacao || r.dataPublicacao < dateStart)) return;
+    if (dateEnd   && (!r.dataPublicacao || r.dataPublicacao > dateEnd))   return;
     if (!weekMap.has(r.semana)) weekMap.set(r.semana, { count: 0, dates: [] });
     const w = weekMap.get(r.semana);
     w.count++;
@@ -4464,10 +5450,19 @@ function buildWeekOptions() {
 function populateWeekDropdown() {
   const dd = document.getElementById('weekDropdown');
   const weeks = buildWeekOptions();
+  const weekKeys = weeks.map(w => w.key);
+  const ghosts = weekAllSelected ? [] : [...selectedWeeks].filter(k => !weekKeys.includes(k)).sort();
   dd.innerHTML = `
     <div class="title-option week-select-all" onclick="toggleAllWeeks(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${weekAllSelected ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">Todas as Semanas (${weeks.length})
     </div>
+    ${ghosts.map(key => {
+      return `<div class="title-option filter-ghost" onclick="toggleWeekCheck('${key}', this)">
+        <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
+        <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${key}</span>
+        <span class="ghost-tag">(indisponível)</span>
+      </div>`;
+    }).join('')}
     ${weeks.map(w => {
       const checked = (weekAllSelected || selectedWeeks.has(w.key)) ? 'checked' : '';
       return `<div class="title-option" onclick="toggleWeekCheck('${w.key}', this)">
@@ -4512,7 +5507,9 @@ function toggleWeekCheck(key, el) {
   } else {
     if (selectedWeeks.has(key)) { selectedWeeks.delete(key); if (cb) cb.checked = false; }
     else { selectedWeeks.add(key); if (cb) cb.checked = true; }
-    if (weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key))) {
+    const weekKeys = weeks.map(w => w.key);
+    const ghosts = [...selectedWeeks].filter(k => !weekKeys.includes(k));
+    if (ghosts.length === 0 && weeks.length > 0 && weeks.every(w => selectedWeeks.has(w.key))) {
       weekAllSelected = true;
       selectedWeeks.clear();
     }
@@ -5461,7 +6458,10 @@ function renderVelho() {
   }).join('');
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();        // pipeline principal (dados.csv)
+  loadFantasyData(); // pipeline Fantasy isolado (fantasy.csv) — falha não derruba o principal
+});
 </script>
 </body>
 </html>
