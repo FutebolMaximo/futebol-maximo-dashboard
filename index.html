@@ -863,34 +863,9 @@
     width: 100%;
     min-height: 320px;
   }
-  .fantasy-ranking-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .fantasy-ranking-count {
-    font-size: 12px;
-    color: var(--gray-500);
-    font-weight: 600;
-  }
-  .fantasy-metrics {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .fantasy-thumb-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gray-100);
-    color: var(--gray-400);
-    font-size: 12px;
-    font-weight: 600;
+  .fantasy-temp-wrap {
+    height: 320px;
+    margin-top: 8px;
   }
 </style>
 </head>
@@ -1836,23 +1811,28 @@
 
     <div class="section-header" data-collapsed="false" style="cursor:default;">
       <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
-      <h2>Ranking de Vídeos</h2>
+      <h2>Evolução Temporal</h2>
     </div>
-    <p class="section-desc">Performance por vídeo válido no recorte filtrado (BIO e Não identificado excluídos).</p>
-    <div class="fantasy-ranking-toolbar">
-      <span class="fantasy-ranking-count" id="fantasyRankingCount"></span>
-      <label class="velho-sort">Ordenar por
-        <select id="fantasySortSelect" onchange="setFantasySort(this.value)">
-          <option value="visitors" selected>Unique Visitors</option>
-          <option value="conversion">Conversion Rate</option>
-          <option value="views">Views</option>
-          <option value="date">Data</option>
-        </select>
-      </label>
+    <p class="section-desc">Performance Fantasy dos vídeos agrupados pela Data Publicação (não é a data do clique). BIO/unidentified sem data ficam fora.</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+      <div class="topn-toggle">
+        <button id="btnFTempWeek" class="toggle-btn active" onclick="setFantasyTempMode('week')">Por Semana</button>
+        <button id="btnFTempMonth" class="toggle-btn" onclick="setFantasyTempMode('month')">Por Mês</button>
+      </div>
     </div>
-    <div id="fantasyRankingGrid" class="velho-grid"></div>
-    <div id="fantasyLoadMoreWrap" class="velho-loadmore-wrap" hidden>
-      <button type="button" class="btn-primary" id="fantasyLoadMoreBtn" onclick="loadMoreFantasy()">Carregar mais</button>
+    <div class="chart-card wide" style="margin-bottom:24px;">
+      <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;position:relative;">
+          <button id="btnFTempMetric" onclick="toggleFantasyTempMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <span id="fantasyTempMetricLabel">🎯 Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          </button>
+          <div id="fantasyTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card,white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;padding:4px 0;">
+            <div onclick="setFantasyTempMetric('clicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
+            <div onclick="setFantasyTempMetric('conversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
+          </div>
+        </div>
+      </div>
+      <div class="fantasy-temp-wrap"><canvas id="chartFantasyTemporal"></canvas></div>
     </div>
   </div>
 </div>
@@ -1960,6 +1940,7 @@ function refreshChartsForTheme() {
   }
   if (fantasyLoaded && !fantasyLoadError) {
     try { renderFantasyBreakdownChart(); } catch(e) { console.error('renderFantasyBreakdownChart theme:', e.message); }
+    try { renderFantasyTemporal(); } catch(e) { console.error('renderFantasyTemporal theme:', e.message); }
   }
 }
 
@@ -2094,10 +2075,11 @@ let allFantasyData = [];
 let filteredFantasy = [];
 let fantasyLoadError = null;
 let fantasyLoaded = false;
-let fantasySort = 'visitors';
-let fantasyVisibleCount = 30;
 let fantasyBreakdownDimension = 'creator';
 let fantasyBreakdownChart = null;
+let fantasyTemporalMetric = 'clicks'; // 'clicks' | 'conversion'
+let fantasyTempMode = 'week';
+let fantasyTemporalChart = null;
 
 function isFantasyTabEnabled() {
   return ENABLE_FANTASY_TAB === true;
@@ -2292,14 +2274,30 @@ function getFantasyDimensionLabel(r, dimension) {
 }
 
 function buildFantasyBreakdown(rows, dimension) {
-  const groups = new Map();
+  const totalUV = countFantasyUniqueVisitors(rows);
+  const groupRows = new Map();
   (rows || []).forEach(r => {
     const label = getFantasyDimensionLabel(r, dimension);
-    if (!groups.has(label)) groups.set(label, new Set());
-    if (r.visitorId) groups.get(label).add(r.visitorId);
+    if (!groupRows.has(label)) groupRows.set(label, []);
+    groupRows.get(label).push(r);
   });
-  return [...groups.entries()]
-    .map(([label, set]) => ({ label, value: set.size }))
+  return [...groupRows.entries()]
+    .map(([label, gRows]) => {
+      const uv = countFantasyUniqueVisitors(gRows);
+      const videoStats = getFantasyUniqueVideoStats(gRows);
+      const hasVideos = videoStats.videoCount > 0;
+      const sumViews = hasVideos ? videoStats.sumViews : null;
+      const conversionRate = (sumViews != null && sumViews > 0) ? (uv / sumViews) : null;
+      const pct = totalUV > 0 ? (uv / totalUV) * 100 : null;
+      return {
+        label,
+        value: uv,
+        pct,
+        views: sumViews,
+        videoCount: videoStats.videoCount,
+        conversionRate,
+      };
+    })
     .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label, 'pt-BR'));
 }
 
@@ -2363,6 +2361,44 @@ function destroyFantasyBreakdownChart() {
   }
 }
 
+function destroyFantasyTemporalChart() {
+  if (fantasyTemporalChart) {
+    try { fantasyTemporalChart.destroy(); } catch (e) {}
+    fantasyTemporalChart = null;
+  }
+  if (chartInstances['chartFantasyTemporal']) {
+    try { chartInstances['chartFantasyTemporal'].destroy(); } catch (e) {}
+    delete chartInstances['chartFantasyTemporal'];
+  }
+}
+
+const fantasyBarEndLabelsPlugin = {
+  id: 'fantasyBarEndLabels',
+  afterDatasetsDraw(chart) {
+    const extras = chart.$fantasyBarExtras;
+    if (!extras || !extras.length) return;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta || !meta.data) return;
+    const ct = getChartTheme();
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.font = '600 11px system-ui, sans-serif';
+    ctx.fillStyle = ct.tick || '#374151';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    meta.data.forEach((bar, i) => {
+      const row = extras[i];
+      if (!row) return;
+      const pctTxt = (row.pct == null || !Number.isFinite(row.pct))
+        ? '—'
+        : row.pct.toFixed(1).replace('.', ',') + '%';
+      const text = `${fmtNum(row.value)} · ${pctTxt}`;
+      ctx.fillText(text, bar.x + 8, bar.y);
+    });
+    ctx.restore();
+  },
+};
+
 function renderFantasyBreakdownChart() {
   const canvas = document.getElementById('chartFantasyBreakdown');
   const wrap = document.getElementById('fantasyChartWrap');
@@ -2398,13 +2434,30 @@ function renderFantasyBreakdownChart() {
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { right: 110 } },
       plugins: {
         legend: { display: false },
         tooltip: {
           ...chartTooltipTheme(),
           callbacks: {
             title: items => (items[0] && items[0].label) || '',
-            label: ctx => ` Unique Visitors: ${fmtNum(ctx.parsed.x)}`,
+            label: ctx => {
+              const row = rows[ctx.dataIndex] || {};
+              const pctTxt = (row.pct == null || !Number.isFinite(row.pct))
+                ? '—'
+                : row.pct.toFixed(1).replace('.', ',') + '%';
+              const viewsTxt = (row.views == null || !Number.isFinite(row.views)) ? '—' : fmtNum(row.views);
+              const crTxt = (row.conversionRate == null || !Number.isFinite(row.conversionRate))
+                ? '—'
+                : fmtFantasyCR(row.conversionRate);
+              return [
+                ` Unique Visitors: ${fmtNum(row.value)}`,
+                ` % do total: ${pctTxt}`,
+                ` Views: ${viewsTxt}`,
+                ` Fantasy Conversion: ${crTxt}`,
+                ` Vídeos: ${fmtNum(row.videoCount || 0)}`,
+              ];
+            },
           },
         },
       },
@@ -2429,7 +2482,122 @@ function renderFantasyBreakdownChart() {
         },
       },
     },
+    plugins: [fantasyBarEndLabelsPlugin],
   });
+  fantasyBreakdownChart.$fantasyBarExtras = rows;
+}
+
+function setFantasyTempMode(mode) {
+  fantasyTempMode = mode === 'month' ? 'month' : 'week';
+  const bw = document.getElementById('btnFTempWeek');
+  const bm = document.getElementById('btnFTempMonth');
+  if (bw) bw.classList.toggle('active', fantasyTempMode === 'week');
+  if (bm) bm.classList.toggle('active', fantasyTempMode === 'month');
+  renderFantasyTemporal();
+}
+
+function toggleFantasyTempMetricDD() {
+  const dd = document.getElementById('fantasyTempMetricDropdown');
+  if (!dd) return;
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function setFantasyTempMetric(metric, label) {
+  fantasyTemporalMetric = metric === 'conversion' ? 'conversion' : 'clicks';
+  const lbl = document.getElementById('fantasyTempMetricLabel');
+  if (lbl) lbl.textContent = label || (fantasyTemporalMetric === 'conversion' ? '🎯 Fantasy Conversion' : '🎯 Fantasy Clicks');
+  const dd = document.getElementById('fantasyTempMetricDropdown');
+  if (dd) dd.style.display = 'none';
+  renderFantasyTemporal();
+}
+
+function fantasyTemporalMetricVal(periodRows, metric) {
+  const uv = countFantasyUniqueVisitors(periodRows);
+  if (metric === 'clicks') return uv > 0 ? uv : null;
+  const videoStats = getFantasyUniqueVideoStats(periodRows);
+  if (!videoStats.sumViews || videoStats.sumViews <= 0) return null;
+  return uv / videoStats.sumViews;
+}
+
+function renderFantasyTemporal() {
+  const el = document.getElementById('chartFantasyTemporal');
+  if (!el) return;
+  destroyFantasyTemporalChart();
+  if (!fantasyLoaded || fantasyLoadError) return;
+
+  const d = (filteredFantasy || []).filter(r => r.dataPublicacao);
+  if (!d.length) return;
+
+  const grouped = groupByPeriod(d, fantasyTempMode);
+  const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*1000+parseInt(m[1]) : 0; };
+  const keys = Object.keys(grouped).sort((a,b) =>
+    fantasyTempMode === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
+  );
+  const shortKey = k => fantasyTempMode==='month'
+    ? (([y,m]) => new Date(+y, +m-1, 1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}))(k.split('-'))
+    : k;
+  const labels = keys.map(shortKey);
+  const weekTitle = idx => {
+    if (fantasyTempMode!=='week'||!keys[idx]) return labels[idx]||'';
+    const k=keys[idx]; const dates=(grouped[k]||[]).map(r=>r.dataPublicacao).filter(Boolean).sort();
+    const fmt=ds=>ds?`${ds.slice(8,10)}/${ds.slice(5,7)}`:'';
+    const range=dates.length>=2?`${fmt(dates[0])} – ${fmt(dates[dates.length-1])}`:'';
+    return range?`${k} · ${range}`:k;
+  };
+
+  const agg = keys.map(k => fantasyTemporalMetricVal(grouped[k], fantasyTemporalMetric));
+  const isConv = fantasyTemporalMetric === 'conversion';
+  const yFmt = isConv
+    ? (v => (v == null || !Number.isFinite(v)) ? '' : fmtFantasyCR(v))
+    : (v => fmtNum(v));
+  const tipFmt = v => {
+    if (v == null || !Number.isFinite(v)) return '—';
+    return isConv ? fmtFantasyCR(v) : fmtNum(v);
+  };
+  const lineLabel = isConv ? 'Fantasy Conversion' : 'Fantasy Clicks';
+  const ct = getChartTheme();
+
+  fantasyTemporalChart = new Chart(el, {
+    data: {
+      labels,
+      datasets: [{
+        type: 'line',
+        label: lineLabel,
+        data: agg,
+        borderColor: '#7c3aed',
+        backgroundColor: '#7c3aed22',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+        borderWidth: 2,
+        spanGaps: false,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...chartTooltipTheme(),
+          callbacks: {
+            title: ctx => weekTitle(ctx[0].dataIndex),
+            label: ctx => ` ${lineLabel}: ${tipFmt(ctx.parsed.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { font: { size: 9 }, color: ct.tick, maxRotation: 45 }, grid: { display: false } },
+        y: {
+          beginAtZero: !isConv,
+          ticks: { font: { size: 9 }, color: '#7c3aed', callback: yFmt },
+          grid: { color: ct.grid },
+        },
+      },
+    },
+  });
+  chartInstances['chartFantasyTemporal'] = fantasyTemporalChart;
 }
 
 function renderFantasyDashboard() {
@@ -2442,6 +2610,7 @@ function renderFantasyDashboard() {
     statusEl.hidden = false;
     statusEl.innerHTML = `<h2>Fantasy</h2><p class="fantasy-error">Não foi possível carregar os dados de Fantasy.</p>`;
     destroyFantasyBreakdownChart();
+    destroyFantasyTemporalChart();
     return;
   }
   if (!fantasyLoaded) {
@@ -2449,6 +2618,7 @@ function renderFantasyDashboard() {
     statusEl.hidden = false;
     statusEl.innerHTML = `<h2>Fantasy</h2><p>Carregando dados Fantasy...</p>`;
     destroyFantasyBreakdownChart();
+    destroyFantasyTemporalChart();
     return;
   }
 
@@ -2456,185 +2626,9 @@ function renderFantasyDashboard() {
   dashEl.hidden = false;
   const sel = document.getElementById('fantasyBreakdownSelect');
   if (sel) sel.value = fantasyBreakdownDimension;
-  const sortSel = document.getElementById('fantasySortSelect');
-  if (sortSel) sortSel.value = fantasySort;
   renderFantasyKPIs();
   renderFantasyBreakdownChart();
-  renderFantasyRanking();
-}
-
-function buildFantasyVideoRanking(rows) {
-  const byVideo = new Map();
-  (rows || []).forEach(r => {
-    if (r.kind !== 'video') return;
-    const key = fantasyVideoKey(r);
-    if (!key) return;
-    let agg = byVideo.get(key);
-    if (!agg) {
-      agg = {
-        videoId: (r.videoId && /^[A-Za-z0-9_-]{11}$/.test(r.videoId)) ? r.videoId : key,
-        videoIdRaw: key,
-        title: r.title || '',
-        dataPublicacao: r.dataPublicacao || '',
-        views: Number.isFinite(r.views) ? r.views : null,
-        link: (r.link || '').trim(),
-        urlVideo: (r.urlVideo || '').trim(),
-        _visitors: new Set(),
-      };
-      byVideo.set(key, agg);
-    }
-    if (r.visitorId) agg._visitors.add(r.visitorId);
-    if (!Number.isFinite(agg.views) && Number.isFinite(r.views)) agg.views = r.views;
-    if (!agg.title && r.title) agg.title = r.title;
-    if (!agg.dataPublicacao && r.dataPublicacao) agg.dataPublicacao = r.dataPublicacao;
-    if (!agg.link && r.link) agg.link = String(r.link).trim();
-    if (!agg.urlVideo && r.urlVideo) agg.urlVideo = String(r.urlVideo).trim();
-  });
-
-  const list = [];
-  byVideo.forEach(agg => {
-    const uniqueVisitors = agg._visitors.size;
-    const views = Number.isFinite(agg.views) ? agg.views : null;
-    const conversionRate = (views !== null && views > 0) ? (uniqueVisitors / views) : null;
-    list.push({
-      videoId: agg.videoId,
-      videoIdRaw: agg.videoIdRaw,
-      title: agg.title,
-      dataPublicacao: agg.dataPublicacao,
-      views,
-      link: agg.link,
-      urlVideo: agg.urlVideo,
-      uniqueVisitors,
-      conversionRate,
-    });
-  });
-  return list;
-}
-
-function sortFantasyRanking(list, mode) {
-  const arr = [...(list || [])];
-  const nullLast = (a, b, cmp) => {
-    const aN = a == null || (typeof a === 'number' && !Number.isFinite(a));
-    const bN = b == null || (typeof b === 'number' && !Number.isFinite(b));
-    if (aN && bN) return 0;
-    if (aN) return 1;
-    if (bN) return -1;
-    return cmp(a, b);
-  };
-  const byUV = (a, b) => nullLast(b.uniqueVisitors, a.uniqueVisitors, (x, y) => x - y);
-  const byViews = (a, b) => nullLast(b.views, a.views, (x, y) => x - y);
-  const byDate = (a, b) => nullLast(b.dataPublicacao || null, a.dataPublicacao || null, (x, y) => String(x).localeCompare(String(y)));
-  const byCR = (a, b) => nullLast(b.conversionRate, a.conversionRate, (x, y) => x - y);
-
-  arr.sort((a, b) => {
-    if (mode === 'conversion') {
-      return byCR(a, b) || byUV(a, b) || byViews(a, b) || byDate(a, b);
-    }
-    if (mode === 'views') {
-      return byViews(a, b) || byUV(a, b) || byDate(a, b);
-    }
-    if (mode === 'date') {
-      return byDate(a, b) || byUV(a, b) || byViews(a, b);
-    }
-    // visitors (default)
-    return byUV(a, b) || byViews(a, b) || byDate(a, b);
-  });
-  return arr;
-}
-
-function setFantasySort(mode) {
-  const allowed = new Set(['visitors', 'conversion', 'views', 'date']);
-  fantasySort = allowed.has(mode) ? mode : 'visitors';
-  const sel = document.getElementById('fantasySortSelect');
-  if (sel && sel.value !== fantasySort) sel.value = fantasySort;
-  fantasyVisibleCount = 30;
-  renderFantasyRanking();
-}
-
-function loadMoreFantasy() {
-  fantasyVisibleCount += 30;
-  renderFantasyRanking();
-}
-
-function fmtFantasyInt(n) {
-  if (!Number.isFinite(n)) return '—';
-  return Math.round(n).toLocaleString('pt-BR');
-}
-
-function renderFantasyRanking() {
-  const grid = document.getElementById('fantasyRankingGrid');
-  const countEl = document.getElementById('fantasyRankingCount');
-  const moreWrap = document.getElementById('fantasyLoadMoreWrap');
-  if (!grid) return;
-
-  if (!fantasyLoaded || fantasyLoadError) {
-    grid.innerHTML = '';
-    if (countEl) countEl.textContent = '';
-    if (moreWrap) moreWrap.hidden = true;
-    return;
-  }
-
-  const aggregated = buildFantasyVideoRanking(filteredFantasy);
-  const sorted = sortFantasyRanking(aggregated, fantasySort);
-  const total = sorted.length;
-  if (countEl) countEl.textContent = total === 1 ? '1 vídeo' : `${fmtFantasyInt(total)} vídeos`;
-
-  if (total === 0) {
-    grid.innerHTML = `<div class="velho-empty">Nenhum vídeo encontrado para os filtros selecionados.</div>`;
-    if (moreWrap) moreWrap.hidden = true;
-    return;
-  }
-
-  const escapeHtml = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const fmtDateBR = iso => {
-    if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '—';
-    const [y, m, d] = iso.slice(0, 10).split('-');
-    return `${d}/${m}/${y}`;
-  };
-
-  const visible = sorted.slice(0, fantasyVisibleCount);
-  grid.innerHTML = visible.map(v => {
-    const title = escapeHtml(v.title || '(Sem título)');
-    const href = v.link || '';
-    const hasLink = !!href;
-    const id = (v.videoId && /^[A-Za-z0-9_-]{11}$/.test(v.videoId)) ? v.videoId : '';
-    const thumbInner = id
-      ? `<img src="https://i.ytimg.com/vi/${escapeHtml(id)}/maxresdefault.jpg" data-vid="${escapeHtml(id)}" alt="" onerror="velhoThumbFallback(this)">`
-      : `<div class="fantasy-thumb-fallback">Sem imagem</div>`;
-    const thumb = hasLink
-      ? `<a class="velho-thumb-wrap" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${thumbInner}</a>`
-      : `<div class="velho-thumb-wrap">${thumbInner}</div>`;
-    const titleEl = hasLink
-      ? `<a class="velho-title" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" title="${title}">${title}</a>`
-      : `<div class="velho-title" title="${title}">${title}</div>`;
-    return `<article class="velho-card" data-videoid="${escapeHtml(v.videoIdRaw)}">
-      ${thumb}
-      <div class="velho-body">
-        ${titleEl}
-        <div class="velho-date">${escapeHtml(fmtDateBR(v.dataPublicacao))}</div>
-        <div class="fantasy-metrics">
-          <div>
-            <div class="velho-metric-label">Unique Visitors</div>
-            <div class="velho-metric-val">${fmtFantasyInt(v.uniqueVisitors)}</div>
-          </div>
-          <div>
-            <div class="velho-metric-label">Conversion Rate</div>
-            <div class="velho-metric-val">${fmtFantasyCR(v.conversionRate)}</div>
-          </div>
-          <div>
-            <div class="velho-metric-label">Views</div>
-            <div class="velho-metric-val">${fmtNum(v.views)}</div>
-          </div>
-        </div>
-      </div>
-    </article>`;
-  }).join('');
-
-  if (moreWrap) moreWrap.hidden = fantasyVisibleCount >= total;
-}
-
-function renderFantasyStatus() {
-  renderFantasyDashboard();
+  renderFantasyTemporal();
 }
 
 function applyFantasyFilters() {
@@ -3954,7 +3948,6 @@ function applyFilters() {
   // Fantasy shares date/semana/categoria/creator/tipo/título — never numeric ranges
   try {
     applyFantasyFilters();
-    fantasyVisibleCount = 30; // reset ranking pagination on apply/clear; keep fantasySort
     if (activeTab === 'fantasy') renderFantasyDashboard();
   } catch(e) { console.error('applyFantasyFilters error:', e.message); }
 }
@@ -4691,6 +4684,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const dd   = document.getElementById(ddId);
       if (wrap && dd && !wrap.contains(e.target)) dd.classList.remove('open');
     });
+    // Close Fantasy temporal metric dropdown
+    const fTempDD = document.getElementById('fantasyTempMetricDropdown');
+    if (fTempDD && !e.target.closest('#btnFTempMetric') && !fTempDD.contains(e.target)) fTempDD.style.display = 'none';
     // Close granularity dropdown
     const durDD = document.getElementById('durGranDropdown');
     if (durDD && !e.target.closest('[onclick="toggleDurGranDD()"]') && !durDD.contains(e.target)) durDD.style.display='none';
@@ -5639,11 +5635,11 @@ function populateWeekDropdown() {
   const weekKeys = weeks.map(w => w.key);
   const ghosts = weekAllSelected ? [] : [...selectedWeeks].filter(k => !weekKeys.includes(k)).sort();
   dd.innerHTML = `
-    <div class="title-option week-select-all" onclick="toggleAllWeeks(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+    <div class="title-option week-select-all" onclick="event.stopPropagation(); toggleAllWeeks(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${weekAllSelected ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">Todas as Semanas (${weeks.length})
     </div>
     ${ghosts.map(key => {
-      return `<div class="title-option filter-ghost" onclick="toggleWeekCheck('${key}', this)">
+      return `<div class="title-option filter-ghost" onclick="event.stopPropagation(); toggleWeekCheck('${key}', this)">
         <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${key}</span>
         <span class="ghost-tag">(indisponível)</span>
@@ -5651,7 +5647,7 @@ function populateWeekDropdown() {
     }).join('')}
     ${weeks.map(w => {
       const checked = (weekAllSelected || selectedWeeks.has(w.key)) ? 'checked' : '';
-      return `<div class="title-option" onclick="toggleWeekCheck('${w.key}', this)">
+      return `<div class="title-option" onclick="event.stopPropagation(); toggleWeekCheck('${w.key}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${w.label}</span>
         <span style="font-size:10px;color:var(--gray-500);margin-right:4px;">${w.range}</span>
@@ -5680,6 +5676,8 @@ function toggleAllWeeks(el) {
   }
   updateWeekInput();
   populateWeekDropdown();
+  const dd = document.getElementById('weekDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function toggleWeekCheck(key, el) {
@@ -5702,6 +5700,8 @@ function toggleWeekCheck(key, el) {
   }
   updateWeekInput();
   populateWeekDropdown();
+  const dd = document.getElementById('weekDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function updateWeekInput() {
