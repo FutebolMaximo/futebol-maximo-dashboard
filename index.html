@@ -827,6 +827,29 @@
     margin-bottom: 8px;
   }
   .fantasy-kpi-label-row .kpi-label { margin-bottom: 0; }
+  .fantasy-kpi-alltime {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .35px;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    padding: 1px 5px;
+    text-transform: uppercase;
+    line-height: 1.3;
+    flex-shrink: 0;
+  }
+  #fantasyDashboard .fantasy-kpi-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 1100px) {
+    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 600px) {
+    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   .fantasy-info {
     display: inline-flex;
     align-items: center;
@@ -1749,12 +1772,12 @@
   </div>
 
   <div class="fantasy-dashboard" id="fantasyDashboard" hidden>
-    <div class="section-header" data-collapsed="false" style="cursor:default;">
-      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
+      <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Fantasy · KPIs</h2>
     </div>
     <p class="section-desc">Visitantes únicos e conversão dos vídeos no recorte filtrado.</p>
-    <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
+    <div class="kpi-grid fantasy-kpi-grid">
       <div class="kpi-card accent">
         <div class="kpi-label">UNIQUE VISITORS</div>
         <div class="kpi-value" id="fkUniqueVisitors">—</div>
@@ -1783,10 +1806,18 @@
         <div class="kpi-value" id="fkWebUV">—</div>
         <div class="kpi-sub">Destino = Web</div>
       </div>
+      <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">BIO VISITORS</div>
+          <span class="fantasy-kpi-alltime">ALL-TIME</span>
+        </div>
+        <div class="kpi-value" id="fkBioUV">—</div>
+        <div class="kpi-sub">Visitantes distintos · BIO</div>
+      </div>
     </div>
 
-    <div class="section-header" data-collapsed="false" style="cursor:default;">
-      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
+      <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Unique Visitors por Granularidade</h2>
     </div>
     <p class="section-desc">Contagem distinta de Visitor ID por dimensão. A soma das barras pode superar o KPI global.</p>
@@ -1809,8 +1840,8 @@
       </div>
     </div>
 
-    <div class="section-header" data-collapsed="false" style="cursor:default;">
-      <div class="section-divider"><span class="section-toggle" style="visibility:hidden;">▼</span></div>
+    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
+      <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Evolução Temporal</h2>
     </div>
     <p class="section-desc">Performance Fantasy dos vídeos agrupados pela Data Publicação (não é a data do clique). BIO/unidentified sem data ficam fora.</p>
@@ -1833,6 +1864,40 @@
         </div>
       </div>
       <div class="fantasy-temp-wrap"><canvas id="chartFantasyTemporal"></canvas></div>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
+      <div class="section-divider"><span class="section-toggle">▼</span></div>
+      <h2>Gráficos de Performance</h2>
+    </div>
+    <p class="section-desc">Performance Fantasy por vídeo válido (BIO e Não identificado excluídos). Agrupa por videoId.</p>
+    <div class="charts-controls">
+      <div class="topn-input">
+        <label>N Vídeos:</label>
+        <input type="number" id="topNInputFantasy" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+        <div class="topn-toggle">
+          <button id="btnFTop" class="toggle-btn" onclick="setFantasyPerfMode('top')">🏆 Melhores</button>
+          <button id="btnFBot" class="toggle-btn" onclick="setFantasyPerfMode('bottom')">🔍 Piores</button>
+          <button id="btnFRec" class="toggle-btn active" onclick="setFantasyPerfMode('recent')">🕐 Recentes</button>
+        </div>
+        <button class="btn-primary" style="height:32px;padding:0 12px;font-size:12px;" onclick="renderFantasyPerformance()">Atualizar</button>
+      </div>
+    </div>
+    <div class="charts-grid" style="margin-bottom:24px;">
+      <div class="chart-card wide">
+        <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;position:relative;">
+            <button id="btnFPerfMetric" onclick="toggleFantasyPerfMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+              <span id="fantasyPerfMetricLabel">🎯 Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
+            </button>
+            <div id="fantasyPerfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card,white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;padding:4px 0;">
+              <div onclick="setFantasyPerfMetric('clicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
+              <div onclick="setFantasyPerfMetric('conversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartFantasyPerformance"></canvas></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1941,6 +2006,7 @@ function refreshChartsForTheme() {
   if (fantasyLoaded && !fantasyLoadError) {
     try { renderFantasyBreakdownChart(); } catch(e) { console.error('renderFantasyBreakdownChart theme:', e.message); }
     try { renderFantasyTemporal(); } catch(e) { console.error('renderFantasyTemporal theme:', e.message); }
+    try { renderFantasyPerformance(); } catch(e) { console.error('renderFantasyPerformance theme:', e.message); }
   }
 }
 
@@ -2080,6 +2146,9 @@ let fantasyBreakdownChart = null;
 let fantasyTemporalMetric = 'clicks'; // 'clicks' | 'conversion'
 let fantasyTempMode = 'week';
 let fantasyTemporalChart = null;
+let fantasyPerformanceMetric = 'clicks'; // 'clicks' | 'conversion'
+let fantasyPerfMode = 'recent'; // 'top' | 'bottom' | 'recent'
+let fantasyPerformanceChart = null;
 
 function isFantasyTabEnabled() {
   return ENABLE_FANTASY_TAB === true;
@@ -2321,6 +2390,10 @@ function setFantasyKPI(id, text) {
   if (el) el.textContent = text;
 }
 
+function countFantasyBioVisitorsAllTime() {
+  return countFantasyUniqueVisitors(allFantasyData, r => r.kind === 'bio');
+}
+
 function renderFantasyKPIs() {
   if (!fantasyLoaded || fantasyLoadError) {
     setFantasyKPI('fkUniqueVisitors', '—');
@@ -2328,6 +2401,7 @@ function renderFantasyKPIs() {
     setFantasyKPI('fkCR', '—');
     setFantasyKPI('fkAppUV', '—');
     setFantasyKPI('fkWebUV', '—');
+    setFantasyKPI('fkBioUV', '—');
     const sub = document.getElementById('fkCRSub');
     if (sub) sub.textContent = 'UV ÷ Views únicas';
     return;
@@ -2338,6 +2412,8 @@ function renderFantasyKPIs() {
   setFantasyKPI('fkCR', fmtFantasyCR(k.conversionRate));
   setFantasyKPI('fkAppUV', fmtNum(k.appUV));
   setFantasyKPI('fkWebUV', fmtNum(k.webUV));
+  // BIO Visitors: always all-time from allFantasyData (ignores filters)
+  setFantasyKPI('fkBioUV', fmtNum(countFantasyBioVisitorsAllTime()));
   const sub = document.getElementById('fkCRSub');
   if (sub) {
     sub.textContent = Number.isFinite(k.conversionRate)
@@ -2359,6 +2435,10 @@ function destroyFantasyBreakdownChart() {
     try { fantasyBreakdownChart.destroy(); } catch (e) {}
     fantasyBreakdownChart = null;
   }
+  if (chartInstances['chartFantasyBreakdown']) {
+    try { chartInstances['chartFantasyBreakdown'].destroy(); } catch (e) {}
+    delete chartInstances['chartFantasyBreakdown'];
+  }
 }
 
 function destroyFantasyTemporalChart() {
@@ -2369,6 +2449,17 @@ function destroyFantasyTemporalChart() {
   if (chartInstances['chartFantasyTemporal']) {
     try { chartInstances['chartFantasyTemporal'].destroy(); } catch (e) {}
     delete chartInstances['chartFantasyTemporal'];
+  }
+}
+
+function destroyFantasyPerformanceChart() {
+  if (fantasyPerformanceChart) {
+    try { fantasyPerformanceChart.destroy(); } catch (e) {}
+    fantasyPerformanceChart = null;
+  }
+  if (chartInstances['chartFantasyPerformance']) {
+    try { chartInstances['chartFantasyPerformance'].destroy(); } catch (e) {}
+    delete chartInstances['chartFantasyPerformance'];
   }
 }
 
@@ -2485,6 +2576,7 @@ function renderFantasyBreakdownChart() {
     plugins: [fantasyBarEndLabelsPlugin],
   });
   fantasyBreakdownChart.$fantasyBarExtras = rows;
+  chartInstances['chartFantasyBreakdown'] = fantasyBreakdownChart;
 }
 
 function setFantasyTempMode(mode) {
@@ -2600,6 +2692,182 @@ function renderFantasyTemporal() {
   chartInstances['chartFantasyTemporal'] = fantasyTemporalChart;
 }
 
+function buildFantasyPerformanceVideos(rows) {
+  const byVideo = new Map();
+  (rows || []).forEach(r => {
+    if (r.kind !== 'video') return;
+    const key = fantasyVideoKey(r);
+    if (!key) return;
+    let entry = byVideo.get(key);
+    if (!entry) {
+      entry = {
+        videoId: key,
+        title: r.title || '',
+        dataPublicacao: r.dataPublicacao || '',
+        views: Number.isFinite(r.views) ? r.views : null,
+        tipo: r.tipo || '',
+        creator: r.creator || '',
+        categoria: r.categoria || '',
+        link: r.link || r.urlVideo || '',
+        visitors: new Set(),
+      };
+      byVideo.set(key, entry);
+    }
+    if (r.visitorId) entry.visitors.add(r.visitorId);
+  });
+  return [...byVideo.values()].map(v => {
+    const clicks = v.visitors.size;
+    const conversion = (Number.isFinite(v.views) && v.views > 0) ? (clicks / v.views) : null;
+    return {
+      videoId: v.videoId,
+      title: v.title,
+      dataPublicacao: v.dataPublicacao,
+      views: v.views,
+      tipo: v.tipo,
+      creator: v.creator,
+      categoria: v.categoria,
+      link: v.link,
+      fantasyClicks: clicks,
+      fantasyConversion: conversion,
+    };
+  });
+}
+
+function fantasyPerfMetricVal(v) {
+  if (fantasyPerformanceMetric === 'conversion') {
+    return (v.fantasyConversion != null && Number.isFinite(v.fantasyConversion)) ? v.fantasyConversion : null;
+  }
+  return (v.fantasyClicks != null && Number.isFinite(v.fantasyClicks)) ? v.fantasyClicks : null;
+}
+
+function compareFantasyPerfVideos(a, b, mode) {
+  const av = fantasyPerfMetricVal(a);
+  const bv = fantasyPerfMetricVal(b);
+  const aNull = av === null || !Number.isFinite(av);
+  const bNull = bv === null || !Number.isFinite(bv);
+  if (!(aNull && bNull)) {
+    if (aNull) return 1;
+    if (bNull) return -1;
+    const primary = mode === 'top' ? (bv - av) : (av - bv);
+    if (primary !== 0) return primary;
+  }
+  const viewsA = Number.isFinite(a.views) ? a.views : -1;
+  const viewsB = Number.isFinite(b.views) ? b.views : -1;
+  if (viewsB !== viewsA) return viewsB - viewsA;
+  return (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
+}
+
+function getFantasyPerfTopN() {
+  const el = document.getElementById('topNInputFantasy');
+  const n = el ? parseInt(el.value, 10) : 20;
+  if (!Number.isFinite(n) || n < 1) return 20;
+  return Math.min(n, 500);
+}
+
+function setFantasyPerfMode(mode) {
+  fantasyPerfMode = (mode === 'top' || mode === 'bottom') ? mode : 'recent';
+  const bt = document.getElementById('btnFTop');
+  const bb = document.getElementById('btnFBot');
+  const br = document.getElementById('btnFRec');
+  if (bt) bt.classList.toggle('active', fantasyPerfMode === 'top');
+  if (bb) bb.classList.toggle('active', fantasyPerfMode === 'bottom');
+  if (br) br.classList.toggle('active', fantasyPerfMode === 'recent');
+  renderFantasyPerformance();
+}
+
+function toggleFantasyPerfMetricDD() {
+  const dd = document.getElementById('fantasyPerfMetricDropdown');
+  if (!dd) return;
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function setFantasyPerfMetric(metric, label) {
+  fantasyPerformanceMetric = metric === 'conversion' ? 'conversion' : 'clicks';
+  const lbl = document.getElementById('fantasyPerfMetricLabel');
+  if (lbl) lbl.textContent = label || (fantasyPerformanceMetric === 'conversion' ? '🎯 Fantasy Conversion' : '🎯 Fantasy Clicks');
+  const dd = document.getElementById('fantasyPerfMetricDropdown');
+  if (dd) dd.style.display = 'none';
+  renderFantasyPerformance();
+}
+
+function getFantasyPerfChartData() {
+  const n = getFantasyPerfTopN();
+  const videos = buildFantasyPerformanceVideos(filteredFantasy);
+  let sorted;
+  if (fantasyPerfMode === 'recent') {
+    sorted = [...videos].sort((a, b) => {
+      const ad = a.dataPublicacao || '';
+      const bd = b.dataPublicacao || '';
+      if (!ad && !bd) return 0;
+      if (!ad) return 1;
+      if (!bd) return -1;
+      return bd.localeCompare(ad);
+    });
+  } else {
+    sorted = [...videos].sort((a, b) => compareFantasyPerfVideos(a, b, fantasyPerfMode));
+  }
+  const topN = sorted.slice(0, n);
+  const labels = topN.map(r => truncateTitle(r.title, 22));
+  const fullLabels = topN.map(r => r.title);
+  const values = topN.map(fantasyPerfMetricVal);
+  const barColors = topN.map(r => {
+    const c = CAT_COLORS[r.categoria || '(Sem categoria)'] || '#2563eb';
+    return c + 'cc';
+  });
+  const catNames = topN.map(r => r.categoria || '(Sem categoria)');
+  const barLinks = topN.map(r => r.link || '');
+
+  // Baseline: vídeos Fantasy com Data Publicação em 2026 (independente dos filtros do usuário)
+  const baseRows = allFantasyData.filter(r =>
+    r.kind === 'video' && r.dataPublicacao && r.dataPublicacao >= '2026-01-01' && r.dataPublicacao <= '2026-12-31'
+  );
+  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : allFantasyData);
+  const baseVals = baseVideos.map(fantasyPerfMetricVal);
+  const meanVal = mean(baseVals);
+  const medianVal = median(baseVals);
+
+  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows: topN };
+}
+
+function renderFantasyPerformance() {
+  const el = document.getElementById('chartFantasyPerformance');
+  if (!el) return;
+  destroyFantasyPerformanceChart();
+  if (!fantasyLoaded || fantasyLoadError) return;
+
+  const isConv = fantasyPerformanceMetric === 'conversion';
+  const yLabel = isConv ? 'Fantasy Conversion' : 'Fantasy Clicks';
+  const tooltipFmt = v => {
+    if (v === null || v === undefined || !Number.isFinite(v)) return '—';
+    return isConv ? fmtFantasyCR(v) : fmtNum(v);
+  };
+  const tickFmt = v => {
+    if (v === null || v === undefined || !Number.isFinite(v)) return '';
+    return isConv ? fmtFantasyCR(v) : fmtNum(v);
+  };
+
+  const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows } = getFantasyPerfChartData();
+  if (!labels.length) return;
+
+  const cfg = buildBarConfig(labels, values, meanVal, medianVal, yLabel, tickFmt, tooltipFmt, fullLabels, barColors, catNames, barLinks);
+  cfg.options.plugins.tooltip.callbacks.label = ctx => {
+    const row = barRows[ctx.dataIndex] || {};
+    const fmtDate = d => {
+      if (!d || d.length < 10) return '—';
+      return `${d.slice(8, 10)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
+    };
+    return [
+      ` Fantasy Clicks: ${fmtNum(row.fantasyClicks || 0)}`,
+      ` Fantasy Conversion: ${fmtFantasyCR(row.fantasyConversion)}`,
+      ` Views: ${(row.views == null || !Number.isFinite(row.views)) ? '—' : fmtNum(row.views)}`,
+      ` Data Publicação: ${fmtDate(row.dataPublicacao)}`,
+    ];
+  };
+
+  fantasyPerformanceChart = new Chart(el, cfg);
+  chartInstances['chartFantasyPerformance'] = fantasyPerformanceChart;
+}
+
 function renderFantasyDashboard() {
   const statusEl = document.getElementById('fantasyStatus');
   const dashEl = document.getElementById('fantasyDashboard');
@@ -2611,6 +2879,7 @@ function renderFantasyDashboard() {
     statusEl.innerHTML = `<h2>Fantasy</h2><p class="fantasy-error">Não foi possível carregar os dados de Fantasy.</p>`;
     destroyFantasyBreakdownChart();
     destroyFantasyTemporalChart();
+    destroyFantasyPerformanceChart();
     return;
   }
   if (!fantasyLoaded) {
@@ -2619,6 +2888,7 @@ function renderFantasyDashboard() {
     statusEl.innerHTML = `<h2>Fantasy</h2><p>Carregando dados Fantasy...</p>`;
     destroyFantasyBreakdownChart();
     destroyFantasyTemporalChart();
+    destroyFantasyPerformanceChart();
     return;
   }
 
@@ -2629,6 +2899,7 @@ function renderFantasyDashboard() {
   renderFantasyKPIs();
   renderFantasyBreakdownChart();
   renderFantasyTemporal();
+  renderFantasyPerformance();
 }
 
 function applyFantasyFilters() {
