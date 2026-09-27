@@ -839,31 +839,32 @@
     line-height: 1.3;
     flex-shrink: 0;
   }
+  /* Fantasy KPIs: 5 cols — row1 = 5 visitors; row2 = 3 conversions aligned under cols 1–3 */
   #fantasyDashboard .fantasy-kpi-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     margin-bottom: 24px;
   }
-  #fantasyDashboard .fantasy-kpi-row {
-    display: grid;
-    gap: 10px;
-  }
-  #fantasyDashboard .fantasy-kpi-row-visitors {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  #fantasyDashboard .fantasy-kpi-row-conversion {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (max-width: 900px) {
-    #fantasyDashboard .fantasy-kpi-row-visitors,
-    #fantasyDashboard .fantasy-kpi-row-conversion {
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(1) { grid-column: 1; grid-row: 1; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(2) { grid-column: 2; grid-row: 1; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(3) { grid-column: 3; grid-row: 1; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(4) { grid-column: 4; grid-row: 1; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(5) { grid-column: 5; grid-row: 1; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(6) { grid-column: 1; grid-row: 2; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(7) { grid-column: 2; grid-row: 2; }
+  #fantasyDashboard .fantasy-kpi-grid > .kpi-card:nth-child(8) { grid-column: 3; grid-row: 2; }
+  @media (max-width: 1100px) {
+    #fantasyDashboard .fantasy-kpi-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+    #fantasyDashboard .fantasy-kpi-grid > .kpi-card {
+      grid-column: auto !important;
+      grid-row: auto !important;
     }
   }
   @media (max-width: 520px) {
-    #fantasyDashboard .fantasy-kpi-row-visitors,
-    #fantasyDashboard .fantasy-kpi-row-conversion {
+    #fantasyDashboard .fantasy-kpi-grid {
       grid-template-columns: 1fr;
     }
   }
@@ -1769,55 +1770,59 @@
       <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Fantasy · KPIs</h2>
     </div>
-    <p class="section-desc">Linha 1: audiência (Total/BIO all-time; LF/Shorts Visitors via dados.csv). Linha 2: conversão (dados.csv). Filtros compartilhados exceto Tipo; Total e BIO ignoram filtros.</p>
+    <p class="section-desc">100% fantasy.csv. Total / LIVE / BIO = ALL-TIME. LF/Shorts Visitors e Conversions respeitam Data/Semana/Categoria/Creator/Título e ignoram o filtro Formato.</p>
     <div class="fantasy-kpi-grid">
-      <div class="fantasy-kpi-row fantasy-kpi-row-visitors">
-        <div class="kpi-card accent" title="All-time. COUNT DISTINCT visitorId em allFantasyData.">
-          <div class="fantasy-kpi-label-row">
-            <div class="kpi-label">TOTAL UNIQUE VISITORS</div>
-            <span class="fantasy-kpi-alltime">ALL-TIME</span>
-          </div>
-          <div class="kpi-value" id="fkTotalUV">—</div>
-          <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
+      <div class="kpi-card accent" title="All-time. COUNT DISTINCT visitorId em allFantasyData.">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">TOTAL UNIQUE VISITORS</div>
+          <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">LONG FORM VISITORS</div>
-          <div class="kpi-value" id="fkLfClicks">—</div>
-          <div class="kpi-sub">Soma Fantasy Clicks · LF · dados.csv</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">SHORTS VISITORS</div>
-          <div class="kpi-value" id="fkShClicks">—</div>
-          <div class="kpi-sub">Soma Fantasy Clicks · Shorts · dados.csv</div>
-        </div>
-        <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
-          <div class="fantasy-kpi-label-row">
-            <div class="kpi-label">BIO VISITORS</div>
-            <span class="fantasy-kpi-alltime">ALL-TIME</span>
-          </div>
-          <div class="kpi-value" id="fkBioUV">—</div>
-          <div class="kpi-sub">Visitantes distintos · BIO</div>
-        </div>
+        <div class="kpi-value" id="fkTotalUV">—</div>
+        <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
       </div>
-      <div class="fantasy-kpi-row fantasy-kpi-row-conversion">
-        <div class="kpi-card accent">
-          <div class="fantasy-kpi-label-row">
-            <div class="kpi-label">FANTASY CONVERSION</div>
-            <span class="fantasy-info" title="SUM Fantasy Clicks ÷ SUM Views dos vídeos elegíveis (LF+Shorts). Ignora filtro Tipo. Fonte: dados.csv.">i</span>
-          </div>
-          <div class="kpi-value" id="fkMainConv">—</div>
-          <div class="kpi-sub">LF + Shorts · dados.csv</div>
+      <div class="kpi-card">
+        <div class="kpi-label">LONG FORM VISITORS</div>
+        <div class="kpi-value" id="fkLfUV">—</div>
+        <div class="kpi-sub">DISTINCT UV · Formato Long Form</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">SHORTS VISITORS</div>
+        <div class="kpi-value" id="fkShUV">—</div>
+        <div class="kpi-sub">DISTINCT UV · Formato Shorts</div>
+      </div>
+      <div class="kpi-card" title="All-time. LIVE atual sem Data Publicação — não atribuível ao recorte temporal.">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">LIVE VISITORS</div>
+          <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">LONG FORM CONVERSION</div>
-          <div class="kpi-value" id="fkLfConv">—</div>
-          <div class="kpi-sub">Clicks ÷ Views · LF</div>
+        <div class="kpi-value" id="fkLiveUV">—</div>
+        <div class="kpi-sub">DISTINCT UV · Formato LIVE</div>
+      </div>
+      <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">BIO VISITORS</div>
+          <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">SHORTS CONVERSION</div>
-          <div class="kpi-value" id="fkShConv">—</div>
-          <div class="kpi-sub">Clicks ÷ Views · Shorts</div>
+        <div class="kpi-value" id="fkBioUV">—</div>
+        <div class="kpi-sub">DISTINCT UV · BIO</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">FANTASY CONVERSION</div>
+          <span class="fantasy-info" title="DISTINCT UV de vídeos elegíveis ÷ SUM Views 1× por videoId. Fonte: fantasy.csv. Ignora filtro Formato.">i</span>
         </div>
+        <div class="kpi-value" id="fkConv">—</div>
+        <div class="kpi-sub">Vídeos elegíveis · fantasy.csv</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">LONG FORM CONVERSION</div>
+        <div class="kpi-value" id="fkLfConv">—</div>
+        <div class="kpi-sub">UV elegíveis ÷ Views únicas · LF</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">SHORTS CONVERSION</div>
+        <div class="kpi-value" id="fkShConv">—</div>
+        <div class="kpi-sub">UV elegíveis ÷ Views únicas · Shorts</div>
       </div>
     </div>
 
@@ -1834,7 +1839,7 @@
           <select id="fantasyBreakdownSelect" onchange="setFantasyBreakdownDimension(this.value)">
             <option value="creator" selected>Creator</option>
             <option value="categoria">Categoria</option>
-            <option value="tipo">Tipo</option>
+            <option value="formato">Formato</option>
             <option value="destino">Destino</option>
             <option value="dispositivo">Dispositivo</option>
           </select>
@@ -2275,6 +2280,30 @@ function fantasyVideoKey(r) {
   return id || '';
 }
 
+/**
+ * Classificador único de formato na Fantasy (fantasy.csv).
+ * Formato é fonte principal; Tipo só como fallback se kind=video e Formato vazio.
+ */
+function getFantasyFormat(r) {
+  if (!r) return 'Não identificado';
+  if (r.kind === 'bio') return 'BIO';
+
+  const fmt = String(r.formato || '').trim().toLowerCase();
+  if (fmt === 'longform') return 'Long Form';
+  if (fmt === 'shorts') return 'Shorts';
+  if (fmt === 'live') return 'LIVE';
+  if (fmt === 'bio') return 'BIO';
+
+  if (!fmt && r.kind === 'video') {
+    const t = String(r.tipo || '').trim().toLowerCase();
+    if (t.includes('long')) return 'Long Form';
+    if (t.includes('short')) return 'Shorts';
+    if (t.includes('live')) return 'LIVE';
+  }
+
+  return 'Não identificado';
+}
+
 function getFantasyUniqueVideoStats(rows) {
   const byVideo = new Map();
   (rows || []).forEach(r => {
@@ -2338,10 +2367,13 @@ function getFantasyDimensionLabel(r, dimension) {
     const d = (r.dispositivo || '').trim();
     return d || 'Não identificado';
   }
-  // creator / categoria / tipo
+  if (dimension === 'formato' || dimension === 'tipo') {
+    // 'tipo' aceito só como alias legado do dropdown antigo
+    return getFantasyFormat(r);
+  }
+  // creator / categoria
   const raw = dimension === 'creator' ? (r.creator || '').trim()
-    : dimension === 'categoria' ? (r.categoria || '').trim()
-    : (r.tipo || '').trim();
+    : (r.categoria || '').trim();
   if (raw) return raw;
   if (r.kind === 'bio') return 'BIO';
   return 'Não identificado';
@@ -2380,44 +2412,83 @@ function setFantasyKPI(id, text) {
   if (el) el.textContent = text;
 }
 
-function countFantasyBioVisitorsAllTime() {
-  return countFantasyUniqueVisitors(allFantasyData, r => r.kind === 'bio');
-}
-
 function countFantasyTotalVisitorsAllTime() {
   return countFantasyUniqueVisitors(allFantasyData);
 }
 
+function countFantasyFormatVisitorsAllTime(formatLabel) {
+  return countFantasyUniqueVisitors(allFantasyData, r => getFantasyFormat(r) === formatLabel);
+}
+
 /**
- * Rows de dados.csv para KPIs Fantasy de conteúdo.
- * Respeita Data / Semana / Categoria / Creator / Título.
- * IGNORA filtro Tipo e ranges numéricos (exceção só destes cards).
+ * Fantasy rows filtradas por Data/Semana/Categoria/Creator/Título.
+ * IGNORA o filtro sticky Formato/Tipo (para cards comparativos LF×Shorts).
+ * Não altera filteredFantasy.
  */
-function getFantasyMainRowsIgnoringTipo() {
+function getFantasyRowsIgnoringFormatFilter() {
+  if (!fantasyLoaded || fantasyLoadError) return [];
   const creator = (document.getElementById('filterCreator') || {}).value || '';
   const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
   const dateEnd = (document.getElementById('filterDateEnd') || {}).value || '';
-  return (allData || []).filter(r => {
-    if (creator && r.creator !== creator) return false;
-    if (!catAllSelected) {
-      if (selectedCats.size === 0) return false;
-      if (!selectedCats.has(r.categoria || '(Sem categoria)')) return false;
-    }
-    if (dateStart && (!r.dataPublicacao || r.dataPublicacao < dateStart)) return false;
-    if (dateEnd && (!r.dataPublicacao || r.dataPublicacao > dateEnd)) return false;
-    if (!titleAllSelected) {
-      if (selectedTitles.size === 0) return false;
-      if (!r.title || !selectedTitles.has(r.title)) return false;
+  return (allFantasyData || []).filter(r => {
+    if (dateStart || dateEnd) {
+      if (!r.dataPublicacao) return false;
+      if (dateStart && r.dataPublicacao < dateStart) return false;
+      if (dateEnd && r.dataPublicacao > dateEnd) return false;
     }
     if (!weekAllSelected) {
       if (selectedWeeks.size === 0) return false;
       if (!r.semana || !selectedWeeks.has(r.semana)) return false;
     }
+    if (!catAllSelected) {
+      if (selectedCats.size === 0) return false;
+      const cat = r.categoria || '(Sem categoria)';
+      if (!selectedCats.has(cat)) return false;
+    }
+    if (creator) {
+      if (!r.creator || r.creator !== creator) return false;
+    }
+    if (!titleAllSelected) {
+      if (selectedTitles.size === 0) return false;
+      if (!r.title || !selectedTitles.has(r.title)) return false;
+    }
     return true;
   });
 }
 
-function fmtFantasyKpiClicks(v) {
+/**
+ * Conversion 100% fantasy.csv:
+ * DISTINCT visitors de vídeos elegíveis / SUM Views 1× por videoId elegível.
+ * Elegível: kind=video + videoId válido + Views finitas > 0.
+ */
+function computeFantasyConversionFromRows(rows) {
+  const byVideo = new Map();
+  (rows || []).forEach(r => {
+    if (r.kind !== 'video') return;
+    const key = fantasyVideoKey(r);
+    if (!key) return;
+    let entry = byVideo.get(key);
+    if (!entry) {
+      entry = {
+        views: Number.isFinite(r.views) ? r.views : null,
+        visitors: new Set(),
+      };
+      byVideo.set(key, entry);
+    }
+    if (r.visitorId) entry.visitors.add(r.visitorId);
+  });
+  let sumViews = 0;
+  const uv = new Set();
+  byVideo.forEach(v => {
+    if (!Number.isFinite(v.views) || v.views <= 0) return;
+    sumViews += v.views;
+    v.visitors.forEach(id => uv.add(id));
+  });
+  if (sumViews <= 0) return null;
+  return uv.size / sumViews;
+}
+
+function fmtFantasyKpiUV(v) {
   return v == null || !Number.isFinite(v) ? '—' : fmtNum(v);
 }
 
@@ -2425,37 +2496,45 @@ function fmtFantasyKpiConv(v) {
   return v == null || !Number.isFinite(v) ? '—' : fmtFantasyCR(v);
 }
 
-function renderFantasyKPIs() {
-  // fantasy.csv: Total UV + BIO (ALL-TIME)
-  if (!fantasyLoaded || fantasyLoadError) {
-    setFantasyKPI('fkTotalUV', '—');
-    setFantasyKPI('fkBioUV', '—');
-  } else {
-    setFantasyKPI('fkTotalUV', fmtNum(countFantasyTotalVisitorsAllTime()));
-    setFantasyKPI('fkBioUV', fmtNum(countFantasyBioVisitorsAllTime()));
-  }
+function matchesFantasyFormatFilter(r, filterValue) {
+  if (!filterValue) return true;
+  const fmt = getFantasyFormat(r);
+  if (filterValue === 'long') return fmt === 'Long Form';
+  if (filterValue === 'shorts') return fmt === 'Shorts';
+  if (filterValue === 'live') return fmt === 'LIVE';
+  if (filterValue === 'bio') return fmt === 'BIO';
+  if (filterValue === 'unidentified') return fmt === 'Não identificado';
+  return true;
+}
 
-  // dados.csv: Visitors (ex-Clicks) + Conversions — ignoram Tipo
-  if (!allData || !allData.length) {
-    setFantasyKPI('fkMainConv', '—');
-    setFantasyKPI('fkLfClicks', '—');
-    setFantasyKPI('fkLfConv', '—');
-    setFantasyKPI('fkShClicks', '—');
-    setFantasyKPI('fkShConv', '—');
+function renderFantasyKPIs() {
+  if (!fantasyLoaded || fantasyLoadError) {
+    ['fkTotalUV', 'fkLfUV', 'fkShUV', 'fkLiveUV', 'fkBioUV', 'fkConv', 'fkLfConv', 'fkShConv']
+      .forEach(id => setFantasyKPI(id, '—'));
     return;
   }
-  const combined = getFantasyMainRowsIgnoringTipo();
-  const lfRows = combined.filter(isLongForm);
-  const shRows = combined.filter(isShortForm);
-  setFantasyKPI('fkMainConv', fmtFantasyKpiConv(aggregateFantasyConversion(combined)));
-  setFantasyKPI('fkLfClicks', fmtFantasyKpiClicks(sumFantasyClicks(lfRows)));
-  setFantasyKPI('fkLfConv', fmtFantasyKpiConv(aggregateFantasyConversion(lfRows)));
-  setFantasyKPI('fkShClicks', fmtFantasyKpiClicks(sumFantasyClicks(shRows)));
-  setFantasyKPI('fkShConv', fmtFantasyKpiConv(aggregateFantasyConversion(shRows)));
+
+  // ALL-TIME (ignoram filtros)
+  setFantasyKPI('fkTotalUV', fmtFantasyKpiUV(countFantasyTotalVisitorsAllTime()));
+  setFantasyKPI('fkLiveUV', fmtFantasyKpiUV(countFantasyFormatVisitorsAllTime('LIVE')));
+  setFantasyKPI('fkBioUV', fmtFantasyKpiUV(countFantasyFormatVisitorsAllTime('BIO')));
+
+  // Filtrado compartilhado, sem Formato/Tipo
+  const base = getFantasyRowsIgnoringFormatFilter();
+  const lfRows = base.filter(r => getFantasyFormat(r) === 'Long Form');
+  const shRows = base.filter(r => getFantasyFormat(r) === 'Shorts');
+
+  setFantasyKPI('fkLfUV', fmtFantasyKpiUV(countFantasyUniqueVisitors(lfRows)));
+  setFantasyKPI('fkShUV', fmtFantasyKpiUV(countFantasyUniqueVisitors(shRows)));
+  setFantasyKPI('fkConv', fmtFantasyKpiConv(computeFantasyConversionFromRows(base)));
+  setFantasyKPI('fkLfConv', fmtFantasyKpiConv(computeFantasyConversionFromRows(lfRows)));
+  setFantasyKPI('fkShConv', fmtFantasyKpiConv(computeFantasyConversionFromRows(shRows)));
 }
 
 function setFantasyBreakdownDimension(dim) {
-  const allowed = ['creator', 'categoria', 'tipo', 'destino', 'dispositivo'];
+  // 'tipo' → 'formato' (migração do dropdown antigo)
+  if (dim === 'tipo') dim = 'formato';
+  const allowed = ['creator', 'categoria', 'formato', 'destino', 'dispositivo'];
   fantasyBreakdownDimension = allowed.includes(dim) ? dim : 'creator';
   const sel = document.getElementById('fantasyBreakdownSelect');
   if (sel && sel.value !== fantasyBreakdownDimension) sel.value = fantasyBreakdownDimension;
@@ -2926,6 +3005,7 @@ function renderFantasyDashboard() {
 
   statusEl.hidden = true;
   dashEl.hidden = false;
+  if (fantasyBreakdownDimension === 'tipo') fantasyBreakdownDimension = 'formato';
   const sel = document.getElementById('fantasyBreakdownSelect');
   if (sel) sel.value = fantasyBreakdownDimension;
   renderFantasyKPIs();
@@ -2963,8 +3043,8 @@ function applyFantasyFilters() {
     if (creator) {
       if (!r.creator || r.creator !== creator) return false;
     }
-    if (tipo === 'long' && !(r.tipo || '').toLowerCase().includes('long')) return false;
-    if (tipo === 'shorts' && !(r.tipo || '').toLowerCase().includes('short')) return false;
+    // Fantasy: filtro sticky usa getFantasyFormat (não r.tipo)
+    if (tipo && !matchesFantasyFormatFilter(r, tipo)) return false;
     if (!titleAllSelected) {
       if (selectedTitles.size === 0) return false;
       if (!r.title || !selectedTitles.has(r.title)) return false;
@@ -3266,14 +3346,43 @@ function rebuildTipoOptions() {
   const sel = document.getElementById('filterTipo');
   if (!sel) return;
   const current = sel.value;
+
+  // Fantasy: opções por getFantasyFormat(); Main: Tipo de dados.csv (long/shorts)
+  if (activeTab === 'fantasy' && isFantasyTabEnabled()) {
+    const present = new Set((allFantasyData || []).map(getFantasyFormat));
+    const order = [
+      { value: 'long', label: 'Long Form', fmt: 'Long Form' },
+      { value: 'shorts', label: 'Shorts', fmt: 'Shorts' },
+      { value: 'live', label: 'LIVE', fmt: 'LIVE' },
+      { value: 'bio', label: 'BIO', fmt: 'BIO' },
+      { value: 'unidentified', label: 'Não identificado', fmt: 'Não identificado' },
+    ];
+    sel.innerHTML = '<option value="">Todos os formatos</option>';
+    const shown = new Set();
+    order.forEach(({ value, label, fmt }) => {
+      if (!present.has(fmt)) return;
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = label;
+      sel.appendChild(opt);
+      shown.add(value);
+    });
+    if (current && !shown.has(current) && current !== '') {
+      const ghost = document.createElement('option');
+      ghost.value = current;
+      ghost.textContent = `${current} (indisponível)`;
+      ghost.className = 'filter-ghost-opt';
+      sel.appendChild(ghost);
+    }
+    sel.value = current;
+    return;
+  }
+
   const rows = getFilterSourceRows();
   const hasLong = rows.some(r => (r.tipo || '').toLowerCase().includes('long'));
   const hasShort = rows.some(r => (r.tipo || '').toLowerCase().includes('short'));
-
-  // Main always exposes Long Form / Shorts (current product semantics).
-  // Fantasy exposes only types present in fantasy.csv (still using long/shorts values).
-  const showLong = activeTab !== 'fantasy' || hasLong;
-  const showShort = activeTab !== 'fantasy' || hasShort;
+  const showLong = hasLong;
+  const showShort = hasShort;
 
   sel.innerHTML = '<option value="">Todos os tipos</option>';
   if (showLong) {
@@ -3288,17 +3397,25 @@ function rebuildTipoOptions() {
     opt.textContent = 'Shorts';
     sel.appendChild(opt);
   }
+  // Fantasy-only selections become ghosts on Main
+  const fantasyOnly = ['live', 'bio', 'unidentified'];
   if (current === 'long' && !showLong) {
     const ghost = document.createElement('option');
     ghost.value = 'long';
     ghost.textContent = 'Long Form (indisponível)';
     ghost.className = 'filter-ghost-opt';
     sel.appendChild(ghost);
-  }
-  if (current === 'shorts' && !showShort) {
+  } else if (current === 'shorts' && !showShort) {
     const ghost = document.createElement('option');
     ghost.value = 'shorts';
     ghost.textContent = 'Shorts (indisponível)';
+    ghost.className = 'filter-ghost-opt';
+    sel.appendChild(ghost);
+  } else if (fantasyOnly.includes(current)) {
+    const labels = { live: 'LIVE', bio: 'BIO', unidentified: 'Não identificado' };
+    const ghost = document.createElement('option');
+    ghost.value = current;
+    ghost.textContent = `${labels[current] || current} (indisponível)`;
     ghost.className = 'filter-ghost-opt';
     sel.appendChild(ghost);
   }

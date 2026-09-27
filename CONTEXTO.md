@@ -1,11 +1,15 @@
 # Futebol Máximo — Dashboard de Performance YouTube
 
 ## O que é esse projeto
-Dashboard single-file (tudo em um único `index.html`) que carrega um `dados.csv`
-e renderiza gráficos e tabelas de análise de performance de vídeos do YouTube.
-Hospedado no GitHub Pages. Desenvolvido ao longo de meses de iteração.
+Dashboard single-file (tudo em um único `index.html`) que carrega CSVs e renderiza
+gráficos/tabelas de performance YouTube. Hospedado no GitHub Pages.
 
-A aba **Fantasy** (pipeline independente via `fantasy.csv`) está **ATIVA**.
+**Arquitetura de dados (regra atual):**
+- **Main** (Long Form · Shorts · Feedbacks · Base · VELHO) → `dados.csv` / `allData`
+- **Aba Fantasy** → **100% `fantasy.csv`** / `allFantasyData` / `filteredFantasy`
+
+Nenhum KPI, Breakdown, Temporal ou Performance da aba Fantasy usa `dados.csv` / `allData`
+para cálculo. Os datasets **não** são concatenados.
 
 ## Regra mais importante
 NUNCA separar o `index.html` em múltiplos arquivos.
@@ -15,8 +19,8 @@ Tudo — HTML, CSS, JavaScript — deve permanecer em um único arquivo.
 
 ## Arquivos do projeto
 - `index.html` — dashboard completo (HTML/CSS/JS em um único arquivo)
-- `dados.csv` — base de dados dos vídeos (**2369** registros)
-- `fantasy.csv` — interações Fantasy (**3499** registros; carregado quando `ENABLE_FANTASY_TAB = true`)
+- `dados.csv` — base Main (**2377** registros)
+- `fantasy.csv` — interações Fantasy (**3951** registros; carregado com `ENABLE_FANTASY_TAB = true`)
 - `CONTEXTO.md` — este arquivo
 
 ---
@@ -32,7 +36,7 @@ Link, Gancho, Fantasy Clicks, Conversão Fantasy
 ```
 
 ### Detalhes importantes do CSV
-- **Tipo**: "Long Form" ou "Shorts"
+- **Tipo** (dados.csv): formato do conteúdo — "Long Form" / "Shorts" (/ LIVE quando existir no Main)
 - **Gancho**: decimal puro (ex: 0.74 = 74%) — só Long Form, ~538 vídeos preenchidos
 - **Fantasy Clicks**: `number | null` — vazio no CSV → `null` (NÃO zero)
 - **Conversão Fantasy**: decimal `0–1 | null` — ex: `0.02177` = 2,177%; vazio → `null` (NÃO zero)
@@ -41,11 +45,11 @@ Link, Gancho, Fantasy Clicks, Conversão Fantasy
 
 ### Contagens atuais (dados.csv) — baseline
 ```
-allData = 2369
+allData = 2377
 ```
 
 > **Histórico (não usar como baseline atual):**  
-> `allData = 2336` · Long Form 1161 · Shorts 1175 · Fantasy Clicks preenchidos 159 · default 2026 “vídeos com Fantasy = 122 / 1586 clicks”.
+> `allData = 2369` · `2336` · Long Form 1161 · Shorts 1175 · Fantasy Clicks preenchidos 159 · default 2026 “122 / 1586 clicks”.
 
 ---
 
@@ -55,11 +59,10 @@ allData = 2369
 3. **Feedbacks** — Classificação automática Long Form e Shorts
 4. **Base de Dados** — Tabela completa com filtros por coluna
 5. **VELHO** — Galeria de cards (main dataset)
-6. **Fantasy** — **ATIVA** (`ENABLE_FANTASY_TAB = true`)  
-   Seções: KPIs · Unique Visitors por Granularidade · Evolução Temporal · Gráficos de Performance  
-   (pipeline isolado a partir de `fantasy.csv`; ver seção Fantasy)
+6. **Fantasy** — **ATIVA** (`ENABLE_FANTASY_TAB = true`) · **100% fantasy.csv**  
+   Seções: KPIs · Unique Visitors por Granularidade · Evolução Temporal · Gráficos de Performance
 
-> **Histórico:** a aba Fantasy já esteve dormente com `ENABLE_FANTASY_TAB = false` (código preservado, sem fetch). Isso **não** é o estado atual.
+> **Histórico:** a aba Fantasy já esteve dormente com `ENABLE_FANTASY_TAB = false`. Isso **não** é o estado atual.
 
 ---
 
@@ -70,9 +73,12 @@ filteredData     → Long Form filtrados pelos filtros globais
 filteredLong     → mesmo que filteredData (alias)
 filteredShorts   → Shorts filtrados pelos filtros globais
 filteredAll      → todos os tipos (usado só na Base de Dados)
+
+allFantasyData   → todas as interações de fantasy.csv
+filteredFantasy  → fantasy.csv após filtros compartilhados (pipeline Fantasy)
 ```
 
-Campos Fantasy no Main (por vídeo, vindos de `dados.csv` — **não confundir** com Fantasy V1 / BIO Visitors):
+Campos Fantasy no Main (por vídeo, vindos de `dados.csv` — **separados** da aba Fantasy):
 ```
 r.fantasyClicks      → number | null
 r.fantasyConversion  → number (0–1) | null
@@ -83,14 +89,14 @@ r.fantasyConversion  → number (0–1) | null
 ## Fantasy Clicks + Conversão Fantasy (Main)
 
 Métricas do **Main** vindas de colunas em `dados.csv`.  
-**Não** vêm de `fantasy.csv`. **Não** são o KPI BIO Visitors nem o pipeline Fantasy V1.
+**Não** vêm de `fantasy.csv`. **Não** são os KPIs da aba Fantasy.
 
 ### Regras de null
 - Sem valor no CSV → `null` → UI = `—`
 - **Nunca** transformar `null` em `0`
 - Ausência de tracking ≠ “zero clicks confirmados”
 
-### Agregações (helpers)
+### Agregações (helpers — Main)
 ```
 sumFantasyClicks(rows)
   → SUM apenas dos fantasyClicks preenchidos
@@ -102,42 +108,32 @@ aggregateFantasyConversion(rows)
   → se nenhum elegível ou denom ≤ 0: null
 
 fmtFantasyCR(rate)  → formata decimal 0–1 como % (preserva CRs muito pequenos)
+                    → também usado pelas Conversions da aba Fantasy
 ```
 
 ### Por vídeo
 Usar diretamente `r.fantasyClicks` e `r.fantasyConversion` (Performance, VELHO card, Base).
 
 ### Onde aparecem no Main
-**Long Form**
-- KPI Fantasy Clicks + Fantasy Conversion
+**Long Form / Shorts**
 - Funil de Engajamento — **outcome/rodapé** (não é etapa do funil SVG)
 - Evolução Temporal (dropdown)
 - Performance (dropdown)
-- Heatmap Indicadores
-
-**Shorts**
-- KPI Fantasy Clicks + Fantasy Conversion
-- Funil — outcome/rodapé
-- Evolução Temporal
-- Performance
-- Heatmap Indicadores
+- Heatmap Indicadores  
+- *(Cards KPI Fantasy Clicks / Fantasy Conversion foram removidos do topo LF/Shorts; métricas permanecem nas superfícies acima.)*
 
 **VELHO**
 - Card — 1ª linha: Views | Outlier | Fantasy Clicks | Fantasy Conversion  
-  (2ª linha Long Form/Shorts permanece a antiga)
 - Sort: Fantasy Clicks DESC · Fantasy Conversion DESC (nulls no fim)
-- **Não afetado** pelas mudanças da aba Fantasy / remoção do Ranking Fantasy
 
 **Base de Dados**
 - Colunas Fantasy Clicks + Fantasy Conversion (após Views)
 - Display: inteiro / `fmtFantasyCR()` · null = `—`
-- Sort numérico no valor real · nulls no fim
 
 ### O que NÃO existe
 - Range filters de Fantasy Clicks / Conversão Fantasy
 - Fantasy nas regras de Feedback Automático
 - Destino / Dispositivo no Main
-- Aba temporal Fantasy separada no Main
 
 ### Referências de agregação Main (validação histórica — revalidar se CSV mudar)
 ```
@@ -150,60 +146,45 @@ Default 2026 — Shorts:
   Fantasy Clicks = 289
   Views elegíveis = 54.900.978
   Conversion ≈ 0,00053%
-
-All-time — Long Form:
-  84 vídeos / 1370 clicks / denom 10.180.334 / CR ≈ 0,013457%
-
-All-time — Shorts:
-  75 vídeos / 404 clicks / denom 116.013.175 / CR ≈ 0,000348%
 ```
 
 ---
 
-## Filtros globais (sticky, afetam todas as abas)
-Criador | Categoria | Tipo | Data Início | Data Fim | Semana | Título
+## Filtros globais (sticky)
+Criador | Categoria | Tipo/Formato | Data Início | Data Fim | Semana | Título
 
 - **Default**: Data Início = 01/01/ano atual, Data Fim = hoje
-- **Limpar**: reseta para o mesmo default (não para todo o histórico)
-- Botão 👁️ ao lado de Limpar: expande/recolhe todas as seções
-- **Tipo no Main**: continua afetando Base / VELHO conforme a lógica existente (não redefine Long Form / Shorts)
-- **Tipo na Fantasy**: opções atuais = Todos | Long Form | Shorts. **BIO não é opção** no filtro Tipo (conhecido; sem correção nesta etapa)
-- **Ranges numéricos** (Views, Outlier, CTR, Avg View Duration, Gancho, Avg Viewed): afetam o pipeline Main; na aba Fantasy ficam disabled e são ignorados
-- **Sem** ranges Fantasy no Main
+- **Limpar**: reseta para o mesmo default
+- Botão 👁️: expande/recolhe todas as seções
+- **Tipo no Main**: `dados.csv` · Long Form / Shorts · afeta Base / VELHO
+- **Formato na Fantasy**: mesmo controle sticky, mas filtra via `getFantasyFormat(r)`  
+  Opções: Todos | Long Form | Shorts | LIVE | BIO | Não identificado
+- **Ranges numéricos**: só Main; na Fantasy ficam disabled e são ignorados
 
-### Filtro Semana — UX atual (multiselect)
+### Filtro Semana — UX (multiselect)
 - Dropdown **permanece aberto** durante a multiseleção.
-- **Não fecha** ao marcar semana, desmarcar semana ou clicar “Todas”.
-- **Fecha** ao clicar fora / interagir com outro dropdown (comportamento atual).
-- Semântica inalterada: `weekAllSelected` · `selectedWeeks` · Apply · Clear.
+- **Não fecha** ao marcar/desmarcar semana ou “Todas”.
+- **Fecha** ao clicar fora / outro dropdown.
+- Semântica: `weekAllSelected` · `selectedWeeks` · Apply · Clear.
 
 ---
 
 ## Seções colapsáveis
-Todas as seções têm `onclick="toggleSection(this)"` no `.section-header`.
-- Default: todas expandidas
-- `expandAllSections()` / `collapseAllSections()` controladas pelo botão 👁️
-- `section-desc` (descrição) sempre visível mesmo quando recolhida
-- **Fantasy**: as 4 seções usam o **mesmo** padrão visual/comportamental de Long Form e Shorts (`section-header` · `section-toggle` · `toggleSection()`), com estado **independente** por seção
-- Charts Fantasy registrados em `chartInstances` para `resize()` ao reabrir
+- `onclick="toggleSection(this)"` no `.section-header`
+- Default: expandidas · botão 👁️ · `section-desc` sempre visível
+- **Fantasy**: 4 seções com estado **independente**; charts em `chartInstances` para `resize()` ao reabrir
 
 ---
 
 ## Gráficos (Chart.js)
-- Instâncias guardadas em `chartInstances{}` — sempre destruir antes de recriar
-- `destroyChart(id)` antes de `new Chart(...)`
-- Cores por categoria em `CAT_COLORS{}`
-- Fantasy: `fantasyBreakdownChart` · `fantasyTemporalChart` · `fantasyPerformanceChart` (destroy próprio + registro em `chartInstances`)
+- `chartInstances{}` — destruir antes de recriar
+- Fantasy: `fantasyBreakdownChart` · `fantasyTemporalChart` · `fantasyPerformanceChart`
 
 ---
 
-## KPI Cards — Long Form
-**Linhas principais**: Views | CTR% | Avg View Duration | Avg Viewed % | Minutagem Média  
-Impressões | Inscritos | Likes | Comentários | Gancho  
-**+ Fantasy**: Fantasy Clicks | Fantasy Conversion (`sumFantasyClicks` / `aggregateFantasyConversion`)
-
-## KPI Cards — Shorts
-Mesma família visual + Fantasy Clicks | Fantasy Conversion sobre `filteredShorts`.
+## KPI Cards — Long Form / Shorts (Main)
+Métricas clássicas (Views, CTR, Avg View Duration, etc.).  
+Fantasy Clicks / Conversion **não** estão mais nos cards do topo; permanecem em Funil / Temporal / Performance / Heatmap.
 
 ---
 
@@ -217,33 +198,19 @@ const THRESHOLDS = {
   gancho:       0.70,    // 70%
   avgViewDurSec:360,     // 6:00
 };
-
-// Gate obrigatório: Views >= 48K
-// Score >= 3 entre os outros 4 critérios (null = ignorado)
 ```
 
-**Status possíveis**:
-- 🟢 **Escalar** — Views ≥48K + score ≥3 → diag: "Estudar & Replicar"
-- 🔵 **Reembalar** — baixo volume/CTR + gancho e retenção fortes → diag: "Trocar Thumb & Título"
-- 🔴 **Rever Formato** — fraco em tudo → diag: "Aperfeiçoar Formato"
-- 🟡 **Ajustar Entrega** — casos intermediários → diag: "Ajuste necessário"
-
 Fantasy Clicks / Conversão Fantasy **não entram** nas regras automáticas.
-
----
 
 ## Lógica de Classificação — Feedback Shorts (classifyVideoShorts)
 ```javascript
 const THRESHOLDS_SHORTS = { views: 98100, ctr: 0.70, avgViewedPct: 75 };
-// Lógica AND estrita: todos os 3 devem ser atingidos para Escalar
 ```
 
 ---
 
 ## Parsing do Gancho
 ```javascript
-// Valor com % (formato antigo): '74%' → 0.74
-// Decimal puro (formato atual): 0.74 → 0.74
 gancho: (obj.gancho && obj.gancho.trim())
   ? (obj.gancho.includes('%')
       ? parseFloat(obj.gancho.replace('%',''))/100
@@ -254,10 +221,8 @@ gancho: (obj.gancho && obj.gancho.trim())
 ---
 
 ## Heatmap Indicadores / Análise de Duração
-- Granularidades: Faixas de Duração | Criadores | Categorias
-- Colunas existentes + **Fantasy Clicks** (soma conhecida) + **Fantasy Conversion** (ponderada)
-- Null → célula neutra `—`
-- Sort numérico · nulls no fim
+- Colunas + **Fantasy Clicks** (soma conhecida) + **Fantasy Conversion** (ponderada) — Main / `dados.csv`
+- Null → `—` · Sort numérico · nulls no fim
 
 ---
 
@@ -272,26 +237,23 @@ Shares | Coment. | Conv. Comm.
 ---
 
 ## VELHO
-- 1ª linha de métricas: Views | Outlier | Fantasy Clicks | Fantasy Conversion  
-  (cores neutras nas métricas Fantasy — sem thresholds verde/amarelo/vermelho)
-- 2ª linha: métricas Long Form (CTR / Gancho / Avg View Dur) ou Shorts (Gancho / Avg View Dur)
-- Sorts adicionais: Fantasy Clicks · Fantasy Conversion (DESC, nulls no fim)
-- Load more: 30 + 30 (inalterado)
-- **Não afetado** pela remoção do Ranking Fantasy nem pelo KPI BIO Visitors
+- 1ª linha: Views | Outlier | Fantasy Clicks | Fantasy Conversion
+- Sorts Fantasy DESC · nulls no fim · Load more 30+30
+- **Não afetado** pelas refatorações da aba Fantasy
 
 ---
 
-## Fantasy (pipeline independente — ATIVA)
+## Fantasy (pipeline independente — ATIVA — 100% fantasy.csv)
 
-### Feature flag / status atual
+### Feature flag
 ```javascript
 const ENABLE_FANTASY_TAB = true;  // estado ATUAL — aba ATIVA
 ```
 
 | Flag | Comportamento |
 |------|----------------|
-| `true` (**atual**) | Aba visível · `loadFantasyData()` · pipeline completo (KPIs, breakdown, temporal, performance) |
-| `false` (**histórico**) | Aba escondida · **0 fetch** de `fantasy.csv` · ranges Main normais · código preservado |
+| `true` (**atual**) | Aba visível · `loadFantasyData()` · KPIs / breakdown / temporal / performance |
+| `false` (**histórico**) | Aba escondida · 0 fetch · código preservado |
 
 Helpers: `isFantasyTabEnabled()`, `syncFantasyTabVisibility()`.
 
@@ -302,19 +264,17 @@ fantasy.csv
 → allFantasyData
 → applyFantasyFilters()
 → filteredFantasy
-→ Fantasy UI (KPIs / breakdown / temporal / performance)
+→ Fantasy UI
 ```
 
-Isolamento do Main:
 ```
-dados.csv → allData → filtros Main → Long Form / Shorts / Feedbacks / Base / VELHO
+dados.csv → allData → Main (LF / Shorts / Feedbacks / Base / VELHO)
 
-allFantasyData ≠ allData
+allFantasyData ≠ allData   // nunca concatenar
 ```
-- **Não** concatenar datasets.
-- Falha em `fantasy.csv` **não** derruba o Main; Fantasy mostra erro próprio.
-- Pipeline Fantasy **nunca** mistura linhas de `fantasy.csv` em `allData` / `filteredLong` / `filteredShorts` / `filteredAll`.
-- Métricas Fantasy do Main vêm de colunas em `dados.csv`, não de `fantasy.csv`.
+
+- Falha em `fantasy.csv` **não** derruba o Main.
+- **Nenhum** KPI/chart Fantasy obtém dados de `allData` / `dados.csv`.
 
 ### Headers de fantasy.csv
 ```
@@ -324,193 +284,181 @@ Visitor ID, Destino
 ```
 
 - Cada linha = uma interação com `Visitor ID`.
+- **Formato** = coluna principal de formato de conteúdo (`longform` / `shorts` / `live` / `BIO`).
+- **Tipo** no fantasy.csv = espelho incompleto; usado só como **fallback** (ver `getFantasyFormat`).
 - Cache-busting: `fetch('fantasy.csv?v=' + Date.now(), { cache: 'no-store' })`.
 
-### kind (classificação)
+### kind
 - `bio` → `videoIdRaw === 'BIO'`
-- `video` → ID válido + title + Views numérico + Data Publicação válidos
-- `unidentified` → demais (sem ID, ou ID sem metadados mínimos)
+- `video` → ID + title + Views + Data Publicação válidos
+- `unidentified` → demais
 
-### Baselines atuais (Fantasy)
+### Baselines atuais
 ```
-allData                 = 2369
-allFantasyData          = 3499
-filteredFantasy default 2026 = 3056
-
-BIO:
-  kind === 'bio'        = 214 linhas
-  Distinct BIO Visitors = 214
+allData                      = 2377
+allFantasyData               = 3951
+filteredFantasy default 2026 = 3308
 ```
 
 > **Histórico (não usar como baseline atual):**  
-> `allFantasyData = 2249` · `filteredFantasy default = 1586` · bio = 82 · unidentified = 393 · video rows = 1774.
+> `allData = 2369/2336` · `allFantasyData = 3499/2249` · `filteredFantasy = 3056/1586` · BIO 214 · bio rows 82.
 
-### Filtros compartilhados que afetam Fantasy
-Data | Semana | Categoria | Creator | Tipo | Título
-
-- Mesmos controles sticky do dashboard.
-- Opções reconstruídas por aba (`allData` ↔ `allFantasyData`).
-- Seleções preservadas ao trocar de aba (incluindo ghost/indisponível).
-- Master **Todos/Todas** = sem restrição semântica (`catAllSelected` / `weekAllSelected` / `titleAllSelected`).
-
-### Ranges numéricos na Fantasy
-Views | Outlier | CTR | Avg View Duration | Gancho | Avg Viewed
-
-- Visualmente disabled na aba Fantasy.
-- Valores preservados.
-- **Não** entram em `applyFantasyFilters()`.
-
-### Regra de Data
-```javascript
-if (dateStart || dateEnd) {
-  if (!r.dataPublicacao) return false;
-  // ... comparações de range
-}
+### Classificação all-time por Formato (`getFantasyFormat`)
 ```
-- Com Data preenchida (início e/ou fim): registros **sem** `dataPublicacao` ficam fora (inclui BIO / unidentified sem data).
-- Com ambos os inputs vazios (all-time real): registros sem Data podem entrar.
+Long Form         = 3018
+Shorts            = 583
+LIVE              = 67
+BIO               = 267
+Não identificado  = 16
+─────────────────────
+Total DISTINCT UV = 3951
+```
 
-### Seções atuais (4) — Ranking removido
-1. **Fantasy · KPIs** (collapse/expand)
-2. **Unique Visitors por Granularidade** (collapse/expand)
-3. **Evolução Temporal** (collapse/expand)
-4. **Gráficos de Performance** (collapse/expand)
+**Não** calcular Total UV como soma dos segmentos — Total = `COUNT DISTINCT visitorId` global em `allFantasyData`.
 
-**Ranking de Vídeos Fantasy** — **removido completamente**. Não existe mais na UI.
-
-Código exclusivo removido (referência):  
-`buildFantasyVideoRanking` · `sortFantasyRanking` · `setFantasySort` · `loadMoreFantasy` · `renderFantasyRanking` · `fmtFantasyInt` · `renderFantasyStatus` · `fantasySort` · `fantasyVisibleCount` · HTML/CSS exclusivos do ranking.  
-**VELHO não foi afetado.**
+### Fallback Tipo (Formato vazio + kind=video)
+```
+27 rows usam fallback Tipo:
+  23 → Long Form
+   4 → Shorts
+```
 
 ---
 
-### KPIs Fantasy — 6 cards
+### `getFantasyFormat(r)` — helper central
 
-| # | Card | Fonte | Notas |
-|---|------|-------|-------|
-| 1 | Unique Visitors | `filteredFantasy` | responde a filtros |
-| 2 | Vídeos que geraram visitantes | `filteredFantasy` | responde a filtros |
-| 3 | Conversion Rate | `filteredFantasy` | responde a filtros |
-| 4 | App Unique Visitors | `filteredFantasy` | responde a filtros |
-| 5 | Web Unique Visitors | `filteredFantasy` | responde a filtros |
-| 6 | **BIO Visitors** | **`allFantasyData`** | **ALL-TIME · ignora filtros** |
+Ordem:
+1. `kind === 'bio'` → **BIO**
+2. Normalizar `r.formato` (trim + lowercase):  
+   `longform`→Long Form · `shorts`→Shorts · `live`→LIVE · `bio`→BIO
+3. Se Formato vazio e `kind === 'video'`: fallback `r.tipo`  
+   (contém long/short/live → Long Form / Shorts / LIVE)
+4. Caso contrário → **Não identificado**
 
-#### KPIs 1–5 (sobre `filteredFantasy`)
-1. **UNIQUE VISITORS** — `COUNT DISTINCT visitorId` (inclui video + bio + unidentified **quando estão no filteredFantasy**)
-2. **VÍDEOS QUE GERARAM VISITANTES** — `COUNT DISTINCT` vídeo válido (`kind === 'video'`)
-3. **CONVERSION RATE** — UV total ÷ SUM Views **1× por vídeo válido**
-4. **APP UNIQUE VISITORS** — UV com `destino === 'App'`
-5. **WEB UNIQUE VISITORS** — UV com `destino === 'Web'`
+**Formato é a fonte PRINCIPAL.** Tipo no fantasy.csv é só fallback para vídeo válido sem Formato.
 
-Conversion Rate:
-- Numerador: Unique Visitors do recorte filtrado.
-- Denominador: Views deduplicadas só de `kind === 'video'`.
-- BIO/unidentified **não** somam Views no denominador.
-- Formatter: `fmtFantasyCR()`.
+---
 
-#### BIO Visitors (card 6 — especial)
+### Filtros na Fantasy
+Data | Semana | Categoria | Creator | Formato (controle sticky “Tipo”) | Título
+
+- Opções de Formato reconstruídas via `getFantasyFormat` sobre `allFantasyData`.
+- Ao sair da Fantasy, Main volta a opções Tipo de `dados.csv`.
+- Ranges numéricos disabled / ignorados.
+- Regra de Data: com range ativo, sem `dataPublicacao` → fora (LIVE/BIO atuais sem data saem do default 2026).
+
+### `getFantasyRowsIgnoringFormatFilter()`
+- Parte de `allFantasyData`
+- Respeita: Data · Semana · Categoria · Creator · Título
+- **Ignora** filtro Formato/Tipo
+- **Não** altera `filteredFantasy`
+- Alimenta cards comparativos LF/Shorts Visitors + Conversions
+
+---
+
+### Seções (4) — Ranking removido
+1. **Fantasy · KPIs**
+2. **Unique Visitors por Granularidade**
+3. **Evolução Temporal**
+4. **Gráficos de Performance**
+
+Collapse/expand independente (`toggleSection` · `section-header` · `section-toggle`).  
+**Ranking de Vídeos Fantasy** — removido (código exclusivo eliminado). VELHO não afetado.
+
+---
+
+### KPIs Fantasy — layout desktop (5 colunas)
+
+**Linha 1**
+| Col | Card | Fonte | Filtros |
+|-----|------|-------|---------|
+| 1 | Total Unique Visitors | `allFantasyData` DISTINCT | ALL-TIME · ignora filtros · **3951** |
+| 2 | Long Form Visitors | DISTINCT UV `getFantasyFormat===Long Form` | Data/Semana/Cat/Creator/Título · **ignora Formato** · default **2852** |
+| 3 | Shorts Visitors | idem Shorts | idem · default **456** |
+| 4 | LIVE Visitors | `allFantasyData` Formato LIVE | ALL-TIME · **67** (sem Data/Views atribuíveis) |
+| 5 | BIO Visitors | `allFantasyData` Formato BIO / kind=bio | ALL-TIME · **267** |
+
+**Linha 2** (alinhada sob cols 1–3)
+| Col | Card | Default 2026 |
+|-----|------|--------------|
+| 1 | Fantasy Conversion | **0,00490%** |
+| 2 | Long Form Conversion | **0,0351%** |
+| 3 | Shorts Conversion | **0,00077%** |
+| 4–5 | *(vazio)* | sem LIVE/BIO Conversion |
+
+Tags **ALL-TIME** somente em: Total UV · LIVE Visitors · BIO Visitors.  
+Responsividade: 5 cols → 2 → 1 (reset de grid placement em breakpoints).
+
+**Cards App/Web Unique Visitors** — **removidos** da seção KPI. Destino App/Web continua no Breakdown.
+
+---
+
+### Conversion — 100% fantasy.csv
+
+Helper: `computeFantasyConversionFromRows(rows)` (ou equivalente atual).
+
 ```
-COUNT DISTINCT visitorId
-em allFantasyData
-onde kind === 'bio'
+DISTINCT Visitor IDs elegíveis
+/
+SUM Views 1× por videoId válido elegível
 ```
-- Valor atual de referência: **214** (calculado dinamicamente; **não** hardcoded).
-- Tag visual: **ALL-TIME**.
-- Tooltip/título: “All-time. Registros BIO não possuem Data Publicação.”
-- Empty (dados carregados, zero BIO): **0**. Erro de load: `—` (estado da aba).
 
-**Ignora filtros:** Data · Semana · Categoria · Creator · Tipo · Título.
+Elegibilidade: `kind === 'video'` · videoId válido · Views finitas · Views > 0.  
+BIO / unidentified sem vídeo / LIVE atual (sem Views) **não entram**.  
+Formatter: `fmtFantasyCR()`. Sem vídeo elegível → `—` (nunca 0%/NaN/Infinity).
 
-**NÃO entra em:** Unique Visitors filtrado · Conversion Rate · App · Web.  
-**Não** somar automaticamente BIO Visitors ao total principal.
+- **Fantasy Conversion**: vídeos elegíveis de `getFantasyRowsIgnoringFormatFilter()` (todos os formatos elegíveis).
+- **LF / Shorts Conversion**: mesmo conjunto filtrado + `getFantasyFormat` LF/Shorts.
+- **Não existem** LIVE Conversion nem BIO Conversion.
+
+**Não** usar Total UV (3951) como numerador da Fantasy Conversion.
 
 ---
 
 ### Breakdown — Unique Visitors por Granularidade
-Dimensões: Creator | Categoria | Tipo | Destino | Dispositivo  
-Métrica: `COUNT DISTINCT visitorId` por grupo.  
-Ordenação: UV DESC.
+Dimensões: Creator | Categoria | **Formato** | Destino | Dispositivo  
 
-**Labels nas barras:** `UV · % do total` (ex.: `1846 · 60,4%`)  
-```
-pct = groupUniqueVisitors / totalUniqueVisitors(filteredFantasy)
-```
-1 casa decimal. Overlap permitido → soma dos % pode ultrapassar 100%.
+Quando dimensão = **Formato**: agrupar exclusivamente com `getFantasyFormat(r)`.  
+Grupos possíveis: Long Form · Shorts · LIVE · BIO · Não identificado.
 
-**Tooltip:** Unique Visitors · % do total · Views · Fantasy Conversion · Vídeos  
-- Views = SUM Views **1×** por `videoId` válido distinto do grupo  
-- Vídeos = COUNT DISTINCT `videoId` só `kind === 'video'`  
-- Fantasy Conversion = UV do grupo ÷ SUM Views dos vídeos válidos distintos  
-- BIO/unidentified sem vídeo válido: Views = `—` · Conversion = `—` · Vídeos = 0
+Métrica: `COUNT DISTINCT visitorId` · ordenação UV DESC.  
+Labels: `UV · % do total` (1 casa; overlap permitido → soma % pode > 100%).  
+Tooltip: UV · % · Views (1×/vídeo) · Fantasy Conversion · Vídeos.
 
-**Destino / Dispositivo:** o mesmo vídeo pode aparecer em mais de um grupo → Views App+Web (ou desktop+mobile+tablet) podem ultrapassar Views gerais. **Esperado.**
+**Default 2026:** LIVE/BIO sem Data ficam fora naturalmente.  
+**All-Time:** LIVE e BIO aparecem. **Sem exceção** de Data no Breakdown.
 
-Labels de fallback:
-- BIO sem Creator/Categoria/Tipo → **BIO**
-- unidentified / vídeo sem dimensão → **Não identificado**
-- Destino vazio → **Não rastreado**
-- Dispositivo vazio → **Não identificado**
+**Destino:** App · Web · Não rastreado.  
+**Dispositivo:** valor ou Não identificado.  
+Overlap App+Web / desktop+mobile pode ultrapassar Views gerais — esperado.
 
 Estado: `fantasyBreakdownDimension` (default `creator`) · `fantasyBreakdownChart`
 
-**Sem exceção temporal para BIO no breakdown** (ver decisão BIO abaixo).
-
 ---
 
-### Evolução Temporal
-Dropdown: **Fantasy Clicks** | **Fantasy Conversion** (default: Fantasy Clicks).  
-Granularidade: Por Semana | Por Mês.  
-Tempo baseado em **Data Publicação** (não é a data real do clique).
-
-- **Fantasy Clicks (período):** `COUNT DISTINCT Visitor ID` (não contar linhas).
-- **Fantasy Conversion (período):** distinct UV ÷ SUM Views **1×** por vídeo válido distinto do período. Sem AVG simples. Denom ≤ 0 → `null`.
-- Registros **sem** Data Publicação ficam **fora** do temporal (BIO/unidentified sem data excluídos).
-
+### Evolução Temporal (100% fantasy.csv)
+- Dropdown: Fantasy Clicks | Fantasy Conversion (default Clicks)
+- Semana / Mês · eixo = **Data Publicação**
+- Clicks = COUNT DISTINCT Visitor ID · Conversion = UV ÷ Views 1×/vídeo no período
+- Sem Data → fora do Temporal  
 Estado: `fantasyTemporalMetric` · `fantasyTempMode` · `fantasyTemporalChart`
 
 ---
 
-### Gráficos de Performance
-Somente `kind === 'video'` + `videoId` válido.  
-**BIO e unidentified NÃO entram.**
-
-Agrupamento por `videoId` (uma barra por vídeo):
-- **Fantasy Clicks** = COUNT DISTINCT Visitor ID do vídeo
-- **Fantasy Conversion** = Clicks ÷ Views do vídeo (Views 1×; Views ≤ 0 → `null`)
-
-Controles (mesmo UX de LF/Shorts): N vídeos · Melhores · Piores · Recentes · Atualizar  
-Default: métrica **Fantasy Clicks** · modo **Recentes** · **N = 20**  
-Melhores/Piores ordenam pela métrica (nulls no fim). Recentes = Data Publicação DESC.
-
-Estado: `fantasyPerformanceMetric` · `fantasyPerfMode` · `fantasyPerformanceChart`  
-Deriva de `filteredFantasy` (respeita filtros), depois filtra vídeo válido.
+### Gráficos de Performance (100% fantasy.csv)
+- Só `kind === 'video'` + videoId válido · agrupa por videoId
+- Clicks = COUNT DISTINCT Visitor ID · Conversion = Visitors / Views do vídeo
+- Controles: N · Melhores · Piores · Recentes · Atualizar  
+- Default: Clicks · Recentes · N=20  
+Estado: `fantasyPerformanceMetric` · `fantasyPerfMode` · `fantasyPerformanceChart`
 
 ---
 
-### BIO — diagnóstico e decisão atual
-
-#### Diagnóstico (dados)
-```
-Tipo = BIO              = 214 linhas
-kind = bio              = 214  (mesmo conjunto)
-Distinct UV BIO         = 214
-Data Publicação válida  = 0
-```
-
-**Presentes:** `videoIdRaw = BIO` · `Tipo = BIO` · Dispositivo · Destino parcial  
-**Ausentes:** Data Publicação · Ano · Semana · Creator · Categoria · Views · Title
-
-#### BIO + filtro temporal
-Com Data ativa, `applyFantasyFilters` remove registros sem Data → **BIO não entra em `filteredFantasy` no default 2026**.
-
-Com datas vazias (All-Time), BIO **aparece** no breakdown. Dimensão Tipo all-time inclui Long Form · Shorts · BIO · Não identificado (quando existirem). Não hardcodar os UV por grupo.
-
-#### Decisão aprovada atual
-- **NÃO** criar exceção temporal para forçar BIO dentro do recorte 2026.
-- O card **BIO Visitors (ALL-TIME)** é a solução atual para dar visibilidade ao tráfego BIO **sem contaminar** filtros temporais / KPI filtrado / CR / Temporal / Performance.
-
-#### Filtro Tipo
-Oferece: Todos | Long Form | Shorts. **BIO não é opção** (conhecido; sem correção nesta etapa).
+### LIVE / BIO — decisão atual
+- **LIVE** (Formato=`live`): ~67 UV · sem Data/Views/Creator/Categoria · card **ALL-TIME** · kind atual = unidentified
+- **BIO**: Formato=BIO + Tipo=BIO + kind=bio · ~267 UV · card **ALL-TIME**
+- **Não** forçar LIVE/BIO no recorte 2026 via exceção de Data
+- Visibilidade all-time = cards ALL-TIME + Breakdown Formato com Data vazia
 
 ---
 
@@ -522,7 +470,10 @@ allFantasyData
 filteredFantasy
 fantasyLoaded
 fantasyLoadError
-fantasyBreakdownDimension   // default: 'creator'
+getFantasyFormat(r)
+getFantasyRowsIgnoringFormatFilter()
+computeFantasyConversionFromRows(rows)
+fantasyBreakdownDimension   // default: 'creator' · dimensão formato = 'formato'
 fantasyBreakdownChart
 fantasyTemporalMetric       // default: 'clicks'
 fantasyTempMode             // default: 'week'
@@ -538,18 +489,19 @@ Exatamente **3 `<script>`** no `index.html`. Sem novas CDNs/dependências.
 ---
 
 ## Correções de bugs conhecidas (não reverter)
-1. **Fuso horário nos labels do gráfico temporal**: usar `new Date(+y, +m-1, 1)` e NÃO `new Date(k+'-01')` para evitar labels com mês errado
+1. **Fuso horário nos labels do gráfico temporal**: usar `new Date(+y, +m-1, 1)` e NÃO `new Date(k+'-01')`
 2. **Gancho zerado**: parser detecta formato automaticamente (com % ou decimal)
-3. **Cache do CSV**: sempre usar `?v=Date.now()` + `cache: 'no-store'`
+3. **Cache do CSV**: sempre `?v=Date.now()` + `cache: 'no-store'`
 4. **Datas US format**: normalizar M/D/YYYY → YYYY-MM-DD no parse
 5. **Base sort numérico**: nulls sempre no fim (ASC e DESC)
 
 ---
 
 ## Como fazer alterações com segurança
-1. Sempre testar no browser após cada mudança (servidor local: `python -m http.server 8765 --bind 127.0.0.1`)
-2. Verificar console (F12) para erros JS
-3. Nunca remover `destroyChart()` / destroy dos charts Fantasy antes de criar novo gráfico
-4. Manter sempre exatamente 3 `<script>` e 3 `</script>` no arquivo
-5. Não misturar linhas de `fantasy.csv` no pipeline `allData`
-6. Estado operacional da aba Fantasy: `ENABLE_FANTASY_TAB = true` (aba ATIVA)
+1. Testar no browser (`python -m http.server 8765 --bind 127.0.0.1`)
+2. Verificar console (F12)
+3. Destruir charts Fantasy antes de recriar
+4. Manter exatamente 3 `<script>` / 3 `</script>`
+5. Não misturar `fantasy.csv` no pipeline `allData`
+6. Aba Fantasy: `ENABLE_FANTASY_TAB = true` · métricas **somente** via fantasy.csv
+7. Segmentação Fantasy: sempre `getFantasyFormat(r)` (não `r.tipo` direto)
