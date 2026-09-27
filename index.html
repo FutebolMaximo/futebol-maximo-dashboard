@@ -962,15 +962,15 @@
       </select>
     </div>
     <div class="filter-group">
-      <label>Data Início</label>
+      <label id="filterDateStartLabel">DATA PUB. INÍCIO</label>
       <input type="date" id="filterDateStart">
     </div>
     <div class="filter-group">
-      <label>Data Fim</label>
+      <label id="filterDateEndLabel">DATA PUB. FIM</label>
       <input type="date" id="filterDateEnd">
     </div>
     <div class="filter-group">
-      <label>Semana</label>
+      <label id="filterWeekLabel">SEMANA DE PUBLICAÇÃO</label>
       <div class="title-search-wrap" id="weekWrap">
         <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
           onclick="toggleWeekDropdown()" style="cursor:pointer;background:white;">
@@ -1778,33 +1778,28 @@
           <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
         <div class="kpi-value" id="fkTotalUV">—</div>
-        <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">LONG FORM VISITORS</div>
         <div class="kpi-value" id="fkLfUV">—</div>
-        <div class="kpi-sub">DISTINCT UV · Formato Long Form</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">SHORTS VISITORS</div>
         <div class="kpi-value" id="fkShUV">—</div>
-        <div class="kpi-sub">DISTINCT UV · Formato Shorts</div>
       </div>
-      <div class="kpi-card" title="All-time. LIVE atual sem Data Publicação — não atribuível ao recorte temporal.">
+      <div class="kpi-card" title="All-time. LIVE sem clickDate no CSV atual — fora do recorte temporal filtrado.">
         <div class="fantasy-kpi-label-row">
           <div class="kpi-label">LIVE VISITORS</div>
           <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
         <div class="kpi-value" id="fkLiveUV">—</div>
-        <div class="kpi-sub">DISTINCT UV · Formato LIVE</div>
       </div>
-      <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
+      <div class="kpi-card" title="All-time. Registros BIO sem clickDate no CSV atual.">
         <div class="fantasy-kpi-label-row">
           <div class="kpi-label">BIO VISITORS</div>
           <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
         <div class="kpi-value" id="fkBioUV">—</div>
-        <div class="kpi-sub">DISTINCT UV · BIO</div>
       </div>
       <div class="kpi-card accent">
         <div class="fantasy-kpi-label-row">
@@ -1812,41 +1807,14 @@
           <span class="fantasy-info" title="DISTINCT UV de vídeos elegíveis ÷ SUM Views 1× por videoId. Fonte: fantasy.csv. Ignora filtro Formato.">i</span>
         </div>
         <div class="kpi-value" id="fkConv">—</div>
-        <div class="kpi-sub">Vídeos elegíveis · fantasy.csv</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">LONG FORM CONVERSION</div>
         <div class="kpi-value" id="fkLfConv">—</div>
-        <div class="kpi-sub">UV elegíveis ÷ Views únicas · LF</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">SHORTS CONVERSION</div>
         <div class="kpi-value" id="fkShConv">—</div>
-        <div class="kpi-sub">UV elegíveis ÷ Views únicas · Shorts</div>
-      </div>
-    </div>
-
-    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
-      <div class="section-divider"><span class="section-toggle">▼</span></div>
-      <h2>Unique Visitors por Granularidade</h2>
-    </div>
-    <p class="section-desc">Contagem distinta de Visitor ID por dimensão. A soma das barras pode superar o KPI global.</p>
-    <div class="chart-card wide" style="margin-bottom:24px;">
-      <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-        <span>UNIQUE VISITORS POR GRANULARIDADE</span>
-        <div class="fantasy-chart-controls">
-          <label for="fantasyBreakdownSelect">Dimensão</label>
-          <select id="fantasyBreakdownSelect" onchange="setFantasyBreakdownDimension(this.value)">
-            <option value="creator" selected>Creator</option>
-            <option value="categoria">Categoria</option>
-            <option value="formato">Formato</option>
-            <option value="destino">Destino</option>
-            <option value="dispositivo">Dispositivo</option>
-          </select>
-        </div>
-      </div>
-      <div class="fantasy-chart-wrap" id="fantasyChartWrap">
-        <canvas id="chartFantasyBreakdown"></canvas>
       </div>
     </div>
 
@@ -1854,7 +1822,7 @@
       <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Evolução Temporal</h2>
     </div>
-    <p class="section-desc">Performance Fantasy dos vídeos agrupados pela Data Publicação (não é a data do clique). BIO/unidentified sem data ficam fora.</p>
+    <p class="section-desc">Evolução dos clicks/visitors agrupados pela Data do Clique. Registros sem clickDate ficam fora.</p>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
       <div class="topn-toggle">
         <button id="btnFTempWeek" class="toggle-btn active" onclick="setFantasyTempMode('week')">Por Semana</button>
@@ -1907,6 +1875,30 @@
           </div>
         </div>
         <div class="chart-wrap"><canvas id="chartFantasyPerformance"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)" data-collapsed="false">
+      <div class="section-divider"><span class="section-toggle">▼</span></div>
+      <h2>Unique Visitors por Granularidade</h2>
+    </div>
+    <p class="section-desc">Contagem distinta de Visitor ID por dimensão. A soma das barras pode superar o KPI global.</p>
+    <div class="chart-card wide" style="margin-bottom:24px;">
+      <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span>UNIQUE VISITORS POR GRANULARIDADE</span>
+        <div class="fantasy-chart-controls">
+          <label for="fantasyBreakdownSelect">Dimensão</label>
+          <select id="fantasyBreakdownSelect" onchange="setFantasyBreakdownDimension(this.value)">
+            <option value="creator" selected>Creator</option>
+            <option value="categoria">Categoria</option>
+            <option value="formato">Formato</option>
+            <option value="destino">Destino</option>
+            <option value="dispositivo">Dispositivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="fantasy-chart-wrap" id="fantasyChartWrap">
+        <canvas id="chartFantasyBreakdown"></canvas>
       </div>
     </div>
   </div>
@@ -2160,6 +2152,94 @@ let fantasyPerformanceMetric = 'clicks'; // 'clicks' | 'conversion'
 let fantasyPerfMode = 'recent'; // 'top' | 'bottom' | 'recent'
 let fantasyPerformanceChart = null;
 
+// ── Estados temporais independentes (Main = publicação | Fantasy = clique) ──
+let mainDateStart = '';
+let mainDateEnd = '';
+let mainWeekAllSelected = true;
+let mainSelectedWeeks = new Set();
+
+let fantasyDateStart = '';
+let fantasyDateEnd = '';
+let fantasyWeekAllSelected = true;
+let fantasySelectedWeeks = new Set();
+
+function isFantasyTabActive() {
+  return isFantasyTabEnabled() && activeTab === 'fantasy';
+}
+
+function syncTemporalFromUI() {
+  const ds = (document.getElementById('filterDateStart') || {}).value || '';
+  const de = (document.getElementById('filterDateEnd') || {}).value || '';
+  if (isFantasyTabActive()) {
+    fantasyDateStart = ds;
+    fantasyDateEnd = de;
+    fantasyWeekAllSelected = weekAllSelected;
+    fantasySelectedWeeks = new Set(selectedWeeks);
+  } else {
+    mainDateStart = ds;
+    mainDateEnd = de;
+    mainWeekAllSelected = weekAllSelected;
+    mainSelectedWeeks = new Set(selectedWeeks);
+  }
+}
+
+function loadTemporalToUI(which) {
+  const isF = which === 'fantasy';
+  if (isF) {
+    weekAllSelected = fantasyWeekAllSelected;
+    selectedWeeks = new Set(fantasySelectedWeeks);
+    const ds = document.getElementById('filterDateStart');
+    const de = document.getElementById('filterDateEnd');
+    if (ds) ds.value = fantasyDateStart || '';
+    if (de) de.value = fantasyDateEnd || '';
+  } else {
+    weekAllSelected = mainWeekAllSelected;
+    selectedWeeks = new Set(mainSelectedWeeks);
+    const ds = document.getElementById('filterDateStart');
+    const de = document.getElementById('filterDateEnd');
+    if (ds) ds.value = mainDateStart || '';
+    if (de) de.value = mainDateEnd || '';
+  }
+  updateWeekInput();
+  updateFilterTemporalLabels();
+}
+
+function updateFilterTemporalLabels() {
+  const isF = isFantasyTabActive();
+  const s = document.getElementById('filterDateStartLabel');
+  const e = document.getElementById('filterDateEndLabel');
+  const w = document.getElementById('filterWeekLabel');
+  if (s) s.textContent = isF ? 'DATA CLIQUE INÍCIO' : 'DATA PUB. INÍCIO';
+  if (e) e.textContent = isF ? 'DATA CLIQUE FIM' : 'DATA PUB. FIM';
+  if (w) w.textContent = isF ? 'SEMANA DO CLIQUE' : 'SEMANA DE PUBLICAÇÃO';
+}
+
+function computeDefaultDateRange(isoDates) {
+  const currentYear = new Date().getFullYear();
+  const today = new Date().toISOString().slice(0, 10);
+  const defaultStart = `${currentYear}-01-01`;
+  const dates = (isoDates || []).filter(Boolean).sort();
+  if (!dates.length) return { start: defaultStart, end: today };
+  const hasCurrentYear = dates.some(d => d >= defaultStart);
+  return { start: hasCurrentYear ? defaultStart : dates[0], end: today };
+}
+
+function initMainTemporalDefaults() {
+  const range = computeDefaultDateRange(allData.map(r => r.dataPublicacao));
+  mainDateStart = range.start;
+  mainDateEnd = range.end;
+  mainWeekAllSelected = true;
+  mainSelectedWeeks = new Set();
+}
+
+function initFantasyTemporalDefaults() {
+  const range = computeDefaultDateRange((allFantasyData || []).map(r => r.clickDate));
+  fantasyDateStart = range.start;
+  fantasyDateEnd = range.end;
+  fantasyWeekAllSelected = true;
+  fantasySelectedWeeks = new Set();
+}
+
 function isFantasyTabEnabled() {
   return ENABLE_FANTASY_TAB === true;
 }
@@ -2191,14 +2271,27 @@ function parseFantasyViews(v) {
   return Number.isFinite(n) ? n : null;
 }
 
-function classifyFantasyKind(videoIdRaw, title, views, dataPublicacao) {
+function classifyFantasyKind(videoIdRaw, title, views, clickDate) {
   if (videoIdRaw === 'BIO') return 'bio';
   const hasId = !!videoIdRaw;
   const hasTitle = !!(title && String(title).trim());
   const hasViews = Number.isFinite(views);
-  const hasDate = !!(dataPublicacao && String(dataPublicacao).trim());
+  const hasDate = !!(clickDate && String(clickDate).trim());
   if (hasId && hasTitle && hasViews && hasDate) return 'video';
   return 'unidentified';
+}
+
+/** ISO week label no formato do CSV Fantasy: W39/26 */
+function deriveFantasyClickWeek(isoDate) {
+  if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return '';
+  const d = new Date(+isoDate.slice(0, 4), +isoDate.slice(5, 7) - 1, +isoDate.slice(8, 10));
+  const tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = tmp.getUTCDay() || 7;
+  tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+  const yy = String(tmp.getUTCFullYear()).slice(-2);
+  return `W${weekNo}/${yy}`;
 }
 
 function parseFantasyCSV(text) {
@@ -2216,10 +2309,14 @@ function parseFantasyCSV(text) {
     return result;
   };
 
+  // "Data Publicação" no fantasy.csv atual = DATA DO CLIQUE (semântica Fantasy).
+  // Também aceita headers explícitos de clique se o CSV for renomeado no futuro.
   const colMap = {
-    'data publicacao': 'dataPublicacao', 'data publica\u00e7\u00e3o': 'dataPublicacao',
+    'data publicacao': 'clickDateRaw', 'data publica\u00e7\u00e3o': 'clickDateRaw',
+    'data do clique': 'clickDateRaw', 'data clique': 'clickDateRaw',
+    'click date': 'clickDateRaw', 'data visita': 'clickDateRaw',
     'mes_ano': 'mesAno', 'm\u00eas_ano': 'mesAno',
-    'ano': 'ano', 'semana': 'semana',
+    'ano': 'ano', 'semana': 'semanaRaw',
     'video title': 'title', 'tipo': 'tipo', 'categoria': 'categoria',
     'creator': 'creator', 'views': 'views', 'link': 'link',
     'url video': 'urlVideo',
@@ -2240,9 +2337,14 @@ function parseFantasyCSV(text) {
     const videoIdRaw = (obj.videoIdRaw || '').trim();
     const title = (obj.title || '').trim();
     const views = parseFantasyViews(obj.views);
-    const dataPublicacao = parseFantasyDate(obj.dataPublicacao);
+    const clickDate = parseFantasyDate(obj.clickDateRaw);
     const urlVideo = (obj.urlVideo || '').trim();
-    const kind = classifyFantasyKind(videoIdRaw, title, views, dataPublicacao);
+    const kind = classifyFantasyKind(videoIdRaw, title, views, clickDate);
+
+    // Semana do clique: preferir coluna Semana do CSV (já alinhada à clickDate);
+    // se vazia e houver clickDate, derivar Wxx/yy.
+    const semanaRaw = (obj.semanaRaw || '').trim();
+    const clickWeek = semanaRaw || deriveFantasyClickWeek(clickDate);
 
     let videoId = null;
     if (kind !== 'bio' && videoIdRaw && videoIdRaw !== 'BIO') {
@@ -2250,10 +2352,10 @@ function parseFantasyCSV(text) {
     }
 
     rows.push({
-      dataPublicacao,
+      clickDate,
+      clickWeek,
       mesAno: (obj.mesAno || '').trim(),
       ano: parseInt(obj.ano, 10) || 0,
-      semana: (obj.semana || '').trim(),
       title,
       tipo: (obj.tipo || '').trim(),
       categoria: (obj.categoria || '').trim(),
@@ -2427,18 +2529,19 @@ function countFantasyFormatVisitorsAllTime(formatLabel) {
  */
 function getFantasyRowsIgnoringFormatFilter() {
   if (!fantasyLoaded || fantasyLoadError) return [];
+  if (isFantasyTabActive()) syncTemporalFromUI();
   const creator = (document.getElementById('filterCreator') || {}).value || '';
-  const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
-  const dateEnd = (document.getElementById('filterDateEnd') || {}).value || '';
+  const dateStart = fantasyDateStart || '';
+  const dateEnd = fantasyDateEnd || '';
   return (allFantasyData || []).filter(r => {
     if (dateStart || dateEnd) {
-      if (!r.dataPublicacao) return false;
-      if (dateStart && r.dataPublicacao < dateStart) return false;
-      if (dateEnd && r.dataPublicacao > dateEnd) return false;
+      if (!r.clickDate) return false;
+      if (dateStart && r.clickDate < dateStart) return false;
+      if (dateEnd && r.clickDate > dateEnd) return false;
     }
-    if (!weekAllSelected) {
-      if (selectedWeeks.size === 0) return false;
-      if (!r.semana || !selectedWeeks.has(r.semana)) return false;
+    if (!fantasyWeekAllSelected) {
+      if (fantasySelectedWeeks.size === 0) return false;
+      if (!r.clickWeek || !fantasySelectedWeeks.has(r.clickWeek)) return false;
     }
     if (!catAllSelected) {
       if (selectedCats.size === 0) return false;
@@ -2492,6 +2595,11 @@ function fmtFantasyKpiUV(v) {
   return v == null || !Number.isFinite(v) ? '—' : fmtNum(v);
 }
 
+/** Inteiro completo (pt-BR) — só Total UV e Long Form Visitors. */
+function fmtFantasyKpiUVFull(v) {
+  return v == null || !Number.isFinite(v) ? '—' : Math.round(v).toLocaleString('pt-BR');
+}
+
 function fmtFantasyKpiConv(v) {
   return v == null || !Number.isFinite(v) ? '—' : fmtFantasyCR(v);
 }
@@ -2515,7 +2623,7 @@ function renderFantasyKPIs() {
   }
 
   // ALL-TIME (ignoram filtros)
-  setFantasyKPI('fkTotalUV', fmtFantasyKpiUV(countFantasyTotalVisitorsAllTime()));
+  setFantasyKPI('fkTotalUV', fmtFantasyKpiUVFull(countFantasyTotalVisitorsAllTime()));
   setFantasyKPI('fkLiveUV', fmtFantasyKpiUV(countFantasyFormatVisitorsAllTime('LIVE')));
   setFantasyKPI('fkBioUV', fmtFantasyKpiUV(countFantasyFormatVisitorsAllTime('BIO')));
 
@@ -2524,7 +2632,7 @@ function renderFantasyKPIs() {
   const lfRows = base.filter(r => getFantasyFormat(r) === 'Long Form');
   const shRows = base.filter(r => getFantasyFormat(r) === 'Shorts');
 
-  setFantasyKPI('fkLfUV', fmtFantasyKpiUV(countFantasyUniqueVisitors(lfRows)));
+  setFantasyKPI('fkLfUV', fmtFantasyKpiUVFull(countFantasyUniqueVisitors(lfRows)));
   setFantasyKPI('fkShUV', fmtFantasyKpiUV(countFantasyUniqueVisitors(shRows)));
   setFantasyKPI('fkConv', fmtFantasyKpiConv(computeFantasyConversionFromRows(base)));
   setFantasyKPI('fkLfConv', fmtFantasyKpiConv(computeFantasyConversionFromRows(lfRows)));
@@ -2715,11 +2823,29 @@ function setFantasyTempMetric(metric, label) {
 }
 
 function fantasyTemporalMetricVal(periodRows, metric) {
-  const uv = countFantasyUniqueVisitors(periodRows);
-  if (metric === 'clicks') return uv > 0 ? uv : null;
-  const videoStats = getFantasyUniqueVideoStats(periodRows);
-  if (!videoStats.sumViews || videoStats.sumViews <= 0) return null;
-  return uv / videoStats.sumViews;
+  if (metric === 'clicks') {
+    const uv = countFantasyUniqueVisitors(periodRows);
+    return uv > 0 ? uv : null;
+  }
+  // Fórmula aprovada: DISTINCT visitors elegíveis / SUM Views 1× por videoId elegível
+  return computeFantasyConversionFromRows(periodRows);
+}
+
+/** Agrupa Fantasy exclusivamente por clickDate / clickWeek (nunca publicação). */
+function groupFantasyByPeriod(data, mode) {
+  const map = {};
+  (data || []).forEach(r => {
+    let key;
+    if (mode === 'week') {
+      key = r.clickWeek || null;
+    } else {
+      key = getPeriodKey(r.clickDate, mode);
+    }
+    if (!key) return;
+    if (!map[key]) map[key] = [];
+    map[key].push(r);
+  });
+  return map;
 }
 
 function renderFantasyTemporal() {
@@ -2728,10 +2854,10 @@ function renderFantasyTemporal() {
   destroyFantasyTemporalChart();
   if (!fantasyLoaded || fantasyLoadError) return;
 
-  const d = (filteredFantasy || []).filter(r => r.dataPublicacao);
+  const d = (filteredFantasy || []).filter(r => r.clickDate);
   if (!d.length) return;
 
-  const grouped = groupByPeriod(d, fantasyTempMode);
+  const grouped = groupFantasyByPeriod(d, fantasyTempMode);
   const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*1000+parseInt(m[1]) : 0; };
   const keys = Object.keys(grouped).sort((a,b) =>
     fantasyTempMode === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
@@ -2742,7 +2868,7 @@ function renderFantasyTemporal() {
   const labels = keys.map(shortKey);
   const weekTitle = idx => {
     if (fantasyTempMode!=='week'||!keys[idx]) return labels[idx]||'';
-    const k=keys[idx]; const dates=(grouped[k]||[]).map(r=>r.dataPublicacao).filter(Boolean).sort();
+    const k=keys[idx]; const dates=(grouped[k]||[]).map(r=>r.clickDate).filter(Boolean).sort();
     const fmt=ds=>ds?`${ds.slice(8,10)}/${ds.slice(5,7)}`:'';
     const range=dates.length>=2?`${fmt(dates[0])} – ${fmt(dates[dates.length-1])}`:'';
     return range?`${k} · ${range}`:k;
@@ -2814,7 +2940,7 @@ function buildFantasyPerformanceVideos(rows) {
       entry = {
         videoId: key,
         title: r.title || '',
-        dataPublicacao: r.dataPublicacao || '',
+        latestClickDate: r.clickDate || '',
         views: Number.isFinite(r.views) ? r.views : null,
         tipo: r.tipo || '',
         creator: r.creator || '',
@@ -2824,6 +2950,9 @@ function buildFantasyPerformanceVideos(rows) {
       };
       byVideo.set(key, entry);
     }
+    if (r.clickDate && (!entry.latestClickDate || r.clickDate > entry.latestClickDate)) {
+      entry.latestClickDate = r.clickDate;
+    }
     if (r.visitorId) entry.visitors.add(r.visitorId);
   });
   return [...byVideo.values()].map(v => {
@@ -2832,7 +2961,7 @@ function buildFantasyPerformanceVideos(rows) {
     return {
       videoId: v.videoId,
       title: v.title,
-      dataPublicacao: v.dataPublicacao,
+      latestClickDate: v.latestClickDate,
       views: v.views,
       tipo: v.tipo,
       creator: v.creator,
@@ -2865,7 +2994,7 @@ function compareFantasyPerfVideos(a, b, mode) {
   const viewsA = Number.isFinite(a.views) ? a.views : -1;
   const viewsB = Number.isFinite(b.views) ? b.views : -1;
   if (viewsB !== viewsA) return viewsB - viewsA;
-  return (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
+  return (b.latestClickDate || '').localeCompare(a.latestClickDate || '');
 }
 
 function getFantasyPerfTopN() {
@@ -2907,8 +3036,8 @@ function getFantasyPerfChartData() {
   let sorted;
   if (fantasyPerfMode === 'recent') {
     sorted = [...videos].sort((a, b) => {
-      const ad = a.dataPublicacao || '';
-      const bd = b.dataPublicacao || '';
+      const ad = a.latestClickDate || '';
+      const bd = b.latestClickDate || '';
       if (!ad && !bd) return 0;
       if (!ad) return 1;
       if (!bd) return -1;
@@ -2928,9 +3057,9 @@ function getFantasyPerfChartData() {
   const catNames = topN.map(r => r.categoria || '(Sem categoria)');
   const barLinks = topN.map(r => r.link || '');
 
-  // Baseline: vídeos Fantasy com Data Publicação em 2026 (independente dos filtros do usuário)
+  // Baseline: vídeos Fantasy com clickDate em 2026 (independente dos filtros do usuário)
   const baseRows = allFantasyData.filter(r =>
-    r.kind === 'video' && r.dataPublicacao && r.dataPublicacao >= '2026-01-01' && r.dataPublicacao <= '2026-12-31'
+    r.kind === 'video' && r.clickDate && r.clickDate >= '2026-01-01' && r.clickDate <= '2026-12-31'
   );
   const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : allFantasyData);
   const baseVals = baseVideos.map(fantasyPerfMetricVal);
@@ -2971,7 +3100,7 @@ function renderFantasyPerformance() {
       ` Fantasy Clicks: ${fmtNum(row.fantasyClicks || 0)}`,
       ` Fantasy Conversion: ${fmtFantasyCR(row.fantasyConversion)}`,
       ` Views: ${(row.views == null || !Number.isFinite(row.views)) ? '—' : fmtNum(row.views)}`,
-      ` Data Publicação: ${fmtDate(row.dataPublicacao)}`,
+      ` Último clique: ${fmtDate(row.latestClickDate)}`,
     ];
   };
 
@@ -3019,21 +3148,22 @@ function applyFantasyFilters() {
     filteredFantasy = [];
     return;
   }
+  if (isFantasyTabActive()) syncTemporalFromUI();
   const creator   = (document.getElementById('filterCreator') || {}).value || '';
-  const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
-  const dateEnd   = (document.getElementById('filterDateEnd') || {}).value || '';
+  const dateStart = fantasyDateStart || '';
+  const dateEnd   = fantasyDateEnd || '';
   const tipo      = (document.getElementById('filterTipo') || {}).value || '';
 
   filteredFantasy = allFantasyData.filter(r => {
-    // Data: active range excludes rows without valid date
+    // Data do clique: range ativo exclui rows sem clickDate válida
     if (dateStart || dateEnd) {
-      if (!r.dataPublicacao) return false;
-      if (dateStart && r.dataPublicacao < dateStart) return false;
-      if (dateEnd && r.dataPublicacao > dateEnd) return false;
+      if (!r.clickDate) return false;
+      if (dateStart && r.clickDate < dateStart) return false;
+      if (dateEnd && r.clickDate > dateEnd) return false;
     }
-    if (!weekAllSelected) {
-      if (selectedWeeks.size === 0) return false;
-      if (!r.semana || !selectedWeeks.has(r.semana)) return false;
+    if (!fantasyWeekAllSelected) {
+      if (fantasySelectedWeeks.size === 0) return false;
+      if (!r.clickWeek || !fantasySelectedWeeks.has(r.clickWeek)) return false;
     }
     if (!catAllSelected) {
       if (selectedCats.size === 0) return false;
@@ -3068,8 +3198,10 @@ async function loadFantasyData() {
     if (!allFantasyData.length) throw new Error('fantasy.csv vazio ou mal formatado');
     fantasyLoaded = true;
     fantasyLoadError = null;
+    initFantasyTemporalDefaults();
     applyFantasyFilters();
     if (activeTab === 'fantasy') {
+      loadTemporalToUI('fantasy');
       rebuildSharedFilterOptions('fantasy');
       setNumericRangesEnabled(false);
       renderFantasyDashboard();
@@ -3248,6 +3380,12 @@ function switchTab(tab) {
     tab = 'dashboard';
   }
   const prevTab = activeTab;
+  const prevWasFantasy = prevTab === 'fantasy';
+  const nextIsFantasy = tab === 'fantasy' && isFantasyTabEnabled();
+
+  // Salvar Data/Semana do universo que está saindo (antes de trocar activeTab)
+  syncTemporalFromUI();
+
   activeTab = tab;
   document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
   document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
@@ -3263,14 +3401,18 @@ function switchTab(tab) {
   const fantasyBtn = document.getElementById('tabBtnFantasy');
   if (fantasyBtn) fantasyBtn.classList.toggle('active', tab === 'fantasy');
 
-  if (tab === 'fantasy' && isFantasyTabEnabled()) {
+  if (nextIsFantasy) {
+    loadTemporalToUI('fantasy');
     rebuildSharedFilterOptions('fantasy');
     setNumericRangesEnabled(false);
     applyFantasyFilters();
     renderFantasyDashboard();
-  } else if (prevTab === 'fantasy') {
+  } else if (prevWasFantasy) {
+    loadTemporalToUI('main');
     rebuildSharedFilterOptions('main');
     setNumericRangesEnabled(true);
+  } else {
+    updateFilterTemporalLabels();
   }
 
   if (tab === 'basedados')  renderTable();
@@ -3298,8 +3440,9 @@ function getSourceTitlesList() {
 }
 
 function getSourceTitleRecords() {
+  const dateField = isFantasyTabActive() ? 'clickDate' : 'dataPublicacao';
   const sorted = [...getFilterSourceRows()].sort((a, b) =>
-    (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '')
+    (b[dateField] || '').localeCompare(a[dateField] || '')
   );
   const unique = [];
   const seen = new Set();
@@ -3600,15 +3743,9 @@ function init() {
   rebuildCreatorOptions();
   rebuildTipoOptions();
 
-  const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
-  if (dates.length) {
-    const currentYear = new Date().getFullYear();
-    const today = new Date().toISOString().slice(0, 10);
-    const defaultStart = `${currentYear}-01-01`;
-    const hasCurrentYear = dates.some(d => d >= defaultStart);
-    document.getElementById('filterDateStart').value = hasCurrentYear ? defaultStart : dates[0];
-    document.getElementById('filterDateEnd').value = today; // always up to today
-  }
+  initMainTemporalDefaults();
+  loadTemporalToUI('main');
+  updateFilterTemporalLabels();
 
   document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
 
@@ -4304,9 +4441,11 @@ function initRangeFilters() {
 }
 
 function applyFilters() {
+  syncTemporalFromUI();
   const creator   = document.getElementById('filterCreator').value;
-  const dateStart = document.getElementById('filterDateStart').value;
-  const dateEnd   = document.getElementById('filterDateEnd').value;
+  // Main sempre usa estado próprio (Data de Publicação) — nunca o DOM da Fantasy
+  const dateStart = mainDateStart || '';
+  const dateEnd   = mainDateEnd || '';
   const rangeVals = readRangeFilterValues(true);
 
   const baseFilter = r => {
@@ -4315,7 +4454,7 @@ function applyFilters() {
     if (dateStart && r.dataPublicacao < dateStart) return false;
     if (dateEnd   && r.dataPublicacao > dateEnd)   return false;
     if (!titleAllSelected && selectedTitles.size > 0 && !selectedTitles.has(r.title)) return false;
-    if (!weekAllSelected && selectedWeeks.size > 0 && !selectedWeeks.has(r.semana||'')) return false;
+    if (!mainWeekAllSelected && mainSelectedWeeks.size > 0 && !mainSelectedWeeks.has(r.semana||'')) return false;
     if (rangeVals.viewsMinSet && Number.isFinite(r.views) && r.views < rangeVals.viewsMin) return false;
     if (rangeVals.viewsMaxSet && Number.isFinite(r.views) && r.views > rangeVals.viewsMax) return false;
     if (rangeVals.outlierMinSet && Number.isFinite(r.outlier) && r.outlier < rangeVals.outlierMin) return false;
@@ -4378,24 +4517,24 @@ function clearFilters() {
   if (tipoEl) tipoEl.value = '';
   selectedCats.clear();
   selectedTitles.clear();
-  selectedWeeks.clear();
   catAllSelected = true;
-  weekAllSelected = true;
   titleAllSelected = true;
   updateCatInput();
   updateTitleInput();
-  updateWeekInput();
-  rebuildSharedFilterOptions(activeTab === 'fantasy' ? 'fantasy' : 'main');
   document.getElementById('weekDropdown').classList.remove('open');
   resetRangeFiltersToBounds();
-  // If on Fantasy, ranges stay visually disabled but values are reset (state preserved pattern)
-  if (activeTab === 'fantasy') setNumericRangesEnabled(false);
-  const dates = allData.map(r => r.dataPublicacao).filter(Boolean).sort();
-  if (dates.length) {
-    const currentYear2 = new Date().getFullYear();
-    const today2 = new Date().toISOString().slice(0, 10);
-    document.getElementById('filterDateStart').value = `${currentYear2}-01-01`;
-    document.getElementById('filterDateEnd').value = today2;
+
+  if (isFantasyTabActive()) {
+    // Clear Fantasy: reset só Data/Semana Fantasy (Main intacto)
+    initFantasyTemporalDefaults();
+    loadTemporalToUI('fantasy');
+    setNumericRangesEnabled(false);
+    rebuildSharedFilterOptions('fantasy');
+  } else {
+    // Clear Main: reset só Data/Semana Main (Fantasy intacto)
+    initMainTemporalDefaults();
+    loadTemporalToUI('main');
+    rebuildSharedFilterOptions('main');
   }
   applyFilters();
 }
@@ -4444,7 +4583,7 @@ function renderTitleDropdown(items) {
       return `<div class="title-option${(titleAllSelected || selectedTitles.has(r.title)) ? ' selected' : ''}"
         onclick="toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
-        <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${r.dataPublicacao || '—'}</span>${r.title}
+        <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${(isFantasyTabActive() ? r.clickDate : r.dataPublicacao) || '—'}</span>${r.title}
       </div>`;
     }).join('')}
     ${targetTitles.length > 60 ? `<div style="padding:8px 12px;font-size:11px;color:var(--gray-400);background:var(--gray-50);border-top:1px solid var(--gray-200);">Mostrando 60 de ${targetTitles.length}. Refine a busca para ver mais.</div>` : ''}`;
@@ -6019,17 +6158,20 @@ function getWeekRange(weekKey) {
 }
 
 function buildWeekOptions() {
-  const dateStart = document.getElementById('filterDateStart').value;
-  const dateEnd   = document.getElementById('filterDateEnd').value;
+  const isF = isFantasyTabActive();
+  const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
+  const dateEnd   = (document.getElementById('filterDateEnd') || {}).value || '';
   const weekMap = new Map();
   getFilterSourceRows().forEach(r => {
-    if (!r.semana) return;
-    if (dateStart && (!r.dataPublicacao || r.dataPublicacao < dateStart)) return;
-    if (dateEnd   && (!r.dataPublicacao || r.dataPublicacao > dateEnd))   return;
-    if (!weekMap.has(r.semana)) weekMap.set(r.semana, { count: 0, dates: [] });
-    const w = weekMap.get(r.semana);
+    const week = isF ? r.clickWeek : r.semana;
+    const date = isF ? r.clickDate : r.dataPublicacao;
+    if (!week) return;
+    if (dateStart && (!date || date < dateStart)) return;
+    if (dateEnd   && (!date || date > dateEnd))   return;
+    if (!weekMap.has(week)) weekMap.set(week, { count: 0, dates: [] });
+    const w = weekMap.get(week);
     w.count++;
-    if (r.dataPublicacao) w.dates.push(r.dataPublicacao);
+    if (date) w.dates.push(date);
   });
   // Sort year-aware: W1/24 < W2/24 < W1/25
   const sortKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*100 + parseInt(m[1]) : 0; };
