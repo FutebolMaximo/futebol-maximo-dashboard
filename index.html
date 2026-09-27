@@ -840,15 +840,15 @@
     flex-shrink: 0;
   }
   #fantasyDashboard .fantasy-kpi-grid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 24px;
   }
-  @media (max-width: 1100px) {
-    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 600px) {
+  @media (max-width: 900px) {
     #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px) {
+    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: 1fr; }
   }
   .fantasy-info {
     display: inline-flex;
@@ -1135,18 +1135,6 @@
         <div class="kpi-value" id="kGancho">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kGanchoMed">—</div>
-      </div>
-  </div>
-  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
-    <div class="kpi-card accent">
-        <div class="kpi-label">FANTASY CLICKS</div>
-        <div class="kpi-value" id="kFantasyClicks">—</div>
-        <div class="kpi-sub">Soma dos valores conhecidos</div>
-      </div>
-    <div class="kpi-card accent">
-        <div class="kpi-label">FANTASY CONVERSION</div>
-        <div class="kpi-value" id="kFantasyConv">—</div>
-        <div class="kpi-sub">Clicks ÷ Views (elegíveis)</div>
       </div>
   </div>
 
@@ -1610,18 +1598,6 @@
         <div class="kpi-median" id="skSharesMed">—</div>
       </div>
   </div>
-  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
-    <div class="kpi-card accent">
-        <div class="kpi-label">FANTASY CLICKS</div>
-        <div class="kpi-value" id="skFantasyClicks">—</div>
-        <div class="kpi-sub">Soma dos valores conhecidos</div>
-      </div>
-    <div class="kpi-card accent">
-        <div class="kpi-label">FANTASY CONVERSION</div>
-        <div class="kpi-value" id="skFantasyConv">—</div>
-        <div class="kpi-sub">Clicks ÷ Views (elegíveis)</div>
-      </div>
-  </div>
   <!-- SHORTS EVOLUÇÃO TEMPORAL -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Evolução Temporal · Shorts</h2></div>
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
@@ -1776,35 +1752,53 @@
       <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Fantasy · KPIs</h2>
     </div>
-    <p class="section-desc">Visitantes únicos e conversão dos vídeos no recorte filtrado.</p>
+    <p class="section-desc">Visitantes (fantasy.csv) e conversão por conteúdo (dados.csv). Total UV e BIO são all-time; demais cards respeitam os filtros compartilhados (exceto Tipo).</p>
     <div class="kpi-grid fantasy-kpi-grid">
-      <div class="kpi-card accent">
-        <div class="kpi-label">UNIQUE VISITORS</div>
-        <div class="kpi-value" id="fkUniqueVisitors">—</div>
-        <div class="kpi-sub">Visitantes distintos no recorte</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">VÍDEOS QUE GERARAM VISITANTES</div>
-        <div class="kpi-value" id="fkVideos">—</div>
-        <div class="kpi-sub">Vídeos válidos distintos</div>
-      </div>
-      <div class="kpi-card">
+      <div class="kpi-card accent" title="All-time. COUNT DISTINCT visitorId em allFantasyData.">
         <div class="fantasy-kpi-label-row">
-          <div class="kpi-label">CONVERSION RATE</div>
-          <span class="fantasy-info" title="Unique Visitors no recorte ÷ soma das Views dos vídeos únicos válidos. BIO e Não identificado entram no numerador, mesmo sem Views próprias no denominador.">i</span>
+          <div class="kpi-label">TOTAL UNIQUE VISITORS</div>
+          <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
-        <div class="kpi-value" id="fkCR">—</div>
-        <div class="kpi-sub" id="fkCRSub">UV ÷ Views únicas</div>
+        <div class="kpi-value" id="fkTotalUV">—</div>
+        <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="fantasy-kpi-label-row">
+          <div class="kpi-label">FANTASY CONVERSION</div>
+          <span class="fantasy-info" title="SUM Fantasy Clicks ÷ SUM Views dos vídeos elegíveis (LF+Shorts). Ignora filtro Tipo. Fonte: dados.csv.">i</span>
+        </div>
+        <div class="kpi-value" id="fkMainConv">—</div>
+        <div class="kpi-sub">LF + Shorts · dados.csv</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">LONG FORM CLICKS</div>
+        <div class="kpi-value" id="fkLfClicks">—</div>
+        <div class="kpi-sub">Soma Fantasy Clicks · LF</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">LONG FORM CONVERSION</div>
+        <div class="kpi-value" id="fkLfConv">—</div>
+        <div class="kpi-sub">Clicks ÷ Views · LF</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">SHORTS CLICKS</div>
+        <div class="kpi-value" id="fkShClicks">—</div>
+        <div class="kpi-sub">Soma Fantasy Clicks · Shorts</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">SHORTS CONVERSION</div>
+        <div class="kpi-value" id="fkShConv">—</div>
+        <div class="kpi-sub">Clicks ÷ Views · Shorts</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">APP UNIQUE VISITORS</div>
         <div class="kpi-value" id="fkAppUV">—</div>
-        <div class="kpi-sub">Destino = App</div>
+        <div class="kpi-sub">Destino = App · recorte</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">WEB UNIQUE VISITORS</div>
         <div class="kpi-value" id="fkWebUV">—</div>
-        <div class="kpi-sub">Destino = Web</div>
+        <div class="kpi-sub">Destino = Web · recorte</div>
       </div>
       <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
         <div class="fantasy-kpi-label-row">
@@ -2370,21 +2364,6 @@ function buildFantasyBreakdown(rows, dimension) {
     .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label, 'pt-BR'));
 }
 
-function computeFantasyKPIs(rows) {
-  const uniqueVisitors = countFantasyUniqueVisitors(rows);
-  const videoStats = getFantasyUniqueVideoStats(rows);
-  const sumViews = videoStats.sumViews;
-  const cr = sumViews > 0 ? uniqueVisitors / sumViews : null;
-  return {
-    uniqueVisitors,
-    videos: videoStats.videoCount,
-    sumViews,
-    conversionRate: cr,
-    appUV: countFantasyUniqueVisitors(rows, r => (r.destino || '').trim() === 'App'),
-    webUV: countFantasyUniqueVisitors(rows, r => (r.destino || '').trim() === 'Web'),
-  };
-}
-
 function setFantasyKPI(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text;
@@ -2394,32 +2373,78 @@ function countFantasyBioVisitorsAllTime() {
   return countFantasyUniqueVisitors(allFantasyData, r => r.kind === 'bio');
 }
 
+function countFantasyTotalVisitorsAllTime() {
+  return countFantasyUniqueVisitors(allFantasyData);
+}
+
+/**
+ * Rows de dados.csv para KPIs Fantasy de conteúdo.
+ * Respeita Data / Semana / Categoria / Creator / Título.
+ * IGNORA filtro Tipo e ranges numéricos (exceção só destes cards).
+ */
+function getFantasyMainRowsIgnoringTipo() {
+  const creator = (document.getElementById('filterCreator') || {}).value || '';
+  const dateStart = (document.getElementById('filterDateStart') || {}).value || '';
+  const dateEnd = (document.getElementById('filterDateEnd') || {}).value || '';
+  return (allData || []).filter(r => {
+    if (creator && r.creator !== creator) return false;
+    if (!catAllSelected) {
+      if (selectedCats.size === 0) return false;
+      if (!selectedCats.has(r.categoria || '(Sem categoria)')) return false;
+    }
+    if (dateStart && (!r.dataPublicacao || r.dataPublicacao < dateStart)) return false;
+    if (dateEnd && (!r.dataPublicacao || r.dataPublicacao > dateEnd)) return false;
+    if (!titleAllSelected) {
+      if (selectedTitles.size === 0) return false;
+      if (!r.title || !selectedTitles.has(r.title)) return false;
+    }
+    if (!weekAllSelected) {
+      if (selectedWeeks.size === 0) return false;
+      if (!r.semana || !selectedWeeks.has(r.semana)) return false;
+    }
+    return true;
+  });
+}
+
+function fmtFantasyKpiClicks(v) {
+  return v == null || !Number.isFinite(v) ? '—' : fmtNum(v);
+}
+
+function fmtFantasyKpiConv(v) {
+  return v == null || !Number.isFinite(v) ? '—' : fmtFantasyCR(v);
+}
+
 function renderFantasyKPIs() {
+  // fantasy.csv cards
   if (!fantasyLoaded || fantasyLoadError) {
-    setFantasyKPI('fkUniqueVisitors', '—');
-    setFantasyKPI('fkVideos', '—');
-    setFantasyKPI('fkCR', '—');
+    setFantasyKPI('fkTotalUV', '—');
     setFantasyKPI('fkAppUV', '—');
     setFantasyKPI('fkWebUV', '—');
     setFantasyKPI('fkBioUV', '—');
-    const sub = document.getElementById('fkCRSub');
-    if (sub) sub.textContent = 'UV ÷ Views únicas';
+  } else {
+    setFantasyKPI('fkTotalUV', fmtNum(countFantasyTotalVisitorsAllTime()));
+    setFantasyKPI('fkAppUV', fmtNum(countFantasyUniqueVisitors(filteredFantasy, r => (r.destino || '').trim() === 'App')));
+    setFantasyKPI('fkWebUV', fmtNum(countFantasyUniqueVisitors(filteredFantasy, r => (r.destino || '').trim() === 'Web')));
+    setFantasyKPI('fkBioUV', fmtNum(countFantasyBioVisitorsAllTime()));
+  }
+
+  // dados.csv cards (independentes do fantasy.csv; ignoram Tipo)
+  if (!allData || !allData.length) {
+    setFantasyKPI('fkMainConv', '—');
+    setFantasyKPI('fkLfClicks', '—');
+    setFantasyKPI('fkLfConv', '—');
+    setFantasyKPI('fkShClicks', '—');
+    setFantasyKPI('fkShConv', '—');
     return;
   }
-  const k = computeFantasyKPIs(filteredFantasy);
-  setFantasyKPI('fkUniqueVisitors', fmtNum(k.uniqueVisitors));
-  setFantasyKPI('fkVideos', fmtNum(k.videos));
-  setFantasyKPI('fkCR', fmtFantasyCR(k.conversionRate));
-  setFantasyKPI('fkAppUV', fmtNum(k.appUV));
-  setFantasyKPI('fkWebUV', fmtNum(k.webUV));
-  // BIO Visitors: always all-time from allFantasyData (ignores filters)
-  setFantasyKPI('fkBioUV', fmtNum(countFantasyBioVisitorsAllTime()));
-  const sub = document.getElementById('fkCRSub');
-  if (sub) {
-    sub.textContent = Number.isFinite(k.conversionRate)
-      ? `Denom.: ${fmtNum(k.sumViews)} Views únicas`
-      : 'Sem Views únicas no recorte';
-  }
+  const combined = getFantasyMainRowsIgnoringTipo();
+  const lfRows = combined.filter(isLongForm);
+  const shRows = combined.filter(isShortForm);
+  setFantasyKPI('fkMainConv', fmtFantasyKpiConv(aggregateFantasyConversion(combined)));
+  setFantasyKPI('fkLfClicks', fmtFantasyKpiClicks(sumFantasyClicks(lfRows)));
+  setFantasyKPI('fkLfConv', fmtFantasyKpiConv(aggregateFantasyConversion(lfRows)));
+  setFantasyKPI('fkShClicks', fmtFantasyKpiClicks(sumFantasyClicks(shRows)));
+  setFantasyKPI('fkShConv', fmtFantasyKpiConv(aggregateFantasyConversion(shRows)));
 }
 
 function setFantasyBreakdownDimension(dim) {
@@ -4388,7 +4413,7 @@ function setKPI(id, val, medId, medVal) {
 
 function updateKPIs() {
   const d = filteredLong;
-  const ids = ['kImpr','kViews','kDurMedia','kAvgPct','kAvgDur','kInsc','kConv','kLikes','kComm','kShares','kCTR','kGancho','kFantasyClicks','kFantasyConv'];
+  const ids = ['kImpr','kViews','kDurMedia','kAvgPct','kAvgDur','kInsc','kConv','kLikes','kComm','kShares','kCTR','kGancho'];
   const mids = ['kImprMed','kViewsMed','kDurMed','kAvgPctMed','kAvgDurMed','kInscMed','kConvMed','kLikesMed','kCommMed','kSharesMed','kCTRMed','kGanchoMed'];
   if (!d.length) {
     ids.forEach(id => { const el=document.getElementById(id); if(el) el.textContent='—'; });
@@ -4438,12 +4463,6 @@ function updateKPIs() {
   setKPI('kLikes',   fmtNum(avgLikes),                  'kLikesMed',   fmtNum(medLikes));
   setKPI('kComm',    fmtNum(avgComm),                   'kCommMed',    fmtNum(medComm));
   setKPI('kShares',  fmtNum(avgShares),                 'kSharesMed',  fmtNum(medShares));
-  const fcSum = sumFantasyClicks(d);
-  const fcConv = aggregateFantasyConversion(d);
-  const elFc = document.getElementById('kFantasyClicks');
-  const elFv = document.getElementById('kFantasyConv');
-  if (elFc) elFc.textContent = fcSum == null ? '—' : fmtNum(fcSum);
-  if (elFv) elFv.textContent = fcConv == null ? '—' : fmtFantasyCR(fcConv);
 }
 
 // ── CHARTS ────────────────────────────────────────────────────────────────────
@@ -6051,7 +6070,7 @@ function renderShortsKPIs() {
     if(mel) mel.textContent = medVal !== undefined ? `Mediana: ${medVal}` : '';
   };
   if (!d.length) {
-    ['skImpr','skViews','skDurMedia','skAvgPct','skAvgDur','skInsc','skCTR','skLikes','skComm','skShares','skFantasyClicks','skFantasyConv'].forEach(id => {
+    ['skImpr','skViews','skDurMedia','skAvgPct','skAvgDur','skInsc','skCTR','skLikes','skComm','skShares'].forEach(id => {
       const el=document.getElementById(id); if(el) el.textContent='—';
     });
     return;
@@ -6067,12 +6086,6 @@ function renderShortsKPIs() {
   setS('skLikes',   fmtNum(mean(d.map(r=>r.likes))),         'skLikesMed',   fmtNum(median(d.map(r=>r.likes))));
   setS('skComm',    fmtNum(mean(d.map(r=>r.comentarios))),   'skCommMed',    fmtNum(median(d.map(r=>r.comentarios))));
   setS('skShares',  fmtNum(mean(d.map(r=>r.shares))),        'skSharesMed',  fmtNum(median(d.map(r=>r.shares))));
-  const fcSum = sumFantasyClicks(d);
-  const fcConv = aggregateFantasyConversion(d);
-  const elFc = document.getElementById('skFantasyClicks');
-  const elFv = document.getElementById('skFantasyConv');
-  if (elFc) elFc.textContent = fcSum == null ? '—' : fmtNum(fcSum);
-  if (elFv) elFv.textContent = fcConv == null ? '—' : fmtFantasyCR(fcConv);
 }
 
 function renderShortsTemporal() {
