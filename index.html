@@ -2309,13 +2309,14 @@ function parseFantasyCSV(text) {
     return result;
   };
 
-  // "Data Publicação" no fantasy.csv atual = DATA DO CLIQUE (semântica Fantasy).
-  // Também aceita headers explícitos de clique se o CSV for renomeado no futuro.
+  // Fantasy: Data Click → r.clickDate | Data Publicação → r.publishDate (campos separados).
   const colMap = {
-    'data publicacao': 'clickDateRaw', 'data publica\u00e7\u00e3o': 'clickDateRaw',
-    'data do clique': 'clickDateRaw', 'data clique': 'clickDateRaw',
+    // clique / visita
     'data click': 'clickDateRaw',
+    'data do clique': 'clickDateRaw', 'data clique': 'clickDateRaw',
     'click date': 'clickDateRaw', 'data visita': 'clickDateRaw',
+    // publicação do vídeo (NÃO misturar com clickDate)
+    'data publicacao': 'publishDateRaw', 'data publica\u00e7\u00e3o': 'publishDateRaw',
     'mes_ano': 'mesAno', 'm\u00eas_ano': 'mesAno',
     'ano': 'ano', 'semana': 'semanaRaw',
     'video title': 'title', 'tipo': 'tipo', 'categoria': 'categoria',
@@ -2339,6 +2340,7 @@ function parseFantasyCSV(text) {
     const title = (obj.title || '').trim();
     const views = parseFantasyViews(obj.views);
     const clickDate = parseFantasyDate(obj.clickDateRaw);
+    const publishDate = parseFantasyDate(obj.publishDateRaw);
     const urlVideo = (obj.urlVideo || '').trim();
     const kind = classifyFantasyKind(videoIdRaw, title, views, clickDate);
 
@@ -2355,6 +2357,7 @@ function parseFantasyCSV(text) {
     rows.push({
       clickDate,
       clickWeek,
+      publishDate,
       mesAno: (obj.mesAno || '').trim(),
       ano: parseInt(obj.ano, 10) || 0,
       title,
@@ -2930,6 +2933,15 @@ function renderFantasyTemporal() {
   chartInstances['chartFantasyTemporal'] = fantasyTemporalChart;
 }
 
+function resolveFantasyPublishDate(datesSet, videoId) {
+  const dates = [...datesSet].filter(Boolean).sort();
+  if (dates.length === 0) return '';
+  if (dates.length === 1) return dates[0];
+  // Conflito: não escolher silenciosamente — omitir data (Recentes manda para o fim)
+  console.warn('[Fantasy Performance] publishDate conflitante para videoId', videoId, dates);
+  return '';
+}
+
 function buildFantasyPerformanceVideos(rows) {
   const byVideo = new Map();
   (rows || []).forEach(r => {
@@ -2942,6 +2954,7 @@ function buildFantasyPerformanceVideos(rows) {
         videoId: key,
         title: r.title || '',
         latestClickDate: r.clickDate || '',
+        publishDates: new Set(),
         views: Number.isFinite(r.views) ? r.views : null,
         tipo: r.tipo || '',
         creator: r.creator || '',
@@ -2954,6 +2967,7 @@ function buildFantasyPerformanceVideos(rows) {
     if (r.clickDate && (!entry.latestClickDate || r.clickDate > entry.latestClickDate)) {
       entry.latestClickDate = r.clickDate;
     }
+    if (r.publishDate) entry.publishDates.add(r.publishDate);
     if (r.visitorId) entry.visitors.add(r.visitorId);
   });
   return [...byVideo.values()].map(v => {
@@ -2963,6 +2977,7 @@ function buildFantasyPerformanceVideos(rows) {
       videoId: v.videoId,
       title: v.title,
       latestClickDate: v.latestClickDate,
+      publishDate: resolveFantasyPublishDate(v.publishDates, v.videoId),
       views: v.views,
       tipo: v.tipo,
       creator: v.creator,
@@ -3036,11 +3051,12 @@ function getFantasyPerfChartData() {
   const videos = buildFantasyPerformanceVideos(filteredFantasy);
   let sorted;
   if (fantasyPerfMode === 'recent') {
+    // Recentes = vídeos publicados mais recentemente (publishDate), não latestClickDate
     sorted = [...videos].sort((a, b) => {
-      const ad = a.latestClickDate || '';
-      const bd = b.latestClickDate || '';
+      const ad = a.publishDate || '';
+      const bd = b.publishDate || '';
       if (!ad && !bd) return 0;
-      if (!ad) return 1;
+      if (!ad) return 1;  // sem publishDate → fim
       if (!bd) return -1;
       return bd.localeCompare(ad);
     });
@@ -3101,7 +3117,7 @@ function renderFantasyPerformance() {
       ` Fantasy Clicks: ${fmtNum(row.fantasyClicks || 0)}`,
       ` Fantasy Conversion: ${fmtFantasyCR(row.fantasyConversion)}`,
       ` Views: ${(row.views == null || !Number.isFinite(row.views)) ? '—' : fmtNum(row.views)}`,
-      ` Último clique: ${fmtDate(row.latestClickDate)}`,
+      ` Data de Publicação: ${fmtDate(row.publishDate)}`,
     ];
   };
 
