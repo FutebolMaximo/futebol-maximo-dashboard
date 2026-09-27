@@ -840,15 +840,32 @@
     flex-shrink: 0;
   }
   #fantasyDashboard .fantasy-kpi-grid {
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 24px;
   }
+  #fantasyDashboard .fantasy-kpi-row {
+    display: grid;
+    gap: 10px;
+  }
+  #fantasyDashboard .fantasy-kpi-row-visitors {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  #fantasyDashboard .fantasy-kpi-row-conversion {
+    grid-template-columns: repeat(3, 1fr);
+  }
   @media (max-width: 900px) {
-    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    #fantasyDashboard .fantasy-kpi-row-visitors,
+    #fantasyDashboard .fantasy-kpi-row-conversion {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   @media (max-width: 520px) {
-    #fantasyDashboard .fantasy-kpi-grid { grid-template-columns: 1fr; }
+    #fantasyDashboard .fantasy-kpi-row-visitors,
+    #fantasyDashboard .fantasy-kpi-row-conversion {
+      grid-template-columns: 1fr;
+    }
   }
   .fantasy-info {
     display: inline-flex;
@@ -1752,61 +1769,55 @@
       <div class="section-divider"><span class="section-toggle">▼</span></div>
       <h2>Fantasy · KPIs</h2>
     </div>
-    <p class="section-desc">Visitantes (fantasy.csv) e conversão por conteúdo (dados.csv). Total UV e BIO são all-time; demais cards respeitam os filtros compartilhados (exceto Tipo).</p>
-    <div class="kpi-grid fantasy-kpi-grid">
-      <div class="kpi-card accent" title="All-time. COUNT DISTINCT visitorId em allFantasyData.">
-        <div class="fantasy-kpi-label-row">
-          <div class="kpi-label">TOTAL UNIQUE VISITORS</div>
-          <span class="fantasy-kpi-alltime">ALL-TIME</span>
+    <p class="section-desc">Linha 1: audiência (Total/BIO all-time; LF/Shorts Visitors via dados.csv). Linha 2: conversão (dados.csv). Filtros compartilhados exceto Tipo; Total e BIO ignoram filtros.</p>
+    <div class="fantasy-kpi-grid">
+      <div class="fantasy-kpi-row fantasy-kpi-row-visitors">
+        <div class="kpi-card accent" title="All-time. COUNT DISTINCT visitorId em allFantasyData.">
+          <div class="fantasy-kpi-label-row">
+            <div class="kpi-label">TOTAL UNIQUE VISITORS</div>
+            <span class="fantasy-kpi-alltime">ALL-TIME</span>
+          </div>
+          <div class="kpi-value" id="fkTotalUV">—</div>
+          <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
         </div>
-        <div class="kpi-value" id="fkTotalUV">—</div>
-        <div class="kpi-sub">Visitantes distintos · fantasy.csv</div>
-      </div>
-      <div class="kpi-card accent">
-        <div class="fantasy-kpi-label-row">
-          <div class="kpi-label">FANTASY CONVERSION</div>
-          <span class="fantasy-info" title="SUM Fantasy Clicks ÷ SUM Views dos vídeos elegíveis (LF+Shorts). Ignora filtro Tipo. Fonte: dados.csv.">i</span>
+        <div class="kpi-card">
+          <div class="kpi-label">LONG FORM VISITORS</div>
+          <div class="kpi-value" id="fkLfClicks">—</div>
+          <div class="kpi-sub">Soma Fantasy Clicks · LF · dados.csv</div>
         </div>
-        <div class="kpi-value" id="fkMainConv">—</div>
-        <div class="kpi-sub">LF + Shorts · dados.csv</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">LONG FORM CLICKS</div>
-        <div class="kpi-value" id="fkLfClicks">—</div>
-        <div class="kpi-sub">Soma Fantasy Clicks · LF</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">LONG FORM CONVERSION</div>
-        <div class="kpi-value" id="fkLfConv">—</div>
-        <div class="kpi-sub">Clicks ÷ Views · LF</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">SHORTS CLICKS</div>
-        <div class="kpi-value" id="fkShClicks">—</div>
-        <div class="kpi-sub">Soma Fantasy Clicks · Shorts</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">SHORTS CONVERSION</div>
-        <div class="kpi-value" id="fkShConv">—</div>
-        <div class="kpi-sub">Clicks ÷ Views · Shorts</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">APP UNIQUE VISITORS</div>
-        <div class="kpi-value" id="fkAppUV">—</div>
-        <div class="kpi-sub">Destino = App · recorte</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">WEB UNIQUE VISITORS</div>
-        <div class="kpi-value" id="fkWebUV">—</div>
-        <div class="kpi-sub">Destino = Web · recorte</div>
-      </div>
-      <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
-        <div class="fantasy-kpi-label-row">
-          <div class="kpi-label">BIO VISITORS</div>
-          <span class="fantasy-kpi-alltime">ALL-TIME</span>
+        <div class="kpi-card">
+          <div class="kpi-label">SHORTS VISITORS</div>
+          <div class="kpi-value" id="fkShClicks">—</div>
+          <div class="kpi-sub">Soma Fantasy Clicks · Shorts · dados.csv</div>
         </div>
-        <div class="kpi-value" id="fkBioUV">—</div>
-        <div class="kpi-sub">Visitantes distintos · BIO</div>
+        <div class="kpi-card" title="All-time. Registros BIO não possuem Data Publicação.">
+          <div class="fantasy-kpi-label-row">
+            <div class="kpi-label">BIO VISITORS</div>
+            <span class="fantasy-kpi-alltime">ALL-TIME</span>
+          </div>
+          <div class="kpi-value" id="fkBioUV">—</div>
+          <div class="kpi-sub">Visitantes distintos · BIO</div>
+        </div>
+      </div>
+      <div class="fantasy-kpi-row fantasy-kpi-row-conversion">
+        <div class="kpi-card accent">
+          <div class="fantasy-kpi-label-row">
+            <div class="kpi-label">FANTASY CONVERSION</div>
+            <span class="fantasy-info" title="SUM Fantasy Clicks ÷ SUM Views dos vídeos elegíveis (LF+Shorts). Ignora filtro Tipo. Fonte: dados.csv.">i</span>
+          </div>
+          <div class="kpi-value" id="fkMainConv">—</div>
+          <div class="kpi-sub">LF + Shorts · dados.csv</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">LONG FORM CONVERSION</div>
+          <div class="kpi-value" id="fkLfConv">—</div>
+          <div class="kpi-sub">Clicks ÷ Views · LF</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">SHORTS CONVERSION</div>
+          <div class="kpi-value" id="fkShConv">—</div>
+          <div class="kpi-sub">Clicks ÷ Views · Shorts</div>
+        </div>
       </div>
     </div>
 
@@ -2415,20 +2426,16 @@ function fmtFantasyKpiConv(v) {
 }
 
 function renderFantasyKPIs() {
-  // fantasy.csv cards
+  // fantasy.csv: Total UV + BIO (ALL-TIME)
   if (!fantasyLoaded || fantasyLoadError) {
     setFantasyKPI('fkTotalUV', '—');
-    setFantasyKPI('fkAppUV', '—');
-    setFantasyKPI('fkWebUV', '—');
     setFantasyKPI('fkBioUV', '—');
   } else {
     setFantasyKPI('fkTotalUV', fmtNum(countFantasyTotalVisitorsAllTime()));
-    setFantasyKPI('fkAppUV', fmtNum(countFantasyUniqueVisitors(filteredFantasy, r => (r.destino || '').trim() === 'App')));
-    setFantasyKPI('fkWebUV', fmtNum(countFantasyUniqueVisitors(filteredFantasy, r => (r.destino || '').trim() === 'Web')));
     setFantasyKPI('fkBioUV', fmtNum(countFantasyBioVisitorsAllTime()));
   }
 
-  // dados.csv cards (independentes do fantasy.csv; ignoram Tipo)
+  // dados.csv: Visitors (ex-Clicks) + Conversions — ignoram Tipo
   if (!allData || !allData.length) {
     setFantasyKPI('fkMainConv', '—');
     setFantasyKPI('fkLfClicks', '—');
