@@ -2942,12 +2942,16 @@ function resolveFantasyPublishDate(datesSet, videoId) {
   return '';
 }
 
+/** Vermelho LIVE — Performance Fantasy (sem token 365Scores dedicado no projeto). */
+const FANTASY_PERF_LIVE_COLOR = '#FF495C';
+
 function buildFantasyPerformanceVideos(rows) {
   const byVideo = new Map();
   (rows || []).forEach(r => {
     if (r.kind !== 'video') return;
     const key = fantasyVideoKey(r);
     if (!key) return;
+    const fmt = getFantasyFormat(r);
     let entry = byVideo.get(key);
     if (!entry) {
       entry = {
@@ -2955,6 +2959,7 @@ function buildFantasyPerformanceVideos(rows) {
         title: r.title || '',
         latestClickDate: r.clickDate || '',
         publishDates: new Set(),
+        format: fmt,
         views: Number.isFinite(r.views) ? r.views : null,
         tipo: r.tipo || '',
         creator: r.creator || '',
@@ -2964,6 +2969,9 @@ function buildFantasyPerformanceVideos(rows) {
       };
       byVideo.set(key, entry);
     }
+    // Preferir LIVE se qualquer row do videoId for LIVE (identificação visual)
+    if (fmt === 'LIVE') entry.format = 'LIVE';
+    else if (!entry.format || entry.format === 'Não identificado') entry.format = fmt;
     if (r.clickDate && (!entry.latestClickDate || r.clickDate > entry.latestClickDate)) {
       entry.latestClickDate = r.clickDate;
     }
@@ -2978,6 +2986,7 @@ function buildFantasyPerformanceVideos(rows) {
       title: v.title,
       latestClickDate: v.latestClickDate,
       publishDate: resolveFantasyPublishDate(v.publishDates, v.videoId),
+      format: v.format || 'Não identificado',
       views: v.views,
       tipo: v.tipo,
       creator: v.creator,
@@ -3068,6 +3077,7 @@ function getFantasyPerfChartData() {
   const fullLabels = topN.map(r => r.title);
   const values = topN.map(fantasyPerfMetricVal);
   const barColors = topN.map(r => {
+    if (r.format === 'LIVE') return FANTASY_PERF_LIVE_COLOR + 'cc';
     const c = CAT_COLORS[r.categoria || '(Sem categoria)'] || '#2563eb';
     return c + 'cc';
   });
@@ -3113,12 +3123,14 @@ function renderFantasyPerformance() {
       if (!d || d.length < 10) return '—';
       return `${d.slice(8, 10)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
     };
-    return [
+    const lines = [
       ` Fantasy Clicks: ${fmtNum(row.fantasyClicks || 0)}`,
       ` Fantasy Conversion: ${fmtFantasyCR(row.fantasyConversion)}`,
       ` Views: ${(row.views == null || !Number.isFinite(row.views)) ? '—' : fmtNum(row.views)}`,
       ` Data de Publicação: ${fmtDate(row.publishDate)}`,
     ];
+    if (row.format === 'LIVE') lines.push(' Formato: LIVE');
+    return lines;
   };
 
   fantasyPerformanceChart = new Chart(el, cfg);
