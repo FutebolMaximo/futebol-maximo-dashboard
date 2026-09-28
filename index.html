@@ -4791,17 +4791,19 @@ const NAMED_CAT_COLORS = {
   'REACT':                  '#4B0082',
   'ME MOSTRA ESSE GOL':     '#27272A',
   'UNIVERSO':               '#0F766E',
+  // Mesmo vermelho de LIVE no Performance Fantasy (FANTASY_PERF_LIVE_COLOR)
+  'CORTE':                  FANTASY_PERF_LIVE_COLOR,
   '(Sem categoria)':        '#D1D5DB',
 };
 
-// Build map: falls back to a generated color for unknown categories
+// Build map: named colors always available; unknown cats get fallback
 function buildCatColorMap(data) {
   const fallbackList = ['#64748b','#9ca3af','#6b7280'];
   const cats = [...new Set(data.map(r => r.categoria || '(Sem categoria)'))].sort();
-  const map = {};
+  const map = { ...NAMED_CAT_COLORS };
   let fi = 0;
   cats.forEach(c => {
-    map[c] = NAMED_CAT_COLORS[c] || fallbackList[fi++ % fallbackList.length];
+    if (!map[c]) map[c] = fallbackList[fi++ % fallbackList.length];
   });
   return map;
 }
