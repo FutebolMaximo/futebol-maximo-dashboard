@@ -1845,6 +1845,17 @@
             <div onclick="setFantasyTempMetric('conversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
           </div>
         </div>
+        <div class="fantasy-chart-controls">
+          <label for="fantasyTempDimensionSelect">Dimensão</label>
+          <select id="fantasyTempDimensionSelect" onchange="setFantasyTemporalDimension(this.value)">
+            <option value="general" selected>Geral</option>
+            <option value="creator">Creator</option>
+            <option value="categoria">Categoria</option>
+            <option value="formato">Formato</option>
+            <option value="destino">Destino</option>
+            <option value="dispositivo">Dispositivo</option>
+          </select>
+        </div>
       </div>
       <div class="fantasy-temp-wrap"><canvas id="chartFantasyTemporal"></canvas></div>
     </div>
@@ -2152,6 +2163,7 @@ let fantasyBreakdownDimension = 'creator';
 let fantasyBreakdownChart = null;
 let fantasyTemporalMetric = 'clicks'; // 'clicks' | 'conversion'
 let fantasyTempMode = 'week';
+let fantasyTemporalDimension = 'general'; // 'general' | creator | categoria | formato | destino | dispositivo
 let fantasyTemporalChart = null;
 let fantasyPerformanceMetric = 'clicks'; // 'clicks' | 'conversion'
 let fantasyPerfMode = 'recent'; // 'top' | 'bottom' | 'recent'
@@ -2833,6 +2845,14 @@ function setFantasyTempMetric(metric, label) {
   renderFantasyTemporal();
 }
 
+function setFantasyTemporalDimension(dim) {
+  const allowed = ['general', 'creator', 'categoria', 'formato', 'destino', 'dispositivo'];
+  fantasyTemporalDimension = allowed.includes(dim) ? dim : 'general';
+  const sel = document.getElementById('fantasyTempDimensionSelect');
+  if (sel && sel.value !== fantasyTemporalDimension) sel.value = fantasyTemporalDimension;
+  renderFantasyTemporal();
+}
+
 function fantasyTemporalMetricVal(periodRows, metric) {
   if (metric === 'clicks') {
     const uv = countFantasyUniqueVisitors(periodRows);
@@ -2859,6 +2879,74 @@ function groupFantasyByPeriod(data, mode) {
   return map;
 }
 
+const FANTASY_TEMP_SERIES_PALETTE = [
+  '#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4',
+  '#f97316', '#84cc16', '#ec4899', '#6366f1', '#14b8a6',
+  '#fb923c', '#64748b', '#0ea5e9', '#a855f7', '#22c55e',
+];
+
+function getFantasyTemporalSeriesColor(dimension, label, index) {
+  if (dimension === 'categoria') {
+    return (CAT_COLORS && CAT_COLORS[label]) || NAMED_CAT_COLORS[label] || FANTASY_TEMP_SERIES_PALETTE[index % FANTASY_TEMP_SERIES_PALETTE.length];
+  }
+  if (dimension === 'formato' && label === 'LIVE') {
+    return (typeof FANTASY_PERF_LIVE_COLOR !== 'undefined') ? FANTASY_PERF_LIVE_COLOR : '#FF495C';
+  }
+  return FANTASY_TEMP_SERIES_PALETTE[index % FANTASY_TEMP_SERIES_PALETTE.length];
+}
+
+/**
+ * Agrupa filteredFantasy em um passe: período × dimensão.
+ * Retorna { periodKeys, seriesLabels, cellRows: Map("period||label" → rows[]) }
+ */
+function buildFantasyTemporalDimensionGrid(rows, mode, dimension) {
+  const periodMap = {}; // period -> Map(label -> rows)
+  const totals = new Map(); // label -> UV set for ordering
+  (rows || []).forEach(r => {
+    let period;
+    if (mode === 'week') period = r.clickWeek || null;
+    else period = getPeriodKey(r.clickDate, mode);
+    if (!period) return;
+    const label = getFantasyDimensionLabel(r, dimension);
+    if (!periodMap[period]) periodMap[period] = new Map();
+    if (!periodMap[period].has(label)) periodMap[period].set(label, []);
+    periodMap[period].get(label).push(r);
+    if (!totals.has(label)) totals.set(label, new Set());
+    if (r.visitorId) totals.get(label).add(r.visitorId);
+  });
+
+  const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2]) * 1000 + parseInt(m[1]) : 0; };
+  const periodKeys = Object.keys(periodMap).sort((a, b) =>
+    mode === 'week' ? sortWeekKey(a) - sortWeekKey(b) : a.localeCompare(b)
+  );
+
+  const formatPreferred = ['Long Form', 'Shorts', 'LIVE', 'BIO', 'Não identificado'];
+  let seriesLabels = [...totals.keys()];
+  if (dimension === 'formato') {
+    seriesLabels.sort((a, b) => {
+      const ia = formatPreferred.indexOf(a);
+      const ib = formatPreferred.indexOf(b);
+      if (ia >= 0 || ib >= 0) return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
+      return a.localeCompare(b, 'pt-BR');
+    });
+  } else {
+    seriesLabels.sort((a, b) => {
+      const diff = (totals.get(b)?.size || 0) - (totals.get(a)?.size || 0);
+      return diff !== 0 ? diff : a.localeCompare(b, 'pt-BR');
+    });
+  }
+
+  const cellRows = new Map();
+  periodKeys.forEach(p => {
+    const gMap = periodMap[p];
+    seriesLabels.forEach(label => {
+      cellRows.set(`${p}||${label}`, gMap.get(label) || []);
+    });
+  });
+
+  return { periodKeys, seriesLabels, cellRows, seriesTotals: totals };
+}
+
 function renderFantasyTemporal() {
   const el = document.getElementById('chartFantasyTemporal');
   if (!el) return;
@@ -2868,25 +2956,10 @@ function renderFantasyTemporal() {
   const d = (filteredFantasy || []).filter(r => r.clickDate);
   if (!d.length) return;
 
-  const grouped = groupFantasyByPeriod(d, fantasyTempMode);
-  const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2])*1000+parseInt(m[1]) : 0; };
-  const keys = Object.keys(grouped).sort((a,b) =>
-    fantasyTempMode === 'week' ? sortWeekKey(a)-sortWeekKey(b) : a.localeCompare(b)
-  );
-  const shortKey = k => fantasyTempMode==='month'
-    ? (([y,m]) => new Date(+y, +m-1, 1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}))(k.split('-'))
-    : k;
-  const labels = keys.map(shortKey);
-  const weekTitle = idx => {
-    if (fantasyTempMode!=='week'||!keys[idx]) return labels[idx]||'';
-    const k=keys[idx]; const dates=(grouped[k]||[]).map(r=>r.clickDate).filter(Boolean).sort();
-    const fmt=ds=>ds?`${ds.slice(8,10)}/${ds.slice(5,7)}`:'';
-    const range=dates.length>=2?`${fmt(dates[0])} – ${fmt(dates[dates.length-1])}`:'';
-    return range?`${k} · ${range}`:k;
-  };
-
-  const agg = keys.map(k => fantasyTemporalMetricVal(grouped[k], fantasyTemporalMetric));
+  const dim = fantasyTemporalDimension || 'general';
+  const isGeneral = dim === 'general';
   const isConv = fantasyTemporalMetric === 'conversion';
+  const lineLabel = isConv ? 'Fantasy Conversion' : 'Fantasy Clicks';
   const yFmt = isConv
     ? (v => (v == null || !Number.isFinite(v)) ? '' : fmtFantasyCR(v))
     : (v => fmtNum(v));
@@ -2894,36 +2967,117 @@ function renderFantasyTemporal() {
     if (v == null || !Number.isFinite(v)) return '—';
     return isConv ? fmtFantasyCR(v) : fmtNum(v);
   };
-  const lineLabel = isConv ? 'Fantasy Conversion' : 'Fantasy Clicks';
   const ct = getChartTheme();
 
-  fantasyTemporalChart = new Chart(el, {
-    data: {
-      labels,
-      datasets: [{
+  const shortKey = k => fantasyTempMode === 'month'
+    ? (([y, m]) => new Date(+y, +m - 1, 1).toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }))(k.split('-'))
+    : k;
+
+  let labels;
+  let datasets;
+  let weekTitle;
+  let dimTitle = '';
+
+  if (isGeneral) {
+    const grouped = groupFantasyByPeriod(d, fantasyTempMode);
+    const sortWeekKey = k => { const m = k.match(/W(\d+)\/(\d+)/); return m ? parseInt(m[2]) * 1000 + parseInt(m[1]) : 0; };
+    const keys = Object.keys(grouped).sort((a, b) =>
+      fantasyTempMode === 'week' ? sortWeekKey(a) - sortWeekKey(b) : a.localeCompare(b)
+    );
+    labels = keys.map(shortKey);
+    weekTitle = idx => {
+      if (fantasyTempMode !== 'week' || !keys[idx]) return labels[idx] || '';
+      const k = keys[idx];
+      const dates = (grouped[k] || []).map(r => r.clickDate).filter(Boolean).sort();
+      const fmt = ds => ds ? `${ds.slice(8, 10)}/${ds.slice(5, 7)}` : '';
+      const range = dates.length >= 2 ? `${fmt(dates[0])} – ${fmt(dates[dates.length - 1])}` : '';
+      return range ? `${k} · ${range}` : k;
+    };
+    const agg = keys.map(k => fantasyTemporalMetricVal(grouped[k], fantasyTemporalMetric));
+    datasets = [{
+      type: 'line',
+      label: lineLabel,
+      data: agg,
+      borderColor: '#7c3aed',
+      backgroundColor: '#7c3aed22',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 3,
+      borderWidth: 2,
+      spanGaps: false,
+    }];
+  } else {
+    const grid = buildFantasyTemporalDimensionGrid(d, fantasyTempMode, dim);
+    const { periodKeys, seriesLabels, cellRows } = grid;
+    labels = periodKeys.map(shortKey);
+    const periodDates = {};
+    periodKeys.forEach(p => {
+      const all = [];
+      seriesLabels.forEach(lab => {
+        (cellRows.get(`${p}||${lab}`) || []).forEach(r => { if (r.clickDate) all.push(r.clickDate); });
+      });
+      periodDates[p] = all.sort();
+    });
+    weekTitle = idx => {
+      if (fantasyTempMode !== 'week' || !periodKeys[idx]) return labels[idx] || '';
+      const k = periodKeys[idx];
+      const dates = periodDates[k] || [];
+      const fmt = ds => ds ? `${ds.slice(8, 10)}/${ds.slice(5, 7)}` : '';
+      const range = dates.length >= 2 ? `${fmt(dates[0])} – ${fmt(dates[dates.length - 1])}` : '';
+      return range ? `${k} · ${range}` : k;
+    };
+    const dimNames = { creator: 'Creator', categoria: 'Categoria', formato: 'Formato', destino: 'Destino', dispositivo: 'Dispositivo' };
+    dimTitle = dimNames[dim] || dim;
+    datasets = seriesLabels.map((lab, i) => {
+      const color = getFantasyTemporalSeriesColor(dim, lab, i);
+      const data = periodKeys.map(p => {
+        const cell = cellRows.get(`${p}||${lab}`) || [];
+        return fantasyTemporalMetricVal(cell, fantasyTemporalMetric);
+      });
+      return {
         type: 'line',
-        label: lineLabel,
-        data: agg,
-        borderColor: '#7c3aed',
-        backgroundColor: '#7c3aed22',
-        fill: true,
+        label: lab,
+        data,
+        borderColor: color,
+        backgroundColor: color + '22',
+        fill: false,
         tension: 0.3,
-        pointRadius: 3,
+        pointRadius: 2,
         borderWidth: 2,
         spanGaps: false,
-      }],
-    },
+      };
+    });
+  }
+
+  fantasyTemporalChart = new Chart(el, {
+    data: { labels, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       animation: { duration: 300 },
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: !isGeneral,
+          position: 'bottom',
+          labels: {
+            boxWidth: 10,
+            boxHeight: 10,
+            font: { size: 10 },
+            color: ct.tick,
+            padding: 10,
+          },
+        },
         tooltip: {
           ...chartTooltipTheme(),
           callbacks: {
             title: ctx => weekTitle(ctx[0].dataIndex),
-            label: ctx => ` ${lineLabel}: ${tipFmt(ctx.parsed.y)}`,
+            label: ctx => {
+              if (isGeneral) return ` ${lineLabel}: ${tipFmt(ctx.parsed.y)}`;
+              return [
+                ` ${dimTitle}: ${ctx.dataset.label}`,
+                ` ${lineLabel}: ${tipFmt(ctx.parsed.y)}`,
+              ];
+            },
           },
         },
       },
@@ -2931,7 +3085,11 @@ function renderFantasyTemporal() {
         x: { ticks: { font: { size: 9 }, color: ct.tick, maxRotation: 45 }, grid: { display: false } },
         y: {
           beginAtZero: !isConv,
-          ticks: { font: { size: 9 }, color: '#7c3aed', callback: yFmt },
+          ticks: {
+            font: { size: 9 },
+            color: isGeneral ? '#7c3aed' : ct.tick,
+            callback: yFmt,
+          },
           grid: { color: ct.grid },
         },
       },
@@ -3173,6 +3331,8 @@ function renderFantasyDashboard() {
   if (fantasyBreakdownDimension === 'tipo') fantasyBreakdownDimension = 'formato';
   const sel = document.getElementById('fantasyBreakdownSelect');
   if (sel) sel.value = fantasyBreakdownDimension;
+  const tempDimSel = document.getElementById('fantasyTempDimensionSelect');
+  if (tempDimSel) tempDimSel.value = fantasyTemporalDimension || 'general';
   renderFantasyKPIs();
   renderFantasyBreakdownChart();
   renderFantasyTemporal();
