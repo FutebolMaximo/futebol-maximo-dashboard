@@ -233,7 +233,7 @@ async function downloadReportOnce(context, report, isFirstReport) {
 
 async function main() {
   const isCI = !!process.env.CI;
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: isCI });
 
   const authFile = 'youtube-auth.json';
   const hasAuth = fs.existsSync(authFile);
