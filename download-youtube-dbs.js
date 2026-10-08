@@ -116,30 +116,60 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 async function clickDownloadButton(page) {
   console.log('Procurando botão de download...');
 
+  // Aguarda os elementos do gráfico e botões do YouTube carregarem
+  await page.waitForSelector('#export-button, [aria-label*="Export"], [aria-label*="download"]', { timeout: 20000 }).catch(() => {});
+
   const downloadSelectors = [
-    'tp-yt-paper-icon-button[aria-label="Download"]',
-    'tp-yt-paper-icon-button[aria-label="Fazer download"]',
-    'ytcp-icon-button[aria-label="Download"]',
-    'ytcp-icon-button[aria-label="Fazer download"]',
-    'button[aria-label="Download"]',
-    '[aria-label="Download"]',
-    '[aria-label="Fazer download"]'
+    '#export-button',
+    'ytcp-icon-button#export-button',
+    '[id="export-button"]',
+    'tp-yt-paper-icon-button[aria-label*="Download"]',
+    'tp-yt-paper-icon-button[aria-label*="download"]',
+    'tp-yt-paper-icon-button[aria-label*="Export"]',
+    'tp-yt-paper-icon-button[aria-label*="export"]',
+    'ytcp-icon-button[aria-label*="Download"]',
+    'ytcp-icon-button[aria-label*="Fazer download"]',
+    'ytcp-icon-button[aria-label*="Exportar"]',
+    '[aria-label*="Fazer download"]',
+    '[aria-label*="Exportar"]',
+    '[aria-label*="Download"]',
+    '[aria-label*="export"]'
   ];
 
   for (const selector of downloadSelectors) {
     try {
-      const locator = page.locator(selector).last();
+      const locator = page.locator(selector).first();
       if (await locator.count() > 0 && await locator.isVisible()) {
-        await locator.click({ timeout: 10000 });
+        await locator.click({ timeout: 5000 });
         console.log(`Cliquei no botão de download usando: ${selector}`);
         await page.waitForTimeout(3000);
         return;
       }
     } catch (error) {
-      // Tenta o próximo seletor
+      // Avança para o próximo seletor
     }
   }
 
+  // Tenta o clique direto via JavaScript no DOM caso o elemento esteja oculto no layout
+  const clickedInDOM = await page.evaluate(() => {
+    const btn = document.querySelector('#export-button') || 
+                document.querySelector('[aria-label*="Export"]') || 
+                document.querySelector('[aria-label*="download"]') ||
+                document.querySelector('[aria-label*="Fazer download"]');
+    if (btn) {
+      btn.click();
+      return true;
+    }
+    return false;
+  });
+
+  if (clickedInDOM) {
+    console.log('Cliquei no botão de download via DOM (JavaScript).');
+    await page.waitForTimeout(3000);
+    return;
+  }
+
+  console.log('Aviso: Nenhum seletor funcionou, tentando clique por coordenadas...');
   const viewport = page.viewportSize();
   if (viewport) {
     await page.mouse.click(viewport.width - 45, 85);
@@ -246,6 +276,7 @@ async function main() {
     storageState: hasAuth ? authFile : undefined,
     acceptDownloads: true,
     viewport: { width: 1600, height: 1000 },
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     locale: 'pt-BR'
   });
 
