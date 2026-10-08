@@ -9,6 +9,8 @@ on:
 jobs:
   run-download:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Clonar Repositório
