@@ -2,8 +2,8 @@ name: Baixar Bases do YouTube Studio
 
 on:
   schedule:
-    # Executa automaticamente todo domingo às 05:00 UTC (02:00 de Brasília)
-    - cron: '0 5 * * 0'
+    # Executa todos os dias às 04:00 UTC (07:00 no horário de Israel)
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 jobs:
