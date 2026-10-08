@@ -1,0 +1,40 @@
+name: Baixar Bases do YouTube Studio
+
+on:
+  schedule:
+    # Executa automaticamente todo domingo às 05:00 UTC (02:00 de Brasília)
+    - cron: '0 5 * * 0'
+  workflow_dispatch:
+
+jobs:
+  run-download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar Repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Instalar Dependências
+        run: npm install playwright adm-zip
+
+      - name: Instalar Navegador Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Restaurar Sessão de Autenticação do YouTube
+        run: echo '${{ secrets.YOUTUBE_AUTH_JSON }}' > youtube-auth.json
+
+      - name: Executar Scraper de Downloads
+        run: node download-youtube-dbs.js
+
+      - name: Salvar Bases de Dados no Repositório (Git Commit)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads/
+          git commit -m "Atualiza bases de dados do YouTube [skip ci]" || echo "Nenhuma alteração encontrada"
+          git push
