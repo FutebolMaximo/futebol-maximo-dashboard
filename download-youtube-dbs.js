@@ -132,22 +132,17 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 }
 
 async function clickDownloadButton(page) {
-  console.log('--- DIAGNÓSTICO DE TELA ---');
-  console.log(`URL Atual: ${page.url()}`);
-  console.log(`Título da Página: ${await page.title()}`);
-  console.log('---------------------------');
+  console.log('Procurando botão de download (ícone da seta)...');
 
-  console.log('Verificando se há aviso de navegador bloqueando a tela...');
+  // Adicionamos um fallback flexível (regex) caso o banner teime em aparecer
   try {
-    const skipButton = page.locator('text="SKIP TO YOUTUBE STUDIO"').first();
+    const skipButton = page.locator('text=/skip to youtube studio/i').first();
     if (await skipButton.count() > 0) {
-      console.log('Aviso detetado! Clicando em SKIP TO YOUTUBE STUDIO...');
+      console.log('Aviso detetado! Clicando em PULAR...');
       await skipButton.click({ force: true, timeout: 5000 });
-      await page.waitForTimeout(5000); // Aguarda 5 segundos para a página real carregar
+      await page.waitForTimeout(5000);
     }
   } catch (error) {}
-  
-  console.log('Procurando botão de download (ícone da seta)...');
 
   const downloadSelectors = [
     '#export-button',
@@ -319,7 +314,9 @@ async function main() {
     viewport: {
       width: 1600,
       height: 1000
-    }
+    },
+    // Aqui está a máscara: identificamo-nos como um Google Chrome de verdade no Windows
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
   });
 
   for (const report of REPORTS) {
