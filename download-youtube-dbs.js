@@ -193,6 +193,14 @@ async function clickDownloadButton(page) {
 async function clickCsvAndDownload(page) {
   console.log('Procurando opção CSV no menu...');
 
+  try {
+    await page.waitForTimeout(2000); // Aguarda a animação do menu abrir
+    await page.screenshot({ path: 'debug-tela.png', fullPage: true });
+    console.log('Fotografia da tela guardada como debug-tela.png');
+  } catch (e) {
+    console.log('Não foi possível tirar a fotografia.');
+  }
+
   // Busca extremamente agressiva por qualquer elemento que contenha "csv"
   const csvSelectors = [
     'text=/.csv/i',
@@ -229,7 +237,6 @@ async function clickCsvAndDownload(page) {
     } catch (error) {}
   }
 
-  // Se falhar, vamos ler TUDO o que existe na tela nesse exato momento para achar o menu
   console.log('--- TEXTO DA TELA APÓS CLICAR NA SETA ---');
   try {
     const pageText = await page.locator('body').innerText({ timeout: 5000 });
