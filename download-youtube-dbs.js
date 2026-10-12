@@ -132,23 +132,28 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 }
 
 async function clickDownloadButton(page) {
-  console.log('Procurando botão de download...');
+  console.log('Procurando botão de download (ícone da seta)...');
 
   const downloadSelectors = [
-    'tp-yt-paper-icon-button[aria-label="Download"]',
+    '[aria-label="Exportar a visualização atual"]',
+    '[aria-label="Export current view"]',
+    '[aria-label*="Exportar"]',
+    '[aria-label*="Export"]',
+    '[aria-label*="Fazer o download"]',
+    '[aria-label*="Transferir"]',
+    '[aria-label*="Baixar"]',
     'ytcp-icon-button[aria-label="Download"]',
-    'button[aria-label="Download"]',
-    '[aria-label="Download"]'
+    'tp-yt-paper-icon-button[aria-label="Download"]'
   ];
 
   for (const selector of downloadSelectors) {
     try {
-      const locator = page.locator(selector).last();
+      const locator = page.locator(selector).last(); // O botão é o último ícone à direita
       const count = await locator.count();
 
       if (count > 0) {
         await locator.click({ timeout: 10000 });
-        console.log(`Cliquei no botão de download usando: ${selector}`);
+        console.log(`Cliquei no botão da seta usando: ${selector}`);
         await page.waitForTimeout(3000);
         return;
       }
@@ -158,13 +163,10 @@ async function clickDownloadButton(page) {
   }
 
   console.log('Tentando clicar por posição no canto superior direito...');
-
   const viewport = page.viewportSize();
-
   if (!viewport) {
     throw new Error('Não consegui identificar o tamanho da janela.');
   }
-
   await page.mouse.click(viewport.width - 45, 85);
   await page.waitForTimeout(3000);
 }
