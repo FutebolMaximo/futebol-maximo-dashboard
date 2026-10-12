@@ -135,8 +135,17 @@ async function clickDownloadButton(page) {
   console.log('--- DIAGNÓSTICO DE TELA ---');
   console.log(`URL Atual: ${page.url()}`);
   console.log(`Título da Página: ${await page.title()}`);
-  console.log('---------------------------');
   
+  try {
+    const textoTela = await page.locator('body').innerText({ timeout: 5000 });
+    console.log(`\n--- INÍCIO DO TEXTO DA TELA ---`);
+    console.log(textoTela.substring(0, 1000));
+    console.log(`--- FIM DO TEXTO DA TELA ---\n`);
+  } catch (erro) {
+    console.log('Não foi possível ler o texto da página.');
+  }
+  console.log('---------------------------');
+
   console.log('Procurando botão de download (ícone da seta)...');
 
   const downloadSelectors = [
