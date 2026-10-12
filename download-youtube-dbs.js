@@ -185,28 +185,6 @@ async function clickDownloadButton(page) {
   }
 }
 
-  console.log('Tentando estratégia alternativa: clicar no último ícone da barra...');
-  try {
-    // Pega todos os botões de ícone e força o clique no último (que costuma ser a seta de exportar)
-    const icons = page.locator('ytcp-icon-button');
-    const count = await icons.count();
-    
-    if (count > 0) {
-      await icons.nth(count - 1).click({ force: true, timeout: 5000 });
-      console.log('Cliquei no último ícone disponível na tela.');
-      await page.waitForTimeout(3000);
-      return;
-    }
-  } catch (error) {}
-
-  console.log('Tentando clicar por posição no canto superior direito...');
-  const viewport = page.viewportSize();
-  if (viewport) {
-    await page.mouse.click(viewport.width - 45, 85);
-    await page.waitForTimeout(3000);
-  }
-}
-
 async function clickCsvAndDownload(page) {
   console.log('Procurando opção CSV...');
 
@@ -319,8 +297,6 @@ async function downloadReportOnce(context, report) {
     await page.close().catch(() => {});
   }
 }
-
-
 
 async function main() {
   const browser = await chromium.launch({
