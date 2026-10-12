@@ -132,7 +132,22 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 }
 
 async function clickDownloadButton(page) {
+  console.log('--- DIAGNÓSTICO DE ECRÃ ---');
+  console.log(`URL Atual: ${page.url()}`);
+  console.log(`Título da Página: ${await page.title()}`);
+  console.log('---------------------------');
+  
   console.log('Procurando botão de download (ícone da seta)...');
+
+  const downloadSelectors = [
+    '#export-button',
+    'ytcp-icon-button#export-button',
+    'ytcp-button#export-button',
+    '[aria-label*="Export"]',
+    '[aria-label*="Exportar"]',
+    '[aria-label*="Transferir"]',
+    '[aria-label*="Baixar"]'
+  ];
 
   // Seletores agressivos usando o ID interno do YouTube para driblar a mudança de idioma
   const downloadSelectors = [
