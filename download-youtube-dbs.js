@@ -5,10 +5,8 @@ const path = require('path');
 const DOWNLOAD_DIR = path.join(__dirname, 'downloads');
 const AUTH_FILE = path.join(__dirname, 'youtube-auth.json');
 
-// Função auxiliar para pausar a execução (substitui o deprecated page.waitForTimeout)
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// ID do Canal (pode ser passado por variável de ambiente ou definido diretamente)
 const CHANNEL_ID = process.env.CHANNEL_ID || 'SEU_CHANNEL_ID_AQUI';
 
 const REPORTS = [
@@ -35,7 +33,16 @@ const REPORTS = [
     process.exit(1);
   }
 
-  const cookies = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf8'));
+  // Tratamento flexível de cookies para aceitar Array [...] ou Objeto { cookies: [...] }
+  const rawAuth = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf8'));
+  const cookies = Array.isArray(rawAuth) 
+    ? rawAuth 
+    : (rawAuth.cookies || rawAuth.session || []);
+
+  if (cookies.length === 0) {
+    console.error('Erro crítico: Nenhum cookie válido encontrado dentro do arquivo youtube-auth.json!');
+    process.exit(1);
+  }
 
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -49,9 +56,10 @@ const REPORTS = [
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
+
+  // Injeta os cookies com validação
   await page.setCookie(...cookies);
 
-  // Permite o download de arquivos em modo headless no Chromium
   const client = await page.createCDPSession();
   await client.send('Page.setDownloadBehavior', {
     behavior: 'allow',
@@ -64,7 +72,6 @@ const REPORTS = [
       await page.goto(report.url, { waitUntil: 'networkidle2', timeout: 60000 });
       await delay(3000);
 
-      // Disparo do clique no botão de exportação
       const clicked = await page.evaluate(() => {
         const exportBtn = document.querySelector('#export-button') ||
                           document.querySelector('ytcp-button[aria-label*="Export"]') ||
@@ -83,17 +90,14 @@ const REPORTS = [
 
       await delay(2000);
 
-      // Clica na opção "CSV" do menu
       await page.evaluate(() => {
         const csvOption = Array.from(document.querySelectorAll('ytcp-text-menu-item, tp-yt-paper-item, paper-item'))
           .find(el => el.textContent.includes('CSV') || el.textContent.includes('Comma-separated values'));
         if (csvOption) csvOption.click();
       });
 
-      // Aguarda a gravação do download
       await delay(6000);
 
-      // Localiza o arquivo CSV recém-baixado (ignorando temporários .crdownload)
       const files = fs.readdirSync(DOWNLOAD_DIR);
       const latestDownloaded = files
         .filter(f => f.endsWith('.csv') && !f.endsWith('.crdownload') && !REPORTS.some(r => r.name === f))
