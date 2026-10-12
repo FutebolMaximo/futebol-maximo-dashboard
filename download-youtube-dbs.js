@@ -132,7 +132,7 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 }
 
 async function clickDownloadButton(page) {
-  console.log('--- DIAGNÓSTICO DE ECRÃ ---');
+  console.log('--- DIAGNÓSTICO DE TELA ---');
   console.log(`URL Atual: ${page.url()}`);
   console.log(`Título da Página: ${await page.title()}`);
   console.log('---------------------------');
@@ -149,23 +149,11 @@ async function clickDownloadButton(page) {
     '[aria-label*="Baixar"]'
   ];
 
-  // Seletores agressivos usando o ID interno do YouTube para driblar a mudança de idioma
-  const downloadSelectors = [
-    '#export-button',
-    'ytcp-icon-button#export-button',
-    'ytcp-button#export-button',
-    '[aria-label*="Export"]',
-    '[aria-label*="Exportar"]',
-    '[aria-label*="Transferir"]',
-    '[aria-label*="Baixar"]'
-  ];
-
   for (const selector of downloadSelectors) {
     try {
       const locator = page.locator(selector).first();
       
       if (await locator.count() > 0) {
-        // force: true obriga o robô a clicar mesmo se o YouTube colocar elementos invisíveis na frente
         await locator.click({ force: true, timeout: 5000 });
         console.log(`Cliquei na seta usando: ${selector}`);
         await page.waitForTimeout(3000);
@@ -175,6 +163,27 @@ async function clickDownloadButton(page) {
       console.log(`Erro no seletor ${selector}: ${error.message}`);
     }
   }
+
+  console.log('Tentando estratégia alternativa: clicar no último ícone da barra...');
+  try {
+    const icons = page.locator('ytcp-icon-button');
+    const count = await icons.count();
+    
+    if (count > 0) {
+      await icons.nth(count - 1).click({ force: true, timeout: 5000 });
+      console.log('Cliquei no último ícone disponível na tela.');
+      await page.waitForTimeout(3000);
+      return;
+    }
+  } catch (error) {}
+
+  console.log('Tentando clicar por posição no canto superior direito...');
+  const viewport = page.viewportSize();
+  if (viewport) {
+    await page.mouse.click(viewport.width - 45, 85);
+    await page.waitForTimeout(3000);
+  }
+}
 
   console.log('Tentando estratégia alternativa: clicar no último ícone da barra...');
   try {
