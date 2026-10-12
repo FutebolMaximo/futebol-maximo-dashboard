@@ -7,49 +7,49 @@ const REPORTS = [
   {
     name: 'DB 2023',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27VIDEO_ON_DEMAND%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=1678863600000%2C1704096000000&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'DB 2023.csv'
   },
   {
     name: 'DB 2024',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27VIDEO_ON_DEMAND%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=1704096000000%2C1735718400000&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'DB 2024.csv'
   },
   {
     name: 'DB 2025',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27VIDEO_ON_DEMAND%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=minus_1_year&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'DB 2025.csv'
   },
   {
     name: 'DB 2026',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27VIDEO_ON_DEMAND%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=current_year&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'DB 2026.csv'
   },
   {
     name: 'Shorts DB 2023',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27SHORTS%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=1678863600000%2C1704096000000&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SHORTS_FEED_IMPRESSIONS_VTR&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'Shorts DB 2023.csv'
   },
   {
     name: 'Shorts DB 2024',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27SHORTS%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=1704096000000%2C1735718400000&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SHORTS_FEED_IMPRESSIONS_VTR&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'Shorts DB 2024.csv'
   },
   {
     name: 'Shorts DB 2025',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27SHORTS%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=minus_1_year&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SHORTS_FEED_IMPRESSIONS_VTR&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'Shorts DB 2025.csv'
   },
   {
     name: 'Shorts DB 2026',
     url: 'https://studio.youtube.com/channel/UCjbnazLwevrhQxGfbws_VmQ/analytics/tab-content/period-default/explore?entity_type=CHANNEL&entity_id=UCjbnazLwevrhQxGfbws_VmQ&ur_dimensions=CREATOR_CONTENT_TYPE&ur_values=%27SHORTS%27&ur_inclusive_starts=&ur_exclusive_ends=&time_period=current_year&explore_type=TABLE_AND_CHART&metrics_computation_type=DELTA&metric=EXTERNAL_VIEWS&granularity=DAY&t_metrics=SHORTS_FEED_IMPRESSIONS_VTR&t_metrics=SUBSCRIBERS_NET_CHANGE&t_metrics=AVERAGE_WATCH_PERCENTAGE&t_metrics=RATINGS_LIKES&t_metrics=SHARINGS&t_metrics=EXTERNAL_VIEWS&t_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&t_metrics=AVERAGE_WATCH_TIME&v_metrics=EXTERNAL_VIEWS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS&v_metrics=VIDEO_THUMBNAIL_IMPRESSIONS_VTR&v_metrics=AVERAGE_WATCH_TIME&dimension=VIDEO&o_column=EXTERNAL_VIEWS&o_direction=ANALYTICS_ORDER_DIRECTION_DESC',
-    outputFolder: 'C:\\Users\\jose\\Desktop\\Suporte Knime\\Futebol Maximo',
+    outputFolder: 'downloads',
     outputFile: 'Shorts DB 2026.csv'
   }
 ];
@@ -62,52 +62,12 @@ function ensureFolderExists(folderPath) {
   }
 }
 
-function validateCsvFile(filePath) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error('CSV final não foi criado.');
-  }
-
-  const stats = fs.statSync(filePath);
-
-  if (stats.size < 100) {
-    throw new Error(`CSV final parece vazio. Tamanho: ${stats.size} bytes.`);
-  }
-
-  const preview = fs.readFileSync(filePath, 'utf8').slice(0, 1000);
-
-  if (
-    preview.includes('<html') ||
-    preview.includes('<!DOCTYPE') ||
-    preview.includes('<body')
-  ) {
-    throw new Error('CSV final parece HTML, não CSV.');
-  }
-
-  if (!preview.includes(',') && !preview.includes('\n')) {
-    throw new Error('CSV final não parece ter estrutura de CSV.');
-  }
-}
-
 function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
   console.log('Extraindo table data.csv do ZIP...');
-
-  if (!fs.existsSync(zipPath)) {
-    throw new Error('Arquivo ZIP temporário não encontrado.');
-  }
-
   const zip = new AdmZip(zipPath);
   const entries = zip.getEntries();
-
-  console.log('Arquivos encontrados dentro do ZIP:');
-
-  for (const entry of entries) {
-    console.log(`- ${entry.entryName}`);
-  }
-
-  const tableEntry = entries.find(entry => {
-    const normalizedName = entry.entryName.toLowerCase().replace(/\\/g, '/');
-    return normalizedName.endsWith('table data.csv');
-  });
+  
+  const tableEntry = entries.find(entry => entry.entryName.toLowerCase().endsWith('table data.csv'));
 
   if (!tableEntry) {
     throw new Error('Não encontrei o arquivo "table data.csv" dentro do ZIP.');
@@ -115,169 +75,17 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 
   const csvBuffer = tableEntry.getData();
 
-  if (!csvBuffer || csvBuffer.length < 100) {
-    throw new Error(`O arquivo table data.csv parece vazio. Tamanho: ${csvBuffer?.length || 0} bytes.`);
-  }
-
   if (fs.existsSync(finalCsvPath)) {
     fs.unlinkSync(finalCsvPath);
-    console.log('Arquivo CSV anterior removido.');
   }
 
   fs.writeFileSync(finalCsvPath, csvBuffer);
-
-  validateCsvFile(finalCsvPath);
-
   console.log(`CSV final salvo com sucesso em: ${finalCsvPath}`);
-}
-
-async function clickDownloadButton(page) {
-  console.log('Procurando botão de download (ícone da seta)...');
-
-  // Adicionamos um fallback flexível (regex) caso o banner teime em aparecer
-  try {
-    const skipButton = page.locator('text=/skip to youtube studio/i').first();
-    if (await skipButton.count() > 0) {
-      console.log('Aviso detetado! Clicando em PULAR...');
-      await skipButton.click({ force: true, timeout: 5000 });
-      await page.waitForTimeout(5000);
-    }
-  } catch (error) {}
-
-  const downloadSelectors = [
-    '#export-button',
-    'ytcp-icon-button#export-button',
-    'ytcp-button#export-button',
-    '[aria-label*="Export"]',
-    '[aria-label*="Exportar"]',
-    '[aria-label*="Transferir"]',
-    '[aria-label*="Baixar"]'
-  ];
-
-  for (const selector of downloadSelectors) {
-    try {
-      const locator = page.locator(selector).first();
-      
-      if (await locator.count() > 0) {
-        await locator.click({ force: true, timeout: 5000 });
-        console.log(`Cliquei na seta usando: ${selector}`);
-        await page.waitForTimeout(3000);
-        return;
-      }
-    } catch (error) {
-      console.log(`Erro no seletor ${selector}: ${error.message}`);
-    }
-  }
-
-  console.log('Tentando estratégia alternativa: clicar no último ícone da barra...');
-  try {
-    const icons = page.locator('ytcp-icon-button');
-    const count = await icons.count();
-    
-    if (count > 0) {
-      await icons.nth(count - 1).click({ force: true, timeout: 5000 });
-      console.log('Cliquei no último ícone disponível na tela.');
-      await page.waitForTimeout(3000);
-      return;
-    }
-  } catch (error) {}
-
-  console.log('Tentando clicar por posição no canto superior direito...');
-  const viewport = page.viewportSize();
-  if (viewport) {
-    await page.mouse.click(viewport.width - 45, 85);
-    await page.waitForTimeout(3000);
-  }
-}
-
-async function clickCsvAndDownload(page) {
-  console.log('Procurando opção CSV no menu...');
-
-  try {
-    await page.waitForTimeout(2000); // Aguarda a animação do menu abrir
-    await page.screenshot({ path: 'debug-tela.png', fullPage: true });
-    console.log('Fotografia da tela guardada como debug-tela.png');
-  } catch (e) {
-    console.log('Não foi possível tirar a fotografia.');
-  }
-
-  // Busca extremamente agressiva por qualquer elemento que contenha "csv"
-  const csvSelectors = [
-    'text=/.csv/i',
-    'text=/csv/i',
-    'text=/Comma-separated/i',
-    'text=/separados por/i'
-  ];
-
-  for (const selector of csvSelectors) {
-    try {
-      const option = page.locator(selector).first();
-      
-      if (await option.count() > 0) {
-        console.log(`Opção CSV encontrada usando: ${selector}`);
-
-        const downloadPromise = page.waitForEvent('download', {
-          timeout: 120000
-        });
-
-        await option.click({ force: true, timeout: 10000 });
-
-        console.log('Cliquei em CSV. Aguardando download terminar...');
-
-        const download = await downloadPromise;
-        const failure = await download.failure();
-
-        if (failure) {
-          throw new Error(`Download falhou: ${failure}`);
-        }
-
-        console.log(`Nome original baixado pelo YouTube: ${download.suggestedFilename()}`);
-        return download;
-      }
-    } catch (error) {}
-  }
-
-  console.log('--- TEXTO DA TELA APÓS CLICAR NA SETA ---');
-  try {
-    const pageText = await page.locator('body').innerText({ timeout: 5000 });
-    console.log(pageText.substring(0, 1500)); 
-  } catch(e) {
-    console.log('Não consegui ler a tela.');
-  }
-  console.log('-----------------------------------------');
-
-  throw new Error('Não consegui encontrar a opção CSV no menu de exportação.');
-}
-
-async function downloadReportWithRetry(context, report) {
-  const maxAttempts = 3;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      console.log('-----------------------------');
-      console.log(`Tentativa ${attempt}/${maxAttempts} para: ${report.name}`);
-
-      await downloadReportOnce(context, report);
-
-      console.log(`Relatório ${report.name} concluído com sucesso.`);
-      return;
-    } catch (error) {
-      console.log(`Falha na tentativa ${attempt}/${maxAttempts} para ${report.name}: ${error.message}`);
-
-      if (attempt === maxAttempts) {
-        console.log(`Erro definitivo no relatório ${report.name}: ${error.message}`);
-        return;
-      }
-
-      console.log('Aguardando 10 segundos antes de tentar novamente...');
-      await new Promise(resolve => setTimeout(resolve, 10000));
-    }
-  }
 }
 
 async function downloadReportOnce(context, report) {
   console.log('-----------------------------');
-  console.log(`Iniciando download: ${report.name}`);
+  console.log(`Iniciando download via Injeção DOM: ${report.name}`);
 
   ensureFolderExists(report.outputFolder);
   ensureFolderExists(TEMP_FOLDER);
@@ -288,66 +96,81 @@ async function downloadReportOnce(context, report) {
   const page = await context.newPage();
 
   try {
-    await page.goto(report.url, {
-      waitUntil: 'load',
-      timeout: 90000
+    await page.goto(report.url, { waitUntil: 'load', timeout: 90000 });
+    console.log('Relatório carregado. Preparando execução JavaScript no DOM...');
+    await page.waitForTimeout(15000); // Aguarda o carregamento dos elementos no DOM
+
+    // 1. Clique direto via DOM no botão de Exportar
+    await page.evaluate(() => {
+      const exportBtn = document.querySelector('#export-button, ytcp-icon-button[aria-label*="Export"], [aria-label*="Exportar"]');
+      if (exportBtn) exportBtn.click();
     });
+    console.log('Cliquei no botão de Exportar via JavaScript.');
+    await page.waitForTimeout(3000);
 
-    console.log('Relatório aberto. Aguardando carregar completamente...');
-    await page.waitForTimeout(25000);
+    // 2. Preparar a escuta do Download ANTES do clique
+    const downloadPromise = page.waitForEvent('download', { timeout: 120000 });
 
-    await clickDownloadButton(page);
+    // 3. Clique direto via DOM na opção CSV
+    await page.evaluate(() => {
+      const menuItems = Array.from(document.querySelectorAll('tp-yt-paper-item, ytcp-text-menu-item'));
+      const csvOption = menuItems.find(item => {
+        const text = item.textContent.toLowerCase();
+        return text.includes('.csv') || text.includes('comma') || text.includes('vírgula');
+      });
+      if (csvOption) csvOption.click();
+    });
+    console.log('Cliquei na opção CSV via JavaScript. Aguardando download...');
 
-    const download = await clickCsvAndDownload(page);
+    const download = await downloadPromise;
+    const failure = await download.failure();
+    if (failure) throw new Error(`Download falhou: ${failure}`);
 
-    if (fs.existsSync(tempZipPath)) {
-      fs.unlinkSync(tempZipPath);
-    }
-
+    if (fs.existsSync(tempZipPath)) fs.unlinkSync(tempZipPath);
     await download.saveAs(tempZipPath);
-
-    console.log(`ZIP temporário salvo em: ${tempZipPath}`);
+    console.log(`ZIP salvo. Processando extração...`);
 
     extractTableDataCsvFromZip(tempZipPath, finalCsvPath);
-
     fs.unlinkSync(tempZipPath);
-    console.log('ZIP temporário removido.');
+
   } finally {
     await page.close().catch(() => {});
   }
 }
 
-async function main() {
-  const browser = await chromium.launch({
-    headless: true
-  });
+async function downloadReportWithRetry(context, report) {
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await downloadReportOnce(context, report);
+      console.log(`Relatório ${report.name} concluído com sucesso.`);
+      return;
+    } catch (error) {
+      console.log(`Falha na tentativa ${attempt} para ${report.name}: ${error.message}`);
+      if (attempt === maxAttempts) {
+        console.log(`Erro definitivo no relatório ${report.name}.`);
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 10000));
+    }
+  }
+}
 
+async function main() {
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
     storageState: 'youtube-auth.json',
-    acceptDownloads: true,
-    viewport: {
-      width: 1600,
-      height: 1000
-    },
-    // Aqui está a máscara: identificamo-nos como um Google Chrome de verdade no Windows
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+    acceptDownloads: true
   });
 
   for (const report of REPORTS) {
     await downloadReportWithRetry(context, report);
   }
 
-  console.log('-----------------------------');
-  console.log('Processo finalizado.');
-  console.log('O navegador vai fechar em 20 segundos.');
-
-  await new Promise(resolve => setTimeout(resolve, 20000));
-
   await browser.close();
 }
 
 main().catch(error => {
-  console.error('Erro técnico no script:');
   console.error(error);
   process.exit(1);
 });
