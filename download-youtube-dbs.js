@@ -191,32 +191,34 @@ async function clickDownloadButton(page) {
 }
 
 async function clickCsvAndDownload(page) {
-  console.log('Procurando opção CSV...');
+  console.log('Procurando opção CSV no menu...');
 
+  // Seletores que cobrem Português, Inglês e buscas parciais
   const csvSelectors = [
-    'text=Comma-separated values (.csv)',
-    'text=Comma-separated values',
-    'text=.csv'
+    'text="Valores separados por vírgula"',
+    'text="Valores separados por vírgulas"',
+    'text="Comma-separated values"',
+    'text=".csv"',
+    'tp-yt-paper-item:has-text(".csv")',
+    'ytcp-text-menu-item:has-text(".csv")'
   ];
 
   for (const selector of csvSelectors) {
     try {
       const option = page.locator(selector).first();
-      const count = await option.count();
-
-      if (count > 0) {
+      
+      if (await option.count() > 0) {
         console.log(`Opção CSV encontrada usando: ${selector}`);
 
         const downloadPromise = page.waitForEvent('download', {
           timeout: 120000
         });
 
-        await option.click({ timeout: 10000 });
+        await option.click({ force: true, timeout: 10000 });
 
         console.log('Cliquei em CSV. Aguardando download terminar...');
 
         const download = await downloadPromise;
-
         const failure = await download.failure();
 
         if (failure) {
@@ -224,15 +226,22 @@ async function clickCsvAndDownload(page) {
         }
 
         console.log(`Nome original baixado pelo YouTube: ${download.suggestedFilename()}`);
-
         return download;
       }
-    } catch (error) {
-      console.log(`Falhou tentando opção ${selector}: ${error.message}`);
-    }
+    } catch (error) {}
   }
 
-  throw new Error('Não consegui encontrar a opção CSV.');
+  // Se falhar, vai imprimir no log os botões que realmente existem na tela
+  console.log('--- OPÇÕES DISPONÍVEIS NO MENU ---');
+  try {
+    const menuText = await page.locator('tp-yt-paper-listbox, ytcp-menu-popup-renderer').innerText({ timeout: 5000 });
+    console.log(menuText);
+  } catch(e) {
+    console.log('Não consegui ler as opções do menu.');
+  }
+  console.log('----------------------------------');
+
+  throw new Error('Não consegui encontrar a opção CSV no menu de exportação.');
 }
 
 async function downloadReportWithRetry(context, report) {
