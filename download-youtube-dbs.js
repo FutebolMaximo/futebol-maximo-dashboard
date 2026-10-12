@@ -193,14 +193,12 @@ async function clickDownloadButton(page) {
 async function clickCsvAndDownload(page) {
   console.log('Procurando opção CSV no menu...');
 
-  // Seletores que cobrem Português, Inglês e buscas parciais
+  // Busca extremamente agressiva por qualquer elemento que contenha "csv"
   const csvSelectors = [
-    'text="Valores separados por vírgula"',
-    'text="Valores separados por vírgulas"',
-    'text="Comma-separated values"',
-    'text=".csv"',
-    'tp-yt-paper-item:has-text(".csv")',
-    'ytcp-text-menu-item:has-text(".csv")'
+    'text=/.csv/i',
+    'text=/csv/i',
+    'text=/Comma-separated/i',
+    'text=/separados por/i'
   ];
 
   for (const selector of csvSelectors) {
@@ -231,15 +229,15 @@ async function clickCsvAndDownload(page) {
     } catch (error) {}
   }
 
-  // Se falhar, vai imprimir no log os botões que realmente existem na tela
-  console.log('--- OPÇÕES DISPONÍVEIS NO MENU ---');
+  // Se falhar, vamos ler TUDO o que existe na tela nesse exato momento para achar o menu
+  console.log('--- TEXTO DA TELA APÓS CLICAR NA SETA ---');
   try {
-    const menuText = await page.locator('tp-yt-paper-listbox, ytcp-menu-popup-renderer').innerText({ timeout: 5000 });
-    console.log(menuText);
+    const pageText = await page.locator('body').innerText({ timeout: 5000 });
+    console.log(pageText.substring(0, 1500)); 
   } catch(e) {
-    console.log('Não consegui ler as opções do menu.');
+    console.log('Não consegui ler a tela.');
   }
-  console.log('----------------------------------');
+  console.log('-----------------------------------------');
 
   throw new Error('Não consegui encontrar a opção CSV no menu de exportação.');
 }
