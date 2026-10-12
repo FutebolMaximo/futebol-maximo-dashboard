@@ -7,7 +7,7 @@ const AUTH_FILE = path.join(__dirname, 'youtube-auth.json');
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const CHANNEL_ID = process.env.CHANNEL_ID || 'SEU_CHANNEL_ID_AQUI';
+const CHANNEL_ID = process.env.CHANNEL_ID || 'UCjbnazLwevrhQxGfbws_VmQ';
 
 const REPORTS = [
   { name: 'DB 2023.csv', url: `https://studio.youtube.com/channel/${CHANNEL_ID}/analytics/tab-overview/time-2023` },
