@@ -135,17 +135,18 @@ async function clickDownloadButton(page) {
   console.log('--- DIAGNÓSTICO DE TELA ---');
   console.log(`URL Atual: ${page.url()}`);
   console.log(`Título da Página: ${await page.title()}`);
-  
-  try {
-    const textoTela = await page.locator('body').innerText({ timeout: 5000 });
-    console.log(`\n--- INÍCIO DO TEXTO DA TELA ---`);
-    console.log(textoTela.substring(0, 1000));
-    console.log(`--- FIM DO TEXTO DA TELA ---\n`);
-  } catch (erro) {
-    console.log('Não foi possível ler o texto da página.');
-  }
   console.log('---------------------------');
 
+  console.log('Verificando se há aviso de navegador bloqueando a tela...');
+  try {
+    const skipButton = page.locator('text="SKIP TO YOUTUBE STUDIO"').first();
+    if (await skipButton.count() > 0) {
+      console.log('Aviso detetado! Clicando em SKIP TO YOUTUBE STUDIO...');
+      await skipButton.click({ force: true, timeout: 5000 });
+      await page.waitForTimeout(5000); // Aguarda 5 segundos para a página real carregar
+    }
+  } catch (error) {}
+  
   console.log('Procurando botão de download (ícone da seta)...');
 
   const downloadSelectors = [
