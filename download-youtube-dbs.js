@@ -134,41 +134,53 @@ function extractTableDataCsvFromZip(zipPath, finalCsvPath) {
 async function clickDownloadButton(page) {
   console.log('Procurando botão de download (ícone da seta)...');
 
+  // Seletores agressivos usando o ID interno do YouTube para driblar a mudança de idioma
   const downloadSelectors = [
-    '[aria-label="Exportar a visualização atual"]',
-    '[aria-label="Export current view"]',
-    '[aria-label*="Exportar"]',
+    '#export-button',
+    'ytcp-icon-button#export-button',
+    'ytcp-button#export-button',
     '[aria-label*="Export"]',
-    '[aria-label*="Fazer o download"]',
+    '[aria-label*="Exportar"]',
     '[aria-label*="Transferir"]',
-    '[aria-label*="Baixar"]',
-    'ytcp-icon-button[aria-label="Download"]',
-    'tp-yt-paper-icon-button[aria-label="Download"]'
+    '[aria-label*="Baixar"]'
   ];
 
   for (const selector of downloadSelectors) {
     try {
-      const locator = page.locator(selector).last(); // O botão é o último ícone à direita
-      const count = await locator.count();
-
-      if (count > 0) {
-        await locator.click({ timeout: 10000 });
-        console.log(`Cliquei no botão da seta usando: ${selector}`);
+      const locator = page.locator(selector).first();
+      
+      if (await locator.count() > 0) {
+        // force: true obriga o robô a clicar mesmo se o YouTube colocar elementos invisíveis na frente
+        await locator.click({ force: true, timeout: 5000 });
+        console.log(`Cliquei na seta usando: ${selector}`);
         await page.waitForTimeout(3000);
         return;
       }
     } catch (error) {
-      console.log(`Não funcionou com seletor ${selector}: ${error.message}`);
+      console.log(`Erro no seletor ${selector}: ${error.message}`);
     }
   }
 
+  console.log('Tentando estratégia alternativa: clicar no último ícone da barra...');
+  try {
+    // Pega todos os botões de ícone e força o clique no último (que costuma ser a seta de exportar)
+    const icons = page.locator('ytcp-icon-button');
+    const count = await icons.count();
+    
+    if (count > 0) {
+      await icons.nth(count - 1).click({ force: true, timeout: 5000 });
+      console.log('Cliquei no último ícone disponível na tela.');
+      await page.waitForTimeout(3000);
+      return;
+    }
+  } catch (error) {}
+
   console.log('Tentando clicar por posição no canto superior direito...');
   const viewport = page.viewportSize();
-  if (!viewport) {
-    throw new Error('Não consegui identificar o tamanho da janela.');
+  if (viewport) {
+    await page.mouse.click(viewport.width - 45, 85);
+    await page.waitForTimeout(3000);
   }
-  await page.mouse.click(viewport.width - 45, 85);
-  await page.waitForTimeout(3000);
 }
 
 async function clickCsvAndDownload(page) {
