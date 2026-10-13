@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Instalar Dependências (Puppeteer)
-        run: npm install puppeteer
+      - name: Instalar Dependências (Puppeteer e Adm-Zip)
+        run: npm install puppeteer adm-zip
 
       - name: Executar Scraper do YouTube Studio
         env:
