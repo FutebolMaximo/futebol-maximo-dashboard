@@ -83,7 +83,8 @@ const REPORTS = [
       });
 
       if (!clicked) {
-        console.warn(`Aviso: Botão de exportação não encontrado para ${report.name}.`);
+        console.warn(`Aviso: Botão não encontrado para ${report.name}. Tirando print da tela...`);
+        await page.screenshot({ path: `erro-${report.name.replace('.csv', '')}.png`, fullPage: true });
         continue;
       }
 
@@ -97,7 +98,6 @@ const REPORTS = [
 
       await delay(6000); // Tempo para o ZIP terminar de baixar
 
-      // NOVO CÓDIGO: Lida com a extração do arquivo .zip
       const files = fs.readdirSync(DOWNLOAD_DIR);
       const latestZip = files
         .filter(f => f.endsWith('.zip') && !f.endsWith('.crdownload'))
@@ -107,29 +107,23 @@ const REPORTS = [
       if (latestZip) {
         const zipPath = path.join(DOWNLOAD_DIR, latestZip.name);
         
-        // 1. Descompacta o arquivo
         const zip = new AdmZip(zipPath);
         zip.extractAllTo(DOWNLOAD_DIR, true);
         
-        // 2. Exclui o arquivo .zip que já foi descompactado
         fs.unlinkSync(zipPath);
 
-        // 3. Procura os arquivos CSV que acabaram de sair do zip
         const extractedFiles = fs.readdirSync(DOWNLOAD_DIR);
         const csvFiles = extractedFiles.filter(f => f.endsWith('.csv') && !REPORTS.some(r => r.name === f));
         
-        // O YouTube geralmente separa em "Table data.csv" (a base real) e "Chart data.csv" (gráfico inútil).
         const tableDataCsv = csvFiles.find(f => f.toLowerCase().includes('table')) || csvFiles[0];
 
         if (tableDataCsv) {
-          // Renomeia a tabela principal para o nome correto
           const oldPath = path.join(DOWNLOAD_DIR, tableDataCsv);
           const newPath = path.join(DOWNLOAD_DIR, report.name);
           if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
           fs.renameSync(oldPath, newPath);
           console.log(`Sucesso: Arquivo extraído e salvo como ${report.name}`);
 
-          // Limpa o lixo que sobrou do zip (ex: Chart data.csv)
           const leftovers = fs.readdirSync(DOWNLOAD_DIR).filter(f => f.endsWith('.csv') && !REPORTS.some(r => r.name === f));
           for (const leftover of leftovers) {
             try { fs.unlinkSync(path.join(DOWNLOAD_DIR, leftover)); } catch (e) {}
