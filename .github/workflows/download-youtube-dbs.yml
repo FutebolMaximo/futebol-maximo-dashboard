@@ -1,0 +1,42 @@
+name: Baixar Bases do YouTube Studio
+
+on:
+  schedule:
+    # Executa diariamente às 07:00 AM no horário de Israel (04:00 AM UTC)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Permite rodar manualmente a qualquer momento pela aba Actions
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Dependências (Puppeteer e Adm-Zip)
+        run: npm install puppeteer adm-zip
+
+      - name: Executar Scraper do YouTube Studio
+        env:
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        run: node download-youtube-dbs.js
+
+      - name: Salvar e Enviar CSVs para o Repositório
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add downloads/*.csv || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Atualiza bases de dados do YouTube [skip ci]" && git push)
+
+      - name: Disponibilizar Prints de Erro para Download
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prints-de-erro
+          path: ./*.png
