@@ -470,6 +470,42 @@
   .tab-btn { padding:10px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
+
+  /* Dashboard format segmented control (Long Form | Shorts) */
+  .dash-format-seg {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--input-bg);
+    height: 36px;
+    flex: 0 0 auto;
+  }
+  .dash-format-seg button {
+    border: none;
+    background: transparent;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+    line-height: 1;
+  }
+  .dash-format-seg button:hover:not(.active) {
+    background: var(--blue-50);
+    color: var(--blue-600);
+  }
+  .dash-format-seg button.active {
+    background: var(--blue-500);
+    color: #fff;
+  }
+  .dash-format-seg button + button {
+    border-left: 1px solid var(--gray-300);
+  }
+
   .filters-sticky { position:sticky; top:38px; z-index:190; background:var(--sticky-bg); box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:8px 20px; gap:10px 12px; }
   .btn-icon-toggle {
@@ -929,7 +965,7 @@
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Long Form</button>
+  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
   <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
@@ -954,7 +990,7 @@
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
     </div>
-    <div class="filter-group">
+    <div class="filter-group" id="filterTipoGroup">
       <label>TIPO</label>
       <select id="filterTipo">
         <option value="">Todos os tipos</option>
@@ -986,7 +1022,11 @@
         <div class="title-dropdown" id="titleDropdown"></div>
       </div>
     </div>
-    <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;">
+    <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;flex-wrap:wrap;">
+      <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Formato do Dashboard" title="Formato do Dashboard">
+        <button type="button" id="btnDashFormatLF" class="active" onclick="setDashboardFormat('longform')">Long Form</button>
+        <button type="button" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
+      </div>
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
       <button id="btnEyeToggle" class="btn-icon-toggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo">👁️</button>
@@ -2016,10 +2056,15 @@ function chartScaleOpts(formatTick) {
 
 function refreshChartsForTheme() {
   if (allData && allData.length) {
-    try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
-    try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
-    try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
-    try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+    // Prefer the visible Dashboard/Shorts pipeline so Chart.js gets a real layout size.
+    if (activeTab === 'dashboard' || activeTab === 'shorts') {
+      try { renderVisibleDashboardPipeline(); } catch(e) { console.error('renderVisibleDashboardPipeline theme:', e.message); }
+    } else {
+      try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
+      try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
+      try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
+      try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+    }
   }
   if (fantasyLoaded && !fantasyLoadError) {
     try { renderFantasyBreakdownChart(); } catch(e) { console.error('renderFantasyBreakdownChart theme:', e.message); }
@@ -3584,6 +3629,81 @@ const chartInstances = {};
 let chartMode = 'recent'; // 'top' | 'bottom' | 'recent'
 let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'dashboard';
+/** Dashboard format mode (session-only). Independent of #filterTipo / Fantasy Formato. */
+let dashboardFormat = 'longform'; // 'longform' | 'shorts'
+
+function syncDashboardFormatUI() {
+  const lfBtn = document.getElementById('btnDashFormatLF');
+  const shBtn = document.getElementById('btnDashFormatShorts');
+  if (lfBtn) lfBtn.classList.toggle('active', dashboardFormat === 'longform');
+  if (shBtn) shBtn.classList.toggle('active', dashboardFormat === 'shorts');
+}
+
+/** Show Dashboard format seg only on Dashboard; hide sticky TIPO there (replaced visually). */
+function syncFormatControlsVisibility() {
+  const dashSeg = document.getElementById('dashFormatSeg');
+  const tipoGroup = document.getElementById('filterTipoGroup');
+  const onDash = activeTab === 'dashboard';
+  if (dashSeg) dashSeg.style.display = onDash ? '' : 'none';
+  // Keep #filterTipo infrastructure; only hide its group on Dashboard for this phase.
+  // Feedbacks/Base/VELHO/Fantasy still show the dropdown (Base/VELHO/Feedbacks UX TBD later).
+  if (tipoGroup) tipoGroup.style.display = onDash ? 'none' : '';
+}
+
+/**
+ * Panel visibility:
+ * - dashboard + longform → panelDashboard
+ * - dashboard + shorts   → panelShorts (same DOM as legacy Shorts tab)
+ * - shorts (legacy tab)  → panelShorts
+ * No reparenting / no duplicated IDs.
+ */
+function syncDashboardPanels() {
+  const showLF = activeTab === 'dashboard' && dashboardFormat === 'longform';
+  const showShorts = activeTab === 'shorts' ||
+    (activeTab === 'dashboard' && dashboardFormat === 'shorts');
+  const pd = document.getElementById('panelDashboard');
+  const ps = document.getElementById('panelShorts');
+  if (pd) pd.style.display = showLF ? '' : 'none';
+  if (ps) ps.style.display = showShorts ? '' : 'none';
+}
+
+function resizeAllChartsSoon(delayMs) {
+  setTimeout(() => {
+    Object.values(chartInstances).forEach(c => { try { c.resize(); } catch (e) {} });
+  }, delayMs == null ? 50 : delayMs);
+}
+
+/** Re-render only the pipeline that is currently visible (Chart.js + display:none). */
+function renderVisibleDashboardPipeline() {
+  if (activeTab === 'dashboard') {
+    if (dashboardFormat === 'longform') {
+      try { updateKPIs(); } catch (e) { console.error('updateKPIs:', e.message); }
+      try { renderCharts(); } catch (e) { console.error('renderCharts:', e.message); }
+      try { renderTemporal(); } catch (e) { console.error('renderTemporal:', e.message); }
+      try { renderAdvanced(); } catch (e) { console.error('renderAdvanced:', e.message); }
+    } else {
+      try { renderShortsAll(); } catch (e) { console.error('renderShortsAll:', e.message); }
+    }
+    resizeAllChartsSoon(60);
+    return;
+  }
+  if (activeTab === 'shorts') {
+    try { renderShortsAll(); } catch (e) { console.error('renderShortsAll:', e.message); }
+    resizeAllChartsSoon(60);
+  }
+}
+
+/** Immediate format switch — does not call applyFilters; does not touch #filterTipo. */
+function setDashboardFormat(fmt) {
+  if (fmt !== 'longform' && fmt !== 'shorts') return;
+  const changed = dashboardFormat !== fmt;
+  dashboardFormat = fmt;
+  syncDashboardFormatUI();
+  if (activeTab !== 'dashboard') return;
+  if (!changed) return;
+  syncDashboardPanels();
+  renderVisibleDashboardPipeline();
+}
 
 function switchTab(tab) {
   if (tab === 'fantasy' && !isFantasyTabEnabled()) {
@@ -3597,8 +3717,7 @@ function switchTab(tab) {
   syncTemporalFromUI();
 
   activeTab = tab;
-  document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
-  document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
+  syncDashboardPanels();
   document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
   document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
   document.getElementById('panelVelho').style.display      = tab === 'velho'      ? '' : 'none';
@@ -3610,6 +3729,9 @@ function switchTab(tab) {
   document.getElementById('tabBtnVelho').classList.toggle('active',     tab === 'velho');
   const fantasyBtn = document.getElementById('tabBtnFantasy');
   if (fantasyBtn) fantasyBtn.classList.toggle('active', tab === 'fantasy');
+
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
 
   if (nextIsFantasy) {
     loadTemporalToUI('fantasy');
@@ -3626,7 +3748,8 @@ function switchTab(tab) {
   }
 
   if (tab === 'basedados')  renderTable();
-  if (tab === 'shorts')     renderShortsAll();
+  if (tab === 'shorts')     renderVisibleDashboardPipeline();
+  if (tab === 'dashboard')  renderVisibleDashboardPipeline();
   if (tab === 'feedbacks')  renderFeedbacksTab();
   if (tab === 'velho')      renderVelho();
 }
@@ -3964,6 +4087,9 @@ function init() {
   updateWeekInput();
   updateTitleInput();
   applyFilters();
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
+  syncDashboardPanels();
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
 }
@@ -7486,6 +7612,9 @@ function renderVelho() {
 
 document.addEventListener('DOMContentLoaded', () => {
   syncFantasyTabVisibility();
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
+  syncDashboardPanels();
   if (!isFantasyTabEnabled()) setNumericRangesEnabled(true);
   loadData(); // pipeline principal (dados.csv)
   if (isFantasyTabEnabled()) {
