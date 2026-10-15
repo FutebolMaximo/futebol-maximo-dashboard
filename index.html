@@ -691,7 +691,7 @@
 
   #filterCategoriaInput, #filterWeekInput { background: var(--input-bg) !important; cursor: pointer; }
   #tempMetricDropdown, #tempCatDropdown, #perfMetricDropdown, #durGranDropdown,
-  #sTempMetricDropdown, #sPerfMetricDropdown {
+  #sTempMetricDropdown, #sPerfMetricDropdown, #shortsHeatmapGranDropdown {
     background: var(--surface-card) !important;
     border-color: var(--gray-300) !important;
   }
@@ -1662,8 +1662,8 @@
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
-      <button id="btnSTempWeek" class="toggle-btn active" onclick="setSTempMode('week')">Por Semana</button>
-      <button id="btnSTempMonth" class="toggle-btn" onclick="setSTempMode('month')">Por Mês</button>
+      <button id="btnSTempWeek" class="toggle-btn" onclick="setSTempMode('week')">Por Semana</button>
+      <button id="btnSTempMonth" class="toggle-btn active" onclick="setSTempMode('month')">Por Mês</button>
     </div>
   </div>
   <div class="chart-card wide" style="margin-bottom:24px;">
@@ -1690,7 +1690,6 @@
     <canvas id="chartSTempDur" style="display:none;"></canvas>
   </div>
 
-  <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <!-- SHORTS SCATTER -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Matriz Avg View Duration × Gancho %</h2></div>
   <p class="section-desc">O problema foi o Pacote, Gancho (abertura) ou Retenção?</p>
@@ -1699,6 +1698,7 @@
     <div id="sSScatterLegend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0 4px;"></div>
   </div>
 
+  <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Gráficos de Performance · Shorts</h2></div>
   <p class="section-desc">Como os Shorts estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
@@ -1745,10 +1745,33 @@
     <canvas id="chartSCTR" style="display:none;"></canvas>
   </div>
 
+  <!-- HEATMAP INDICADORES · SHORTS (logo abaixo de Performance, como no Long Form) -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
+  <p class="section-desc">Mapa de calor dos principais indicadores (somente Shorts).</p>
+  <div class="table-card" style="margin-bottom:32px;">
+    <div class="table-toolbar" style="flex-wrap:wrap;gap:8px;">
+      <h3 id="shortsIndicatorsTitle" style="margin:0;font-size:14px;font-weight:700;">Por Criador</h3>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto;">
+        <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+        <div style="display:flex;align-items:center;gap:6px;position:relative;" id="shortsHeatmapGranWrap">
+          <label style="font-size:12px;color:var(--gray-500);">Granularidade</label>
+          <button type="button" id="btnShortsHeatmapGran" onclick="toggleShortsHeatmapGranDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <span id="shortsHeatmapGranLabel">👤 Criadores</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          </button>
+          <div id="shortsHeatmapGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+            <div onclick="setShortsHeatmapGranularity('creator')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
+            <div onclick="setShortsHeatmapGranularity('duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixa de duração</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap"><div id="shortsIndicatorsContainer"></div></div>
+  </div>
+
   <!-- SHORTS FUNIL -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento · Shorts</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido).</p>
-  <div class="chart-card wide" style="margin-bottom:32px;">
+  <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -1762,15 +1785,14 @@
     <div id="funnelContainerShorts" style="margin-top:16px;max-width:900px;"></div>
   </div>
 
-  <!-- HEATMAP INDICADORES · SHORTS -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
-  <p class="section-desc">Performance agregada por Creator (somente Shorts).</p>
-  <div class="table-card" style="margin-bottom:32px;">
-    <div class="table-toolbar">
-      <h3 id="shortsIndicatorsTitle" style="margin:0;font-size:14px;font-weight:700;">Por Creator</h3>
-      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+  <!-- SHORTS DISTRIBUIÇÃO DE VIEWS (logo abaixo do Funil, como no Long Form) -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Distribuição de Views</h2></div>
+  <p class="section-desc">Quantos Shorts temos em cada patamar de views?</p>
+  <div style="margin-bottom:32px;">
+    <div class="chart-card wide">
+      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsShorts"></canvas></div>
     </div>
-    <div class="table-wrap"><div id="shortsIndicatorsContainer"></div></div>
   </div>
 
 </div>
@@ -5578,9 +5600,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close Fantasy temporal metric dropdown
     const fTempDD = document.getElementById('fantasyTempMetricDropdown');
     if (fTempDD && !e.target.closest('#btnFTempMetric') && !fTempDD.contains(e.target)) fTempDD.style.display = 'none';
-    // Close granularity dropdown
+    // Close granularity dropdown (Long Form Heatmap Indicadores)
     const durDD = document.getElementById('durGranDropdown');
     if (durDD && !e.target.closest('[onclick="toggleDurGranDD()"]') && !durDD.contains(e.target)) durDD.style.display='none';
+    // Close Shorts Heatmap Granularidade dropdown
+    const sGranDD = document.getElementById('shortsHeatmapGranDropdown');
+    const sGranWrap = document.getElementById('shortsHeatmapGranWrap');
+    if (sGranDD && sGranWrap && !sGranWrap.contains(e.target)) sGranDD.style.display = 'none';
   });
 });
 
@@ -6616,7 +6642,7 @@ let chartModeShorts = 'recent';
 let durationModeShorts = 'duration';
 let commentsModeShorts = 'comments';
 let inscritosModeShorts = 'conversao';
-let tempModeShorts = 'week'; // independent from Dashboard tempMode
+let tempModeShorts = 'month'; // default Mês; session-persisted (not reset on LF↔Shorts toggle)
 
 function setSTempMode(mode) {
   tempModeShorts = mode;
@@ -6664,6 +6690,19 @@ function renderShortsAll() {
   try { renderShortsCharts();  } catch(e) { console.error('ShortsCharts:', e.message); }
   try { renderShortsFunil();   } catch(e) { console.error('ShortsFunil:', e.message); }
   try { renderShortsIndicatorsHeatmap(); } catch(e) { console.error('ShortsIndicators:', e.message); }
+  try { renderShortsHistograms(); } catch(e) { console.error('ShortsHistograms:', e.message); }
+}
+
+/** Distribuição de Views — Shorts (mesma metodologia do LF, dataset = filteredShorts). */
+function renderShortsHistograms() {
+  const d = filteredShorts;
+  const BIN_VIEWS = 10000; const MAX_VIEWS_BINS = 10;
+  const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
+  d.forEach(r => { bins[Math.min(Math.floor((r.views || 0) / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
+  const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>100K`);
+  destroyChart('chartHistViewsShorts');
+  const el = document.getElementById('chartHistViewsShorts');
+  if (el) chartInstances['chartHistViewsShorts'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(16,185,129,.75)'));
 }
 
 function renderShortsKPIs() {
@@ -6938,6 +6977,32 @@ function renderShortsFunil() {
 
 let shortsIndSortCol = 'n';
 let shortsIndSortDir = -1;
+/** Shorts Heatmap Indicadores grouping: 'creator' | 'duration' */
+let shortsHeatmapGranularity = 'creator';
+
+function toggleShortsHeatmapGranDD() {
+  const dd = document.getElementById('shortsHeatmapGranDropdown');
+  if (!dd) return;
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function setShortsHeatmapGranularity(gran) {
+  if (gran !== 'creator' && gran !== 'duration') return;
+  shortsHeatmapGranularity = gran;
+  const labelEl = document.getElementById('shortsHeatmapGranLabel');
+  if (labelEl) labelEl.textContent = gran === 'duration' ? '⏱️ Faixa de duração' : '👤 Criadores';
+  const dd = document.getElementById('shortsHeatmapGranDropdown');
+  if (dd) dd.style.display = 'none';
+  renderShortsIndicatorsHeatmap();
+}
+
+/** Video duration (seconds) → 30s bucket label. Invalid/non-positive → Não identificado. */
+function getShortsDurationBucketLabel(r) {
+  const sec = r && r.duracao;
+  if (!Number.isFinite(sec) || sec <= 0) return 'Não identificado';
+  const start = Math.floor(sec / 30) * 30;
+  return `${start}–${start + 29}s`;
+}
 
 function sortShortsIndicators(col) {
   if (shortsIndSortCol === col) shortsIndSortDir *= -1;
@@ -6956,8 +7021,29 @@ function renderShortsIndicatorsHeatmap() {
   const thR = thBase + 'text-align:right;';
   const sortArrow = col => shortsIndSortCol === col ? (shortsIndSortDir === -1 ? ' ↓' : ' ↑') : ' ↕';
 
-  const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
-  const rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr) }));
+  const gran = shortsHeatmapGranularity === 'duration' ? 'duration' : 'creator';
+  let rows_data = [];
+  let firstColLabel = 'Criador';
+
+  if (gran === 'creator') {
+    // Exact previous behavior: group by creator
+    const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
+    rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr), bucketStart: null }));
+    firstColLabel = 'Criador';
+  } else {
+    firstColLabel = 'Faixa Duração';
+    const byBucket = new Map();
+    d.forEach(r => {
+      const label = getShortsDurationBucketLabel(r);
+      if (!byBucket.has(label)) byBucket.set(label, []);
+      byBucket.get(label).push(r);
+    });
+    rows_data = [...byBucket.entries()].map(([label, rows]) => {
+      const m = /^(\d+)–/.exec(label);
+      const bucketStart = m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY; // Não identificado last
+      return { label, rows, bucketStart };
+    }).sort((a, b) => a.bucketStart - b.bucketStart);
+  }
 
   const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[], fantasyClicks:[], fantasyConversion:[] };
   rows_data.forEach(({ rows }) => {
@@ -6988,6 +7074,10 @@ function renderShortsIndicatorsHeatmap() {
       comm1k: totalViews > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / totalViews * 1000 : 0,
       fantasyClicks: sumFantasyClicks(rows),
       fantasyConversion: aggregateFantasyConversion(rows),
+      bucketStart: (() => {
+        const m = /^(\d+)–/.exec(label);
+        return m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY;
+      })(),
     };
     const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
@@ -6999,6 +7089,7 @@ function renderShortsIndicatorsHeatmap() {
       label, n: data.n, medianViews: data.medianViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
       ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
       fantasyClicks: data.fantasyClicks, fantasyConversion: data.fantasyConversion,
+      bucketStart: data.bucketStart,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
@@ -7018,7 +7109,12 @@ function renderShortsIndicatorsHeatmap() {
 
   if (shortsIndSortCol) {
     built.sort((a, b) => {
-      if (shortsIndSortCol === 'label') return shortsIndSortDir * a.label.localeCompare(b.label);
+      if (shortsIndSortCol === 'label') {
+        if (gran === 'duration') {
+          return shortsIndSortDir * (a.bucketStart - b.bucketStart);
+        }
+        return shortsIndSortDir * a.label.localeCompare(b.label);
+      }
       const av = a[shortsIndSortCol], bv = b[shortsIndSortCol];
       const aNull = av === null || av === undefined || !Number.isFinite(av);
       const bNull = bv === null || bv === undefined || !Number.isFinite(bv);
@@ -7030,11 +7126,15 @@ function renderShortsIndicatorsHeatmap() {
   }
 
   const titleEl = document.getElementById('shortsIndicatorsTitle');
-  if (titleEl) titleEl.textContent = `${built.length} Creators · ${d.length} Shorts`;
+  if (titleEl) {
+    titleEl.textContent = gran === 'duration'
+      ? `${built.length} faixas · ${d.length} Shorts`
+      : `${built.length} Creators · ${d.length} Shorts`;
+  }
 
   container.innerHTML = `<table style="width:100%;border-collapse:collapse;">
     <thead><tr>
-      <th onclick="sortShortsIndicators('label')" style="${thL}">Criador${sortArrow('label')}</th>
+      <th onclick="sortShortsIndicators('label')" style="${thL}">${firstColLabel}${sortArrow('label')}</th>
       <th onclick="sortShortsIndicators('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
       <th onclick="sortShortsIndicators('medianViews')" style="${thR}">Views Mediana${sortArrow('medianViews')}</th>
       <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
@@ -7344,10 +7444,10 @@ function renderShortsScatter() {
     }
   });
 
-  // Legend
+  // Legend — omit "(Sem categoria)" label only (data still plotted in datasets above)
   const legendEl = document.getElementById('sSScatterLegend');
   if (legendEl) {
-    const catLegend = cats.map(cat => {
+    const catLegend = cats.filter(cat => cat !== '(Sem categoria)').map(cat => {
       const col = CAT_COLORS[cat]||'#64748b';
       const n = d.filter(r=>(r.categoria||'(Sem categoria)')===cat).length;
       return `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
