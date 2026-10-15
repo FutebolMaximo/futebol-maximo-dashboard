@@ -365,30 +365,31 @@
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
 
-  /* 23-column widths for Base de Dados — sum = 100% */
+  /* 24-column widths for Base de Dados — sum ≈ 100% */
   #dataTable th:nth-child(1)  { width:4%;   text-align:left; }  /* Data */
   #dataTable th:nth-child(2)  { width:3.5%; }                    /* Semana */
   #dataTable th:nth-child(3)  { width:3.5%; }                    /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:18%;  text-align:left; }  /* Título */
-  #dataTable th:nth-child(5)  { width:3.5%; }                    /* Tipo */
-  #dataTable th:nth-child(6)  { width:3%;   }                    /* Criador */
-  #dataTable th:nth-child(7)  { width:5.5%; }                    /* Categoria */
-  #dataTable th:nth-child(8)  { width:3.5%; }                    /* Views */
-  #dataTable th:nth-child(9)  { width:3.5%; }                    /* Fantasy Clicks */
-  #dataTable th:nth-child(10) { width:4%;   }                    /* Fantasy Conversion */
-  #dataTable th:nth-child(11) { width:3%;   }                    /* CTR% */
-  #dataTable th:nth-child(12) { width:3%;   }                    /* Avg View Dur */
-  #dataTable th:nth-child(13) { width:2.5%; }                    /* Gancho */
-  #dataTable th:nth-child(14) { width:2.5%; }                    /* Duração */
-  #dataTable th:nth-child(15) { width:2.5%; }                    /* Avg View % */
-  #dataTable th:nth-child(16) { width:4.5%; }                    /* Impr. */
-  #dataTable th:nth-child(17) { width:3%;   }                    /* CTR% YT */
-  #dataTable th:nth-child(18) { width:3%;   }                    /* Likes */
-  #dataTable th:nth-child(19) { width:3%;   }                    /* Inscritos */
-  #dataTable th:nth-child(20) { width:4%;   }                    /* Conv. Insc. */
-  #dataTable th:nth-child(21) { width:2.5%; }                    /* Shares */
-  #dataTable th:nth-child(22) { width:3.5%; }                    /* Coment. */
-  #dataTable th:nth-child(23) { width:4%;   }                    /* Conv. Comm. */
+  #dataTable th:nth-child(4)  { width:5%;   text-align:left; }  /* Content ID */
+  #dataTable th:nth-child(5)  { width:15%;  text-align:left; }  /* Título */
+  #dataTable th:nth-child(6)  { width:3.5%; }                    /* Tipo */
+  #dataTable th:nth-child(7)  { width:3%;   }                    /* Criador */
+  #dataTable th:nth-child(8)  { width:5%;   }                    /* Categoria */
+  #dataTable th:nth-child(9)  { width:3.5%; }                    /* Views */
+  #dataTable th:nth-child(10) { width:3.5%; }                    /* Fantasy Clicks */
+  #dataTable th:nth-child(11) { width:4%;   }                    /* Fantasy Conversion */
+  #dataTable th:nth-child(12) { width:3%;   }                    /* CTR% */
+  #dataTable th:nth-child(13) { width:3%;   }                    /* Avg View Dur */
+  #dataTable th:nth-child(14) { width:2.5%; }                    /* Gancho */
+  #dataTable th:nth-child(15) { width:2.5%; }                    /* Duração */
+  #dataTable th:nth-child(16) { width:2.5%; }                    /* Avg View % */
+  #dataTable th:nth-child(17) { width:4%;   }                    /* Impr. */
+  #dataTable th:nth-child(18) { width:3%;   }                    /* CTR% YT */
+  #dataTable th:nth-child(19) { width:3%;   }                    /* Likes */
+  #dataTable th:nth-child(20) { width:3%;   }                    /* Inscritos */
+  #dataTable th:nth-child(21) { width:3.5%; }                    /* Conv. Insc. */
+  #dataTable th:nth-child(22) { width:2.5%; }                    /* Shares */
+  #dataTable th:nth-child(23) { width:3%;   }                    /* Coment. */
+  #dataTable th:nth-child(24) { width:3.5%; }                    /* Conv. Comm. */
   tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
   tbody tr:hover { background: var(--blue-50); }
   tbody td { padding: 4px 4px; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
@@ -1213,8 +1214,8 @@
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
-      <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
-      <button id="btnTempMonth" class="toggle-btn" onclick="setTempMode('month')">Por Mês</button>
+      <button id="btnTempWeek" class="toggle-btn" onclick="setTempMode('week')">Por Semana</button>
+      <button id="btnTempMonth" class="toggle-btn active" onclick="setTempMode('month')">Por Mês</button>
     </div>
     <div style="display:flex;gap:8px;">
       <button id="btnComp30" class="toggle-btn" onclick="showComparison(30)" style="font-size:11px;">vs 30 dias ant.</button>
@@ -1236,8 +1237,6 @@
           <div onclick="setTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
           <div onclick="setTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
           <div onclick="setTempMetric('gancho','🎣 Gancho Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho Médio</div>
-          <div onclick="setTempMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-          <div onclick="setTempMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
         </div>
       </div>
       <div style="position:relative;">
@@ -1319,8 +1318,6 @@
             <div onclick="setPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
             <div onclick="setPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
             <div onclick="setPerfMetric('gancho','🎣 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho % por Vídeo</div>
-            <div onclick="setPerfMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-            <div onclick="setPerfMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
@@ -1542,6 +1539,7 @@
             <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('semana')" data-col="semana">Semana <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('mesAno')" data-col="mesAno">Mês_Ano <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('id')" data-col="id" style="white-space:nowrap;">Content ID <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('title')" data-col="title">Título <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('tipo')" data-col="tipo">Tipo <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
@@ -1562,31 +1560,6 @@
             <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Coment. <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
-          </tr>
-          <tr class="filter-row">
-            <td><input class="col-filter" data-col="dataPublicacao" data-type="text" placeholder="ex: 2026"></td>
-            <td><input class="col-filter" data-col="semana" data-type="text" placeholder="ex: W18/26"></td>
-            <td><input class="col-filter" data-col="mesAno" data-type="text" placeholder="ex: 05-2026"></td>
-            <td><input class="col-filter" data-col="title" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="tipo" data-type="text" placeholder="Long Form"></td>
-            <td><input class="col-filter" data-col="creator" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="categoria" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
-            <td><input class="col-filter" data-col="fantasyClicks" data-type="num" placeholder=">10"></td>
-            <td><input class="col-filter" data-col="fantasyConversion" data-type="num" placeholder=">0.001"></td>
-            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
-            <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
-            <td><input class="col-filter" data-col="gancho" data-type="num" placeholder=">0.70"></td>
-            <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
-            <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500K"></td>
-            <td><input class="col-filter" data-col="ctrYT" data-type="num" placeholder=">5"></td>
-            <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
-            <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
-            <td><input class="col-filter" data-col="conversao" data-type="num" placeholder=">0.005"></td>
-            <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -1688,8 +1661,6 @@
           <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
           <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
           <div onclick="setSTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
-          <div onclick="setSTempMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-          <div onclick="setSTempMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
         </div>
       </div>
     </div>
@@ -1742,8 +1713,6 @@
             <div onclick="setSPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
             <div onclick="setSPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
             <div onclick="setSPerfMetric('gancho','📊 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % por Vídeo</div>
-            <div onclick="setSPerfMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-            <div onclick="setSPerfMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
           </div>
         </div>
       </div>
@@ -3328,16 +3297,25 @@ function getFantasyPerfChartData() {
   const catNames = topN.map(r => r.categoria || '(Sem categoria)');
   const barLinks = topN.map(r => r.link || '');
 
-  // Baseline: vídeos Fantasy com clickDate em 2026 (independente dos filtros do usuário)
-  const baseRows = allFantasyData.filter(r =>
+  // Baseline: vídeos Fantasy com clickDate em 2026 (independente de Data/Semana/Cat/Creator/Título).
+  // Respeita Formato sticky (fantasyFormatFilter); Todos = baseline anterior intacto.
+  const fmtFilter = fantasyFormatFilter || '';
+  let baseRows = allFantasyData.filter(r =>
     r.kind === 'video' && r.clickDate && r.clickDate >= '2026-01-01' && r.clickDate <= '2026-12-31'
   );
-  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : allFantasyData);
-  const baseVals = baseVideos.map(fantasyPerfMetricVal);
-  const meanVal = mean(baseVals);
-  const medianVal = median(baseVals);
+  if (fmtFilter) {
+    baseRows = baseRows.filter(r => matchesFantasyFormatFilter(r, fmtFilter));
+  }
+  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : (
+    fmtFilter
+      ? allFantasyData.filter(r => r.kind === 'video' && matchesFantasyFormatFilter(r, fmtFilter))
+      : allFantasyData
+  ));
+  const baseVals = baseVideos.map(fantasyPerfMetricVal).filter(v => v !== null && Number.isFinite(v));
+  const meanVal = baseVals.length ? mean(baseVals) : null;
+  const medianVal = baseVals.length ? median(baseVals) : null;
 
-  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows: topN };
+  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows: topN, baselineN: baseVideos.length };
 }
 
 function renderFantasyPerformance() {
@@ -3728,6 +3706,7 @@ function resizeAllChartsSoon(delayMs) {
 /** Re-render only the Dashboard pipeline that is currently visible. */
 function renderVisibleDashboardPipeline() {
   if (activeTab !== 'dashboard') return;
+  syncTempModeButtons();
   if (dashboardFormat === 'longform') {
     try { updateKPIs(); } catch (e) { console.error('updateKPIs:', e.message); }
     try { renderCharts(); } catch (e) { console.error('renderCharts:', e.message); }
@@ -4010,12 +3989,12 @@ function populateCatDropdown() {
   const allChecked = catAllSelected ? 'checked' : '';
 
   dd.innerHTML = `
-    <div class="title-option cat-select-all" onclick="toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+    <div class="title-option cat-select-all" onclick="event.stopPropagation(); toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as Categorias
     </div>
     ${ghosts.map(c => {
       const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option filter-ghost" onclick="toggleCatCheck('${safeC}', this)">
+      return `<div class="title-option filter-ghost" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
         <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
         ${c}<span class="ghost-tag">(indisponível)</span>
       </div>`;
@@ -4024,7 +4003,7 @@ function populateCatDropdown() {
       const checked = (catAllSelected || selectedCats.has(c)) ? 'checked' : '';
       const color = CAT_COLORS[c] || '#64748b';
       const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option" onclick="toggleCatCheck('${safeC}', this)">
+      return `<div class="title-option" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${color};margin-right:5px;vertical-align:middle;flex-shrink:0;"></span>${c}
       </div>`;
@@ -4044,6 +4023,8 @@ function toggleAllCats(el) {
   }
   updateCatInput();
   populateCatDropdown();
+  const dd = document.getElementById('catDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function updateCatInput() {
@@ -4086,6 +4067,8 @@ function toggleCatCheck(cat, el) {
   }
   updateCatInput();
   populateCatDropdown();
+  const dd = document.getElementById('catDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function init() {
@@ -4111,6 +4094,7 @@ function init() {
   syncBaseVelhoTipoUI();
   syncFantasyFormatFilterUI();
   syncDashboardPanels();
+  syncTempModeButtons();
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
 }
@@ -4797,7 +4781,15 @@ function initRangeFilters() {
   bindDurRange();
 }
 
+function closeStickyMultiselectDropdowns() {
+  ['catDropdown', 'weekDropdown', 'titleDropdown'].forEach(id => {
+    const dd = document.getElementById(id);
+    if (dd) dd.classList.remove('open');
+  });
+}
+
 function applyFilters() {
+  closeStickyMultiselectDropdowns();
   syncTemporalFromUI();
   const creator   = document.getElementById('filterCreator').value;
   // Main sempre usa estado próprio (Data de Publicação) — nunca o DOM da Fantasy
@@ -4876,7 +4868,7 @@ function clearFilters() {
   titleAllSelected = true;
   updateCatInput();
   updateTitleInput();
-  document.getElementById('weekDropdown').classList.remove('open');
+  closeStickyMultiselectDropdowns();
   resetRangeFiltersToBounds();
 
   if (isFantasyTabActive()) {
@@ -4927,12 +4919,12 @@ function renderTitleDropdown(items) {
     .sort();
 
   dropdown.innerHTML = `
-    <div class="title-option title-select-all" onclick="toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+    <div class="title-option title-select-all" onclick="event.stopPropagation(); toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${masterChecked ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
     </div>
     ${ghosts.map(t => {
       const safeT = t.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option filter-ghost selected" onclick="toggleTitleCheck('${safeT}', this)">
+      return `<div class="title-option filter-ghost selected" onclick="event.stopPropagation(); toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
         ${t}<span class="ghost-tag">(indisponível)</span>
       </div>`;
@@ -4941,7 +4933,7 @@ function renderTitleDropdown(items) {
       const checked = (titleAllSelected || selectedTitles.has(r.title)) ? 'checked' : '';
       const safeT = r.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div class="title-option${(titleAllSelected || selectedTitles.has(r.title)) ? ' selected' : ''}"
-        onclick="toggleTitleCheck('${safeT}', this)">
+        onclick="event.stopPropagation(); toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${(isFantasyTabActive() ? r.clickDate : r.dataPublicacao) || '—'}</span>${r.title}
       </div>`;
@@ -4950,6 +4942,7 @@ function renderTitleDropdown(items) {
 }
 
 function toggleAllTitles(el) {
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
   const cb = el.querySelector('input[type=checkbox]');
   if (titleAllSelected) {
     titleAllSelected = false;
@@ -4965,6 +4958,8 @@ function toggleAllTitles(el) {
   const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
+  const dd = document.getElementById('titleDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function onTitleFocus() {
@@ -4973,12 +4968,13 @@ function onTitleFocus() {
 }
 
 function onTitleBlur() {
-  titleBlurTimer = setTimeout(() => {
-    document.getElementById('titleDropdown').classList.remove('open');
-  }, 250);
+  // Do not auto-close on blur — clicking options steals focus and would close the menu.
+  // Close via outside-click / Aplicar / Limpar (same pattern as Semana).
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
 }
 
 function toggleTitleCheck(title, el) {
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
   const cb = el.querySelector('input[type=checkbox]');
   const allTitles = getSourceTitlesList();
   if (titleAllSelected) {
@@ -5008,6 +5004,8 @@ function toggleTitleCheck(title, el) {
   const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
+  const dd = document.getElementById('titleDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function updateTitleInput() {
@@ -5253,6 +5251,7 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
         if (!yScale) return;
 
         const drawLine = (val, color, label, labelSide) => {
+          if (val === null || val === undefined || !Number.isFinite(val)) return;
           const y = yScale.getPixelForValue(val);
           if (y < top || y > bottom) return;
           ctx.save();
@@ -5456,62 +5455,25 @@ function sortTable(col) {
   renderTable();
 }
 
-function applyColFilter(val, expr, col) {
-  if (!expr) return true;
-  expr = expr.trim();
-  const numMatch = expr.match(/^(>=|<=|>|<|=)?\s*(-?[\d.]+)$/);
-  if (numMatch) {
-    const op = numMatch[1] || '>=';
-    const threshold = parseFloat(numMatch[2]);
-    // Duration fields: filter by minutes (convert stored seconds → minutes)
-    let v;
-    if (col === 'avgViewDurSec' || col === 'duracao') {
-      v = parseFloat(val) / 60; // stored in seconds, compare in minutes
-    } else {
-      v = parseFloat(val);
-    }
-    if (isNaN(v)) return false;
-    if (op === '>')  return v >  threshold;
-    if (op === '>=') return v >= threshold;
-    if (op === '<')  return v <  threshold;
-    if (op === '<=') return v <= threshold;
-    if (op === '=')  return Math.round(v) === threshold;
-  }
-  // Text filter
-  return String(val).toLowerCase().includes(expr.toLowerCase());
-}
-
-function getColFilters() {
-  const filters = {};
-  document.querySelectorAll('.col-filter').forEach(inp => {
-    const v = inp.value.trim();
-    inp.classList.toggle('active', v !== '');
-    if (v) filters[inp.dataset.col] = { expr: v, type: inp.dataset.type };
-  });
-  return filters;
-}
-
 function renderTable() {
   const q = (document.getElementById('tableSearch').value || '').toLowerCase();
-  const colFilters = getColFilters();
   let rows = [...(filteredAll||filteredData)]; // Base de Dados shows all types
 
   if (q) {
     rows = rows.filter(r =>
       r.title.toLowerCase().includes(q) ||
       (r.creator||'').toLowerCase().includes(q) ||
-      r.dataPublicacao.includes(q)
+      r.dataPublicacao.includes(q) ||
+      String(r.id || '').toLowerCase().includes(q)
     );
-  }
-
-  // Apply per-column filters
-  for (const [col, {expr}] of Object.entries(colFilters)) {
-    rows = rows.filter(r => applyColFilter(r[col], expr, col));
   }
 
   rows.sort((a,b) => {
     let av = a[sortCol], bv = b[sortCol];
-    if (typeof av === 'string' || typeof bv === 'string') return sortDir * String(av||'').localeCompare(String(bv||''));
+    // Content ID and other IDs: always textual compare (preserve leading zeros)
+    if (sortCol === 'id' || typeof av === 'string' || typeof bv === 'string') {
+      return sortDir * String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: false });
+    }
     const aNull = av === null || av === undefined || (typeof av === 'number' && !Number.isFinite(av));
     const bNull = bv === null || bv === undefined || (typeof bv === 'number' && !Number.isFinite(bv));
     if (aNull && bNull) return 0;
@@ -5543,11 +5505,13 @@ function renderTable() {
       return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     })();
     const dateFmt = r.dataPublicacao ? r.dataPublicacao.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$3/$2/$1') : '—';
+    const contentId = (r.id != null && String(r.id) !== '') ? String(r.id) : '—';
     return `
     <tr>
       <td style="white-space:nowrap;">${dateFmt}</td>
       <td style="white-space:nowrap;">${r.semana||'—'}</td>
       <td style="white-space:nowrap;">${r.mesAno||'—'}</td>
+      <td style="white-space:nowrap;font-variant-numeric:normal;">${contentId}</td>
       <td class="title-cell">
         ${r.link
           ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
@@ -5582,12 +5546,8 @@ function renderTable() {
     `${rows.length} vídeos`;
 }
 
-// Wire column filter inputs to re-render on typing
+// Close sticky multiselects when clicking outside their wrapper
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.col-filter').forEach(inp => {
-    inp.addEventListener('input', renderTable);
-  });
-  // Close all dropdowns when clicking outside their wrapper
   document.addEventListener('click', e => {
     const closings = [
       ['catWrap',   'catDropdown'],
@@ -5867,11 +5827,22 @@ function renderFeedbackTable() {
 
 // ── TEMPORAL EVOLUTION ────────────────────────────────────────────────────────
 
+function syncTempModeButtons() {
+  const w = document.getElementById('btnTempWeek');
+  const m = document.getElementById('btnTempMonth');
+  if (w) w.classList.toggle('active', tempMode === 'week');
+  if (m) m.classList.toggle('active', tempMode === 'month');
+  const sw = document.getElementById('btnSTempWeek');
+  const sm = document.getElementById('btnSTempMonth');
+  if (sw) sw.classList.toggle('active', tempModeShorts === 'week');
+  if (sm) sm.classList.toggle('active', tempModeShorts === 'month');
+}
+
 function setTempMode(mode) {
   tempMode = mode;
-  document.getElementById('btnTempWeek').classList.toggle('active',  mode === 'week');
-  document.getElementById('btnTempMonth').classList.toggle('active', mode === 'month');
-  document.getElementById('comparisonBadge').style.display = 'none';
+  syncTempModeButtons();
+  const badge = document.getElementById('comparisonBadge');
+  if (badge) badge.style.display = 'none';
   renderTemporal();
 }
 
@@ -6648,8 +6619,7 @@ let tempModeShorts = 'month'; // default Mês; session-persisted (not reset on L
 
 function setSTempMode(mode) {
   tempModeShorts = mode;
-  document.getElementById('btnSTempWeek').classList.toggle('active', mode==='week');
-  document.getElementById('btnSTempMonth').classList.toggle('active', mode==='month');
+  syncTempModeButtons();
   renderShortsTemporal();
 }
 
@@ -7219,9 +7189,20 @@ function renderFeedbackTableShorts() {
 let tempMetric = 'views'; // 'views' | 'viewsMedian' | 'ctr' | 'ret' | 'insc' | 'dur' | 'gancho'
 let tempSelectedCats = new Set(); // empty = aggregate line
 
+function sanitizeDashboardMetric(metric, fallback, labelId, fallbackLabel) {
+  if (metric === 'fantasyClicks' || metric === 'fantasyConversion') {
+    const lbl = document.getElementById(labelId);
+    if (lbl) lbl.textContent = fallbackLabel;
+    return fallback;
+  }
+  return metric;
+}
+
 function setTempMetric(metric, label) {
-  tempMetric = metric;
-  document.getElementById('tempMetricLabel').textContent = label;
+  tempMetric = sanitizeDashboardMetric(metric, 'views', 'tempMetricLabel', '📈 Soma de Views');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('tempMetricLabel').textContent = label;
+  }
   document.getElementById('tempMetricDropdown').style.display = 'none';
   renderTemporal();
 }
@@ -7276,8 +7257,10 @@ let perfMetric = 'views';
 let perfView = 'video'; // 'video' | 'categoria'
 
 function setPerfMetric(metric, label) {
-  perfMetric = metric;
-  document.getElementById('perfMetricLabel').textContent = label;
+  perfMetric = sanitizeDashboardMetric(metric, 'views', 'perfMetricLabel', '📊 Views por Vídeo');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('perfMetricLabel').textContent = label;
+  }
   document.getElementById('perfMetricDropdown').style.display = 'none';
   renderCharts();
 }
@@ -7313,8 +7296,10 @@ document.addEventListener('click', e => {
 let sTempMetric = 'views';
 
 function setSTempMetric(metric, label) {
-  sTempMetric = metric;
-  document.getElementById('sTempMetricLabel').textContent = label;
+  sTempMetric = sanitizeDashboardMetric(metric, 'views', 'sTempMetricLabel', '📈 Soma de Views');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('sTempMetricLabel').textContent = label;
+  }
   document.getElementById('sTempMetricDropdown').style.display = 'none';
   renderShortsTemporal();
 }
@@ -7329,8 +7314,10 @@ let sPerfMetric = 'views';
 let sPerfView   = 'video';
 
 function setSPerfMetric(metric, label) {
-  sPerfMetric = metric;
-  document.getElementById('sPerfMetricLabel').textContent = label;
+  sPerfMetric = sanitizeDashboardMetric(metric, 'views', 'sPerfMetricLabel', '📊 Views por Vídeo');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('sPerfMetricLabel').textContent = label;
+  }
   document.getElementById('sPerfMetricDropdown').style.display = 'none';
   renderShortsCharts();
 }
