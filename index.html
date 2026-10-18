@@ -365,30 +365,31 @@
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
 
-  /* 23-column widths for Base de Dados — sum = 100% */
+  /* 24-column widths for Base de Dados — sum ≈ 100% */
   #dataTable th:nth-child(1)  { width:4%;   text-align:left; }  /* Data */
   #dataTable th:nth-child(2)  { width:3.5%; }                    /* Semana */
   #dataTable th:nth-child(3)  { width:3.5%; }                    /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:18%;  text-align:left; }  /* Título */
-  #dataTable th:nth-child(5)  { width:3.5%; }                    /* Tipo */
-  #dataTable th:nth-child(6)  { width:3%;   }                    /* Criador */
-  #dataTable th:nth-child(7)  { width:5.5%; }                    /* Categoria */
-  #dataTable th:nth-child(8)  { width:3.5%; }                    /* Views */
-  #dataTable th:nth-child(9)  { width:3.5%; }                    /* Fantasy Clicks */
-  #dataTable th:nth-child(10) { width:4%;   }                    /* Fantasy Conversion */
-  #dataTable th:nth-child(11) { width:3%;   }                    /* CTR% */
-  #dataTable th:nth-child(12) { width:3%;   }                    /* Avg View Dur */
-  #dataTable th:nth-child(13) { width:2.5%; }                    /* Gancho */
-  #dataTable th:nth-child(14) { width:2.5%; }                    /* Duração */
-  #dataTable th:nth-child(15) { width:2.5%; }                    /* Avg View % */
-  #dataTable th:nth-child(16) { width:4.5%; }                    /* Impr. */
-  #dataTable th:nth-child(17) { width:3%;   }                    /* CTR% YT */
-  #dataTable th:nth-child(18) { width:3%;   }                    /* Likes */
-  #dataTable th:nth-child(19) { width:3%;   }                    /* Inscritos */
-  #dataTable th:nth-child(20) { width:4%;   }                    /* Conv. Insc. */
-  #dataTable th:nth-child(21) { width:2.5%; }                    /* Shares */
-  #dataTable th:nth-child(22) { width:3.5%; }                    /* Coment. */
-  #dataTable th:nth-child(23) { width:4%;   }                    /* Conv. Comm. */
+  #dataTable th:nth-child(4)  { width:5%;   text-align:left; }  /* Content ID */
+  #dataTable th:nth-child(5)  { width:15%;  text-align:left; }  /* Título */
+  #dataTable th:nth-child(6)  { width:3.5%; }                    /* Tipo */
+  #dataTable th:nth-child(7)  { width:3%;   }                    /* Criador */
+  #dataTable th:nth-child(8)  { width:5%;   }                    /* Categoria */
+  #dataTable th:nth-child(9)  { width:3.5%; }                    /* Views */
+  #dataTable th:nth-child(10) { width:3.5%; }                    /* Fantasy Clicks */
+  #dataTable th:nth-child(11) { width:4%;   }                    /* Fantasy Conversion */
+  #dataTable th:nth-child(12) { width:3%;   }                    /* CTR% */
+  #dataTable th:nth-child(13) { width:3%;   }                    /* Avg View Dur */
+  #dataTable th:nth-child(14) { width:2.5%; }                    /* Gancho */
+  #dataTable th:nth-child(15) { width:2.5%; }                    /* Duração */
+  #dataTable th:nth-child(16) { width:2.5%; }                    /* Avg View % */
+  #dataTable th:nth-child(17) { width:4%;   }                    /* Impr. */
+  #dataTable th:nth-child(18) { width:3%;   }                    /* CTR% YT */
+  #dataTable th:nth-child(19) { width:3%;   }                    /* Likes */
+  #dataTable th:nth-child(20) { width:3%;   }                    /* Inscritos */
+  #dataTable th:nth-child(21) { width:3.5%; }                    /* Conv. Insc. */
+  #dataTable th:nth-child(22) { width:2.5%; }                    /* Shares */
+  #dataTable th:nth-child(23) { width:3%;   }                    /* Coment. */
+  #dataTable th:nth-child(24) { width:3.5%; }                    /* Conv. Comm. */
   tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
   tbody tr:hover { background: var(--blue-50); }
   tbody td { padding: 4px 4px; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
@@ -470,6 +471,44 @@
   .tab-btn { padding:10px 24px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-500); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
+
+  /* Segmented Tipo/Formato (Dashboard 2 opts · Base/VELHO 3 opts) */
+  .dash-format-seg, .tipo-format-seg {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--input-bg);
+    height: 36px;
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+  .dash-format-seg button, .tipo-format-seg button {
+    border: none;
+    background: transparent;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+    line-height: 1;
+  }
+  .dash-format-seg button:hover:not(.active),
+  .tipo-format-seg button:hover:not(.active) {
+    background: var(--blue-50);
+    color: var(--blue-600);
+  }
+  .dash-format-seg button.active, .tipo-format-seg button.active {
+    background: var(--blue-500);
+    color: #fff;
+  }
+  .dash-format-seg button + button, .tipo-format-seg button + button {
+    border-left: 1px solid var(--gray-300);
+  }
+
   .filters-sticky { position:sticky; top:38px; z-index:190; background:var(--sticky-bg); box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
   .filters-sticky .filters-card { border-radius:0; box-shadow:none; border:none; margin:0; padding:8px 20px; gap:10px 12px; }
   .btn-icon-toggle {
@@ -655,7 +694,7 @@
 
   #filterCategoriaInput, #filterWeekInput { background: var(--input-bg) !important; cursor: pointer; }
   #tempMetricDropdown, #tempCatDropdown, #perfMetricDropdown, #durGranDropdown,
-  #sTempMetricDropdown, #sPerfMetricDropdown {
+  #sTempMetricDropdown, #sPerfMetricDropdown, #shortsHeatmapGranDropdown {
     background: var(--surface-card) !important;
     border-color: var(--gray-300) !important;
   }
@@ -929,8 +968,7 @@
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Long Form</button>
-  <button class="tab-btn"        id="tabBtnShorts"    onclick="switchTab('shorts')">⚡ Shorts</button>
+  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
   <button class="tab-btn"        id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
@@ -954,10 +992,19 @@
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
     </div>
-    <div class="filter-group">
+    <!-- Slot Tipo/Formato: Base/VELHO segmented XOR Fantasy dropdown; oculto em Dashboard/Feedbacks -->
+    <div class="filter-group" id="baseVelhoTipoGroup" style="display:none;">
       <label>TIPO</label>
-      <select id="filterTipo">
-        <option value="">Todos os tipos</option>
+      <div class="tipo-format-seg" id="baseVelhoTipoSeg" role="group" aria-label="Tipo Base/VELHO" title="Tipo">
+        <button type="button" id="btnBaseVelhoTipoAll" class="active" onclick="setBaseVelhoTipo('')">Todos</button>
+        <button type="button" id="btnBaseVelhoTipoLF" onclick="setBaseVelhoTipo('long')">Long Form</button>
+        <button type="button" id="btnBaseVelhoTipoShorts" onclick="setBaseVelhoTipo('shorts')">Shorts</button>
+      </div>
+    </div>
+    <div class="filter-group" id="filterTipoGroup" style="display:none;">
+      <label>FORMATO</label>
+      <select id="filterTipo" onchange="onFantasyFormatFilterChange()">
+        <option value="">Todos os formatos</option>
         <option value="long">Long Form</option>
         <option value="shorts">Shorts</option>
       </select>
@@ -986,7 +1033,11 @@
         <div class="title-dropdown" id="titleDropdown"></div>
       </div>
     </div>
-    <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;">
+    <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;flex-wrap:wrap;">
+      <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Formato do Dashboard" title="Formato do Dashboard">
+        <button type="button" id="btnDashFormatLF" class="active" onclick="setDashboardFormat('longform')">Long Form</button>
+        <button type="button" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
+      </div>
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
       <button id="btnEyeToggle" class="btn-icon-toggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo">👁️</button>
@@ -1163,8 +1214,8 @@
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
-      <button id="btnTempWeek" class="toggle-btn active" onclick="setTempMode('week')">Por Semana</button>
-      <button id="btnTempMonth" class="toggle-btn" onclick="setTempMode('month')">Por Mês</button>
+      <button id="btnTempWeek" class="toggle-btn" onclick="setTempMode('week')">Por Semana</button>
+      <button id="btnTempMonth" class="toggle-btn active" onclick="setTempMode('month')">Por Mês</button>
     </div>
     <div style="display:flex;gap:8px;">
       <button id="btnComp30" class="toggle-btn" onclick="showComparison(30)" style="font-size:11px;">vs 30 dias ant.</button>
@@ -1186,8 +1237,6 @@
           <div onclick="setTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
           <div onclick="setTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
           <div onclick="setTempMetric('gancho','🎣 Gancho Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho Médio</div>
-          <div onclick="setTempMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-          <div onclick="setTempMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
         </div>
       </div>
       <div style="position:relative;">
@@ -1269,8 +1318,6 @@
             <div onclick="setPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
             <div onclick="setPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
             <div onclick="setPerfMetric('gancho','🎣 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho % por Vídeo</div>
-            <div onclick="setPerfMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-            <div onclick="setPerfMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
@@ -1492,6 +1539,7 @@
             <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('semana')" data-col="semana">Semana <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('mesAno')" data-col="mesAno">Mês_Ano <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('id')" data-col="id" style="white-space:nowrap;">Content ID <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('title')" data-col="title">Título <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('tipo')" data-col="tipo">Tipo <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
@@ -1512,31 +1560,6 @@
             <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Coment. <span class="sort-icon">↕</span></th>
             <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
-          </tr>
-          <tr class="filter-row">
-            <td><input class="col-filter" data-col="dataPublicacao" data-type="text" placeholder="ex: 2026"></td>
-            <td><input class="col-filter" data-col="semana" data-type="text" placeholder="ex: W18/26"></td>
-            <td><input class="col-filter" data-col="mesAno" data-type="text" placeholder="ex: 05-2026"></td>
-            <td><input class="col-filter" data-col="title" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="tipo" data-type="text" placeholder="Long Form"></td>
-            <td><input class="col-filter" data-col="creator" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="categoria" data-type="text" placeholder="buscar..."></td>
-            <td><input class="col-filter" data-col="views" data-type="num" placeholder=">100000"></td>
-            <td><input class="col-filter" data-col="fantasyClicks" data-type="num" placeholder=">10"></td>
-            <td><input class="col-filter" data-col="fantasyConversion" data-type="num" placeholder=">0.001"></td>
-            <td><input class="col-filter" data-col="ctr" data-type="num" placeholder=">0.05"></td>
-            <td><input class="col-filter" data-col="avgViewDurSec" data-type="num" placeholder=">5 min"></td>
-            <td><input class="col-filter" data-col="gancho" data-type="num" placeholder=">0.70"></td>
-            <td><input class="col-filter" data-col="duracao" data-type="num" placeholder=">5 min"></td>
-            <td><input class="col-filter" data-col="avgViewedPct" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="impressoes" data-type="num" placeholder=">500K"></td>
-            <td><input class="col-filter" data-col="ctrYT" data-type="num" placeholder=">5"></td>
-            <td><input class="col-filter" data-col="likes" data-type="num" placeholder=">1000"></td>
-            <td><input class="col-filter" data-col="inscritos" data-type="num" placeholder=">100"></td>
-            <td><input class="col-filter" data-col="conversao" data-type="num" placeholder=">0.005"></td>
-            <td><input class="col-filter" data-col="shares" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="comentarios" data-type="num" placeholder=">50"></td>
-            <td><input class="col-filter" data-col="conversaoComments" data-type="num" placeholder=">0.01"></td>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -1622,8 +1645,8 @@
   <p class="section-desc">Como estamos evoluindo em cada um dos nossos indicadores?</p>
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
     <div class="topn-toggle">
-      <button id="btnSTempWeek" class="toggle-btn active" onclick="setSTempMode('week')">Por Semana</button>
-      <button id="btnSTempMonth" class="toggle-btn" onclick="setSTempMode('month')">Por Mês</button>
+      <button id="btnSTempWeek" class="toggle-btn" onclick="setSTempMode('week')">Por Semana</button>
+      <button id="btnSTempMonth" class="toggle-btn active" onclick="setSTempMode('month')">Por Mês</button>
     </div>
   </div>
   <div class="chart-card wide" style="margin-bottom:24px;">
@@ -1638,8 +1661,6 @@
           <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
           <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
           <div onclick="setSTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
-          <div onclick="setSTempMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-          <div onclick="setSTempMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
         </div>
       </div>
     </div>
@@ -1650,7 +1671,6 @@
     <canvas id="chartSTempDur" style="display:none;"></canvas>
   </div>
 
-  <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <!-- SHORTS SCATTER -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Matriz Avg View Duration × Gancho %</h2></div>
   <p class="section-desc">O problema foi o Pacote, Gancho (abertura) ou Retenção?</p>
@@ -1659,6 +1679,7 @@
     <div id="sSScatterLegend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0 4px;"></div>
   </div>
 
+  <!-- SHORTS GRÁFICOS DE PERFORMANCE -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Gráficos de Performance · Shorts</h2></div>
   <p class="section-desc">Como os Shorts estão performando em relação à Média e Mediana do Canal?</p>
   <div class="charts-controls">
@@ -1692,8 +1713,6 @@
             <div onclick="setSPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
             <div onclick="setSPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
             <div onclick="setSPerfMetric('gancho','📊 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % por Vídeo</div>
-            <div onclick="setSPerfMetric('fantasyClicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-            <div onclick="setSPerfMetric('fantasyConversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
           </div>
         </div>
       </div>
@@ -1705,10 +1724,33 @@
     <canvas id="chartSCTR" style="display:none;"></canvas>
   </div>
 
+  <!-- HEATMAP INDICADORES · SHORTS (logo abaixo de Performance, como no Long Form) -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
+  <p class="section-desc">Mapa de calor dos principais indicadores (somente Shorts).</p>
+  <div class="table-card" style="margin-bottom:32px;">
+    <div class="table-toolbar" style="flex-wrap:wrap;gap:8px;">
+      <h3 id="shortsIndicatorsTitle" style="margin:0;font-size:14px;font-weight:700;">Por Criador</h3>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto;">
+        <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+        <div style="display:flex;align-items:center;gap:6px;position:relative;" id="shortsHeatmapGranWrap">
+          <label style="font-size:12px;color:var(--gray-500);">Granularidade</label>
+          <button type="button" id="btnShortsHeatmapGran" onclick="toggleShortsHeatmapGranDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
+            <span id="shortsHeatmapGranLabel">👤 Criadores</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          </button>
+          <div id="shortsHeatmapGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+            <div onclick="setShortsHeatmapGranularity('creator')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
+            <div onclick="setShortsHeatmapGranularity('duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixa de duração</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap"><div id="shortsIndicatorsContainer"></div></div>
+  </div>
+
   <!-- SHORTS FUNIL -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Funil de Engajamento · Shorts</h2></div>
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido).</p>
-  <div class="chart-card wide" style="margin-bottom:32px;">
+  <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -1722,15 +1764,14 @@
     <div id="funnelContainerShorts" style="margin-top:16px;max-width:900px;"></div>
   </div>
 
-  <!-- HEATMAP INDICADORES · SHORTS -->
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Heatmap Indicadores</h2></div>
-  <p class="section-desc">Performance agregada por Creator (somente Shorts).</p>
-  <div class="table-card" style="margin-bottom:32px;">
-    <div class="table-toolbar">
-      <h3 id="shortsIndicatorsTitle" style="margin:0;font-size:14px;font-weight:700;">Por Creator</h3>
-      <span style="font-size:11px;color:var(--gray-500);">Cor = melhor performance na coluna (verde = top · vermelho = bottom)</span>
+  <!-- SHORTS DISTRIBUIÇÃO DE VIEWS (logo abaixo do Funil, como no Long Form) -->
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Distribuição de Views</h2></div>
+  <p class="section-desc">Quantos Shorts temos em cada patamar de views?</p>
+  <div style="margin-bottom:32px;">
+    <div class="chart-card wide">
+      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsShorts"></canvas></div>
     </div>
-    <div class="table-wrap"><div id="shortsIndicatorsContainer"></div></div>
   </div>
 
 </div>
@@ -1788,14 +1829,14 @@
         <div class="kpi-label">SHORTS VISITORS</div>
         <div class="kpi-value" id="fkShUV">—</div>
       </div>
-      <div class="kpi-card" title="All-time. LIVE sem clickDate no CSV atual — fora do recorte temporal filtrado.">
+      <div class="kpi-card" title="All-time. Unique Visitors de conteúdo LIVE.">
         <div class="fantasy-kpi-label-row">
           <div class="kpi-label">LIVE VISITORS</div>
           <span class="fantasy-kpi-alltime">ALL-TIME</span>
         </div>
         <div class="kpi-value" id="fkLiveUV">—</div>
       </div>
-      <div class="kpi-card" title="All-time. Registros BIO sem clickDate no CSV atual.">
+      <div class="kpi-card" title="All-time. Unique Visitors originados de BIO.">
         <div class="fantasy-kpi-label-row">
           <div class="kpi-label">BIO VISITORS</div>
           <span class="fantasy-kpi-alltime">ALL-TIME</span>
@@ -2016,10 +2057,15 @@ function chartScaleOpts(formatTick) {
 
 function refreshChartsForTheme() {
   if (allData && allData.length) {
-    try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
-    try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
-    try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
-    try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+    // Prefer the visible Dashboard pipeline so Chart.js gets a real layout size.
+    if (activeTab === 'dashboard') {
+      try { renderVisibleDashboardPipeline(); } catch(e) { console.error('renderVisibleDashboardPipeline theme:', e.message); }
+    } else {
+      try { renderCharts(); } catch(e) { console.error('renderCharts theme:', e.message); }
+      try { renderTemporal(); } catch(e) { console.error('renderTemporal theme:', e.message); }
+      try { renderAdvanced(); } catch(e) { console.error('renderAdvanced theme:', e.message); }
+      try { renderShortsAll(); } catch(e) { console.error('renderShortsAll theme:', e.message); }
+    }
   }
   if (fantasyLoaded && !fantasyLoadError) {
     try { renderFantasyBreakdownChart(); } catch(e) { console.error('renderFantasyBreakdownChart theme:', e.message); }
@@ -3251,16 +3297,25 @@ function getFantasyPerfChartData() {
   const catNames = topN.map(r => r.categoria || '(Sem categoria)');
   const barLinks = topN.map(r => r.link || '');
 
-  // Baseline: vídeos Fantasy com clickDate em 2026 (independente dos filtros do usuário)
-  const baseRows = allFantasyData.filter(r =>
+  // Baseline: vídeos Fantasy com clickDate em 2026 (independente de Data/Semana/Cat/Creator/Título).
+  // Respeita Formato sticky (fantasyFormatFilter); Todos = baseline anterior intacto.
+  const fmtFilter = fantasyFormatFilter || '';
+  let baseRows = allFantasyData.filter(r =>
     r.kind === 'video' && r.clickDate && r.clickDate >= '2026-01-01' && r.clickDate <= '2026-12-31'
   );
-  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : allFantasyData);
-  const baseVals = baseVideos.map(fantasyPerfMetricVal);
-  const meanVal = mean(baseVals);
-  const medianVal = median(baseVals);
+  if (fmtFilter) {
+    baseRows = baseRows.filter(r => matchesFantasyFormatFilter(r, fmtFilter));
+  }
+  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : (
+    fmtFilter
+      ? allFantasyData.filter(r => r.kind === 'video' && matchesFantasyFormatFilter(r, fmtFilter))
+      : allFantasyData
+  ));
+  const baseVals = baseVideos.map(fantasyPerfMetricVal).filter(v => v !== null && Number.isFinite(v));
+  const meanVal = baseVals.length ? mean(baseVals) : null;
+  const medianVal = baseVals.length ? median(baseVals) : null;
 
-  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows: topN };
+  return { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows: topN, baselineN: baseVideos.length };
 }
 
 function renderFantasyPerformance() {
@@ -3350,7 +3405,12 @@ function applyFantasyFilters() {
   const creator   = (document.getElementById('filterCreator') || {}).value || '';
   const dateStart = fantasyDateStart || '';
   const dateEnd   = fantasyDateEnd || '';
-  const tipo      = (document.getElementById('filterTipo') || {}).value || '';
+  // Independent Fantasy Formato state (not Base/VELHO / Dashboard)
+  if (isFantasyTabActive()) {
+    const sel = document.getElementById('filterTipo');
+    if (sel) fantasyFormatFilter = sel.value || '';
+  }
+  const tipo = fantasyFormatFilter || '';
 
   filteredFantasy = allFantasyData.filter(r => {
     // Data do clique: range ativo exclui rows sem clickDate válida
@@ -3584,8 +3644,110 @@ const chartInstances = {};
 let chartMode = 'recent'; // 'top' | 'bottom' | 'recent'
 let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'dashboard';
+/** Independent Tipo/Formato contexts (session-only; no localStorage). */
+let dashboardFormat = 'longform'; // 'longform' | 'shorts' — Dashboard only; immediate
+let baseVelhoTipo = '';           // '' | 'long' | 'shorts' — Base+VELHO shared; Apply/Clear
+let fantasyFormatFilter = '';     // '' | 'long' | 'shorts' | 'live' | 'bio' | 'unidentified'
+
+function syncDashboardFormatUI() {
+  const lfBtn = document.getElementById('btnDashFormatLF');
+  const shBtn = document.getElementById('btnDashFormatShorts');
+  if (lfBtn) lfBtn.classList.toggle('active', dashboardFormat === 'longform');
+  if (shBtn) shBtn.classList.toggle('active', dashboardFormat === 'shorts');
+}
+
+function syncBaseVelhoTipoUI() {
+  const allBtn = document.getElementById('btnBaseVelhoTipoAll');
+  const lfBtn = document.getElementById('btnBaseVelhoTipoLF');
+  const shBtn = document.getElementById('btnBaseVelhoTipoShorts');
+  if (allBtn) allBtn.classList.toggle('active', baseVelhoTipo === '');
+  if (lfBtn) lfBtn.classList.toggle('active', baseVelhoTipo === 'long');
+  if (shBtn) shBtn.classList.toggle('active', baseVelhoTipo === 'shorts');
+}
+
+function syncFantasyFormatFilterUI() {
+  const sel = document.getElementById('filterTipo');
+  if (sel && sel.value !== fantasyFormatFilter) sel.value = fantasyFormatFilter;
+}
+
+/** Per-tab sticky slot: Dashboard seg | Base/VELHO seg | Fantasy dropdown | Feedbacks none. */
+function syncFormatControlsVisibility() {
+  const dashSeg = document.getElementById('dashFormatSeg');
+  const baseVelhoGroup = document.getElementById('baseVelhoTipoGroup');
+  const fantasyGroup = document.getElementById('filterTipoGroup');
+  const onDash = activeTab === 'dashboard';
+  const onBaseVelho = activeTab === 'basedados' || activeTab === 'velho';
+  const onFantasy = activeTab === 'fantasy';
+  if (dashSeg) dashSeg.style.display = onDash ? '' : 'none';
+  if (baseVelhoGroup) baseVelhoGroup.style.display = onBaseVelho ? '' : 'none';
+  if (fantasyGroup) fantasyGroup.style.display = onFantasy ? '' : 'none';
+}
+
+/**
+ * Panel visibility (Dashboard only):
+ * - longform → panelDashboard
+ * - shorts   → panelShorts
+ */
+function syncDashboardPanels() {
+  const showLF = activeTab === 'dashboard' && dashboardFormat === 'longform';
+  const showShorts = activeTab === 'dashboard' && dashboardFormat === 'shorts';
+  const pd = document.getElementById('panelDashboard');
+  const ps = document.getElementById('panelShorts');
+  if (pd) pd.style.display = showLF ? '' : 'none';
+  if (ps) ps.style.display = showShorts ? '' : 'none';
+}
+
+function resizeAllChartsSoon(delayMs) {
+  setTimeout(() => {
+    Object.values(chartInstances).forEach(c => { try { c.resize(); } catch (e) {} });
+  }, delayMs == null ? 50 : delayMs);
+}
+
+/** Re-render only the Dashboard pipeline that is currently visible. */
+function renderVisibleDashboardPipeline() {
+  if (activeTab !== 'dashboard') return;
+  syncTempModeButtons();
+  if (dashboardFormat === 'longform') {
+    try { updateKPIs(); } catch (e) { console.error('updateKPIs:', e.message); }
+    try { renderCharts(); } catch (e) { console.error('renderCharts:', e.message); }
+    try { renderTemporal(); } catch (e) { console.error('renderTemporal:', e.message); }
+    try { renderAdvanced(); } catch (e) { console.error('renderAdvanced:', e.message); }
+  } else {
+    try { renderShortsAll(); } catch (e) { console.error('renderShortsAll:', e.message); }
+  }
+  resizeAllChartsSoon(60);
+}
+
+/** Immediate Dashboard format switch — does not touch Base/VELHO/Fantasy. */
+function setDashboardFormat(fmt) {
+  if (fmt !== 'longform' && fmt !== 'shorts') return;
+  const changed = dashboardFormat !== fmt;
+  dashboardFormat = fmt;
+  syncDashboardFormatUI();
+  if (activeTab !== 'dashboard') return;
+  if (!changed) return;
+  syncDashboardPanels();
+  renderVisibleDashboardPipeline();
+}
+
+/**
+ * Base/VELHO Tipo selection — updates shared state + UI only.
+ * Takes effect on Aplicar (same semantics as old #filterTipo).
+ */
+function setBaseVelhoTipo(val) {
+  if (val !== '' && val !== 'long' && val !== 'shorts') return;
+  baseVelhoTipo = val;
+  syncBaseVelhoTipoUI();
+}
+
+function onFantasyFormatFilterChange() {
+  const sel = document.getElementById('filterTipo');
+  fantasyFormatFilter = sel ? (sel.value || '') : '';
+}
 
 function switchTab(tab) {
+  // Legacy top-level Shorts tab removed — redirect any leftover calls to Dashboard
+  if (tab === 'shorts') tab = 'dashboard';
   if (tab === 'fantasy' && !isFantasyTabEnabled()) {
     tab = 'dashboard';
   }
@@ -3597,23 +3759,26 @@ function switchTab(tab) {
   syncTemporalFromUI();
 
   activeTab = tab;
-  document.getElementById('panelDashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
-  document.getElementById('panelShorts').style.display     = tab === 'shorts'     ? '' : 'none';
+  syncDashboardPanels();
   document.getElementById('panelFeedbacks').style.display  = tab === 'feedbacks'  ? '' : 'none';
   document.getElementById('panelBaseDados').style.display  = tab === 'basedados'  ? '' : 'none';
   document.getElementById('panelVelho').style.display      = tab === 'velho'      ? '' : 'none';
   document.getElementById('panelFantasy').style.display    = tab === 'fantasy'    ? '' : 'none';
   document.getElementById('tabBtnDash').classList.toggle('active',      tab === 'dashboard');
-  document.getElementById('tabBtnShorts').classList.toggle('active',    tab === 'shorts');
   document.getElementById('tabBtnFeedbacks').classList.toggle('active', tab === 'feedbacks');
   document.getElementById('tabBtnBase').classList.toggle('active',      tab === 'basedados');
   document.getElementById('tabBtnVelho').classList.toggle('active',     tab === 'velho');
   const fantasyBtn = document.getElementById('tabBtnFantasy');
   if (fantasyBtn) fantasyBtn.classList.toggle('active', tab === 'fantasy');
 
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
+  syncBaseVelhoTipoUI();
+
   if (nextIsFantasy) {
     loadTemporalToUI('fantasy');
     rebuildSharedFilterOptions('fantasy');
+    syncFantasyFormatFilterUI();
     setNumericRangesEnabled(false);
     applyFantasyFilters();
     renderFantasyDashboard();
@@ -3626,7 +3791,7 @@ function switchTab(tab) {
   }
 
   if (tab === 'basedados')  renderTable();
-  if (tab === 'shorts')     renderShortsAll();
+  if (tab === 'dashboard')  renderVisibleDashboardPipeline();
   if (tab === 'feedbacks')  renderFeedbacksTab();
   if (tab === 'velho')      renderVelho();
 }
@@ -3695,84 +3860,40 @@ function rebuildCreatorOptions() {
   sel.value = current;
 }
 
+/** Fantasy Formato dropdown only (#filterTipo). Base/VELHO use baseVelhoTipo segmented. */
 function rebuildTipoOptions() {
   const sel = document.getElementById('filterTipo');
   if (!sel) return;
-  const current = sel.value;
+  if (!(activeTab === 'fantasy' && isFantasyTabEnabled())) return;
 
-  // Fantasy: opções por getFantasyFormat(); Main: Tipo de dados.csv (long/shorts)
-  if (activeTab === 'fantasy' && isFantasyTabEnabled()) {
-    const present = new Set((allFantasyData || []).map(getFantasyFormat));
-    const order = [
-      { value: 'long', label: 'Long Form', fmt: 'Long Form' },
-      { value: 'shorts', label: 'Shorts', fmt: 'Shorts' },
-      { value: 'live', label: 'LIVE', fmt: 'LIVE' },
-      { value: 'bio', label: 'BIO', fmt: 'BIO' },
-      { value: 'unidentified', label: 'Não identificado', fmt: 'Não identificado' },
-    ];
-    sel.innerHTML = '<option value="">Todos os formatos</option>';
-    const shown = new Set();
-    order.forEach(({ value, label, fmt }) => {
-      if (!present.has(fmt)) return;
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = label;
-      sel.appendChild(opt);
-      shown.add(value);
-    });
-    if (current && !shown.has(current) && current !== '') {
-      const ghost = document.createElement('option');
-      ghost.value = current;
-      ghost.textContent = `${current} (indisponível)`;
-      ghost.className = 'filter-ghost-opt';
-      sel.appendChild(ghost);
-    }
-    sel.value = current;
-    return;
-  }
-
-  const rows = getFilterSourceRows();
-  const hasLong = rows.some(r => (r.tipo || '').toLowerCase().includes('long'));
-  const hasShort = rows.some(r => (r.tipo || '').toLowerCase().includes('short'));
-  const showLong = hasLong;
-  const showShort = hasShort;
-
-  sel.innerHTML = '<option value="">Todos os tipos</option>';
-  if (showLong) {
+  const current = fantasyFormatFilter || '';
+  const present = new Set((allFantasyData || []).map(getFantasyFormat));
+  const order = [
+    { value: 'long', label: 'Long Form', fmt: 'Long Form' },
+    { value: 'shorts', label: 'Shorts', fmt: 'Shorts' },
+    { value: 'live', label: 'LIVE', fmt: 'LIVE' },
+    { value: 'bio', label: 'BIO', fmt: 'BIO' },
+    { value: 'unidentified', label: 'Não identificado', fmt: 'Não identificado' },
+  ];
+  sel.innerHTML = '<option value="">Todos os formatos</option>';
+  const shown = new Set();
+  order.forEach(({ value, label, fmt }) => {
+    if (!present.has(fmt)) return;
     const opt = document.createElement('option');
-    opt.value = 'long';
-    opt.textContent = 'Long Form';
+    opt.value = value;
+    opt.textContent = label;
     sel.appendChild(opt);
-  }
-  if (showShort) {
-    const opt = document.createElement('option');
-    opt.value = 'shorts';
-    opt.textContent = 'Shorts';
-    sel.appendChild(opt);
-  }
-  // Fantasy-only selections become ghosts on Main
-  const fantasyOnly = ['live', 'bio', 'unidentified'];
-  if (current === 'long' && !showLong) {
-    const ghost = document.createElement('option');
-    ghost.value = 'long';
-    ghost.textContent = 'Long Form (indisponível)';
-    ghost.className = 'filter-ghost-opt';
-    sel.appendChild(ghost);
-  } else if (current === 'shorts' && !showShort) {
-    const ghost = document.createElement('option');
-    ghost.value = 'shorts';
-    ghost.textContent = 'Shorts (indisponível)';
-    ghost.className = 'filter-ghost-opt';
-    sel.appendChild(ghost);
-  } else if (fantasyOnly.includes(current)) {
-    const labels = { live: 'LIVE', bio: 'BIO', unidentified: 'Não identificado' };
+    shown.add(value);
+  });
+  if (current && !shown.has(current) && current !== '') {
     const ghost = document.createElement('option');
     ghost.value = current;
-    ghost.textContent = `${labels[current] || current} (indisponível)`;
+    ghost.textContent = `${current} (indisponível)`;
     ghost.className = 'filter-ghost-opt';
     sel.appendChild(ghost);
   }
   sel.value = current;
+  fantasyFormatFilter = sel.value || '';
 }
 
 function rebuildSharedFilterOptions(source) {
@@ -3868,12 +3989,12 @@ function populateCatDropdown() {
   const allChecked = catAllSelected ? 'checked' : '';
 
   dd.innerHTML = `
-    <div class="title-option cat-select-all" onclick="toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+    <div class="title-option cat-select-all" onclick="event.stopPropagation(); toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as Categorias
     </div>
     ${ghosts.map(c => {
       const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option filter-ghost" onclick="toggleCatCheck('${safeC}', this)">
+      return `<div class="title-option filter-ghost" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
         <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
         ${c}<span class="ghost-tag">(indisponível)</span>
       </div>`;
@@ -3882,7 +4003,7 @@ function populateCatDropdown() {
       const checked = (catAllSelected || selectedCats.has(c)) ? 'checked' : '';
       const color = CAT_COLORS[c] || '#64748b';
       const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option" onclick="toggleCatCheck('${safeC}', this)">
+      return `<div class="title-option" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${color};margin-right:5px;vertical-align:middle;flex-shrink:0;"></span>${c}
       </div>`;
@@ -3902,6 +4023,8 @@ function toggleAllCats(el) {
   }
   updateCatInput();
   populateCatDropdown();
+  const dd = document.getElementById('catDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function updateCatInput() {
@@ -3944,6 +4067,8 @@ function toggleCatCheck(cat, el) {
   }
   updateCatInput();
   populateCatDropdown();
+  const dd = document.getElementById('catDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function init() {
@@ -3964,6 +4089,12 @@ function init() {
   updateWeekInput();
   updateTitleInput();
   applyFilters();
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
+  syncBaseVelhoTipoUI();
+  syncFantasyFormatFilterUI();
+  syncDashboardPanels();
+  syncTempModeButtons();
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
 }
@@ -4650,7 +4781,15 @@ function initRangeFilters() {
   bindDurRange();
 }
 
+function closeStickyMultiselectDropdowns() {
+  ['catDropdown', 'weekDropdown', 'titleDropdown'].forEach(id => {
+    const dd = document.getElementById(id);
+    if (dd) dd.classList.remove('open');
+  });
+}
+
 function applyFilters() {
+  closeStickyMultiselectDropdowns();
   syncTemporalFromUI();
   const creator   = document.getElementById('filterCreator').value;
   // Main sempre usa estado próprio (Data de Publicação) — nunca o DOM da Fantasy
@@ -4696,8 +4835,8 @@ function applyFilters() {
   filteredLong   = filteredData; // alias — all Dashboard/Análise Avançada code uses filteredLong
   // Shorts only → used by Shorts tab
   filteredShorts = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && baseFilter(r));
-  // All types → used by Base de Dados tab (respects Tipo filter)
-  const tipo = (document.getElementById('filterTipo')||{}).value || '';
+  // Base de Dados + VELHO — Tipo from shared baseVelhoTipo (not Dashboard / Fantasy)
+  const tipo = baseVelhoTipo || '';
   filteredAll = allData.filter(r => {
     if (tipo === 'long'   && !(r.tipo||'').toLowerCase().includes('long'))  return false;
     if (tipo === 'shorts' && !(r.tipo||'').toLowerCase().includes('short')) return false;
@@ -4723,25 +4862,28 @@ function applyFilters() {
 
 function clearFilters() {
   document.getElementById('filterCreator').value = '';
-  const tipoEl = document.getElementById('filterTipo');
-  if (tipoEl) tipoEl.value = '';
   selectedCats.clear();
   selectedTitles.clear();
   catAllSelected = true;
   titleAllSelected = true;
   updateCatInput();
   updateTitleInput();
-  document.getElementById('weekDropdown').classList.remove('open');
+  closeStickyMultiselectDropdowns();
   resetRangeFiltersToBounds();
 
   if (isFantasyTabActive()) {
-    // Clear Fantasy: reset só Data/Semana Fantasy (Main intacto)
+    // Clear Fantasy Formato only — Dashboard/BaseVelho untouched
+    fantasyFormatFilter = '';
+    const tipoEl = document.getElementById('filterTipo');
+    if (tipoEl) tipoEl.value = '';
     initFantasyTemporalDefaults();
     loadTemporalToUI('fantasy');
     setNumericRangesEnabled(false);
     rebuildSharedFilterOptions('fantasy');
   } else {
-    // Clear Main: reset só Data/Semana Main (Fantasy intacto)
+    // Clear Main: Base/VELHO Tipo → Todos; dashboardFormat preserved; Fantasy Formato preserved
+    baseVelhoTipo = '';
+    syncBaseVelhoTipoUI();
     initMainTemporalDefaults();
     loadTemporalToUI('main');
     rebuildSharedFilterOptions('main');
@@ -4777,12 +4919,12 @@ function renderTitleDropdown(items) {
     .sort();
 
   dropdown.innerHTML = `
-    <div class="title-option title-select-all" onclick="toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+    <div class="title-option title-select-all" onclick="event.stopPropagation(); toggleAllTitles(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
       <input type="checkbox" ${masterChecked ? 'checked' : ''} style="pointer-events:none;margin-right:6px;">${label}
     </div>
     ${ghosts.map(t => {
       const safeT = t.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option filter-ghost selected" onclick="toggleTitleCheck('${safeT}', this)">
+      return `<div class="title-option filter-ghost selected" onclick="event.stopPropagation(); toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
         ${t}<span class="ghost-tag">(indisponível)</span>
       </div>`;
@@ -4791,7 +4933,7 @@ function renderTitleDropdown(items) {
       const checked = (titleAllSelected || selectedTitles.has(r.title)) ? 'checked' : '';
       const safeT = r.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div class="title-option${(titleAllSelected || selectedTitles.has(r.title)) ? ' selected' : ''}"
-        onclick="toggleTitleCheck('${safeT}', this)">
+        onclick="event.stopPropagation(); toggleTitleCheck('${safeT}', this)">
         <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
         <span style="font-size:10px;color:var(--gray-400);margin-right:4px;white-space:nowrap;">${(isFantasyTabActive() ? r.clickDate : r.dataPublicacao) || '—'}</span>${r.title}
       </div>`;
@@ -4800,6 +4942,7 @@ function renderTitleDropdown(items) {
 }
 
 function toggleAllTitles(el) {
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
   const cb = el.querySelector('input[type=checkbox]');
   if (titleAllSelected) {
     titleAllSelected = false;
@@ -4815,6 +4958,8 @@ function toggleAllTitles(el) {
   const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
+  const dd = document.getElementById('titleDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function onTitleFocus() {
@@ -4823,12 +4968,13 @@ function onTitleFocus() {
 }
 
 function onTitleBlur() {
-  titleBlurTimer = setTimeout(() => {
-    document.getElementById('titleDropdown').classList.remove('open');
-  }, 250);
+  // Do not auto-close on blur — clicking options steals focus and would close the menu.
+  // Close via outside-click / Aplicar / Limpar (same pattern as Semana).
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
 }
 
 function toggleTitleCheck(title, el) {
+  if (titleBlurTimer) clearTimeout(titleBlurTimer);
   const cb = el.querySelector('input[type=checkbox]');
   const allTitles = getSourceTitlesList();
   if (titleAllSelected) {
@@ -4858,6 +5004,8 @@ function toggleTitleCheck(title, el) {
   const unique = getSourceTitleRecords();
   const items = (q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique).slice(0, 60);
   renderTitleDropdown(items);
+  const dd = document.getElementById('titleDropdown');
+  if (dd) dd.classList.add('open');
 }
 
 function updateTitleInput() {
@@ -5103,6 +5251,7 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
         if (!yScale) return;
 
         const drawLine = (val, color, label, labelSide) => {
+          if (val === null || val === undefined || !Number.isFinite(val)) return;
           const y = yScale.getPixelForValue(val);
           if (y < top || y > bottom) return;
           ctx.save();
@@ -5306,62 +5455,25 @@ function sortTable(col) {
   renderTable();
 }
 
-function applyColFilter(val, expr, col) {
-  if (!expr) return true;
-  expr = expr.trim();
-  const numMatch = expr.match(/^(>=|<=|>|<|=)?\s*(-?[\d.]+)$/);
-  if (numMatch) {
-    const op = numMatch[1] || '>=';
-    const threshold = parseFloat(numMatch[2]);
-    // Duration fields: filter by minutes (convert stored seconds → minutes)
-    let v;
-    if (col === 'avgViewDurSec' || col === 'duracao') {
-      v = parseFloat(val) / 60; // stored in seconds, compare in minutes
-    } else {
-      v = parseFloat(val);
-    }
-    if (isNaN(v)) return false;
-    if (op === '>')  return v >  threshold;
-    if (op === '>=') return v >= threshold;
-    if (op === '<')  return v <  threshold;
-    if (op === '<=') return v <= threshold;
-    if (op === '=')  return Math.round(v) === threshold;
-  }
-  // Text filter
-  return String(val).toLowerCase().includes(expr.toLowerCase());
-}
-
-function getColFilters() {
-  const filters = {};
-  document.querySelectorAll('.col-filter').forEach(inp => {
-    const v = inp.value.trim();
-    inp.classList.toggle('active', v !== '');
-    if (v) filters[inp.dataset.col] = { expr: v, type: inp.dataset.type };
-  });
-  return filters;
-}
-
 function renderTable() {
   const q = (document.getElementById('tableSearch').value || '').toLowerCase();
-  const colFilters = getColFilters();
   let rows = [...(filteredAll||filteredData)]; // Base de Dados shows all types
 
   if (q) {
     rows = rows.filter(r =>
       r.title.toLowerCase().includes(q) ||
       (r.creator||'').toLowerCase().includes(q) ||
-      r.dataPublicacao.includes(q)
+      r.dataPublicacao.includes(q) ||
+      String(r.id || '').toLowerCase().includes(q)
     );
-  }
-
-  // Apply per-column filters
-  for (const [col, {expr}] of Object.entries(colFilters)) {
-    rows = rows.filter(r => applyColFilter(r[col], expr, col));
   }
 
   rows.sort((a,b) => {
     let av = a[sortCol], bv = b[sortCol];
-    if (typeof av === 'string' || typeof bv === 'string') return sortDir * String(av||'').localeCompare(String(bv||''));
+    // Content ID and other IDs: always textual compare (preserve leading zeros)
+    if (sortCol === 'id' || typeof av === 'string' || typeof bv === 'string') {
+      return sortDir * String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: false });
+    }
     const aNull = av === null || av === undefined || (typeof av === 'number' && !Number.isFinite(av));
     const bNull = bv === null || bv === undefined || (typeof bv === 'number' && !Number.isFinite(bv));
     if (aNull && bNull) return 0;
@@ -5393,11 +5505,13 @@ function renderTable() {
       return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     })();
     const dateFmt = r.dataPublicacao ? r.dataPublicacao.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$3/$2/$1') : '—';
+    const contentId = (r.id != null && String(r.id) !== '') ? String(r.id) : '—';
     return `
     <tr>
       <td style="white-space:nowrap;">${dateFmt}</td>
       <td style="white-space:nowrap;">${r.semana||'—'}</td>
       <td style="white-space:nowrap;">${r.mesAno||'—'}</td>
+      <td style="white-space:nowrap;font-variant-numeric:normal;">${contentId}</td>
       <td class="title-cell">
         ${r.link
           ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
@@ -5432,12 +5546,8 @@ function renderTable() {
     `${rows.length} vídeos`;
 }
 
-// Wire column filter inputs to re-render on typing
+// Close sticky multiselects when clicking outside their wrapper
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.col-filter').forEach(inp => {
-    inp.addEventListener('input', renderTable);
-  });
-  // Close all dropdowns when clicking outside their wrapper
   document.addEventListener('click', e => {
     const closings = [
       ['catWrap',   'catDropdown'],
@@ -5452,9 +5562,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close Fantasy temporal metric dropdown
     const fTempDD = document.getElementById('fantasyTempMetricDropdown');
     if (fTempDD && !e.target.closest('#btnFTempMetric') && !fTempDD.contains(e.target)) fTempDD.style.display = 'none';
-    // Close granularity dropdown
+    // Close granularity dropdown (Long Form Heatmap Indicadores)
     const durDD = document.getElementById('durGranDropdown');
     if (durDD && !e.target.closest('[onclick="toggleDurGranDD()"]') && !durDD.contains(e.target)) durDD.style.display='none';
+    // Close Shorts Heatmap Granularidade dropdown
+    const sGranDD = document.getElementById('shortsHeatmapGranDropdown');
+    const sGranWrap = document.getElementById('shortsHeatmapGranWrap');
+    if (sGranDD && sGranWrap && !sGranWrap.contains(e.target)) sGranDD.style.display = 'none';
   });
 });
 
@@ -5713,11 +5827,22 @@ function renderFeedbackTable() {
 
 // ── TEMPORAL EVOLUTION ────────────────────────────────────────────────────────
 
+function syncTempModeButtons() {
+  const w = document.getElementById('btnTempWeek');
+  const m = document.getElementById('btnTempMonth');
+  if (w) w.classList.toggle('active', tempMode === 'week');
+  if (m) m.classList.toggle('active', tempMode === 'month');
+  const sw = document.getElementById('btnSTempWeek');
+  const sm = document.getElementById('btnSTempMonth');
+  if (sw) sw.classList.toggle('active', tempModeShorts === 'week');
+  if (sm) sm.classList.toggle('active', tempModeShorts === 'month');
+}
+
 function setTempMode(mode) {
   tempMode = mode;
-  document.getElementById('btnTempWeek').classList.toggle('active',  mode === 'week');
-  document.getElementById('btnTempMonth').classList.toggle('active', mode === 'month');
-  document.getElementById('comparisonBadge').style.display = 'none';
+  syncTempModeButtons();
+  const badge = document.getElementById('comparisonBadge');
+  if (badge) badge.style.display = 'none';
   renderTemporal();
 }
 
@@ -6490,12 +6615,11 @@ let chartModeShorts = 'recent';
 let durationModeShorts = 'duration';
 let commentsModeShorts = 'comments';
 let inscritosModeShorts = 'conversao';
-let tempModeShorts = 'week'; // independent from Dashboard tempMode
+let tempModeShorts = 'month'; // default Mês; session-persisted (not reset on LF↔Shorts toggle)
 
 function setSTempMode(mode) {
   tempModeShorts = mode;
-  document.getElementById('btnSTempWeek').classList.toggle('active', mode==='week');
-  document.getElementById('btnSTempMonth').classList.toggle('active', mode==='month');
+  syncTempModeButtons();
   renderShortsTemporal();
 }
 
@@ -6538,6 +6662,19 @@ function renderShortsAll() {
   try { renderShortsCharts();  } catch(e) { console.error('ShortsCharts:', e.message); }
   try { renderShortsFunil();   } catch(e) { console.error('ShortsFunil:', e.message); }
   try { renderShortsIndicatorsHeatmap(); } catch(e) { console.error('ShortsIndicators:', e.message); }
+  try { renderShortsHistograms(); } catch(e) { console.error('ShortsHistograms:', e.message); }
+}
+
+/** Distribuição de Views — Shorts (mesma metodologia do LF, dataset = filteredShorts). */
+function renderShortsHistograms() {
+  const d = filteredShorts;
+  const BIN_VIEWS = 10000; const MAX_VIEWS_BINS = 10;
+  const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
+  d.forEach(r => { bins[Math.min(Math.floor((r.views || 0) / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
+  const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>100K`);
+  destroyChart('chartHistViewsShorts');
+  const el = document.getElementById('chartHistViewsShorts');
+  if (el) chartInstances['chartHistViewsShorts'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(16,185,129,.75)'));
 }
 
 function renderShortsKPIs() {
@@ -6812,6 +6949,32 @@ function renderShortsFunil() {
 
 let shortsIndSortCol = 'n';
 let shortsIndSortDir = -1;
+/** Shorts Heatmap Indicadores grouping: 'creator' | 'duration' */
+let shortsHeatmapGranularity = 'creator';
+
+function toggleShortsHeatmapGranDD() {
+  const dd = document.getElementById('shortsHeatmapGranDropdown');
+  if (!dd) return;
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+}
+
+function setShortsHeatmapGranularity(gran) {
+  if (gran !== 'creator' && gran !== 'duration') return;
+  shortsHeatmapGranularity = gran;
+  const labelEl = document.getElementById('shortsHeatmapGranLabel');
+  if (labelEl) labelEl.textContent = gran === 'duration' ? '⏱️ Faixa de duração' : '👤 Criadores';
+  const dd = document.getElementById('shortsHeatmapGranDropdown');
+  if (dd) dd.style.display = 'none';
+  renderShortsIndicatorsHeatmap();
+}
+
+/** Video duration (seconds) → 30s bucket label. Invalid/non-positive → Não identificado. */
+function getShortsDurationBucketLabel(r) {
+  const sec = r && r.duracao;
+  if (!Number.isFinite(sec) || sec <= 0) return 'Não identificado';
+  const start = Math.floor(sec / 30) * 30;
+  return `${start}–${start + 29}s`;
+}
 
 function sortShortsIndicators(col) {
   if (shortsIndSortCol === col) shortsIndSortDir *= -1;
@@ -6830,8 +6993,29 @@ function renderShortsIndicatorsHeatmap() {
   const thR = thBase + 'text-align:right;';
   const sortArrow = col => shortsIndSortCol === col ? (shortsIndSortDir === -1 ? ' ↓' : ' ↑') : ' ↕';
 
-  const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
-  const rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr) }));
+  const gran = shortsHeatmapGranularity === 'duration' ? 'duration' : 'creator';
+  let rows_data = [];
+  let firstColLabel = 'Criador';
+
+  if (gran === 'creator') {
+    // Exact previous behavior: group by creator
+    const creators = [...new Set(d.map(r => r.creator).filter(Boolean))].sort();
+    rows_data = creators.map(cr => ({ label: cr, rows: d.filter(r => r.creator === cr), bucketStart: null }));
+    firstColLabel = 'Criador';
+  } else {
+    firstColLabel = 'Faixa Duração';
+    const byBucket = new Map();
+    d.forEach(r => {
+      const label = getShortsDurationBucketLabel(r);
+      if (!byBucket.has(label)) byBucket.set(label, []);
+      byBucket.get(label).push(r);
+    });
+    rows_data = [...byBucket.entries()].map(([label, rows]) => {
+      const m = /^(\d+)–/.exec(label);
+      const bucketStart = m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY; // Não identificado last
+      return { label, rows, bucketStart };
+    }).sort((a, b) => a.bucketStart - b.bucketStart);
+  }
 
   const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[], fantasyClicks:[], fantasyConversion:[] };
   rows_data.forEach(({ rows }) => {
@@ -6862,6 +7046,10 @@ function renderShortsIndicatorsHeatmap() {
       comm1k: totalViews > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / totalViews * 1000 : 0,
       fantasyClicks: sumFantasyClicks(rows),
       fantasyConversion: aggregateFantasyConversion(rows),
+      bucketStart: (() => {
+        const m = /^(\d+)–/.exec(label);
+        return m ? parseInt(m[1], 10) : Number.POSITIVE_INFINITY;
+      })(),
     };
     const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
@@ -6873,6 +7061,7 @@ function renderShortsIndicatorsHeatmap() {
       label, n: data.n, medianViews: data.medianViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
       ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
       fantasyClicks: data.fantasyClicks, fantasyConversion: data.fantasyConversion,
+      bucketStart: data.bucketStart,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
@@ -6892,7 +7081,12 @@ function renderShortsIndicatorsHeatmap() {
 
   if (shortsIndSortCol) {
     built.sort((a, b) => {
-      if (shortsIndSortCol === 'label') return shortsIndSortDir * a.label.localeCompare(b.label);
+      if (shortsIndSortCol === 'label') {
+        if (gran === 'duration') {
+          return shortsIndSortDir * (a.bucketStart - b.bucketStart);
+        }
+        return shortsIndSortDir * a.label.localeCompare(b.label);
+      }
       const av = a[shortsIndSortCol], bv = b[shortsIndSortCol];
       const aNull = av === null || av === undefined || !Number.isFinite(av);
       const bNull = bv === null || bv === undefined || !Number.isFinite(bv);
@@ -6904,11 +7098,15 @@ function renderShortsIndicatorsHeatmap() {
   }
 
   const titleEl = document.getElementById('shortsIndicatorsTitle');
-  if (titleEl) titleEl.textContent = `${built.length} Creators · ${d.length} Shorts`;
+  if (titleEl) {
+    titleEl.textContent = gran === 'duration'
+      ? `${built.length} faixas · ${d.length} Shorts`
+      : `${built.length} Creators · ${d.length} Shorts`;
+  }
 
   container.innerHTML = `<table style="width:100%;border-collapse:collapse;">
     <thead><tr>
-      <th onclick="sortShortsIndicators('label')" style="${thL}">Criador${sortArrow('label')}</th>
+      <th onclick="sortShortsIndicators('label')" style="${thL}">${firstColLabel}${sortArrow('label')}</th>
       <th onclick="sortShortsIndicators('n')" style="${thR}">Nº Vídeos${sortArrow('n')}</th>
       <th onclick="sortShortsIndicators('medianViews')" style="${thR}">Views Mediana${sortArrow('medianViews')}</th>
       <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
@@ -6991,9 +7189,20 @@ function renderFeedbackTableShorts() {
 let tempMetric = 'views'; // 'views' | 'viewsMedian' | 'ctr' | 'ret' | 'insc' | 'dur' | 'gancho'
 let tempSelectedCats = new Set(); // empty = aggregate line
 
+function sanitizeDashboardMetric(metric, fallback, labelId, fallbackLabel) {
+  if (metric === 'fantasyClicks' || metric === 'fantasyConversion') {
+    const lbl = document.getElementById(labelId);
+    if (lbl) lbl.textContent = fallbackLabel;
+    return fallback;
+  }
+  return metric;
+}
+
 function setTempMetric(metric, label) {
-  tempMetric = metric;
-  document.getElementById('tempMetricLabel').textContent = label;
+  tempMetric = sanitizeDashboardMetric(metric, 'views', 'tempMetricLabel', '📈 Soma de Views');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('tempMetricLabel').textContent = label;
+  }
   document.getElementById('tempMetricDropdown').style.display = 'none';
   renderTemporal();
 }
@@ -7048,8 +7257,10 @@ let perfMetric = 'views';
 let perfView = 'video'; // 'video' | 'categoria'
 
 function setPerfMetric(metric, label) {
-  perfMetric = metric;
-  document.getElementById('perfMetricLabel').textContent = label;
+  perfMetric = sanitizeDashboardMetric(metric, 'views', 'perfMetricLabel', '📊 Views por Vídeo');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('perfMetricLabel').textContent = label;
+  }
   document.getElementById('perfMetricDropdown').style.display = 'none';
   renderCharts();
 }
@@ -7085,8 +7296,10 @@ document.addEventListener('click', e => {
 let sTempMetric = 'views';
 
 function setSTempMetric(metric, label) {
-  sTempMetric = metric;
-  document.getElementById('sTempMetricLabel').textContent = label;
+  sTempMetric = sanitizeDashboardMetric(metric, 'views', 'sTempMetricLabel', '📈 Soma de Views');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('sTempMetricLabel').textContent = label;
+  }
   document.getElementById('sTempMetricDropdown').style.display = 'none';
   renderShortsTemporal();
 }
@@ -7101,8 +7314,10 @@ let sPerfMetric = 'views';
 let sPerfView   = 'video';
 
 function setSPerfMetric(metric, label) {
-  sPerfMetric = metric;
-  document.getElementById('sPerfMetricLabel').textContent = label;
+  sPerfMetric = sanitizeDashboardMetric(metric, 'views', 'sPerfMetricLabel', '📊 Views por Vídeo');
+  if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
+    document.getElementById('sPerfMetricLabel').textContent = label;
+  }
   document.getElementById('sPerfMetricDropdown').style.display = 'none';
   renderShortsCharts();
 }
@@ -7218,10 +7433,10 @@ function renderShortsScatter() {
     }
   });
 
-  // Legend
+  // Legend — omit "(Sem categoria)" label only (data still plotted in datasets above)
   const legendEl = document.getElementById('sSScatterLegend');
   if (legendEl) {
-    const catLegend = cats.map(cat => {
+    const catLegend = cats.filter(cat => cat !== '(Sem categoria)').map(cat => {
       const col = CAT_COLORS[cat]||'#64748b';
       const n = d.filter(r=>(r.categoria||'(Sem categoria)')===cat).length;
       return `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
@@ -7486,6 +7701,11 @@ function renderVelho() {
 
 document.addEventListener('DOMContentLoaded', () => {
   syncFantasyTabVisibility();
+  syncFormatControlsVisibility();
+  syncDashboardFormatUI();
+  syncBaseVelhoTipoUI();
+  syncFantasyFormatFilterUI();
+  syncDashboardPanels();
   if (!isFantasyTabEnabled()) setNumericRangesEnabled(true);
   loadData(); // pipeline principal (dados.csv)
   if (isFantasyTabEnabled()) {
