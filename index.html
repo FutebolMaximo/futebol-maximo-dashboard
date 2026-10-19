@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Futebol Máximo · Dashboard de Performance</title>
+<title>Dashboard Futebol Máximo</title>
+<link rel="icon" href="assets/logo-futebol-maximo.png" type="image/png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
@@ -108,11 +109,21 @@
   }
   .header-left { display: flex; align-items: center; gap: 14px; }
   .header-logo {
-    width: 44px; height: 44px;
-    background: var(--blue-500);
+    width: 44px;
+    height: 44px;
     border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: transparent;
+    flex-shrink: 0;
+  }
+  .header-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
   }
   .header-title { color: white; }
   .header-title h1 { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
@@ -472,7 +483,7 @@
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
 
-  /* Segmented Tipo/Formato (Dashboard 2 opts · Base/VELHO 3 opts) */
+  /* Segmented Tipo (Dashboard 2 · Base/VELHO 3 · Fantasy 5) */
   .dash-format-seg, .tipo-format-seg {
     display: inline-flex;
     align-items: stretch;
@@ -507,6 +518,26 @@
   }
   .dash-format-seg button + button, .tipo-format-seg button + button {
     border-left: 1px solid var(--gray-300);
+  }
+  /* Fantasy 5 opções: compacto no desktop, wrap limpo em telas estreitas */
+  #filterTipoGroup {
+    min-width: auto;
+    flex: 0 1 auto;
+  }
+  .tipo-format-seg.fantasy-tipo-seg button {
+    padding: 0 9px;
+    font-size: 11px;
+  }
+  @media (max-width: 1100px) {
+    .tipo-format-seg.fantasy-tipo-seg {
+      flex-wrap: wrap;
+      height: auto;
+      border-radius: 12px;
+    }
+    .tipo-format-seg.fantasy-tipo-seg button {
+      min-height: 32px;
+      padding: 6px 10px;
+    }
   }
 
   .filters-sticky { position:sticky; top:38px; z-index:190; background:var(--sticky-bg); box-shadow:0 2px 8px rgba(0,0,0,.08); border-bottom:1px solid var(--gray-200); }
@@ -835,8 +866,7 @@
     font-style: normal;
     font-weight: 600;
   }
-  #filterCreator option.filter-ghost-opt,
-  #filterTipo option.filter-ghost-opt {
+  #filterCreator option.filter-ghost-opt {
     font-style: italic;
     color: var(--gray-500);
   }
@@ -955,9 +985,9 @@
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <div class="header-logo">⚽</div>
+    <div class="header-logo"><img src="assets/logo-futebol-maximo.png" alt="Futebol Máximo"></div>
     <div class="header-title">
-      <h1>Futebol Máximo · Performance</h1>
+      <h1>Dashboard Futebol Máximo</h1>
       <p>Dashboard de Análise de Vídeos</p>
     </div>
   </div>
@@ -992,7 +1022,14 @@
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
     </div>
-    <!-- Slot Tipo/Formato: Base/VELHO segmented XOR Fantasy dropdown; oculto em Dashboard/Feedbacks -->
+    <!-- Slot TIPO por aba: Dashboard XOR Base/VELHO XOR Fantasy (mesmo lugar na barra) -->
+    <div class="filter-group" id="dashboardTipoGroup">
+      <label>TIPO</label>
+      <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Tipo do Dashboard" title="Tipo">
+        <button type="button" id="btnDashFormatLF" class="active" onclick="setDashboardFormat('longform')">Long Form</button>
+        <button type="button" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
+      </div>
+    </div>
     <div class="filter-group" id="baseVelhoTipoGroup" style="display:none;">
       <label>TIPO</label>
       <div class="tipo-format-seg" id="baseVelhoTipoSeg" role="group" aria-label="Tipo Base/VELHO" title="Tipo">
@@ -1002,12 +1039,14 @@
       </div>
     </div>
     <div class="filter-group" id="filterTipoGroup" style="display:none;">
-      <label>FORMATO</label>
-      <select id="filterTipo" onchange="onFantasyFormatFilterChange()">
-        <option value="">Todos os formatos</option>
-        <option value="long">Long Form</option>
-        <option value="shorts">Shorts</option>
-      </select>
+      <label>TIPO</label>
+      <div class="tipo-format-seg fantasy-tipo-seg" id="fantasyTipoSeg" role="group" aria-label="Tipo Fantasy" title="Tipo">
+        <button type="button" id="btnFantasyTipoAll" class="active" onclick="setFantasyFormatFilter('')">Todos</button>
+        <button type="button" id="btnFantasyTipoLF" onclick="setFantasyFormatFilter('long')">Long Form</button>
+        <button type="button" id="btnFantasyTipoShorts" onclick="setFantasyFormatFilter('shorts')">Shorts</button>
+        <button type="button" id="btnFantasyTipoLive" onclick="setFantasyFormatFilter('live')">Live</button>
+        <button type="button" id="btnFantasyTipoBio" onclick="setFantasyFormatFilter('bio')">BIO</button>
+      </div>
     </div>
     <div class="filter-group">
       <label id="filterDateStartLabel">DATA PUB. INÍCIO</label>
@@ -1034,10 +1073,6 @@
       </div>
     </div>
     <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;flex-wrap:wrap;">
-      <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Formato do Dashboard" title="Formato do Dashboard">
-        <button type="button" id="btnDashFormatLF" class="active" onclick="setDashboardFormat('longform')">Long Form</button>
-        <button type="button" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
-      </div>
       <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
       <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
       <button id="btnEyeToggle" class="btn-icon-toggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo">👁️</button>
@@ -3297,8 +3332,8 @@ function getFantasyPerfChartData() {
   const catNames = topN.map(r => r.categoria || '(Sem categoria)');
   const barLinks = topN.map(r => r.link || '');
 
-  // Baseline: vídeos Fantasy com clickDate em 2026 (independente de Data/Semana/Cat/Creator/Título).
-  // Respeita Formato sticky (fantasyFormatFilter); Todos = baseline anterior intacto.
+  // Baseline "no ano": clickDate em 2026 · kind===video · respeita fantasyFormatFilter.
+  // Sem amostra anual elegível → mean/median null (—). Sem fallback para outro período.
   const fmtFilter = fantasyFormatFilter || '';
   let baseRows = allFantasyData.filter(r =>
     r.kind === 'video' && r.clickDate && r.clickDate >= '2026-01-01' && r.clickDate <= '2026-12-31'
@@ -3306,11 +3341,7 @@ function getFantasyPerfChartData() {
   if (fmtFilter) {
     baseRows = baseRows.filter(r => matchesFantasyFormatFilter(r, fmtFilter));
   }
-  const baseVideos = buildFantasyPerformanceVideos(baseRows.length ? baseRows : (
-    fmtFilter
-      ? allFantasyData.filter(r => r.kind === 'video' && matchesFantasyFormatFilter(r, fmtFilter))
-      : allFantasyData
-  ));
+  const baseVideos = buildFantasyPerformanceVideos(baseRows);
   const baseVals = baseVideos.map(fantasyPerfMetricVal).filter(v => v !== null && Number.isFinite(v));
   const meanVal = baseVals.length ? mean(baseVals) : null;
   const medianVal = baseVals.length ? median(baseVals) : null;
@@ -3336,6 +3367,7 @@ function renderFantasyPerformance() {
   };
 
   const { labels, fullLabels, values, meanVal, medianVal, barColors, catNames, barLinks, barRows } = getFantasyPerfChartData();
+  // Sem barras: chart já destruído — não reaproveitar Média/Mediana do formato anterior
   if (!labels.length) return;
 
   const cfg = buildBarConfig(labels, values, meanVal, medianVal, yLabel, tickFmt, tooltipFmt, fullLabels, barColors, catNames, barLinks);
@@ -3405,11 +3437,7 @@ function applyFantasyFilters() {
   const creator   = (document.getElementById('filterCreator') || {}).value || '';
   const dateStart = fantasyDateStart || '';
   const dateEnd   = fantasyDateEnd || '';
-  // Independent Fantasy Formato state (not Base/VELHO / Dashboard)
-  if (isFantasyTabActive()) {
-    const sel = document.getElementById('filterTipo');
-    if (sel) fantasyFormatFilter = sel.value || '';
-  }
+  // Fantasy Tipo: estado fantasyFormatFilter (toggle); recorte só aqui / Aplicar
   const tipo = fantasyFormatFilter || '';
 
   filteredFantasy = allFantasyData.filter(r => {
@@ -3666,19 +3694,36 @@ function syncBaseVelhoTipoUI() {
 }
 
 function syncFantasyFormatFilterUI() {
-  const sel = document.getElementById('filterTipo');
-  if (sel && sel.value !== fantasyFormatFilter) sel.value = fantasyFormatFilter;
+  const v = fantasyFormatFilter || '';
+  const map = {
+    '': 'btnFantasyTipoAll',
+    long: 'btnFantasyTipoLF',
+    shorts: 'btnFantasyTipoShorts',
+    live: 'btnFantasyTipoLive',
+    bio: 'btnFantasyTipoBio',
+  };
+  Object.keys(map).forEach(key => {
+    const btn = document.getElementById(map[key]);
+    if (btn) btn.classList.toggle('active', key === v);
+  });
+  // Valor legado (ex.: unidentified) sem botão: nenhum ativo além de limpar visual
+  if (!(v in map)) {
+    Object.values(map).forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.classList.remove('active');
+    });
+  }
 }
 
-/** Per-tab sticky slot: Dashboard seg | Base/VELHO seg | Fantasy dropdown | Feedbacks none. */
+/** Per-tab sticky slot: Dashboard TIPO | Base/VELHO TIPO | Fantasy TIPO | Feedbacks none. */
 function syncFormatControlsVisibility() {
-  const dashSeg = document.getElementById('dashFormatSeg');
+  const dashGroup = document.getElementById('dashboardTipoGroup');
   const baseVelhoGroup = document.getElementById('baseVelhoTipoGroup');
   const fantasyGroup = document.getElementById('filterTipoGroup');
   const onDash = activeTab === 'dashboard';
   const onBaseVelho = activeTab === 'basedados' || activeTab === 'velho';
   const onFantasy = activeTab === 'fantasy';
-  if (dashSeg) dashSeg.style.display = onDash ? '' : 'none';
+  if (dashGroup) dashGroup.style.display = onDash ? '' : 'none';
   if (baseVelhoGroup) baseVelhoGroup.style.display = onBaseVelho ? '' : 'none';
   if (fantasyGroup) fantasyGroup.style.display = onFantasy ? '' : 'none';
 }
@@ -3740,9 +3785,15 @@ function setBaseVelhoTipo(val) {
   syncBaseVelhoTipoUI();
 }
 
-function onFantasyFormatFilterChange() {
-  const sel = document.getElementById('filterTipo');
-  fantasyFormatFilter = sel ? (sel.value || '') : '';
+/**
+ * Fantasy Tipo toggle — atualiza estado + UI only.
+ * filteredFantasy só recalcula no Aplicar (mesma semântica do antigo dropdown).
+ */
+function setFantasyFormatFilter(val) {
+  const allowed = ['', 'long', 'shorts', 'live', 'bio'];
+  if (!allowed.includes(val)) return;
+  fantasyFormatFilter = val;
+  syncFantasyFormatFilterUI();
 }
 
 function switchTab(tab) {
@@ -3860,40 +3911,12 @@ function rebuildCreatorOptions() {
   sel.value = current;
 }
 
-/** Fantasy Formato dropdown only (#filterTipo). Base/VELHO use baseVelhoTipo segmented. */
+/** Fantasy TIPO segmented — opções fixas; só sincroniza UI com fantasyFormatFilter. */
 function rebuildTipoOptions() {
-  const sel = document.getElementById('filterTipo');
-  if (!sel) return;
   if (!(activeTab === 'fantasy' && isFantasyTabEnabled())) return;
-
-  const current = fantasyFormatFilter || '';
-  const present = new Set((allFantasyData || []).map(getFantasyFormat));
-  const order = [
-    { value: 'long', label: 'Long Form', fmt: 'Long Form' },
-    { value: 'shorts', label: 'Shorts', fmt: 'Shorts' },
-    { value: 'live', label: 'LIVE', fmt: 'LIVE' },
-    { value: 'bio', label: 'BIO', fmt: 'BIO' },
-    { value: 'unidentified', label: 'Não identificado', fmt: 'Não identificado' },
-  ];
-  sel.innerHTML = '<option value="">Todos os formatos</option>';
-  const shown = new Set();
-  order.forEach(({ value, label, fmt }) => {
-    if (!present.has(fmt)) return;
-    const opt = document.createElement('option');
-    opt.value = value;
-    opt.textContent = label;
-    sel.appendChild(opt);
-    shown.add(value);
-  });
-  if (current && !shown.has(current) && current !== '') {
-    const ghost = document.createElement('option');
-    ghost.value = current;
-    ghost.textContent = `${current} (indisponível)`;
-    ghost.className = 'filter-ghost-opt';
-    sel.appendChild(ghost);
-  }
-  sel.value = current;
-  fantasyFormatFilter = sel.value || '';
+  // Drop legacy value not offered in UI (e.g. unidentified)
+  if (fantasyFormatFilter === 'unidentified') fantasyFormatFilter = '';
+  syncFantasyFormatFilterUI();
 }
 
 function rebuildSharedFilterOptions(source) {
@@ -4872,10 +4895,9 @@ function clearFilters() {
   resetRangeFiltersToBounds();
 
   if (isFantasyTabActive()) {
-    // Clear Fantasy Formato only — Dashboard/BaseVelho untouched
+    // Clear Fantasy Tipo → Todos; Dashboard/BaseVelho untouched
     fantasyFormatFilter = '';
-    const tipoEl = document.getElementById('filterTipo');
-    if (tipoEl) tipoEl.value = '';
+    syncFantasyFormatFilterUI();
     initFantasyTemporalDefaults();
     loadTemporalToUI('fantasy');
     setNumericRangesEnabled(false);

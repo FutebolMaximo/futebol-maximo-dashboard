@@ -20,11 +20,21 @@ NUNCA separar o `index.html` em múltiplos arquivos. HTML, CSS e JS permanecem e
 |------|--------|
 | Projeto | Futebol Máximo |
 | Pasta | `C:\Users\jose\Desktop\IA PROJECTS\Dashboard Futebol Máximo` |
-| Arquivos | `index.html` · `dados.csv` · `fantasy.csv` · `CONTEXTO.md` |
+| Nome na UI | `<title>` e header `<h1>` = **Dashboard Futebol Máximo** · subtítulo = `Dashboard de Análise de Vídeos` |
+| Arquivos | `index.html` · `dados.csv` · `fantasy.csv` · `CONTEXTO.md` · `assets/logo-futebol-maximo.png` |
 | Scripts | exatamente **3 `<script>`** (Chart.js + annotation + inline) |
 | Dependências | sem novas libs além das CDNs Chart já presentes |
 | Servidor local | `python -m http.server 8765 --bind 127.0.0.1` |
 | URL | http://127.0.0.1:8765/ |
+
+```
+index.html
+dados.csv
+fantasy.csv
+CONTEXTO.md
+assets/
+  logo-futebol-maximo.png   ← logo header + favicon (único path válido)
+```
 
 ---
 
@@ -45,16 +55,23 @@ Shorts **não** foi eliminado como pipeline: vive em
 
 ## Dashboard — Long Form / Shorts
 
-### Estado
+### Estado / controle TIPO
 ```
 dashboardFormat = 'longform' | 'shorts'   // default: 'longform'
 ```
 
-- UI: segmented `[ Long Form | Shorts ]` (`#dashFormatSeg`) — troca **imediata** (sem Aplicar)
+- Label sticky: **TIPO**
+- UI: segmented `[ Long Form | Shorts ]` (`#dashFormatSeg` dentro de `#dashboardTipoGroup`)
+- Troca **imediata** (não depende de Aplicar)
 - Reload → Dashboard + Long Form
 - Sessão: formato **persiste** ao trocar de aba e voltar
 - **Clear NÃO** reseta `dashboardFormat`
 - Sem `localStorage` para esse estado
+
+**Posição na barra (Dashboard):**  
+Criador → Categoria → **TIPO** → Data Pub. Início → Data Pub. Fim → Semana de Publicação → Título → Aplicar / Limpar / …  
+
+O toggle **não** fica junto dos botões Aplicar/Limpar/tema. O mesmo `#dashFormatSeg` foi reposicionado (sem duplicar estado/listeners).
 
 ### Pipelines (não fundidos)
 ```
@@ -111,25 +128,38 @@ Fonte: colunas de `dados.csv` (`r.fantasyClicks` / `r.fantasyConversion`), **nã
 
 ## Tipo / Formato — controles por contexto
 
-Três estados **independentes** (sessão; sem localStorage de formato):
+Três estados **independentes** (sessão; sem localStorage de formato) — **sem vazamento** entre universos:
 
-| Contexto | Estado | UI | Valores |
-|----------|--------|-----|---------|
-| Dashboard | `dashboardFormat` | `[ Long Form \| Shorts ]` | `longform` / `shorts` |
-| Base + VELHO | `baseVelhoTipo` (compartilhado) | `[ Todos \| Long Form \| Shorts ]` | `''` / `'long'` / `'shorts'` |
-| Fantasy | `fantasyFormatFilter` | dropdown **FORMATO** `#filterTipo` | `''` / long / shorts / live / bio / unidentified |
-| Feedbacks | — | **sem** controle Tipo/Formato | — |
+| Contexto | Estado | UI | Valores internos | Apply |
+|----------|--------|-----|------------------|-------|
+| Dashboard | `dashboardFormat` | label **TIPO** · `[ Long Form \| Shorts ]` | `longform` / `shorts` | **Imediato** |
+| Base + VELHO | `baseVelhoTipo` (compartilhado) | label **TIPO** · `[ Todos \| Long Form \| Shorts ]` | `''` / `'long'` / `'shorts'` | **Aplicar** |
+| Fantasy | `fantasyFormatFilter` | label **TIPO** · segmented `#fantasyTipoSeg` | `''` / `long` / `shorts` / `live` / `bio` | **Aplicar** |
+| Feedbacks | — | **sem** controle Tipo | — | — |
 
-- Base/VELHO: Tipo entra em `filteredAll` no **Aplicar** (mesma semântica do antigo dropdown).
-- Clear Main → `baseVelhoTipo = ''` (Todos); **não** altera Fantasy nem `dashboardFormat`.
-- Clear Fantasy → `fantasyFormatFilter = ''`; **não** altera Base/VELHO nem Dashboard.
-- `#filterTipo` é o dropdown **exclusivo da Fantasy** (label FORMATO); opções via `rebuildTipoOptions()` + `getFantasyFormat`.
+### Fantasy — TIPO (não é dropdown)
+- UI: `[ Todos | Long Form | Shorts | Live | BIO ]` — default **Todos**
+- Label visual: **TIPO** (não “FORMATO”)
+- UI escreve **Live**; classificação oficial continua `getFantasyFormat(r) === 'LIVE'`
+- Valores: Todos→`''` · Long Form→`long` · Shorts→`shorts` · Live→`live` · BIO→`bio`
+- **Não identificado** não tem botão no toggle; com TIPO=Todos esses registros **continuam incluídos**. Continua sendo resultado possível de `getFantasyFormat()` e pode aparecer em dimensões/gráficos.
+- Clique no Tipo → atualiza `fantasyFormatFilter` + UI (`setFantasyFormatFilter`)
+- **Aplicar** → `applyFantasyFilters()` recalcula `filteredFantasy`
+- **Limpar** → Tipo volta para Todos
+
+**Posição sticky Fantasy:**  
+Criador → Categoria → **TIPO** → Data Clique Início → Data Clique Fim → Semana do Clique → Título → …
+
+### Clear por universo
+- Clear Main → `baseVelhoTipo = ''`; **não** altera Fantasy nem `dashboardFormat`
+- Clear Fantasy → `fantasyFormatFilter = ''`; **não** altera Base/VELHO nem Dashboard
+- Base/VELHO: Tipo entra em `filteredAll` no **Aplicar**
 
 ---
 
 ## Filtros sticky (multiselect)
 
-Controles: Criador · Categoria · (slot Tipo/Formato por aba) · Data · Semana · Título · Aplicar · Limpar · 👁️ · tema · (Dashboard: format seg)
+Controles: Criador · Categoria · **TIPO** (slot por aba) · Data · Semana · Título · Aplicar · Limpar · 👁️ · tema
 
 **Semana · Categoria · Título:**
 - Multiselect permanece **aberto** ao marcar/desmarcar (padrão Semana: `stopPropagation` + re-`open`)
@@ -278,21 +308,59 @@ Não usar AVG. Não somar Views linha a linha.
 - LIVE na dimensão Formato: cor `#FF495C`
 
 ### Performance Fantasy
-- `filteredFantasy` · agrupa por videoId · só `kind === 'video'`
+- Barras: `filteredFantasy` · agrupa por videoId · só `kind === 'video'`
 - Controles: Melhores · Piores · **Recentes** · N · Atualizar
 - **Recentes = `publishDate` DESC** (publicação do vídeo), **não** `latestClickDate`
 - Métricas do vídeo ainda vêm do recorte de **clickDate** atual
 - LIVE: barra `#FF495C` (`FANTASY_PERF_LIVE_COLOR`); tooltip pode mostrar `Formato: LIVE`
-- **Média / Mediana (linhas de referência):**  
-  - Universo: vídeos com `clickDate` em **2026** (`allFantasyData`, independente do range sticky de Data/Semana/Cat/Creator/Título)  
-  - **Respeitam** `fantasyFormatFilter` (Formato sticky)  
-  - Formato = Todos → baseline geral 2026 (comportamento anterior)
+
+#### Média no ano / Mediana no ano
+Benchmarks das linhas de referência — **respondem ao TIPO Fantasy** (`fantasyFormatFilter`) após Aplicar:
+
+| TIPO | Universo do benchmark |
+|------|------------------------|
+| Todos | anual geral elegível |
+| Long Form | só vídeos Long Form elegíveis |
+| Shorts | só Shorts elegíveis |
+| Live | só Live elegíveis (`getFantasyFormat === 'LIVE'`) |
+| BIO | **—** se não houver vídeos elegíveis (`kind === 'video'`) |
+
+**Fórmula (metodologia inalterada):**
+1. `allFantasyData` com `kind === 'video'` e `clickDate` em **2026-01-01…2026-12-31**
+2. Se TIPO ≠ Todos → `matchesFantasyFormatFilter`
+3. `buildFantasyPerformanceVideos` (dedupe por videoId)
+4. `fantasyPerfMetricVal` → `mean()` / `median()`
+5. Ignora Data/Semana/Cat/Creator/Título sticky
+
+**Sem amostra anual válida** → `meanVal`/`medianVal` = `null` (exibe —).  
+**Não** há fallback para dados fora de 2026 / outro período (removido de propósito — preserva “no ano”).
+
+Sem vídeos elegíveis nas barras: chart é destruído/limpo — **não** reaproveitar Média/Mediana stale do formato anterior.
+
+**KPIs / cards Fantasy não foram alterados** por esta correção (ALL-TIME e regras de Conversion intactas).
 
 ### Breakdown
 - Posição: após Performance  
 - Dimensões: Creator · Categoria · Formato · Destino · Dispositivo  
 - Fonte: `filteredFantasy`  
 - Formato → `getFantasyFormat`
+
+---
+
+## Identidade visual (logo / favicon / nome)
+
+| Uso | Valor atual |
+|-----|-------------|
+| Logo header | `<img src="assets/logo-futebol-maximo.png">` — sem fundo azul do antigo emoji |
+| Favicon | `<link rel="icon" href="assets/logo-futebol-maximo.png">` |
+| Asset oficial | **somente** `assets/logo-futebol-maximo.png` |
+| `<title>` | `Dashboard Futebol Máximo` |
+| Header `<h1>` | `Dashboard Futebol Máximo` |
+| Subtítulo | `Dashboard de Análise de Vídeos` |
+
+- Antigo emoji `⚽` + quadrado azul **não** é mais usado.
+- Duplicata acidental `assetslogo-futebol-maximo.png` (raiz) **foi removida** — não documentar como arquivo válido.
+- Preservar aspect ratio / `object-fit: contain` / sem distorção.
 
 ---
 
@@ -344,6 +412,19 @@ LIVE Conversion (default, ignora Formato):
 Classificação rows por `getFantasyFormat` (all-time):  
 Long Form 3812 · Shorts 732 · LIVE 227 · BIO 416 · Não identificado 16.
 
+### Snapshot — Performance Fantasy · Média/Mediana no ano (Fantasy Clicks)
+
+> **Dinâmico — snapshot do CSV atual; não é regra fixa.**  
+> Validação: TIPO=Todos reproduz o baseline geral anterior à correção do fallback.
+
+```
+Todos:      N=238 · Média ≈ 20,950 · Mediana = 6,5
+Long Form:  N=128 · Média ≈ 31,492 · Mediana = 9,5
+Shorts:     N=107 · Média ≈ 6,804  · Mediana = 6
+Live:       N=3   · Média ≈ 75,667 · Mediana = 99
+BIO:        N elegível = 0 · Média / Mediana = —
+```
+
 ---
 
 ## HISTÓRICO / DECISÕES IMPORTANTES
@@ -352,9 +433,12 @@ Long Form 3812 · Shorts 732 · LIVE 227 · BIO 416 · Não identificado 16.
 - Fantasy migrou para **`fantasy.csv` independente** de `dados.csv`.
 - **`clickDate`** (Data Click) e **`publishDate`** (Data Publicação) são campos separados no Fantasy.
 - Performance Recentes usa **`publishDate` DESC** (não latest click).
+- Fantasy TIPO deixou de ser dropdown FORMATO → segmented Apply-based; UI “Live” vs interno `LIVE`.
+- Benchmark Performance: removido fallback fora de 2026; sem amostra anual → —.
 - Ranking Fantasy antigo e cards KPI Fantasy no topo LF/Shorts foram removidos.
 - Alias parser `'data click' → clickDateRaw` evita `filteredFantasy` zerar com o header atual.
 - Flag Fantasy já esteve `ENABLE_FANTASY_TAB = false` — **não** é o estado atual.
+- Logo: emoji `⚽` substituído por `assets/logo-futebol-maximo.png` (+ favicon).
 
 ---
 
@@ -365,13 +449,17 @@ Long Form 3812 · Shorts 732 · LIVE 227 · BIO 416 · Não identificado 16.
 3. Fantasy `publishDate` só onde a semântica exige publicação (ex.: Performance Recentes)  
 4. Dashboard LF/Shorts = pipelines separados (`filteredLong` / `filteredShorts` + painéis)  
 5. `getFantasyFormat` é a fonte oficial de Formato Fantasy  
-6. Não remover Tipo/Formato globalmente sem respeitar os 3 contextos (Dashboard / Base·VELHO / Fantasy)  
-7. Feedbacks não precisa de controle Tipo visual  
-8. Exatamente **3** `<script>` · sem dependências novas sem necessidade  
-9. `null` Fantasy Main (`fantasyClicks` / conversion) **não** vira zero silenciosamente  
-10. Conversion Fantasy: Views **deduplicadas 1× por videoId**  
-11. Temporal/Performance Dashboard **não** reoferecem Fantasy Clicks/Conversion nos dropdowns  
-12. Botões Semana/Mês devem refletir `tempMode` / `tempModeShorts` (nunca dessincronizar do gráfico)
+6. Dashboard TIPO (`dashboardFormat`) é **imediato**; Fantasy TIPO (`fantasyFormatFilter`) é **Apply-based**  
+7. UI Fantasy “Live” **não** altera o valor interno `LIVE`  
+8. Sem amostra anual no benchmark Performance → `null` / — — **sem** fallback temporal  
+9. Asset oficial logo/favicon = `assets/logo-futebol-maximo.png`  
+10. Não remover Tipo/Formato globalmente sem respeitar os 3 contextos (Dashboard / Base·VELHO / Fantasy)  
+11. Feedbacks não precisa de controle Tipo visual  
+12. Exatamente **3** `<script>` · sem dependências novas sem necessidade  
+13. `null` Fantasy Main (`fantasyClicks` / conversion) **não** vira zero silenciosamente  
+14. Conversion Fantasy: Views **deduplicadas 1× por videoId**  
+15. Temporal/Performance Dashboard **não** reoferecem Fantasy Clicks/Conversion nos dropdowns  
+16. Botões Semana/Mês devem refletir `tempMode` / `tempModeShorts` (nunca dessincronizar do gráfico)
 
 ---
 
