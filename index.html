@@ -3776,24 +3776,35 @@ function setDashboardFormat(fmt) {
 }
 
 /**
- * Base/VELHO Tipo selection — updates shared state + UI only.
- * Takes effect on Aplicar (same semantics as old #filterTipo).
+ * Base/VELHO Tipo — imediato (como Dashboard): atualiza estado + refiltra a aba atual.
+ * Demais filtros sticky (Data/Semana/…) continuam no Aplicar.
  */
 function setBaseVelhoTipo(val) {
   if (val !== '' && val !== 'long' && val !== 'shorts') return;
+  const changed = baseVelhoTipo !== val;
   baseVelhoTipo = val;
   syncBaseVelhoTipoUI();
+  if (!changed) return;
+  if (activeTab === 'basedados' || activeTab === 'velho') {
+    applyFilters();
+  }
 }
 
 /**
- * Fantasy Tipo toggle — atualiza estado + UI only.
- * filteredFantasy só recalcula no Aplicar (mesma semântica do antigo dropdown).
+ * Fantasy Tipo — imediato (como Dashboard): atualiza estado + recalcula filteredFantasy.
+ * Demais filtros sticky (Data/Semana/…) continuam no Aplicar.
  */
 function setFantasyFormatFilter(val) {
   const allowed = ['', 'long', 'shorts', 'live', 'bio'];
   if (!allowed.includes(val)) return;
+  const changed = fantasyFormatFilter !== val;
   fantasyFormatFilter = val;
   syncFantasyFormatFilterUI();
+  if (!changed) return;
+  if (activeTab === 'fantasy' && isFantasyTabEnabled()) {
+    applyFantasyFilters();
+    renderFantasyDashboard();
+  }
 }
 
 function switchTab(tab) {
