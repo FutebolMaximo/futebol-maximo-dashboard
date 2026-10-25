@@ -5382,11 +5382,24 @@ function renderCharts() {
     }
     return (v !== null && v !== undefined) ? v : 0;
   };
-  const catAgg = rows => {
+  // Quantidade → soma na barra (Por Categoria). Taxas/%/durações → média (comportamento anterior).
+  const isQuantityMetric = ['views', 'inscritos', 'comentarios', 'likes', 'shares', 'impressoes', 'fantasyClicks']
+    .includes(perfMetric);
+  const catSum = rows => {
     if (perfMetric === 'fantasyClicks') return sumFantasyClicks(rows);
+    let s = 0;
+    let any = false;
+    rows.forEach(r => {
+      const v = metricVal(r);
+      if (v !== null && v !== undefined && Number.isFinite(v)) { s += v; any = true; }
+    });
+    return any ? s : null;
+  };
+  const catMean = rows => {
     if (perfMetric === 'fantasyConversion') return aggregateFantasyConversion(rows);
     return mean(rows.map(metricVal));
   };
+  const catAgg = rows => (isQuantityMetric ? catSum(rows) : catMean(rows));
 
   const tooltipFmtPerf = v => {
     if (v === null || v === undefined || !Number.isFinite(v)) return '—';
@@ -5436,29 +5449,44 @@ function renderCharts() {
       if (bNull) return -1;
       return (chartMode === 'bottom') ? av - bv : bv - av;
     });
-    const catMeans   = cats.map(c => catAgg(catMap[c]));
-    const catCounts  = cats.map(c => catMap[c].length);
+    const catBarVals = cats.map(c => catAgg(catMap[c]));
     const barColors  = cats.map(c => (CAT_COLORS[c]||'#2563eb')+'cc');
 
-    const lf2026base = allData.filter(r=>(r.tipo||'').toLowerCase().includes('long')&&r.ano===2026);
-    const baseVals   = lf2026base.map(metricVal);
-    const meanVal    = mean(baseVals);
-    const medianVal  = median(baseVals);
+    // Quantidade: sem linhas pontilhadas (escala incompatível com totais).
+    // Taxas: mantém baseline canal LF 2026 (média/mediana por vídeo).
+    let meanVal = null;
+    let medianVal = null;
+    if (!isQuantityMetric) {
+      const lf2026base = allData.filter(r=>(r.tipo||'').toLowerCase().includes('long')&&r.ano===2026);
+      const baseVals   = lf2026base.map(metricVal);
+      meanVal    = mean(baseVals);
+      medianVal  = median(baseVals);
+    }
 
-    const cfg = buildBarConfig(cats, catMeans, meanVal, medianVal, perfMetric, tickFmtPerf, tooltipFmtPerf, cats, barColors, cats, []);
-    // Override tooltip to include count and median
+    const cfg = buildBarConfig(cats, catBarVals, meanVal, medianVal, perfMetric, tickFmtPerf, tooltipFmtPerf, cats, barColors, cats, []);
     cfg.options.plugins.tooltip.callbacks.label = ctx => {
       const cat = cats[ctx.dataIndex];
       const rows = catMap[cat]||[];
-      const med = (perfMetric === 'fantasyClicks' || perfMetric === 'fantasyConversion')
+      if (isQuantityMetric) {
+        const total = catSum(rows);
+        const avg = catMean(rows);
+        const med = median(rows.map(metricVal));
+        return [
+          ` Total: ${tooltipFmtPerf(total)}`,
+          ` ${rows.length} vídeos`,
+          ` Média por vídeo: ${tooltipFmtPerf(avg)}`,
+          ` Mediana por vídeo: ${tooltipFmtPerf(med)}`,
+        ];
+      }
+      const med = (perfMetric === 'fantasyConversion')
         ? catAgg(rows)
         : median(rows.map(metricVal));
       return [
         ` Valor: ${tooltipFmtPerf(ctx.parsed.y)}`,
         ` ${rows.length} vídeos`,
-        (perfMetric === 'fantasyClicks' || perfMetric === 'fantasyConversion')
+        perfMetric === 'fantasyConversion'
           ? ` Agregado: ${tooltipFmtPerf(med)}`
-          : ` Mediana: ${tooltipFmtPerf(med)}`
+          : ` Mediana: ${tooltipFmtPerf(med)}`,
       ];
     };
     cfg.options.scales.x.ticks.maxRotation = 25;
