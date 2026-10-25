@@ -1,0 +1,74 @@
+[main 7e3ce83] Atualizacao automatica das bases pelo KNIME - Tue 10/20/2026  4:45:51.34
+ 2 files changed, 5831 insertions(+), 5771 deletions(-)
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+   0389b71..7e3ce83  main -> main
+[main 114793d] Atualizacao automatica das bases pelo KNIME - Wed 10/21/2026  4:46:04.83
+ 2 files changed, 5829 insertions(+), 5770 deletions(-)
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+   7e3ce83..114793d  main -> main
+[main 575fdbe] Atualizacao automatica das bases pelo KNIME - Thu 10/22/2026  4:45:53.66
+ 2 files changed, 5976 insertions(+), 5879 deletions(-)
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/FutebolMaximo/futebol-maximo-dashboard'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   automacao_knime.bat
+	modified:   index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	log-git.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/FutebolMaximo/futebol-maximo-dashboard'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   automacao_knime.bat
+	modified:   index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	log-git.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/FutebolMaximo/futebol-maximo-dashboard'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[main 4d68fcc] Atualizacao automatica das bases pelo KNIME - Sun 10/25/2026  6:14:35.48
+ 2 files changed, 6493 insertions(+), 6246 deletions(-)
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/FutebolMaximo/futebol-maximo-dashboard'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
