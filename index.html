@@ -267,7 +267,7 @@
   .kpi-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
   .kpi-value { font-size: 26px; font-weight: 800; color: var(--gray-900); line-height: 1; }
   .kpi-sub { font-size: 11px; color: var(--gray-500); margin-top: 5px; }
-  .kpi-median { font-size: 11px; color: var(--blue-500); margin-top: 4px; font-weight: 600; }
+  .kpi-median { font-size: 11px; color: #f59e0b; margin-top: 4px; font-weight: 600; }
   .kpi-median::before { content: '⬡ '; font-size: 9px; }
 
   /* CHARTS SECTION */
@@ -344,28 +344,28 @@
   }
   .table-search input:focus { border-color: var(--blue-500); }
   .table-wrap { overflow-x: hidden; max-height: 520px; overflow-y: auto; width: 100%; }
-  table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
   thead th {
-    background: var(--gray-50);
-    padding: 4px 3px;
+    background: var(--gray-100);
+    padding: 10px 6px;
     text-align: center;
-    font-size: 8.5px;
-    font-weight: 700;
-    color: var(--gray-500);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--gray-900);
     text-transform: uppercase;
-    letter-spacing: .1px;
+    letter-spacing: .15px;
     cursor: pointer;
     user-select: none;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 2px solid var(--gray-300);
     white-space: normal;
     word-break: break-word;
-    line-height: 1.15;
+    line-height: 1.25;
     overflow: hidden;
     position: sticky;
     top: 0;
     z-index: 5;
     vertical-align: bottom;
-    height: 32px;
+    height: 44px;
     box-sizing: border-box;
   }
   /* 20-column percentage layout for Base de Dados:
@@ -401,15 +401,15 @@
   #dataTable th:nth-child(22) { width:2.5%; }                    /* Shares */
   #dataTable th:nth-child(23) { width:3%;   }                    /* Coment. */
   #dataTable th:nth-child(24) { width:3.5%; }                    /* Conv. Comm. */
-  tbody tr { border-bottom: 1px solid var(--gray-100); transition: background .1s; }
+  tbody tr { border-bottom: 1px solid var(--gray-200); transition: background .1s; }
   tbody tr:hover { background: var(--blue-50); }
-  tbody td { padding: 4px 4px; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+  tbody td { padding: 10px 6px; color: var(--gray-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; line-height: 1.45; }
   tbody td.title-cell {
-    font-weight: 500; color: var(--gray-900); white-space: normal;
+    font-weight: 600; color: var(--gray-900); white-space: normal;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; line-height: 1.35;
+    overflow: hidden; line-height: 1.5;
   }
-  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 10px; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--gray-900); }
   .creator-tag {
     display: inline-block;
     padding: 1px 5px;
@@ -431,7 +431,7 @@
     padding: 2px 3px;
     border-bottom: 2px solid var(--blue-200);
     position: sticky;
-    top: 32px;
+    top: 44px;
     z-index: 4;
   }
   .col-filter {
@@ -516,8 +516,29 @@
     background: var(--blue-500);
     color: #fff;
   }
+  /* Preencher cantos arredondados do segmento ativo até a borda */
+  .dash-format-seg button:first-child,
+  .tipo-format-seg button:first-child {
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+  }
+  .dash-format-seg button:last-child,
+  .tipo-format-seg button:last-child {
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
+  }
+  .dash-format-seg button:only-child,
+  .tipo-format-seg button:only-child {
+    border-radius: 999px;
+  }
   .dash-format-seg button + button, .tipo-format-seg button + button {
     border-left: 1px solid var(--gray-300);
+  }
+  .dash-format-seg button.active + button,
+  .tipo-format-seg button.active + button,
+  .dash-format-seg button:has(+ .active),
+  .tipo-format-seg button:has(+ .active) {
+    border-left-color: transparent;
   }
   /* Fantasy 5 opções: compacto no desktop, wrap limpo em telas estreitas */
   #filterTipoGroup {
@@ -998,10 +1019,10 @@
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn active" id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
+  <button class="tab-btn"        id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
   <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
   <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
-  <button class="tab-btn"        id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
   <button class="tab-btn"        id="tabBtnFantasy"   onclick="switchTab('fantasy')" style="display:none;">🎯 Fantasy</button>
 </div>
 
@@ -1692,6 +1713,7 @@
         </button>
         <div id="sTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
           <div onclick="setSTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
+          <div onclick="setSTempMetric('viewsMedian','📊 Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views Mediana</div>
           <div onclick="setSTempMetric('gancho','📊 Gancho % Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % Médio</div>
           <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
           <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
@@ -1804,7 +1826,7 @@
   <p class="section-desc">Quantos Shorts temos em cada patamar de views?</p>
   <div style="margin-bottom:32px;">
     <div class="chart-card wide">
-      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-title">📊 Distribuição de Views (faixas de 50K)</div>
       <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsShorts"></canvas></div>
     </div>
   </div>
@@ -2826,6 +2848,16 @@ function renderFantasyBreakdownChart() {
   const rows = buildFantasyBreakdown(filteredFantasy, fantasyBreakdownDimension);
   const labels = rows.map(r => r.label);
   const values = rows.map(r => r.value);
+  const barColors = labels.map(lab => {
+    if (fantasyBreakdownDimension === 'formato' && lab === 'Shorts') return SHORTS_THEME + 'b8';
+    if (fantasyBreakdownDimension === 'formato' && lab === 'LIVE') return FANTASY_PERF_LIVE_COLOR + 'b8';
+    if (fantasyBreakdownDimension === 'categoria') {
+      const c = (CAT_COLORS && CAT_COLORS[lab]) || '#2563eb';
+      return c + 'b8';
+    }
+    return 'rgba(37, 99, 235, 0.72)';
+  });
+  const borderColors = barColors.map(c => (typeof c === 'string' && c.length === 9) ? c.slice(0, 7) : c);
   const barH = 28;
   const height = Math.max(320, 60 + labels.length * barH);
   wrap.style.height = height + 'px';
@@ -2839,8 +2871,8 @@ function renderFantasyBreakdownChart() {
       datasets: [{
         label: 'Unique Visitors',
         data: values,
-        backgroundColor: 'rgba(37, 99, 235, 0.72)',
-        borderColor: 'rgba(37, 99, 235, 1)',
+        backgroundColor: barColors,
+        borderColor: borderColors,
         borderWidth: 1,
         borderRadius: 4,
         barThickness: 18,
@@ -2974,6 +3006,9 @@ function getFantasyTemporalSeriesColor(dimension, label, index) {
   }
   if (dimension === 'formato' && label === 'LIVE') {
     return (typeof FANTASY_PERF_LIVE_COLOR !== 'undefined') ? FANTASY_PERF_LIVE_COLOR : '#FF495C';
+  }
+  if (dimension === 'formato' && label === 'Shorts') {
+    return (typeof SHORTS_THEME !== 'undefined') ? SHORTS_THEME : '#C11D83';
   }
   return FANTASY_TEMP_SERIES_PALETTE[index % FANTASY_TEMP_SERIES_PALETTE.length];
 }
@@ -3326,10 +3361,11 @@ function getFantasyPerfChartData() {
   const values = topN.map(fantasyPerfMetricVal);
   const barColors = topN.map(r => {
     if (r.format === 'LIVE') return FANTASY_PERF_LIVE_COLOR + 'cc';
+    if (r.format === 'Shorts') return SHORTS_THEME + 'cc';
     const c = CAT_COLORS[r.categoria || '(Sem categoria)'] || '#2563eb';
     return c + 'cc';
   });
-  const catNames = topN.map(r => r.categoria || '(Sem categoria)');
+  const catNames = topN.map(r => r.format === 'Shorts' ? 'Shorts' : (r.categoria || '(Sem categoria)'));
   const barLinks = topN.map(r => r.link || '');
 
   // Baseline "no ano": clickDate em 2026 · kind===video · respeita fantasyFormatFilter.
@@ -3671,7 +3707,7 @@ let sortDir = -1; // -1 = desc, 1 = asc
 const chartInstances = {};
 let chartMode = 'recent'; // 'top' | 'bottom' | 'recent'
 let tempMode = 'month'; // 'week' | 'month'
-let activeTab = 'dashboard';
+let activeTab = 'velho';
 /** Independent Tipo/Formato contexts (session-only; no localStorage). */
 let dashboardFormat = 'longform'; // 'longform' | 'shorts' — Dashboard only; immediate
 let baseVelhoTipo = '';           // '' | 'long' | 'shorts' — Base+VELHO shared; Apply/Clear
@@ -4129,6 +4165,8 @@ function init() {
   syncFantasyFormatFilterUI();
   syncDashboardPanels();
   syncTempModeButtons();
+  // Default tab = VELHO
+  switchTab('velho');
   // Start with all sections expanded (default)
   setTimeout(() => { expandAllSections(); }, 50);
 }
@@ -5124,9 +5162,11 @@ function updateKPIs() {
 const CHART_COLORS = {
   bar:    '#2563eb',
   barBg:  'rgba(37,99,235,.75)',
-  mean:   '#f59e0b',
-  median: '#10b981',
+  mean:   '#10b981',  // Média = verde
+  median: '#f59e0b',  // Mediana = amarelo
 };
+/** Tema visual Shorts (sem categoria) — temporal, performance, matriz, histograma */
+const SHORTS_THEME = '#C11D83';
 
 // Fixed colors per category name
 const NAMED_CAT_COLORS = {
@@ -5545,7 +5585,9 @@ function renderTable() {
 
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = rows.map(r => {
-    const catColor = CAT_COLORS[r.categoria] || '#6b7280';
+    const isSh = isShortForm(r);
+    const catColor = isSh ? SHORTS_THEME : (CAT_COLORS[r.categoria] || CAT_COLORS['(Sem categoria)'] || '#6b7280');
+    const catLabel = isSh ? 'Shorts' : (r.categoria || '—');
     const catBg = catColor + '22';
     const duracaoFmt = (() => {
       if (!r.duracao) return '—';
@@ -5581,7 +5623,7 @@ function renderTable() {
       </td>
       <td style="white-space:nowrap;">${r.tipo||'—'}</td>
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${r.categoria||'—'}</span></td>
+      <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${catLabel}</span></td>
       <td class="num">${fmtNum(r.views)}</td>
       <td class="num">${r.fantasyClicks != null && Number.isFinite(r.fantasyClicks) ? fmtNum(r.fantasyClicks) : '—'}</td>
       <td class="num">${r.fantasyConversion != null && Number.isFinite(r.fantasyConversion) ? fmtFantasyCR(r.fantasyConversion) : '—'}</td>
@@ -5863,23 +5905,33 @@ function renderFeedbackTable() {
   });
 
   const catColor = cat => CAT_COLORS[cat] || '#6b7280';
+  const fbOk = ok => ok == null
+    ? 'font-weight:400;color:var(--gray-400)'
+    : (ok ? 'font-weight:700;color:#15803d' : 'font-weight:400;color:#dc2626');
 
-  document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => `
+  document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => {
+    const oV = r.views >= THRESHOLDS.views;
+    const oC = Number.isFinite(r.ctr) ? r.ctr >= THRESHOLDS.ctr : null;
+    const oD = (r.avgViewDurSec != null && r.avgViewDurSec !== undefined) ? r.avgViewDurSec >= THRESHOLDS.avgViewDurSec : null;
+    const oR = (r.avgViewedPct != null && r.avgViewedPct !== undefined) ? r.avgViewedPct >= THRESHOLDS.avgViewedPct : null;
+    const oG = (r.gancho != null && r.gancho !== undefined) ? r.gancho >= THRESHOLDS.gancho : null;
+    return `
     <tr style="border-bottom:1px solid var(--gray-100);">
       <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${(r.ctr*100).toFixed(2)}%</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;font-weight:${r.gancho!==null&&r.gancho!==undefined?'700':'400'};color:${r.gancho!==null&&r.gancho!==undefined?(r.gancho>=0.70?'#15803d':'#991b1b'):'var(--gray-400)'};">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
-      <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
-    </tr>`).join('');
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oC)}">${Number.isFinite(r.ctr) ? (r.ctr*100).toFixed(2)+'%' : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oD)}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oG)}">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
+      <td style="padding:5px 6px;font-size:11px;font-weight:600;color:var(--gray-900);">${cls.status}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
+    </tr>`;
+  }).join('');
 
   document.getElementById('feedbackFooter').textContent =
     `${rows.length} vídeos · Score ≥3: Views ≥48K · CTR% ≥7.6% · Avg Viewed% ≥40% · Avg View Dur ≥6:00 · Gancho ≥70%`;
@@ -6393,9 +6445,6 @@ function renderDurationAnalysis() {
 
   const buildRow = (label, rows, allValsPerCol) => {
     if (!rows.length) return '';
-    const totalViews = rows.reduce((a,r)=>a+r.views,0);
-    const insc1k = totalViews>0 ? rows.reduce((a,r)=>a+r.inscritos,0)/totalViews*1000 : 0;
-    const comm1k = totalViews>0 ? rows.reduce((a,r)=>a+r.comentarios,0)/totalViews*1000 : 0;
     const fantasyClicks = sumFantasyClicks(rows);
     const fantasyConversion = aggregateFantasyConversion(rows);
     const data = {
@@ -6404,16 +6453,18 @@ function renderDurationAnalysis() {
       medRet:   median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)),
       avgDurSec:mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)),
       ganchoMed: mean(rows.map(r=>r.gancho).filter(v=>v!==null&&v!==undefined))*100,
-      insc1k, comm1k, fantasyClicks, fantasyConversion,
+      inscAvg: mean(rows.map(r => r.inscritos).filter(Number.isFinite)),
+      commAvg: mean(rows.map(r => r.comentarios).filter(Number.isFinite)),
+      fantasyClicks, fantasyConversion,
     };
-    const cols = ['viewsMed','medRet','avgDurSec','ganchoMed','insc1k','comm1k','fantasyClicks','fantasyConversion'];
+    const cols = ['viewsMed','medRet','avgDurSec','ganchoMed','inscAvg','commAvg','fantasyClicks','fantasyConversion'];
     const cellColor = col => heatColor(data[col], allValsPerCol[col]);
     const cell = (col, fmt) => {
       if (data[col]===null||data[col]===undefined||isNaN(data[col])) return `<td style="padding:7px 10px;text-align:right;color:var(--gray-300);">—</td>`;
       const c = cellColor(col);
       return `<td style="padding:7px 10px;text-align:right;background:${c.bg};color:${c.txt};font-weight:600;">${fmt(data[col])}</td>`;
     };
-    return { label, n: data.n, viewsMed: data.viewsMed, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k, fantasyClicks: data.fantasyClicks, fantasyConversion: data.fantasyConversion,
+    return { label, n: data.n, viewsMed: data.viewsMed, medRet: data.medRet, avgDurSec: data.avgDurSec, ganchoMed: data.ganchoMed, inscAvg: data.inscAvg, commAvg: data.commAvg, fantasyClicks: data.fantasyClicks, fantasyConversion: data.fantasyConversion,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
         <td style="padding:7px 10px;font-weight:700;font-size:12px;color:var(--gray-700);">${label}</td>
         <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--gray-600);">${data.n}</td>
@@ -6421,8 +6472,8 @@ function renderDurationAnalysis() {
     ${cell('medRet',   v=>v.toFixed(1)+'%')}
         ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
         ${cell('ganchoMed',v=>v.toFixed(1)+'%')}
-        ${cell('insc1k',   v=>v.toFixed(2))}
-        ${cell('comm1k',   v=>v.toFixed(2))}
+        ${cell('inscAvg',  v=>v.toFixed(1))}
+        ${cell('commAvg',  v=>v.toFixed(1))}
         ${cell('fantasyClicks', v=>fmtNum(v))}
         ${cell('fantasyConversion', v=>fmtFantasyCR(v))}
       </tr>` };
@@ -6447,16 +6498,15 @@ function renderDurationAnalysis() {
     cats.forEach(c => rows_data.push({ label: c, rows: d.filter(r=>(r.categoria||'(Sem categoria)')===c) }));
   }
 
-  const allValsPerCol = { viewsMed:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[], fantasyClicks:[], fantasyConversion:[] };
+  const allValsPerCol = { viewsMed:[], medRet:[], avgDurSec:[], ganchoMed:[], inscAvg:[], commAvg:[], fantasyClicks:[], fantasyConversion:[] };
   rows_data.forEach(({rows}) => {
     if (!rows.length) return;
-    const tv = rows.reduce((a,r)=>a+r.views,0);
     allValsPerCol.viewsMed.push(median(rows.map(r=>r.views).filter(v=>Number.isFinite(v))));
     allValsPerCol.medRet.push(median(rows.map(r=>r.avgViewedPct).filter(v=>v!==null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r=>r.avgViewDurSec).filter(v=>v!==null&&v!==undefined)));
     allValsPerCol.ganchoMed.push(mean(rows.map(r=>r.gancho).filter(v=>v!==null&&v!==undefined))*100);
-    allValsPerCol.insc1k.push(tv>0?rows.reduce((a,r)=>a+r.inscritos,0)/tv*1000:0);
-    allValsPerCol.comm1k.push(tv>0?rows.reduce((a,r)=>a+r.comentarios,0)/tv*1000:0);
+    allValsPerCol.inscAvg.push(mean(rows.map(r => r.inscritos).filter(Number.isFinite)));
+    allValsPerCol.commAvg.push(mean(rows.map(r => r.comentarios).filter(Number.isFinite)));
     const fc = sumFantasyClicks(rows);
     const fconv = aggregateFantasyConversion(rows);
     if (fc != null) allValsPerCol.fantasyClicks.push(fc);
@@ -6497,8 +6547,8 @@ function renderDurationAnalysis() {
 <th onclick="sortDurTable('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortDurTable('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
       <th onclick="sortDurTable('ganchoMed')" style="${thR}">Gancho Médio${sortArrow('ganchoMed')}</th>
-      <th onclick="sortDurTable('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
-      <th onclick="sortDurTable('comm1k')" style="${thR}">Coment./1K${sortArrow('comm1k')}</th>
+      <th onclick="sortDurTable('inscAvg')" style="${thR}">Inscritos méd.${sortArrow('inscAvg')}</th>
+      <th onclick="sortDurTable('commAvg')" style="${thR}">Coment. méd.${sortArrow('commAvg')}</th>
       <th onclick="sortDurTable('fantasyClicks')" style="${thR}">Fantasy Clicks${sortArrow('fantasyClicks')}</th>
       <th onclick="sortDurTable('fantasyConversion')" style="${thR}">Fantasy Conversion${sortArrow('fantasyConversion')}</th>
     </tr></thead>
@@ -6726,16 +6776,16 @@ function renderShortsAll() {
   try { renderShortsHistograms(); } catch(e) { console.error('ShortsHistograms:', e.message); }
 }
 
-/** Distribuição de Views — Shorts (mesma metodologia do LF, dataset = filteredShorts). */
+/** Distribuição de Views — Shorts: faixas de 50K; última = >1M. */
 function renderShortsHistograms() {
   const d = filteredShorts;
-  const BIN_VIEWS = 10000; const MAX_VIEWS_BINS = 10;
+  const BIN_VIEWS = 50000; const MAX_VIEWS_BINS = 20; // 0–50K … 950K–1M, depois >1M
   const bins = Array(MAX_VIEWS_BINS + 1).fill(0);
   d.forEach(r => { bins[Math.min(Math.floor((r.views || 0) / BIN_VIEWS), MAX_VIEWS_BINS)]++; });
-  const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>100K`);
+  const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>1M`);
   destroyChart('chartHistViewsShorts');
   const el = document.getElementById('chartHistViewsShorts');
-  if (el) chartInstances['chartHistViewsShorts'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(16,185,129,.75)'));
+  if (el) chartInstances['chartHistViewsShorts'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', SHORTS_THEME + 'bf'));
 }
 
 function renderShortsKPIs() {
@@ -6784,6 +6834,7 @@ function renderShortsTemporal() {
 
   const getMetricVal = (rows, metric) => {
     if (metric==='views') return rows.reduce((a,r)=>a+r.views,0);
+    if (metric==='viewsMedian') return median(rows.map(r=>r.views).filter(v=>Number.isFinite(v)));
     if (metric==='gancho') return mean(rows.map(r=>r.gancho).filter(Number.isFinite))*100;
     if (metric==='ret')   return mean(rows.map(r=>r.avgViewedPct).filter(v=>v!==null));
     if (metric==='insc')  return rows.reduce((a,r)=>a+r.inscritos,0);
@@ -6800,6 +6851,7 @@ function renderShortsTemporal() {
   };
   const getTooltipFmt = (metric,v) => {
     if (v == null || !Number.isFinite(v)) return '—';
+    if (metric==='viewsMedian') return `Views Mediana: ${fmtNum(Math.round(v))}`;
     if (metric==='gancho') return `Gancho %: ${v.toFixed(2)}%`;
     if (metric==='ret') return `Retenção: ${v.toFixed(1)}%`;
     if (metric==='dur') return `Avg View Dur: ${formatDuration(Math.round(v))}`;
@@ -6812,6 +6864,7 @@ function renderShortsTemporal() {
   const agg    = keys.map(k => getMetricVal(grouped[k], sTempMetric));
   const counts = keys.map(k => grouped[k].length);
   const yFmt   = getYFmt(sTempMetric);
+  const lineLabel = sTempMetric === 'viewsMedian' ? 'Views Mediana' : 'Agregado';
 
   if (chartInstances['chartSTempViews']) { chartInstances['chartSTempViews'].destroy(); delete chartInstances['chartSTempViews']; }
   const el = document.getElementById('chartSTempViews');
@@ -6819,7 +6872,7 @@ function renderShortsTemporal() {
   const ct = getChartTheme();
   chartInstances['chartSTempViews'] = new Chart(el, {
     data: { labels, datasets: [
-      { type:'line', label:'Agregado', data:agg, borderColor:'#10b981', backgroundColor:'#10b98122', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
+      { type:'line', label:lineLabel, data:agg, borderColor:SHORTS_THEME, backgroundColor:SHORTS_THEME+'22', fill:true, tension:0.3, pointRadius:3, borderWidth:2, yAxisID:'yMain', order:1 },
       { type:'bar',  label:'Qtd Vídeos', data:counts, backgroundColor:'#06b6d422', borderColor:'#06b6d4', borderWidth:1, borderRadius:3, yAxisID:'yCount', order:2 },
     ]},
     options: {
@@ -6830,7 +6883,7 @@ function renderShortsTemporal() {
       }}},
       scales: {
         x: { ticks:{font:{size:9},color:ct.tick,maxRotation:45}, grid:{display:false} },
-        yMain:  { position:'left',  ticks:{font:{size:9},color:'#10b981',callback:yFmt}, grid:{color:ct.grid} },
+        yMain:  { position:'left',  ticks:{font:{size:9},color:SHORTS_THEME,callback:yFmt}, grid:{color:ct.grid} },
         yCount: { position:'right', ticks:{font:{size:9},color:'#06b6d4',callback:v=>Math.round(v)}, grid:{drawOnChartArea:false} }
       }
     }
@@ -6858,8 +6911,8 @@ function getChartDataShorts(metric) {
   const labels    = topN.map(r=>truncateTitle(r.title,22));
   const fullLabels= topN.map(r=>r.title);
   const values    = topN.map(metricVal);
-  const barColors = topN.map(r=>(CAT_COLORS[r.categoria||'(Sem categoria)']||'#2563eb')+'cc');
-  const catNames  = topN.map(r=>r.categoria||'(Sem categoria)');
+  const barColors = topN.map(() => SHORTS_THEME + 'cc');
+  const catNames  = topN.map(() => 'Shorts');
   const barLinks  = topN.map(r=>r.link||'');
   // Fixed baseline: Shorts + 2026 (independent of user filters)
   const shorts2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('short') && r.ano === 2026);
@@ -6931,7 +6984,7 @@ function renderShortsCharts() {
       return (chartModeShorts==='bottom') ? av-bv : bv-av;
     });
     const catMeans = cats.map(c=>catAgg(catMap[c]));
-    const barColors = cats.map(c=>(CAT_COLORS[c]||'#10b981')+'cc');
+    const barColors = cats.map(() => SHORTS_THEME + 'cc');
     const cfg = buildBarConfig(cats, catMeans, meanVal, medianVal, sPerfMetric, tickFmt, tooltipFmt, cats, barColors, cats, []);
     cfg.options.plugins.tooltip.callbacks.label = ctx => {
       const cat=cats[ctx.dataIndex]; const rows=catMap[cat]||[];
@@ -7078,16 +7131,15 @@ function renderShortsIndicatorsHeatmap() {
     }).sort((a, b) => a.bucketStart - b.bucketStart);
   }
 
-  const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ganchoMed:[], insc1k:[], comm1k:[], fantasyClicks:[], fantasyConversion:[] };
+  const allValsPerCol = { medianViews:[], medRet:[], avgDurSec:[], ganchoMed:[], inscAvg:[], commAvg:[], fantasyClicks:[], fantasyConversion:[] };
   rows_data.forEach(({ rows }) => {
     if (!rows.length) return;
-    const tv = rows.reduce((a, r) => a + r.views, 0);
     allValsPerCol.medianViews.push(median(rows.map(r => r.views)));
     allValsPerCol.medRet.push(median(rows.map(r => r.avgViewedPct).filter(v => v !== null)));
     allValsPerCol.avgDurSec.push(mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)));
     allValsPerCol.ganchoMed.push(mean(rows.map(r => r.gancho).filter(Number.isFinite)) * 100);
-    allValsPerCol.insc1k.push(tv > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / tv * 1000 : 0);
-    allValsPerCol.comm1k.push(tv > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / tv * 1000 : 0);
+    allValsPerCol.inscAvg.push(mean(rows.map(r => r.inscritos).filter(Number.isFinite)));
+    allValsPerCol.commAvg.push(mean(rows.map(r => r.comentarios).filter(Number.isFinite)));
     const fc = sumFantasyClicks(rows);
     const fconv = aggregateFantasyConversion(rows);
     if (fc != null) allValsPerCol.fantasyClicks.push(fc);
@@ -7096,15 +7148,14 @@ function renderShortsIndicatorsHeatmap() {
 
   const buildRow = (label, rows) => {
     if (!rows.length) return null;
-    const totalViews = rows.reduce((a, r) => a + r.views, 0);
     const data = {
       n: rows.length,
       medianViews: median(rows.map(r => r.views)),
       medRet: median(rows.map(r => r.avgViewedPct).filter(v => v !== null)),
       avgDurSec: mean(rows.map(r => r.avgViewDurSec).filter(v => v !== null && v !== undefined)),
       ganchoMed: mean(rows.map(r => r.gancho).filter(Number.isFinite)) * 100,
-      insc1k: totalViews > 0 ? rows.reduce((a, r) => a + r.inscritos, 0) / totalViews * 1000 : 0,
-      comm1k: totalViews > 0 ? rows.reduce((a, r) => a + r.comentarios, 0) / totalViews * 1000 : 0,
+      inscAvg: mean(rows.map(r => r.inscritos).filter(Number.isFinite)),
+      commAvg: mean(rows.map(r => r.comentarios).filter(Number.isFinite)),
       fantasyClicks: sumFantasyClicks(rows),
       fantasyConversion: aggregateFantasyConversion(rows),
       bucketStart: (() => {
@@ -7120,7 +7171,7 @@ function renderShortsIndicatorsHeatmap() {
     };
     return {
       label, n: data.n, medianViews: data.medianViews, medRet: data.medRet, avgDurSec: data.avgDurSec,
-      ganchoMed: data.ganchoMed, insc1k: data.insc1k, comm1k: data.comm1k,
+      ganchoMed: data.ganchoMed, inscAvg: data.inscAvg, commAvg: data.commAvg,
       fantasyClicks: data.fantasyClicks, fantasyConversion: data.fantasyConversion,
       bucketStart: data.bucketStart,
       html: `<tr style="border-bottom:1px solid var(--gray-100);">
@@ -7130,8 +7181,8 @@ function renderShortsIndicatorsHeatmap() {
         ${cell('medRet', v => v.toFixed(1) + '%')}
         ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
         ${cell('ganchoMed', v => v.toFixed(2) + '%')}
-        ${cell('insc1k', v => v.toFixed(2))}
-        ${cell('comm1k', v => v.toFixed(2))}
+        ${cell('inscAvg', v => v.toFixed(1))}
+        ${cell('commAvg', v => v.toFixed(1))}
         ${cell('fantasyClicks', v => fmtNum(v))}
         ${cell('fantasyConversion', v => fmtFantasyCR(v))}
       </tr>`
@@ -7173,8 +7224,8 @@ function renderShortsIndicatorsHeatmap() {
       <th onclick="sortShortsIndicators('medRet')" style="${thR}">Retenção Média${sortArrow('medRet')}</th>
       <th onclick="sortShortsIndicators('avgDurSec')" style="${thR}">Avg View Dur${sortArrow('avgDurSec')}</th>
       <th onclick="sortShortsIndicators('ganchoMed')" style="${thR}">Gancho Médio${sortArrow('ganchoMed')}</th>
-      <th onclick="sortShortsIndicators('insc1k')" style="${thR}">Inscritos/1K${sortArrow('insc1k')}</th>
-      <th onclick="sortShortsIndicators('comm1k')" style="${thR}">Coment./1K${sortArrow('comm1k')}</th>
+      <th onclick="sortShortsIndicators('inscAvg')" style="${thR}">Inscritos méd.${sortArrow('inscAvg')}</th>
+      <th onclick="sortShortsIndicators('commAvg')" style="${thR}">Coment. méd.${sortArrow('commAvg')}</th>
       <th onclick="sortShortsIndicators('fantasyClicks')" style="${thR}">Fantasy Clicks${sortArrow('fantasyClicks')}</th>
       <th onclick="sortShortsIndicators('fantasyConversion')" style="${thR}">Fantasy Conversion${sortArrow('fantasyConversion')}</th>
     </tr></thead>
@@ -7211,7 +7262,6 @@ function renderFeedbackTableShorts() {
 
   const statusFilter = (document.getElementById('feedbackSStatusFilter')||{}).value || '';
   const searchQ = ((document.getElementById('feedbackSSearch')||{}).value || '').toLowerCase();
-  const catColor = cat => CAT_COLORS[cat] || '#6b7280';
 
   let rows = d.map(r => ({ r, cls: classifyVideoShorts(r) }));
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
@@ -7225,21 +7275,33 @@ function renderFeedbackTableShorts() {
     return feedbackSSortDir * ((a.r[feedbackSSortCol]||0) - (b.r[feedbackSSortCol]||0));
   });
 
-  bodyEl.innerHTML = rows.map(({r, cls}) => `
+  const fbOk = ok => ok == null
+    ? 'font-weight:400;color:var(--gray-400)'
+    : (ok ? 'font-weight:700;color:#15803d' : 'font-weight:400;color:#dc2626');
+  const shCat = SHORTS_THEME;
+
+  bodyEl.innerHTML = rows.map(({r, cls}) => {
+    const oV = r.views >= THRESHOLDS_SHORTS.views;
+    const oG = Number.isFinite(r.gancho) ? r.gancho >= THRESHOLDS_SHORTS.gancho : null;
+    const oR = (r.avgViewedPct != null && r.avgViewedPct !== undefined && !Number.isNaN(r.avgViewedPct))
+      ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct : null;
+    const ganchoTxt = Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(2) + '%' : '—';
+    return `
     <tr style="border-bottom:1px solid var(--gray-100);">
       <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;">${r.title}</span>`}
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${catColor(r.categoria)}22;color:${catColor(r.categoria)};border:1px solid ${catColor(r.categoria)}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${fmtGanchoCell(r, 2)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:5px 6px;"><span style="background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}44;padding:2px 5px;border-radius:8px;font-size:9px;font-weight:700;white-space:nowrap;">${cls.icon} ${cls.status}</span></td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
-    </tr>`).join('');
+      <td style="padding:5px 6px;font-size:9px;overflow:hidden;"><span style="background:${shCat}22;color:${shCat};border:1px solid ${shCat}44;padding:2px 4px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:78px;overflow:hidden;text-overflow:ellipsis;" title="Shorts">Shorts</span></td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oG)}">${ganchoTxt}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;color:var(--gray-900);">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
+      <td style="padding:5px 6px;font-size:11px;font-weight:600;color:var(--gray-900);">${cls.status}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
+      <td style="padding:5px 6px;font-size:10px;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
+    </tr>`;
+  }).join('');
 
   if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · Gancho ≥70% · Avg Viewed% ≥75%`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
@@ -7407,24 +7469,19 @@ function renderShortsScatter() {
   const medDur = median(base.map(r => r.avgViewDurSec).filter(v => Number.isFinite(v)));
   const medGancho = median(base.map(r => r.gancho).filter(Number.isFinite));
 
-  // Group by category for datasets
-  const cats = [...new Set(d.map(r => r.categoria||'(Sem categoria)'))].sort();
-  const datasets = cats.map(cat => {
-    const rows = d.filter(r => (r.categoria||'(Sem categoria)') === cat);
-    const col = CAT_COLORS[cat] || '#64748b';
-    return {
-      label: cat,
-      data: rows.map(r => ({
-        x: r.avgViewDurSec ?? null,
-        y: Number.isFinite(r.gancho) ? r.gancho * 100 : null,
-        r: Math.max(4, Math.min(18, Math.sqrt((r.views||0)/8000))),
-        title: r.title, views: r.views, gancho: r.gancho
-      })).filter(p => p.x !== null && p.y !== null),
-      backgroundColor: col + 'aa',
-      borderColor: col,
-      borderWidth: 1,
-    };
-  });
+  // Shorts: uma série rosa (sem categoria visual)
+  const datasets = [{
+    label: 'Shorts',
+    data: d.map(r => ({
+      x: r.avgViewDurSec ?? null,
+      y: Number.isFinite(r.gancho) ? r.gancho * 100 : null,
+      r: Math.max(4, Math.min(18, Math.sqrt((r.views||0)/8000))),
+      title: r.title, views: r.views, gancho: r.gancho
+    })).filter(p => p.x !== null && p.y !== null),
+    backgroundColor: SHORTS_THEME + 'aa',
+    borderColor: SHORTS_THEME,
+    borderWidth: 1,
+  }];
 
   // Quadrant plugin
   const sQuadrantPlugin = {
@@ -7494,17 +7551,11 @@ function renderShortsScatter() {
     }
   });
 
-  // Legend — omit "(Sem categoria)" label only (data still plotted in datasets above)
   const legendEl = document.getElementById('sSScatterLegend');
   if (legendEl) {
-    const catLegend = cats.filter(cat => cat !== '(Sem categoria)').map(cat => {
-      const col = CAT_COLORS[cat]||'#64748b';
-      const n = d.filter(r=>(r.categoria||'(Sem categoria)')===cat).length;
-      return `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
-        <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;"></span>${cat} (${n})
-      </span>`;
-    }).join('');
-    legendEl.innerHTML = catLegend + `<div style="width:100%;margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10px;color:var(--gray-500);">
+    legendEl.innerHTML = `<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gray-600);">
+        <span style="width:10px;height:10px;border-radius:50%;background:${SHORTS_THEME};flex-shrink:0;display:inline-block;"></span>Shorts (${d.length})
+      </span>` + `<div style="width:100%;margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10px;color:var(--gray-500);">
       <span>↗ Alto Gancho + Alta duração — Forte abertura + forte retenção</span>
       <span>↘ Alto Gancho + Baixa duração — Boa abertura, perde atenção depois</span>
       <span>↖ Baixo Gancho + Alta duração — Quem fica assiste bem; abertura fraca</span>
