@@ -348,71 +348,89 @@
   }
   .table-search input:focus { border-color: var(--blue-500); }
   .table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; width: 100%; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
   thead th {
     background: var(--gray-100);
-    padding: 8px 4px;
+    padding: 6px 3px;
     text-align: center;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
     color: var(--gray-900);
     text-transform: uppercase;
-    letter-spacing: .1px;
+    letter-spacing: .05px;
     cursor: pointer;
     user-select: none;
     border-bottom: 2px solid var(--gray-300);
-    white-space: nowrap;
-    line-height: 1.2;
-    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.15;
+    overflow: hidden;
     position: sticky;
     top: 0;
     z-index: 5;
     vertical-align: bottom;
     height: auto;
-    min-height: 36px;
+    min-height: 40px;
     box-sizing: border-box;
   }
   thead th:hover { background: var(--blue-50); color: var(--blue-600); }
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--blue-500); }
 
-  /* Base de Dados: min-widths para headers/dados não cortarem; só Título quebra linha */
-  #dataTable { min-width: 1680px; table-layout: fixed; }
-  #dataTable th:nth-child(1)  { width:72px;  text-align:left; }   /* Data */
-  #dataTable th:nth-child(2)  { width:64px; }                     /* Semana */
-  #dataTable th:nth-child(3)  { width:72px; }                     /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:100px; text-align:left; }   /* Content ID */
-  #dataTable th:nth-child(5)  { width:220px; text-align:left; white-space:normal; } /* Título */
-  #dataTable th:nth-child(6)  { width:72px; }                     /* Tipo */
-  #dataTable th:nth-child(7)  { width:72px; }                     /* Criador */
-  #dataTable th:nth-child(8)  { width:110px; }                    /* Categoria */
-  #dataTable th:nth-child(9)  { width:64px; }                     /* Views */
-  #dataTable th:nth-child(10) { width:72px; }                     /* Fantasy Clicks */
-  #dataTable th:nth-child(11) { width:88px; }                     /* Fantasy Conversion */
-  #dataTable th:nth-child(12) { width:64px; }                     /* CTR% */
-  #dataTable th:nth-child(13) { width:72px; }                     /* Avg View Dur */
-  #dataTable th:nth-child(14) { width:64px; }                     /* Gancho */
-  #dataTable th:nth-child(15) { width:64px; }                     /* Duração */
-  #dataTable th:nth-child(16) { width:72px; }                     /* Avg View % */
-  #dataTable th:nth-child(17) { width:64px; }                     /* Impr. */
-  #dataTable th:nth-child(18) { width:64px; }                     /* CTR% YT */
-  #dataTable th:nth-child(19) { width:56px; }                     /* Likes */
-  #dataTable th:nth-child(20) { width:64px; }                     /* Inscritos */
-  #dataTable th:nth-child(21) { width:72px; }                     /* Conv. Insc. */
-  #dataTable th:nth-child(22) { width:56px; }                     /* Shares */
-  #dataTable th:nth-child(23) { width:64px; }                     /* Coment. */
-  #dataTable th:nth-child(24) { width:72px; }                     /* Conv. Comm. */
+  /* Base: caber na viewport sem scroll horizontal; headers podem quebrar linha */
+  #dataTable { width: 100%; min-width: 0; table-layout: fixed; font-size: 11px; }
+  #dataTable th:nth-child(1)  { width:3.6%; text-align:left; }  /* Data */
+  #dataTable th:nth-child(2)  { width:3.2%; }                   /* Semana */
+  #dataTable th:nth-child(3)  { width:3.4%; }                   /* Mês_Ano */
+  #dataTable th:nth-child(4)  { width:5.2%; text-align:left; }  /* Content ID */
+  #dataTable th:nth-child(5)  { width:14%;  text-align:left; }  /* Título */
+  #dataTable th:nth-child(6)  { width:3.6%; }                   /* Tipo */
+  #dataTable th:nth-child(7)  { width:3.4%; }                   /* Criador */
+  #dataTable th:nth-child(8)  { width:5%; }                     /* Categoria */
+  #dataTable th:nth-child(9)  { width:3.4%; }                   /* Views */
+  #dataTable th:nth-child(10) { width:3.6%; }                   /* Fantasy Clicks */
+  #dataTable th:nth-child(11) { width:4.2%; }                   /* Fantasy Conversion */
+  #dataTable th:nth-child(12) { width:3.2%; }                   /* CTR% */
+  #dataTable th:nth-child(13) { width:3.6%; }                   /* Avg View Dur */
+  #dataTable th:nth-child(14) { width:3.2%; }                   /* Gancho */
+  #dataTable th:nth-child(15) { width:3.2%; }                   /* Duração */
+  #dataTable th:nth-child(16) { width:3.4%; }                   /* Avg View % */
+  #dataTable th:nth-child(17) { width:3.4%; }                   /* Impr. */
+  #dataTable th:nth-child(18) { width:3.2%; }                   /* CTR% YT */
+  #dataTable th:nth-child(19) { width:3%; }                     /* Likes */
+  #dataTable th:nth-child(20) { width:3.4%; }                   /* Inscritos */
+  #dataTable th:nth-child(21) { width:3.6%; }                   /* Conv. Insc. */
+  #dataTable th:nth-child(22) { width:3%; }                     /* Shares */
+  #dataTable th:nth-child(23) { width:3.2%; }                   /* Coment. */
+  #dataTable th:nth-child(24) { width:3.6%; }                   /* Conv. Comm. */
   #dataTable td:nth-child(5) { white-space: normal; }
-  #panelBaseDados .table-wrap { overflow-x: auto; }
+  #panelBaseDados .table-card { min-height: calc(100vh - 160px); }
+  #panelBaseDados .table-wrap { overflow-x: hidden; max-height: calc(100vh - 220px); }
+  #panelBaseDados .title-cell a,
+  #panelBaseDados .title-cell span { color: var(--gray-900) !important; font-weight: 500; text-decoration: none; }
   tbody tr { border-bottom: 1px solid var(--gray-200); transition: background .1s; }
   tbody tr:hover { background: var(--blue-50); }
-  tbody td { padding: 8px 5px; color: var(--gray-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 1.35; }
+  tbody td { padding: 6px 3px; color: var(--gray-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; line-height: 1.3; }
   tbody td.title-cell {
-    font-weight: 600; color: var(--gray-900); white-space: normal;
+    font-weight: 500; color: var(--gray-900); white-space: normal;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; line-height: 1.4;
+    overflow: hidden; line-height: 1.35;
   }
-  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; font-weight: 700; color: var(--gray-900); }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 11px; font-weight: 400; color: var(--gray-900); }
+  /* Feedback filters: fundo escuro no dark mode */
+  [data-theme="dark"] #feedbackStatusFilter,
+  [data-theme="dark"] #feedbackSearch,
+  [data-theme="dark"] #feedbackSStatusFilter,
+  [data-theme="dark"] #feedbackSSearch {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+  [data-theme="dark"] #feedbackStatusFilter option,
+  [data-theme="dark"] #feedbackSStatusFilter option {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
   .creator-tag {
     display: inline-block;
     padding: 2px 6px;
@@ -486,22 +504,28 @@
   .tab-btn:hover { color:var(--blue-600); }
   .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-500); }
 
-  /* Segmented Tipo (Dashboard 2 · Base/VELHO 3 · Fantasy 5) */
+  /* Segmented Tipo — outline (não border) evita “gordurinha” no segmento ativo */
   .dash-format-seg, .tipo-format-seg {
     display: inline-flex;
     align-items: stretch;
-    border: 1px solid var(--gray-300);
+    border: none;
+    outline: 1px solid var(--gray-300);
+    outline-offset: -1px;
     border-radius: 999px;
     overflow: hidden;
     background: var(--input-bg);
     height: 36px;
     flex: 0 0 auto;
     max-width: 100%;
+    padding: 0;
+    gap: 0;
   }
   .dash-format-seg button, .tipo-format-seg button {
-    border: none;
+    border: none !important;
+    border-radius: 0 !important;
     background: transparent;
-    padding: 0 12px;
+    padding: 0 14px;
+    margin: 0;
     font-size: 12px;
     font-weight: 600;
     color: var(--gray-600);
@@ -509,6 +533,8 @@
     white-space: nowrap;
     transition: background .15s, color .15s;
     line-height: 1;
+    align-self: stretch;
+    height: 100%;
   }
   .dash-format-seg button:hover:not(.active),
   .tipo-format-seg button:hover:not(.active) {
@@ -519,18 +545,18 @@
     background: var(--blue-500);
     color: #fff;
   }
-  /* Sem border-radius nos botões: o overflow:hidden do pai corta no fio
-     e evita a “gordurinha” branca nos cantos do segmento ativo */
   .dash-format-seg button + button, .tipo-format-seg button + button {
-    border-left: 1px solid var(--gray-300);
+    box-shadow: inset 1px 0 0 var(--gray-300);
+  }
+  .dash-format-seg button.active,
+  .tipo-format-seg button.active,
+  .dash-format-seg button:has(+ .active),
+  .tipo-format-seg button:has(+ .active) {
+    box-shadow: none;
   }
   .dash-format-seg button.active + button,
-  .tipo-format-seg button.active + button,
-  .dash-format-seg button:has(+ .active),
-  .tipo-format-seg button:has(+ .active),
-  .dash-format-seg button.active,
-  .tipo-format-seg button.active {
-    border-left-color: transparent;
+  .tipo-format-seg button.active + button {
+    box-shadow: none;
   }
   /* Fantasy 5 opções: compacto no desktop, wrap limpo em telas estreitas */
   #filterTipoGroup {
@@ -1467,7 +1493,7 @@
 <div id="panelFeedbacks" class="main" style="display:none;">
 
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Long Form</h2></div>
-  <p class="section-desc">Classificação de cada vídeo Long Form com limiares fixos: Views ≥48K, CTR% ≥7.6%, Avg Viewed % ≥40%, Avg View Duration ≥6:00 e Gancho ≥70%. Score ≥3 critérios = Escalar.</p>
+  <p class="section-desc">Classificação Long Form: Escalar = CTR% ≥8% · Avg Viewed% ≥40% · Views ≥49K. Demais status pelas combinações de CTR e Avg Viewed%.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -1476,8 +1502,8 @@
           <option value="">Todos os diagnósticos</option>
           <option value="Escalar">🟢 Escalar</option>
           <option value="Reembalar">🔵 Reembalar</option>
-          <option value="Rever Formato">🔴 Rever Formato</option>
-          <option value="Ajustar Entrega">🟡 Ajustar Entrega</option>
+          <option value="Storytelling">🟡 Storytelling</option>
+          <option value="Não Escalar">🔴 Não Escalar</option>
         </select>
         <input type="text" id="feedbackSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTable()"
           style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
@@ -1518,7 +1544,7 @@
   </div>
 
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true" style="margin-top:16px;"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação com limiares: ≥98.1K views E Gancho ≥70% E Avg Viewed% ≥75% = Escalar.</p>
+  <p class="section-desc">Classificação Shorts: Escalar = Gancho% ≥71% · Avg Viewed% ≥80% · Views ≥114K. Demais status pelas combinações de Gancho e Avg Viewed%.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackSTitle">Todos os Shorts</h3>
@@ -1526,9 +1552,9 @@
         <select id="feedbackSStatusFilter" onchange="renderFeedbackTableShorts()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
           <option value="">Todos os diagnósticos</option>
           <option value="Escalar">🟢 Escalar</option>
-          <option value="Ajustar entrega">🟡 Ajustar entrega</option>
-          <option value="Reembalar">🔵 Reembalar</option>
-          <option value="Rever formato">🔴 Rever formato</option>
+          <option value="Gancho">🔵 Gancho</option>
+          <option value="Storytelling">🟡 Storytelling</option>
+          <option value="Não Escalar">🔴 Não Escalar</option>
         </select>
         <input type="text" id="feedbackSSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTableShorts()"
           style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
@@ -5625,14 +5651,14 @@ function renderTable() {
       <td style="white-space:nowrap;font-variant-numeric:normal;">${contentId}</td>
       <td class="title-cell">
         ${r.link
-          ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:var(--blue-600);text-decoration:none;font-weight:500;" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
-          : `<span title="${r.title.replace(/"/g,'&quot;')}" style="font-weight:500;">${r.title}</span>`
+          ? `<a href="${r.link}" target="_blank" rel="noopener" title="${r.title.replace(/"/g,'&quot;')}">${r.title}</a>`
+          : `<span title="${r.title.replace(/"/g,'&quot;')}">${r.title}</span>`
         }
       </td>
       <td style="white-space:nowrap;">${r.tipo||'—'}</td>
       <td><span class="creator-tag">${r.creator||'—'}</span></td>
       <td><span class="creator-tag" style="background:${catBg};color:${catColor};border:1px solid ${catColor}44;">${catLabel}</span></td>
-      <td class="num">${fmtNum(r.views)}</td>
+      <td class="num">${fmtNumInt(r.views)}</td>
       <td class="num">${r.fantasyClicks != null && Number.isFinite(r.fantasyClicks) ? fmtNum(r.fantasyClicks) : '—'}</td>
       <td class="num">${r.fantasyConversion != null && Number.isFinite(r.fantasyConversion) ? fmtFantasyCRBase(r.fantasyConversion) : '—'}</td>
       <td class="num">${fmtCtrCell(r)}</td>
@@ -5642,7 +5668,7 @@ function renderTable() {
       <td class="num">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td class="num">${fmtNumInt(r.impressoes)}</td>
       <td class="num">${(r.ctrYT||0).toFixed(1)}%</td>
-      <td class="num">${r.likes.toLocaleString('pt-BR')}</td>
+      <td class="num">${fmtNumInt(r.likes)}</td>
       <td class="num">${r.inscritos.toLocaleString('pt-BR')}</td>
       <td class="num">${(r.conversao*100).toFixed(1)}%</td>
       <td class="num">${r.shares.toLocaleString('pt-BR')}</td>
@@ -5708,6 +5734,19 @@ function renderScatter() {
     catMap[cat].push(r);
   });
 
+  const scatterPts = d.filter(r => Number.isFinite(r.avgViewDurSec) && Number.isFinite(r.ctr));
+  const qTotal = scatterPts.length || 1;
+  const qCounts = { tr:0, br:0, tl:0, bl:0 };
+  scatterPts.forEach(r => {
+    const right = r.avgViewDurSec >= medDur;
+    const top = r.ctr >= medCTR;
+    if (right && top) qCounts.tr++;
+    else if (right && !top) qCounts.br++;
+    else if (!right && top) qCounts.tl++;
+    else qCounts.bl++;
+  });
+  const qPct = k => ((qCounts[k] / qTotal) * 100).toFixed(0) + '%';
+
   const datasets = Object.entries(catMap).map(([cat, rows]) => ({
     label: cat,
     data: rows.map(r => ({
@@ -5760,11 +5799,26 @@ function renderScatter() {
         { x1:left, y1:yMed,  x2:xMed,  y2:bottom, color:quadrantFills[3] },
       ].forEach(q => { c.fillStyle = q.color; c.fillRect(q.x1, q.y1, q.x2-q.x1, q.y2-q.y1); });
 
-      // Draw dashed lines (mais visíveis no dark)
       c.strokeStyle = quadrantLine; c.lineWidth = dark ? 2 : 1.5; c.setLineDash([6,4]);
       c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
       c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
       c.setLineDash([]);
+
+      // % labels no centro de cada quadrante
+      const pctStyle = dark ? '#f8fafc' : '#111827';
+      c.font = 'bold 12px system-ui, sans-serif';
+      c.fillStyle = pctStyle;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      const drawPct = (x1, y1, x2, y2, label) => {
+        c.globalAlpha = 0.9;
+        c.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2);
+        c.globalAlpha = 1;
+      };
+      drawPct(xMed, top, right, yMed, qPct('tr'));
+      drawPct(xMed, yMed, right, bottom, qPct('br'));
+      drawPct(left, top, xMed, yMed, qPct('tl'));
+      drawPct(left, yMed, xMed, bottom, qPct('bl'));
 
       const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
       c.font = 'bold 10px system-ui, sans-serif';
@@ -5830,57 +5884,43 @@ function renderScatter() {
 
 // ── FEEDBACK TABLE ────────────────────────────────────────────────────────────
 
-// Shorts-specific classification thresholds
-const THRESHOLDS_SHORTS = { views: 98100, gancho: 0.70, avgViewedPct: 75 };
+// Shorts classification: Gancho + Avg Viewed% + Views
+const THRESHOLDS_SHORTS = { views: 114000, gancho: 0.71, avgViewedPct: 80 };
 
-// Long Form classification thresholds
+// Long Form classification: CTR + Avg Viewed% + Views (sem Gancho / Avg View Dur)
 const THRESHOLDS = {
-  views:        48000,   // >=48K views
-  ctr:          0.076,   // >=7.6% CTR
+  views:        49000,   // >=49K views
+  ctr:          0.08,    // >=8% CTR
   avgViewedPct: 40,      // >=40% avg viewed
-  gancho:       0.70,    // >=70% gancho
-  avgViewDurSec:360,     // >=6:00 avg view duration
 };
 
 function classifyVideo(r) {
-  // Gate obrigatório: sem views mínimas, não pode ser Escalar
-  const highViews = r.views >= THRESHOLDS.views;
+  const highViews = (r.views || 0) >= THRESHOLDS.views;
+  const highCTR = Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr;
+  const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS.avgViewedPct;
 
-  // Score dos outros 4 critérios (null = ignorado)
-  let score = 0;
-  if (Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr) score++;
-  if (r.avgViewedPct !== null && r.avgViewedPct !== undefined && r.avgViewedPct >= THRESHOLDS.avgViewedPct) score++;
-  if (r.gancho !== null && r.gancho !== undefined && r.gancho >= THRESHOLDS.gancho) score++;
-  if (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec) score++;
-
-  // Helper flags for secondary statuses
-  const highCTR     = Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr;
-  const highAvgView = (r.avgViewedPct === null || r.avgViewedPct === undefined) ? true : r.avgViewedPct >= THRESHOLDS.avgViewedPct;
-  const highGancho  = (r.gancho === null || r.gancho === undefined) ? true : r.gancho >= THRESHOLDS.gancho;
-
-  if (highViews && score >= 3)
-    return { status:'Escalar',        color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar',   acao:'Fazer sequencia e replicar o formato' };
-  if (!highViews && !highCTR && highGancho && highAvgView)
-    return { status:'Reembalar',      color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
-  if (!highViews && !highCTR && !highGancho && !highAvgView)
-    return { status:'Rever Formato',  color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato',  acao:'Revisar pauta e reformular formato' };
-  return { status:'Ajustar Entrega', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Ajuste necessario',     acao:'Verificar metrica mais fraca' };
+  if (highViews && highCTR && highAvg)
+    return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
+  // Demais: pelas 2 métricas (CTR × Avg Viewed); views altas sem Escalar caem aqui
+  if (!highCTR && highAvg)
+    return { status:'Reembalar', color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
+  if (highCTR && !highAvg)
+    return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
+  return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
 }
 
 function classifyVideoShorts(r) {
-  const highViews = r.views >= THRESHOLDS_SHORTS.views;
+  const highViews = (r.views || 0) >= THRESHOLDS_SHORTS.views;
   const highGancho = Number.isFinite(r.gancho) && r.gancho >= THRESHOLDS_SHORTS.gancho;
-  const highAvgView = (r.avgViewedPct !== null && r.avgViewedPct !== undefined && !Number.isNaN(r.avgViewedPct))
-    ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct
-    : false;
+  const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct;
 
-  if (highViews && highGancho && highAvgView)
-    return { status:'Escalar',         color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar',       acao:'Fazer sequencia e replicar o formato' };
-  if (!highViews && !highGancho && highAvgView)
-    return { status:'Reembalar',       color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Melhorar abertura / hook', acao:'Revisar primeiros segundos e hook' };
-  if (!highViews && !highGancho && !highAvgView)
-    return { status:'Rever formato',   color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato',      acao:'Revisar pauta e reformular formato' };
-  return { status:'Ajustar entrega', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Ajuste necessario',         acao:'Verificar metrica mais fraca' };
+  if (highViews && highGancho && highAvg)
+    return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
+  if (!highGancho && highAvg)
+    return { status:'Gancho', color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Melhorar abertura / hook', acao:'Revisar primeiros segundos e hook' };
+  if (highGancho && !highAvg)
+    return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
+  return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
 }
 
 let feedbackSortCol = 'status';
@@ -5908,7 +5948,7 @@ function renderFeedbackTable() {
   if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
 
   // Sort
-  const statusOrder = ['Escalar','Reembalar','Ajustar entrega','Rever formato'];
+  const statusOrder = ['Escalar','Reembalar','Storytelling','Não Escalar'];
   rows.sort((a, b) => {
     let av, bv;
     if (feedbackSortCol === 'status') {
@@ -5930,13 +5970,12 @@ function renderFeedbackTable() {
     ? 'font-weight:400;color:var(--gray-400)'
     : (ok ? 'font-weight:700;color:#4ade80' : 'font-weight:400;color:#fca5a5');
   const titleLink = getTheme() === 'dark' ? '#f3f4f6' : 'var(--gray-800)';
+  const neut = 'font-weight:400;color:var(--gray-700)';
 
   document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => {
     const oV = r.views >= THRESHOLDS.views;
     const oC = Number.isFinite(r.ctr) ? r.ctr >= THRESHOLDS.ctr : null;
-    const oD = (r.avgViewDurSec != null && r.avgViewDurSec !== undefined) ? r.avgViewDurSec >= THRESHOLDS.avgViewDurSec : null;
-    const oR = (r.avgViewedPct != null && r.avgViewedPct !== undefined) ? r.avgViewedPct >= THRESHOLDS.avgViewedPct : null;
-    const oG = (r.gancho != null && r.gancho !== undefined) ? r.gancho >= THRESHOLDS.gancho : null;
+    const oR = Number.isFinite(r.avgViewedPct) ? r.avgViewedPct >= THRESHOLDS.avgViewedPct : null;
     const cc = catColor(r.categoria);
     return `
     <tr style="border-bottom:1px solid var(--gray-100);">
@@ -5947,9 +5986,9 @@ function renderFeedbackTable() {
       <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${cc}22;color:${cc};border:1px solid ${cc}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oC)}">${Number.isFinite(r.ctr) ? (r.ctr*100).toFixed(2)+'%' : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oD)}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oG)}">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
       <td style="padding:5px 6px;font-size:11px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:10px;white-space:nowrap;background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}55;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
@@ -5957,7 +5996,7 @@ function renderFeedbackTable() {
   }).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Score ≥3: Views ≥48K · CTR% ≥7.6% · Avg Viewed% ≥40% · Avg View Dur ≥6:00 · Gancho ≥70%`;
+    `${rows.length} vídeos · Escalar: Views ≥49K · CTR% ≥8% · Avg Viewed% ≥40%`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
@@ -7290,7 +7329,7 @@ function renderFeedbackTableShorts() {
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
   if (searchQ) rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ) || (r.creator||'').toLowerCase().includes(searchQ));
 
-  const order = ['Escalar','Reembalar','Ajustar entrega','Rever formato'];
+  const order = ['Escalar','Gancho','Storytelling','Não Escalar'];
   rows.sort((a,b) => {
     if (feedbackSSortCol === 'status') return feedbackSSortDir * (order.indexOf(a.cls.status) - order.indexOf(b.cls.status));
     if (feedbackSSortCol === 'creator') return feedbackSSortDir * (a.r.creator||'').localeCompare(b.r.creator||'');
@@ -7303,12 +7342,12 @@ function renderFeedbackTableShorts() {
     : (ok ? 'font-weight:700;color:#4ade80' : 'font-weight:400;color:#fca5a5');
   const shCat = SHORTS_THEME;
   const titleLink = getTheme() === 'dark' ? '#f3f4f6' : 'var(--gray-800)';
+  const neut = 'font-weight:400;color:var(--gray-700)';
 
   bodyEl.innerHTML = rows.map(({r, cls}) => {
     const oV = r.views >= THRESHOLDS_SHORTS.views;
     const oG = Number.isFinite(r.gancho) ? r.gancho >= THRESHOLDS_SHORTS.gancho : null;
-    const oR = (r.avgViewedPct != null && r.avgViewedPct !== undefined && !Number.isNaN(r.avgViewedPct))
-      ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct : null;
+    const oR = Number.isFinite(r.avgViewedPct) ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct : null;
     const ganchoTxt = Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(2) + '%' : '—';
     return `
     <tr style="border-bottom:1px solid var(--gray-100);">
@@ -7319,7 +7358,7 @@ function renderFeedbackTableShorts() {
       <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${shCat}22;color:${shCat};border:1px solid ${shCat}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="Shorts">Shorts</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oG)}">${ganchoTxt}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;color:var(--gray-700);">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;font-size:11px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:10px;white-space:nowrap;background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}55;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
@@ -7327,7 +7366,7 @@ function renderFeedbackTableShorts() {
     </tr>`;
   }).join('');
 
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Limiares: ≥98.1K views · Gancho ≥70% · Avg Viewed% ≥75%`;
+  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Escalar: Views ≥114K · Gancho ≥71% · Avg Viewed% ≥80%`;
   if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
@@ -7507,6 +7546,20 @@ function renderShortsScatter() {
     borderWidth: 1,
   }];
 
+  const scatterPts = datasets[0].data;
+  const qTotal = scatterPts.length || 1;
+  const medGPct = medGancho * 100;
+  const qCounts = { tr:0, br:0, tl:0, bl:0 };
+  scatterPts.forEach(p => {
+    const right = p.x >= medDur;
+    const topQ = p.y >= medGPct;
+    if (right && topQ) qCounts.tr++;
+    else if (right && !topQ) qCounts.br++;
+    else if (!right && topQ) qCounts.tl++;
+    else qCounts.bl++;
+  });
+  const qPct = k => ((qCounts[k] / qTotal) * 100).toFixed(0) + '%';
+
   const dark = getTheme() === 'dark';
   const quadrantFills = dark
     ? [
@@ -7528,7 +7581,7 @@ function renderShortsScatter() {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
       const xMed = scales.x.getPixelForValue(medDur);
-      const yMed = scales.y.getPixelForValue(medGancho * 100);
+      const yMed = scales.y.getPixelForValue(medGPct);
       c.save();
       [
         { x1:xMed, y1:top,   x2:right, y2:yMed,   color:quadrantFills[0] },
@@ -7541,6 +7594,21 @@ function renderShortsScatter() {
       c.beginPath(); c.moveTo(xMed, top); c.lineTo(xMed, bottom); c.stroke();
       c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
       c.setLineDash([]);
+
+      const pctStyle = dark ? '#f8fafc' : '#111827';
+      c.font = 'bold 12px system-ui, sans-serif';
+      c.fillStyle = pctStyle;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      const drawPct = (x1, y1, x2, y2, label) => {
+        c.globalAlpha = 0.9;
+        c.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2);
+        c.globalAlpha = 1;
+      };
+      drawPct(xMed, top, right, yMed, qPct('tr'));
+      drawPct(xMed, yMed, right, bottom, qPct('br'));
+      drawPct(left, top, xMed, yMed, qPct('tl'));
+      drawPct(left, yMed, xMed, bottom, qPct('bl'));
 
       const ganchoLabel = `Gancho ${(medGancho*100).toFixed(1)}%`;
       c.font = 'bold 10px system-ui,sans-serif';
