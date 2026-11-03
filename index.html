@@ -236,13 +236,13 @@
     white-space: nowrap;
   }
   .filter-anchor { position: relative; }
+  .filter-btns { display: inline-flex; align-items: center; gap: 8px; }
   .filters-popover {
     display: none;
     position: absolute;
     top: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(920px, calc(100vw - 32px));
+    left: 0;
+    width: min(420px, calc(100vw - 32px));
     max-height: min(78vh, 720px);
     overflow-x: hidden;
     overflow-y: auto;
@@ -250,24 +250,22 @@
     border: 1px solid var(--surface-border);
     border-radius: 20px;
     box-shadow: 0 24px 64px rgba(0,0,0,.45);
-    padding: 18px 18px 16px;
+    padding: 16px 16px 14px;
     z-index: 300;
   }
-  .filters-popover .title-dropdown {
-    z-index: 320;
-  }
+  .filters-popover .title-dropdown { z-index: 320; }
   .filters-popover.open { display: block; }
   .filters-popover-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 4px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--surface-border);
   }
   .filters-popover-head h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--gray-900);
   }
@@ -285,18 +283,147 @@
     padding: 0;
     margin: 0;
     box-shadow: none;
+    display: block;
   }
+  .fp-section {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .fp-section:last-of-type { border-bottom: none; }
+  .fp-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0 0 10px;
+  }
+  .fp-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .fp-toggle-btn {
+    border: 1px solid var(--surface-border);
+    background: transparent;
+    color: var(--gray-700);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .fp-toggle-btn:hover:not(:disabled) { border-color: color-mix(in srgb, var(--accent) 45%, var(--surface-border)); color: var(--accent); }
+  .fp-toggle-btn.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .fp-toggle-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+  .fp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .fp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--surface-border);
+    background: transparent;
+    color: var(--gray-800);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: border-color .15s, box-shadow .15s, opacity .15s;
+  }
+  .fp-chip:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--surface-border)); }
+  .fp-chip.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .fp-chip.disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .fp-chip-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+  .fp-chip-check {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-400);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .fp-chip.selected .fp-chip-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .fp-chip.selected .fp-chip-check svg { display: block; }
+  .fp-chip-check svg { display: none; width: 9px; height: 9px; }
+  .fp-date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .fp-date-row .filter-group { min-width: 0; width: 100%; }
+  .fp-date-row input[type=date] { width: 100%; }
   .filters-popover-actions {
     display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-top: 14px;
+    margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid var(--surface-border);
     position: sticky;
     bottom: 0;
     background: var(--surface-card);
   }
+  .filters-popover-actions .btn-apply {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .filters-popover-actions .btn-apply:hover { filter: brightness(1.05); }
+  .filters-popover .filter-ranges-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    overflow: visible;
+  }
+  .filters-popover .filter-group.filter-range-group {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+  #filterValoresSection.ranges-disabled { display: none !important; }
+  .filters-popover .title-search-wrap { width: 100%; }
+  .filters-popover .title-search-wrap input { width: 100%; }
   #csvFile { display: none; }
   @media (max-width: 1100px) {
     .app-chrome {
@@ -304,7 +431,7 @@
       justify-items: stretch;
     }
     .chrome-center, .chrome-right, .brand { justify-content: flex-start; }
-    .filters-popover { left: 0; transform: none; width: min(920px, calc(100vw - 24px)); }
+    .filters-popover { left: 0; width: min(420px, calc(100vw - 24px)); }
   }
 
   /* MAIN */
@@ -1382,9 +1509,14 @@
     </div>
 
     <div class="filter-anchor">
-      <button type="button" id="btnFiltersToggle" class="btn-circle" onclick="toggleFiltersPopover(event)" title="Filtros" aria-haspopup="dialog" aria-expanded="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-      </button>
+      <div class="filter-btns">
+        <button type="button" id="btnFiltersToggle" class="btn-circle" onclick="toggleFiltersPopover(event)" title="Filtros" aria-haspopup="dialog" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        </button>
+        <button type="button" id="btnFiltersReset" class="btn-circle" onclick="resetFiltersDefault(event)" title="Limpar filtros" aria-label="Limpar filtros">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.1-3.4L23 10M1 14l5.4 4.4A9 9 0 0 0 20.5 15"/></svg>
+        </button>
+      </div>
       <div class="filters-popover" id="filtersPopover" role="dialog" aria-label="Filtros">
         <div class="filters-popover-head">
           <h3>Filtros</h3>
@@ -1393,162 +1525,164 @@
           </button>
         </div>
         <div class="filters-card" id="filtersSticky">
-    <div class="filter-group">
-      <label>Criador</label>
-      <select id="filterCreator">
-        <option value="">Todos os Criadores</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Categoria</label>
-      <div class="title-search-wrap" id="catWrap">
-        <input type="text" id="filterCategoriaInput" placeholder="Todas as Categorias" readonly
-          onclick="toggleCatDropdown()" style="cursor:pointer;background:var(--input-bg);">
-        <div class="title-dropdown" id="catDropdown"></div>
-      </div>
-    </div>
-    <!-- Slot TIPO por aba: Dashboard XOR Base/VELHO XOR Fantasy -->
-    <div class="filter-group" id="dashboardTipoGroup">
-      <label>TIPO</label>
-      <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Tipo do Dashboard" title="Tipo">
-        <button type="button" id="btnDashFormatLF" class="active" onclick="setDashboardFormat('longform')">Long Form</button>
-        <button type="button" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
-      </div>
-    </div>
-    <div class="filter-group" id="baseVelhoTipoGroup" style="display:none;">
-      <label>TIPO</label>
-      <div class="tipo-format-seg" id="baseVelhoTipoSeg" role="group" aria-label="Tipo Base/VELHO" title="Tipo">
-        <button type="button" id="btnBaseVelhoTipoAll" class="active" onclick="setBaseVelhoTipo('')">Todos</button>
-        <button type="button" id="btnBaseVelhoTipoLF" onclick="setBaseVelhoTipo('long')">Long Form</button>
-        <button type="button" id="btnBaseVelhoTipoShorts" onclick="setBaseVelhoTipo('shorts')">Shorts</button>
-      </div>
-    </div>
-    <div class="filter-group" id="filterTipoGroup" style="display:none;">
-      <label>TIPO</label>
-      <div class="tipo-format-seg fantasy-tipo-seg" id="fantasyTipoSeg" role="group" aria-label="Tipo Fantasy" title="Tipo">
-        <button type="button" id="btnFantasyTipoAll" class="active" onclick="setFantasyFormatFilter('')">Todos</button>
-        <button type="button" id="btnFantasyTipoLF" onclick="setFantasyFormatFilter('long')">Long Form</button>
-        <button type="button" id="btnFantasyTipoShorts" onclick="setFantasyFormatFilter('shorts')">Shorts</button>
-        <button type="button" id="btnFantasyTipoLive" onclick="setFantasyFormatFilter('live')">Live</button>
-        <button type="button" id="btnFantasyTipoBio" onclick="setFantasyFormatFilter('bio')">BIO</button>
-      </div>
-    </div>
-    <div class="filter-group">
-      <label id="filterDateStartLabel">DATA PUB. INÍCIO</label>
-      <input type="date" id="filterDateStart">
-    </div>
-    <div class="filter-group">
-      <label id="filterDateEndLabel">DATA PUB. FIM</label>
-      <input type="date" id="filterDateEnd">
-    </div>
-    <div class="filter-group">
-      <label id="filterWeekLabel">SEMANA DE PUBLICAÇÃO</label>
-      <div class="title-search-wrap" id="weekWrap">
-        <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
-          onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);">
-        <div class="title-dropdown" id="weekDropdown"></div>
-      </div>
-    </div>
-    <div class="filter-group">
-      <label>Título do Vídeo</label>
-      <div class="title-search-wrap" id="titleWrap">
-        <input type="text" id="filterTitleSearch" placeholder="Todos os Títulos" autocomplete="off"
-          oninput="onTitleSearchInput()" onfocus="onTitleFocus()" onblur="onTitleBlur()">
-        <div class="title-dropdown" id="titleDropdown"></div>
-      </div>
-    </div>
-    <div class="filter-ranges-grid">
-      <div class="filter-group filter-range-group" data-range="views">
-        <label>Views</label>
-        <div class="filter-range">
-          <input type="number" id="filterViewsMin" step="1" inputmode="numeric" placeholder="-">
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterViewsFill"></div>
-            <input type="range" id="filterViewsMinRange" min="0" max="1000" step="1" aria-label="Views mínimo">
-            <input type="range" id="filterViewsMaxRange" min="0" max="1000" step="1" aria-label="Views máximo">
+          <select id="filterCreator" hidden aria-hidden="true"><option value="">Todos</option></select>
+
+          <div class="fp-section">
+            <h4 class="fp-section-title">Criadores</h4>
+            <div class="fp-toggle" id="creatorToggle" role="group" aria-label="Criadores"></div>
           </div>
-          <input type="number" id="filterViewsMax" step="1" inputmode="numeric" placeholder="-">
-        </div>
-      </div>
-      <div class="filter-group filter-range-group" data-range="outlier">
-        <label>Outlier</label>
-        <div class="filter-range">
-          <input type="number" id="filterOutlierMin" step="0.1" inputmode="decimal" placeholder="-">
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterOutlierFill"></div>
-            <input type="range" id="filterOutlierMinRange" min="0" max="1000" step="1" aria-label="Outlier mínimo">
-            <input type="range" id="filterOutlierMaxRange" min="0" max="1000" step="1" aria-label="Outlier máximo">
+
+          <div class="fp-section" id="dashboardTipoGroup">
+            <h4 class="fp-section-title">Tipo</h4>
+            <div class="fp-toggle" id="dashFormatSeg" role="group" aria-label="Tipo do Dashboard">
+              <button type="button" class="fp-toggle-btn active" id="btnDashFormatLF" onclick="setDashboardFormat('longform')">Long Form</button>
+              <button type="button" class="fp-toggle-btn" id="btnDashFormatShorts" onclick="setDashboardFormat('shorts')">Shorts</button>
+            </div>
           </div>
-          <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal" placeholder="-">
-        </div>
-      </div>
-      <div class="filter-group filter-range-group" data-range="ctr">
-        <label>CTR %</label>
-        <div class="filter-range">
-          <input type="number" id="filterCtrMin" step="0.1" inputmode="decimal" placeholder="-">
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterCtrFill"></div>
-            <input type="range" id="filterCtrMinRange" min="0" max="1000" step="1" aria-label="CTR mínimo">
-            <input type="range" id="filterCtrMaxRange" min="0" max="1000" step="1" aria-label="CTR máximo">
+          <div class="fp-section" id="baseVelhoTipoGroup" style="display:none;">
+            <h4 class="fp-section-title">Tipo</h4>
+            <div class="fp-toggle" id="baseVelhoTipoSeg" role="group" aria-label="Tipo Base/VELHO">
+              <button type="button" class="fp-toggle-btn" id="btnBaseVelhoTipoAll" onclick="setBaseVelhoTipo('')">Todos</button>
+              <button type="button" class="fp-toggle-btn active" id="btnBaseVelhoTipoLF" onclick="setBaseVelhoTipo('long')">Long Form</button>
+              <button type="button" class="fp-toggle-btn" id="btnBaseVelhoTipoShorts" onclick="setBaseVelhoTipo('shorts')">Shorts</button>
+            </div>
           </div>
-          <input type="number" id="filterCtrMax" step="0.1" inputmode="decimal" placeholder="-">
-        </div>
-      </div>
-      <div class="filter-group filter-range-group" data-range="duration">
-        <label>Avg View Duration</label>
-        <div class="filter-range">
-          <div class="filter-range-time">
-            <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima minutos">
-            <span class="time-sep">:</span>
-            <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima segundos">
+          <div class="fp-section" id="filterTipoGroup" style="display:none;">
+            <h4 class="fp-section-title">Tipo</h4>
+            <div class="fp-toggle fantasy-tipo-seg" id="fantasyTipoSeg" role="group" aria-label="Tipo Fantasy">
+              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoAll" onclick="setFantasyFormatFilter('')">Todos</button>
+              <button type="button" class="fp-toggle-btn active" id="btnFantasyTipoLF" onclick="setFantasyFormatFilter('long')">Long Form</button>
+              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoShorts" onclick="setFantasyFormatFilter('shorts')">Shorts</button>
+              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoLive" onclick="setFantasyFormatFilter('live')">Live</button>
+              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoBio" onclick="setFantasyFormatFilter('bio')">BIO</button>
+            </div>
           </div>
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterDurFill"></div>
-            <input type="range" id="filterDurMinRange" min="0" max="1000" step="1" aria-label="Avg View Duration mínimo">
-            <input type="range" id="filterDurMaxRange" min="0" max="1000" step="1" aria-label="Avg View Duration máximo">
+
+          <div class="fp-section">
+            <h4 class="fp-section-title">Categoria</h4>
+            <div class="fp-chips" id="categoryChips" role="group" aria-label="Categorias"></div>
+            <div id="catWrap" style="display:none;">
+              <input type="text" id="filterCategoriaInput" readonly>
+              <div class="title-dropdown" id="catDropdown"></div>
+            </div>
           </div>
-          <div class="filter-range-time">
-            <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima minutos">
-            <span class="time-sep">:</span>
-            <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima segundos">
+
+          <div class="fp-section">
+            <h4 class="fp-section-title">Data</h4>
+            <div class="fp-date-row">
+              <div class="filter-group">
+                <label id="filterDateStartLabel">Início</label>
+                <input type="date" id="filterDateStart">
+              </div>
+              <div class="filter-group">
+                <label id="filterDateEndLabel">Fim</label>
+                <input type="date" id="filterDateEnd">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label id="filterWeekLabel">Semana</label>
+              <div class="title-search-wrap" id="weekWrap">
+                <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
+                  onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);width:100%;">
+                <div class="title-dropdown" id="weekDropdown"></div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="filter-group filter-range-group" data-range="gancho">
-        <label>Gancho %</label>
-        <div class="filter-range">
-          <input type="number" id="filterGanchoMin" step="0.1" inputmode="decimal" placeholder="-">
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterGanchoFill"></div>
-            <input type="range" id="filterGanchoMinRange" min="0" max="1000" step="1" aria-label="Gancho mínimo">
-            <input type="range" id="filterGanchoMaxRange" min="0" max="1000" step="1" aria-label="Gancho máximo">
+
+          <div class="fp-section" id="filterValoresSection">
+            <h4 class="fp-section-title">Valores</h4>
+            <div class="filter-ranges-grid">
+              <div class="filter-group filter-range-group" data-range="views">
+                <label>Views</label>
+                <div class="filter-range">
+                  <input type="number" id="filterViewsMin" step="1" inputmode="numeric" placeholder="-">
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterViewsFill"></div>
+                    <input type="range" id="filterViewsMinRange" min="0" max="1000" step="1" aria-label="Views mínimo">
+                    <input type="range" id="filterViewsMaxRange" min="0" max="1000" step="1" aria-label="Views máximo">
+                  </div>
+                  <input type="number" id="filterViewsMax" step="1" inputmode="numeric" placeholder="-">
+                </div>
+              </div>
+              <div class="filter-group filter-range-group" data-range="outlier">
+                <label>Outlier</label>
+                <div class="filter-range">
+                  <input type="number" id="filterOutlierMin" step="0.1" inputmode="decimal" placeholder="-">
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterOutlierFill"></div>
+                    <input type="range" id="filterOutlierMinRange" min="0" max="1000" step="1" aria-label="Outlier mínimo">
+                    <input type="range" id="filterOutlierMaxRange" min="0" max="1000" step="1" aria-label="Outlier máximo">
+                  </div>
+                  <input type="number" id="filterOutlierMax" step="0.1" inputmode="decimal" placeholder="-">
+                </div>
+              </div>
+              <div class="filter-group filter-range-group" data-range="ctr">
+                <label>CTR %</label>
+                <div class="filter-range">
+                  <input type="number" id="filterCtrMin" step="0.1" inputmode="decimal" placeholder="-">
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterCtrFill"></div>
+                    <input type="range" id="filterCtrMinRange" min="0" max="1000" step="1" aria-label="CTR mínimo">
+                    <input type="range" id="filterCtrMaxRange" min="0" max="1000" step="1" aria-label="CTR máximo">
+                  </div>
+                  <input type="number" id="filterCtrMax" step="0.1" inputmode="decimal" placeholder="-">
+                </div>
+              </div>
+              <div class="filter-group filter-range-group" data-range="duration">
+                <label>Avg View Duration</label>
+                <div class="filter-range">
+                  <div class="filter-range-time">
+                    <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima minutos">
+                    <span class="time-sep">:</span>
+                    <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima segundos">
+                  </div>
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterDurFill"></div>
+                    <input type="range" id="filterDurMinRange" min="0" max="1000" step="1" aria-label="Avg View Duration mínimo">
+                    <input type="range" id="filterDurMaxRange" min="0" max="1000" step="1" aria-label="Avg View Duration máximo">
+                  </div>
+                  <div class="filter-range-time">
+                    <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima minutos">
+                    <span class="time-sep">:</span>
+                    <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima segundos">
+                  </div>
+                </div>
+              </div>
+              <div class="filter-group filter-range-group" data-range="gancho">
+                <label>Gancho %</label>
+                <div class="filter-range">
+                  <input type="number" id="filterGanchoMin" step="0.1" inputmode="decimal" placeholder="-">
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterGanchoFill"></div>
+                    <input type="range" id="filterGanchoMinRange" min="0" max="1000" step="1" aria-label="Gancho mínimo">
+                    <input type="range" id="filterGanchoMaxRange" min="0" max="1000" step="1" aria-label="Gancho máximo">
+                  </div>
+                  <input type="number" id="filterGanchoMax" step="0.1" inputmode="decimal" placeholder="-">
+                </div>
+              </div>
+              <div class="filter-group filter-range-group" data-range="avgviewed">
+                <label>Avg Viewed %</label>
+                <div class="filter-range">
+                  <input type="number" id="filterAvgViewedMin" step="0.1" inputmode="decimal" placeholder="-">
+                  <div class="filter-range-track-wrap">
+                    <div class="filter-range-rail"></div>
+                    <div class="filter-range-fill" id="filterAvgViewedFill"></div>
+                    <input type="range" id="filterAvgViewedMinRange" min="0" max="1000" step="1" aria-label="Avg Viewed mínimo">
+                    <input type="range" id="filterAvgViewedMaxRange" min="0" max="1000" step="1" aria-label="Avg Viewed máximo">
+                  </div>
+                  <input type="number" id="filterAvgViewedMax" step="0.1" inputmode="decimal" placeholder="-">
+                </div>
+              </div>
+            </div>
           </div>
-          <input type="number" id="filterGanchoMax" step="0.1" inputmode="decimal" placeholder="-">
-        </div>
-      </div>
-      <div class="filter-group filter-range-group" data-range="avgviewed">
-        <label>Avg Viewed %</label>
-        <div class="filter-range">
-          <input type="number" id="filterAvgViewedMin" step="0.1" inputmode="decimal" placeholder="-">
-          <div class="filter-range-track-wrap">
-            <div class="filter-range-rail"></div>
-            <div class="filter-range-fill" id="filterAvgViewedFill"></div>
-            <input type="range" id="filterAvgViewedMinRange" min="0" max="1000" step="1" aria-label="Avg Viewed mínimo">
-            <input type="range" id="filterAvgViewedMaxRange" min="0" max="1000" step="1" aria-label="Avg Viewed máximo">
-          </div>
-          <input type="number" id="filterAvgViewedMax" step="0.1" inputmode="decimal" placeholder="-">
-        </div>
-      </div>
-    </div>
         </div>
         <div class="filters-popover-actions">
-          <button type="button" class="btn-secondary" onclick="clearFilters()">Limpar</button>
-          <button type="button" class="btn-primary" onclick="applyFilters(); closeFiltersPopover();">Aplicar</button>
+          <button type="button" class="btn-apply" onclick="applyFilters(); closeFiltersPopover();">Aplicar</button>
         </div>
       </div>
     </div>
@@ -2564,8 +2698,9 @@ function closeFiltersPopover() {
 document.addEventListener('click', (e) => {
   const pop = document.getElementById('filtersPopover');
   const btn = document.getElementById('btnFiltersToggle');
+  const reset = document.getElementById('btnFiltersReset');
   if (!pop || !pop.classList.contains('open')) return;
-  if (pop.contains(e.target) || (btn && btn.contains(e.target))) return;
+  if (pop.contains(e.target) || (btn && btn.contains(e.target)) || (reset && reset.contains(e.target))) return;
   closeFiltersPopover();
 });
 document.addEventListener('keydown', (e) => {
@@ -4145,8 +4280,9 @@ let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'velho';
 /** Independent Tipo/Formato contexts (session-only; no localStorage). */
 let dashboardFormat = 'longform'; // 'longform' | 'shorts' — Dashboard only; immediate
-let baseVelhoTipo = '';           // '' | 'long' | 'shorts' — Base+VELHO shared; Apply/Clear
-let fantasyFormatFilter = '';     // '' | 'long' | 'shorts' | 'live' | 'bio' | 'unidentified'
+let baseVelhoTipo = 'long';       // '' | 'long' | 'shorts' — Base+VELHO shared; default Long Form
+let fantasyFormatFilter = 'long'; // '' | 'long' | 'shorts' | 'live' | 'bio' | 'unidentified'
+const FIXED_CREATORS = ['Felipe', 'João', 'Rai'];
 
 function syncDashboardFormatUI() {
   const lfBtn = document.getElementById('btnDashFormatLF');
@@ -4363,7 +4499,9 @@ function getSourceTitleRecords() {
 }
 
 function setNumericRangesEnabled(enabled) {
+  const section = document.getElementById('filterValoresSection');
   const grid = document.querySelector('.filter-ranges-grid');
+  if (section) section.classList.toggle('ranges-disabled', !enabled);
   if (!grid) return;
   grid.classList.toggle('ranges-disabled', !enabled);
   grid.querySelectorAll('input').forEach(inp => {
@@ -4371,26 +4509,61 @@ function setNumericRangesEnabled(enabled) {
   });
 }
 
-function rebuildCreatorOptions() {
+function getCreatorToggleList() {
+  const fromData = getSourceCreators();
+  const extras = fromData.filter(c => !FIXED_CREATORS.includes(c)).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  return [...FIXED_CREATORS, ...extras];
+}
+
+function setCreatorFilter(value) {
   const sel = document.getElementById('filterCreator');
-  if (!sel) return;
-  const current = sel.value;
-  const creators = getSourceCreators();
-  sel.innerHTML = '<option value="">Todos os Criadores</option>';
-  creators.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    sel.appendChild(opt);
-  });
-  if (current && !creators.includes(current)) {
-    const ghost = document.createElement('option');
-    ghost.value = current;
-    ghost.textContent = `${current} (indisponível)`;
-    ghost.className = 'filter-ghost-opt';
-    sel.appendChild(ghost);
+  if (sel) sel.value = value || '';
+  renderCreatorToggle();
+}
+
+function renderCreatorToggle() {
+  const wrap = document.getElementById('creatorToggle');
+  const sel = document.getElementById('filterCreator');
+  if (!wrap) return;
+  const current = sel ? sel.value : '';
+  const creators = getCreatorToggleList();
+  const fromData = new Set(getSourceCreators());
+  // Keep hidden select options in sync
+  if (sel) {
+    sel.innerHTML = '<option value="">Todos</option>';
+    creators.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      sel.appendChild(opt);
+    });
+    if (current && ![...creators, ''].includes(current)) {
+      const ghost = document.createElement('option');
+      ghost.value = current;
+      ghost.textContent = current;
+      sel.appendChild(ghost);
+    }
+    sel.value = current;
   }
-  sel.value = current;
+  const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  let html = `<button type="button" class="fp-toggle-btn${!current ? ' active' : ''}" onclick="setCreatorFilter('')">Todos</button>`;
+  creators.forEach(c => {
+    const missing = !fromData.has(c);
+    const active = current === c ? ' active' : '';
+    const dis = missing && current !== c ? ' disabled' : '';
+    html += `<button type="button" class="fp-toggle-btn${active}" ${dis ? 'disabled' : ''} onclick="setCreatorFilter('${esc(c)}')">${c}</button>`;
+  });
+  wrap.innerHTML = html;
+}
+
+function rebuildCreatorOptions() {
+  renderCreatorToggle();
+}
+
+function resetFiltersDefault(ev) {
+  if (ev) ev.stopPropagation();
+  clearFilters();
+  closeFiltersPopover();
 }
 
 /** Fantasy TIPO segmented — opções fixas; só sincroniza UI com fantasyFormatFilter. */
@@ -4487,83 +4660,72 @@ function renderCatLegend() {
   }).join('');
 }
 
-function populateCatDropdown() {
-  const dd = document.getElementById('catDropdown');
+function renderCategoryChips() {
+  const wrap = document.getElementById('categoryChips');
+  if (!wrap) return;
   const cats = getSourceCategories();
-  const ghosts = catAllSelected ? [] : [...selectedCats].filter(c => !cats.includes(c)).sort();
-  const allChecked = catAllSelected ? 'checked' : '';
+  const available = new Set(cats);
+  const ghosts = catAllSelected ? [] : [...selectedCats].filter(c => !available.has(c)).sort();
+  const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
-  dd.innerHTML = `
-    <div class="title-option cat-select-all" onclick="event.stopPropagation(); toggleAllCats(this)" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
-      <input type="checkbox" ${allChecked} style="pointer-events:none;margin-right:6px;">Todas as Categorias
-    </div>
-    ${ghosts.map(c => {
-      const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option filter-ghost" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
-        <input type="checkbox" checked style="pointer-events:none;margin-right:6px;">
-        ${c}<span class="ghost-tag">(indisponível)</span>
-      </div>`;
-    }).join('')}
-    ${cats.map(c => {
-      const checked = (catAllSelected || selectedCats.has(c)) ? 'checked' : '';
-      const color = CAT_COLORS[c] || '#64748b';
-      const safeC = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="title-option" onclick="event.stopPropagation(); toggleCatCheck('${safeC}', this)">
-        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${color};margin-right:5px;vertical-align:middle;flex-shrink:0;"></span>${c}
-      </div>`;
-    }).join('')}`;
+  let html = `<button type="button" class="fp-chip${catAllSelected ? ' selected' : ''}" onclick="toggleAllCats()">
+    <span class="fp-chip-check">${checkSvg}</span>Todas
+  </button>`;
+
+  [...ghosts, ...cats].forEach(c => {
+    const isGhost = !available.has(c);
+    const selected = !catAllSelected && selectedCats.has(c);
+    const color = (CAT_COLORS && CAT_COLORS[c]) || '#64748b';
+    const dis = isGhost && !selected ? ' disabled' : '';
+    html += `<button type="button" class="fp-chip${selected ? ' selected' : ''}${dis}" ${isGhost && !selected ? 'disabled' : ''} onclick="toggleCatChip('${esc(c)}')" title="${isGhost ? c + ' (indisponível)' : c}">
+      <span class="fp-chip-dot" style="background:${color};"></span>${c}
+    </button>`;
+  });
+  wrap.innerHTML = html;
 }
 
-function toggleAllCats(el) {
-  const cb = el.querySelector('input[type=checkbox]');
-  if (catAllSelected) {
-    catAllSelected = false;
-    selectedCats.clear();
-    if (cb) cb.checked = false;
-  } else {
-    catAllSelected = true;
-    selectedCats.clear();
-    if (cb) cb.checked = true;
-  }
+function populateCatDropdown() {
+  renderCategoryChips();
+}
+
+function toggleAllCats() {
+  catAllSelected = true;
+  selectedCats.clear();
   updateCatInput();
-  populateCatDropdown();
-  const dd = document.getElementById('catDropdown');
-  if (dd) dd.classList.add('open');
+  renderCategoryChips();
 }
 
 function updateCatInput() {
   const inp = document.getElementById('filterCategoriaInput');
   if (!inp) return;
-  if (catAllSelected) {
-    inp.value = ''; inp.placeholder = 'Todas as Categorias';
-  } else if (selectedCats.size === 0) {
-    inp.value = ''; inp.placeholder = 'Nenhuma categoria selecionada';
+  if (catAllSelected || selectedCats.size === 0) {
+    inp.value = '';
+    inp.placeholder = 'Todas as Categorias';
   } else {
-    inp.value = `${selectedCats.size} categoria(s) selecionada(s)`; inp.placeholder = '';
+    inp.value = `${selectedCats.size} categoria(s) selecionada(s)`;
+    inp.placeholder = '';
   }
 }
 
 function toggleCatDropdown() {
-  const dd = document.getElementById('catDropdown');
-  const isOpen = dd.classList.contains('open');
-  if (isOpen) { dd.classList.remove('open'); return; }
-  populateCatDropdown();
-  dd.classList.add('open');
+  renderCategoryChips();
 }
 
-function toggleCatCheck(cat, el) {
-  const cb = el.querySelector('input[type=checkbox]');
+function toggleCatChip(cat) {
   const cats = getSourceCategories();
   if (catAllSelected) {
-    // Leaving "all": keep every category except the one just unchecked
+    // Saindo de Todas → seleciona só esta categoria
     catAllSelected = false;
     selectedCats.clear();
-    cats.forEach(c => { if (c !== cat) selectedCats.add(c); });
-    if (cb) cb.checked = false;
+    selectedCats.add(cat);
+  } else if (selectedCats.has(cat)) {
+    selectedCats.delete(cat);
+    if (selectedCats.size === 0) {
+      catAllSelected = true;
+    }
   } else {
-    if (selectedCats.has(cat)) { selectedCats.delete(cat); if (cb) cb.checked = false; }
-    else { selectedCats.add(cat); if (cb) cb.checked = true; }
+    selectedCats.add(cat);
     const ghosts = [...selectedCats].filter(c => !cats.includes(c));
     if (ghosts.length === 0 && cats.length > 0 && cats.every(c => selectedCats.has(c))) {
       catAllSelected = true;
@@ -4571,9 +4733,11 @@ function toggleCatCheck(cat, el) {
     }
   }
   updateCatInput();
-  populateCatDropdown();
-  const dd = document.getElementById('catDropdown');
-  if (dd) dd.classList.add('open');
+  renderCategoryChips();
+}
+
+function toggleCatCheck(cat) {
+  toggleCatChip(cat);
 }
 
 function init() {
@@ -5366,33 +5530,43 @@ function applyFilters() {
 }
 
 function clearFilters() {
-  document.getElementById('filterCreator').value = '';
+  const creatorSel = document.getElementById('filterCreator');
+  if (creatorSel) creatorSel.value = '';
   selectedCats.clear();
   selectedTitles.clear();
   catAllSelected = true;
   titleAllSelected = true;
   updateCatInput();
-  updateTitleInput();
+  if (typeof updateTitleInput === 'function') {
+    try { updateTitleInput(); } catch (e) {}
+  }
   closeStickyMultiselectDropdowns();
   resetRangeFiltersToBounds();
 
+  // Default de tipo = Long Form em todos os contextos
+  dashboardFormat = 'longform';
+  baseVelhoTipo = 'long';
+  fantasyFormatFilter = 'long';
+  syncDashboardFormatUI();
+  syncBaseVelhoTipoUI();
+  syncFantasyFormatFilterUI();
+  syncDashboardPanels();
+
   if (isFantasyTabActive()) {
-    // Clear Fantasy Tipo → Todos; Dashboard/BaseVelho untouched
-    fantasyFormatFilter = '';
-    syncFantasyFormatFilterUI();
     initFantasyTemporalDefaults();
     loadTemporalToUI('fantasy');
     setNumericRangesEnabled(false);
     rebuildSharedFilterOptions('fantasy');
   } else {
-    // Clear Main: Base/VELHO Tipo → Todos; dashboardFormat preserved; Fantasy Formato preserved
-    baseVelhoTipo = '';
-    syncBaseVelhoTipoUI();
     initMainTemporalDefaults();
     loadTemporalToUI('main');
     rebuildSharedFilterOptions('main');
+    setNumericRangesEnabled(true);
   }
+  renderCreatorToggle();
+  renderCategoryChips();
   applyFilters();
+  if (activeTab === 'dashboard') renderVisibleDashboardPipeline();
 }
 
 // ── TITLE SEARCH (multi-select) ───────────────────────────────────────────────
@@ -5400,8 +5574,9 @@ function clearFilters() {
 let titleBlurTimer = null;
 
 function onTitleSearchInput() {
-  const q = (document.getElementById('filterTitleSearch').value || '').toLowerCase();
   const dropdown = document.getElementById('titleDropdown');
+  if (!dropdown) return;
+  const q = (document.getElementById('filterTitleSearch')?.value || '').toLowerCase();
   const unique = getSourceTitleRecords();
   const matches = q ? unique.filter(r => r.title.toLowerCase().includes(q)) : unique;
   renderTitleDropdown(matches.slice(0, 60));
