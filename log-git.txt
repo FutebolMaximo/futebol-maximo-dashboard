@@ -92,3 +92,7 @@ To https://github.com/FutebolMaximo/futebol-maximo-dashboard
  2 files changed, 6518 insertions(+), 6476 deletions(-)
 To https://github.com/FutebolMaximo/futebol-maximo-dashboard
    609db27..511e921  main -> main
+[main 6a2684f] Atualizacao automatica das bases pelo KNIME - Tue 11/03/2026  5:45:44.56
+ 2 files changed, 6413 insertions(+), 6351 deletions(-)
+To https://github.com/FutebolMaximo/futebol-maximo-dashboard
+   78b5831..6a2684f  main -> main
