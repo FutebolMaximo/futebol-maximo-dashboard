@@ -2695,12 +2695,12 @@ function closeFiltersPopover() {
   }
 }
 
-document.addEventListener('click', (e) => {
+// pointerdown: evita fechar ao re-renderizar chips/toggles (o click target some do DOM)
+document.addEventListener('pointerdown', (e) => {
   const pop = document.getElementById('filtersPopover');
-  const btn = document.getElementById('btnFiltersToggle');
-  const reset = document.getElementById('btnFiltersReset');
   if (!pop || !pop.classList.contains('open')) return;
-  if (pop.contains(e.target) || (btn && btn.contains(e.target)) || (reset && reset.contains(e.target))) return;
+  const anchor = document.querySelector('.filter-anchor');
+  if (anchor && anchor.contains(e.target)) return;
   closeFiltersPopover();
 });
 document.addEventListener('keydown', (e) => {
@@ -4563,7 +4563,7 @@ function rebuildCreatorOptions() {
 function resetFiltersDefault(ev) {
   if (ev) ev.stopPropagation();
   clearFilters();
-  closeFiltersPopover();
+  // Mantém o painel aberto para continuar ajustando filtros
 }
 
 /** Fantasy TIPO segmented — opções fixas; só sincroniza UI com fantasyFormatFilter. */
