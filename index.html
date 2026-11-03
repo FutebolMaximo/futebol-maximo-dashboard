@@ -53,6 +53,7 @@
     --performance-mid: #d97706;
     --performance-bad: #dc2626;
     --shorts: #C11D83;
+    --funnel-pct: #111827;
     --surface-bg: #f4f6f8;
     --surface-card: #ffffff;
     --surface-hover: rgba(0, 0, 0, 0.03);
@@ -100,6 +101,8 @@
     --performance-good: #34d399;
     --performance-mid: #fbbf24;
     --performance-bad: #f87171;
+    --shorts: #FE13F0;
+    --funnel-pct: #e5e7eb;
     --surface-bg: #181D28;
     --surface-card: #222836;
     --surface-hover: rgba(255, 255, 255, 0.04);
@@ -182,7 +185,7 @@
     letter-spacing: -0.06em;
     transform: scaleX(1.08) scaleY(1.04);
     transform-origin: left center;
-    color: var(--accent);
+    color: inherit;
   }
   .chrome-center {
     display: flex;
@@ -423,7 +426,7 @@
   /* Shorts: valor + mediana + divider no rosa */
   #panelShorts .kpi-value { color: var(--shorts); }
   #panelShorts .kpi-median { color: var(--shorts); }
-  #panelShorts .section-divider { background: var(--shorts); box-shadow: 0 0 12px rgba(193,29,131,.35); }
+  #panelShorts .section-divider { background: var(--shorts); box-shadow: 0 0 12px color-mix(in srgb, var(--shorts) 40%, transparent); }
   .kpi-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
   .kpi-value { font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -.4px; }
   .kpi-sub { font-size: 11px; color: var(--gray-500); margin-top: 6px; opacity: .85; }
@@ -445,7 +448,37 @@
   }
   .charts-controls label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
   .topn-input { display: flex; align-items: center; gap: 8px; }
-  .topn-input input { width: 70px; }
+  .topn-input input,
+  #topNInput, #topNInputShorts, #topNInputFantasy {
+    width: 70px;
+    background: var(--input-bg) !important;
+    color: var(--gray-900) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 6px;
+    height: 32px;
+    padding: 4px 8px;
+    font-size: 13px;
+    outline: none;
+  }
+  .topn-input input:focus,
+  #topNInput:focus, #topNInputShorts:focus, #topNInputFantasy:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  select {
+    background: var(--input-bg);
+    color: var(--gray-900);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    color-scheme: light;
+  }
+  [data-theme="dark"] select { color-scheme: dark; }
+  #heatmapMetric, #funnelGroupBy, #funnelGroupByShorts,
+  #feedbackStatusFilter, #feedbackSStatusFilter {
+    background: var(--input-bg) !important;
+    color: var(--gray-900) !important;
+    border-color: var(--input-border) !important;
+  }
   .topn-toggle { display: flex; border: 1px solid var(--input-border); border-radius: var(--radius-sm); overflow: hidden; background: var(--input-bg); }
   .toggle-btn {
     background: transparent; border: none; padding: 0 12px; height: 32px;
@@ -540,35 +573,60 @@
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--accent); }
 
-  /* Base: caber na viewport sem scroll horizontal; headers podem quebrar linha */
-  #dataTable { width: 100%; min-width: 0; table-layout: fixed; font-size: 11px; }
-  #dataTable th:nth-child(1)  { width:3.6%; text-align:left; }  /* Data */
-  #dataTable th:nth-child(2)  { width:3.2%; }                   /* Semana */
-  #dataTable th:nth-child(3)  { width:3.4%; }                   /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:5.2%; text-align:left; }  /* Content ID */
-  #dataTable th:nth-child(5)  { width:14%;  text-align:left; }  /* Título */
-  #dataTable th:nth-child(6)  { width:3.6%; }                   /* Tipo */
-  #dataTable th:nth-child(7)  { width:3.4%; }                   /* Criador */
-  #dataTable th:nth-child(8)  { width:5%; }                     /* Categoria */
-  #dataTable th:nth-child(9)  { width:3.4%; }                   /* Views */
-  #dataTable th:nth-child(10) { width:3.6%; }                   /* Fantasy Clicks */
-  #dataTable th:nth-child(11) { width:4.2%; }                   /* Fantasy Conversion */
-  #dataTable th:nth-child(12) { width:3.2%; }                   /* CTR% */
-  #dataTable th:nth-child(13) { width:3.6%; }                   /* Avg View Dur */
-  #dataTable th:nth-child(14) { width:3.2%; }                   /* Gancho */
-  #dataTable th:nth-child(15) { width:3.2%; }                   /* Duração */
-  #dataTable th:nth-child(16) { width:3.4%; }                   /* Avg View % */
-  #dataTable th:nth-child(17) { width:3.4%; }                   /* Impr. */
-  #dataTable th:nth-child(18) { width:3.2%; }                   /* CTR% YT */
-  #dataTable th:nth-child(19) { width:3%; }                     /* Likes */
-  #dataTable th:nth-child(20) { width:3.4%; }                   /* Inscritos */
-  #dataTable th:nth-child(21) { width:3.6%; }                   /* Conv. Insc. */
-  #dataTable th:nth-child(22) { width:3%; }                     /* Shares */
-  #dataTable th:nth-child(23) { width:3.2%; }                   /* Coment. */
-  #dataTable th:nth-child(24) { width:3.6%; }                   /* Conv. Comm. */
+  /* Base de Dados — headers diagonais + colunas legíveis */
+  #dataTable { width: max-content; min-width: 100%; table-layout: fixed; font-size: 11px; }
+  #dataTable th:nth-child(1)  { width:92px; text-align:left; }   /* Data */
+  #dataTable th:nth-child(2)  { width:64px; }                    /* Semana */
+  #dataTable th:nth-child(3)  { width:72px; }                    /* Mês_Ano */
+  #dataTable th:nth-child(4)  { width:100px; text-align:left; }  /* Content ID */
+  #dataTable th:nth-child(5)  { width:220px; text-align:left; }  /* Título */
+  #dataTable th:nth-child(6)  { width:88px; }                    /* Tipo */
+  #dataTable th:nth-child(7)  { width:72px; }                    /* Criador */
+  #dataTable th:nth-child(8)  { width:100px; }                   /* Categoria */
+  #dataTable th:nth-child(9)  { width:64px; }                    /* Views */
+  #dataTable th:nth-child(10) { width:72px; }                    /* Fantasy Clicks */
+  #dataTable th:nth-child(11) { width:88px; }                    /* Fantasy Conversion */
+  #dataTable th:nth-child(12) { width:56px; }                    /* CTR% */
+  #dataTable th:nth-child(13) { width:72px; }                    /* Avg View Dur */
+  #dataTable th:nth-child(14) { width:64px; }                    /* Gancho */
+  #dataTable th:nth-child(15) { width:64px; }                    /* Duração */
+  #dataTable th:nth-child(16) { width:68px; }                    /* Avg View % */
+  #dataTable th:nth-child(17) { width:64px; }                    /* Impr. */
+  #dataTable th:nth-child(18) { width:64px; }                    /* CTR% YT */
+  #dataTable th:nth-child(19) { width:56px; }                    /* Likes */
+  #dataTable th:nth-child(20) { width:68px; }                    /* Inscritos */
+  #dataTable th:nth-child(21) { width:72px; }                    /* Conv. Insc. */
+  #dataTable th:nth-child(22) { width:56px; }                    /* Shares */
+  #dataTable th:nth-child(23) { width:64px; }                    /* Coment. */
+  #dataTable th:nth-child(24) { width:72px; }                    /* Conv. Comm. */
   #dataTable td:nth-child(5) { white-space: normal; }
+  #dataTable td:nth-child(1),
+  #dataTable td:nth-child(6) {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+  #dataTable thead th {
+    height: 96px;
+    vertical-align: bottom;
+    white-space: nowrap;
+    word-break: normal;
+    overflow: visible;
+    padding: 0 4px 8px;
+    text-align: left;
+    line-height: 1.1;
+  }
+  #dataTable thead th .th-diag {
+    display: inline-block;
+    transform: translate(6px, 0) rotate(-40deg);
+    transform-origin: bottom left;
+    white-space: nowrap;
+    max-width: none;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
   #panelBaseDados .table-card { min-height: calc(100vh - 160px); }
-  #panelBaseDados .table-wrap { overflow-x: hidden; max-height: calc(100vh - 220px); }
+  #panelBaseDados .table-wrap { overflow-x: auto; max-height: calc(100vh - 220px); }
   #panelBaseDados .title-cell a,
   #panelBaseDados .title-cell span { color: var(--gray-900) !important; font-weight: 500; text-decoration: none; }
   tbody tr { border-bottom: 1px solid var(--surface-border); transition: background .12s; }
@@ -1034,8 +1092,14 @@
     margin-left:auto;
   }
   .velho-sort select {
-    height:32px; padding:0 10px; border:1px solid var(--gray-300); border-radius:6px;
-    font-size:13px; color:var(--gray-800); background:var(--input-bg); cursor:pointer; outline:none;
+    height:32px; padding:0 10px; border:1px solid var(--input-border); border-radius:6px;
+    font-size:13px; color:var(--gray-900); background:var(--input-bg); cursor:pointer; outline:none;
+    color-scheme: light;
+  }
+  [data-theme="dark"] .velho-sort select { color-scheme: dark; }
+  .velho-sort select option {
+    background: var(--surface-card);
+    color: var(--gray-900);
   }
   .velho-metric-val.perf-good { color: var(--performance-good); }
   .velho-metric-val.perf-mid { color: var(--performance-mid); }
@@ -1491,7 +1555,6 @@
   </div>
 
   <div class="chrome-right">
-    <span class="data-badge" id="dataBadge">Carregando...</span>
     <button type="button" id="btnEyeToggle" class="btn-circle" onclick="toggleAllSections()" title="Expandir/Recolher tudo" aria-label="Expandir ou recolher seções"></button>
     <button type="button" id="btnThemeToggle" class="btn-circle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema"></button>
   </div>
@@ -1730,7 +1793,7 @@
       <h3>Performance por Criador e Categoria</h3>
       <div style="display:flex;gap:8px;align-items:center;">
         <label style="font-size:12px;color:var(--gray-500);">Colorir por:</label>
-        <select id="heatmapMetric" onchange="renderHeatmap()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+        <select id="heatmapMetric" onchange="renderHeatmap()" style="padding:5px 8px;border:1px solid var(--input-border);border-radius:6px;font-size:12px;background:var(--input-bg);color:var(--gray-900);">
           <option value="views">Views mediana</option>
           <option value="ctr">CTR médio</option>
           <option value="ret">Retenção média</option>
@@ -1758,7 +1821,7 @@
       <span>Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
         <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
-        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+        <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--input-border);border-radius:6px;font-size:12px;background:var(--input-bg);color:var(--gray-900);">
           <option value="all">Geral (todos os vídeos)</option>
           <option value="creator">Por Criador</option>
           <option value="categoria">Por Categoria</option>
@@ -1900,30 +1963,30 @@
             <table id="dataTable">
         <thead>
           <tr>
-            <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao" style="white-space:nowrap;">Data <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('semana')" data-col="semana">Semana <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('mesAno')" data-col="mesAno">Mês_Ano <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('id')" data-col="id" style="white-space:nowrap;">Content ID <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('title')" data-col="title">Título <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('tipo')" data-col="tipo">Tipo <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('creator')" data-col="creator">Criador <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('categoria')" data-col="categoria">Categoria <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('views')" data-col="views" class="num sorted">Views <span class="sort-icon">↓</span></th>
-            <th onclick="sortTable('fantasyClicks')" data-col="fantasyClicks" class="num">Fantasy Clicks <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('fantasyConversion')" data-col="fantasyConversion" class="num">Fantasy Conversion <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('ctr')" data-col="ctr" class="num">CTR% <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num">Avg View Dur <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('gancho')" data-col="gancho" class="num">Gancho <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('duracao')" data-col="duracao" class="num">Duração <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num">Avg View % <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('impressoes')" data-col="impressoes" class="num">Impr. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('ctrYT')" data-col="ctrYT" class="num">CTR% YT <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('likes')" data-col="likes" class="num">Likes <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('inscritos')" data-col="inscritos" class="num">Inscritos <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('conversao')" data-col="conversao" class="num">Conv. Insc. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('shares')" data-col="shares" class="num">Shares <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('comentarios')" data-col="comentarios" class="num">Coment. <span class="sort-icon">↕</span></th>
-            <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num">Conv. Comm. <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao"><span class="th-diag">Data <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('semana')" data-col="semana"><span class="th-diag">Semana <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('mesAno')" data-col="mesAno"><span class="th-diag">Mês_Ano <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('id')" data-col="id"><span class="th-diag">Content ID <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('title')" data-col="title"><span class="th-diag">Título <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('tipo')" data-col="tipo"><span class="th-diag">Tipo <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('creator')" data-col="creator"><span class="th-diag">Criador <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('categoria')" data-col="categoria"><span class="th-diag">Categoria <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('views')" data-col="views" class="num sorted"><span class="th-diag">Views <span class="sort-icon">↓</span></span></th>
+            <th onclick="sortTable('fantasyClicks')" data-col="fantasyClicks" class="num"><span class="th-diag">Fantasy Clicks <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('fantasyConversion')" data-col="fantasyConversion" class="num"><span class="th-diag">Fantasy Conversion <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('ctr')" data-col="ctr" class="num"><span class="th-diag">CTR% <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('avgViewDurSec')" data-col="avgViewDurSec" class="num"><span class="th-diag">Avg View Dur <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('gancho')" data-col="gancho" class="num"><span class="th-diag">Gancho <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('duracao')" data-col="duracao" class="num"><span class="th-diag">Duração <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('avgViewedPct')" data-col="avgViewedPct" class="num"><span class="th-diag">Avg View % <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('impressoes')" data-col="impressoes" class="num"><span class="th-diag">Impr. <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('ctrYT')" data-col="ctrYT" class="num"><span class="th-diag">CTR% YT <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('likes')" data-col="likes" class="num"><span class="th-diag">Likes <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('inscritos')" data-col="inscritos" class="num"><span class="th-diag">Inscritos <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('conversao')" data-col="conversao" class="num"><span class="th-diag">Conv. Insc. <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('shares')" data-col="shares" class="num"><span class="th-diag">Shares <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('comentarios')" data-col="comentarios" class="num"><span class="th-diag">Coment. <span class="sort-icon">↕</span></span></th>
+            <th onclick="sortTable('conversaoComments')" data-col="conversaoComments" class="num"><span class="th-diag">Conv. Comm. <span class="sort-icon">↕</span></span></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -2120,7 +2183,7 @@
       <span>Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
         <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
-        <select id="funnelGroupByShorts" onchange="renderShortsAll()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+        <select id="funnelGroupByShorts" onchange="renderShortsAll()" style="padding:5px 8px;border:1px solid var(--input-border);border-radius:6px;font-size:12px;background:var(--input-bg);color:var(--gray-900);">
           <option value="all">Geral (todos os Shorts)</option>
           <option value="creator">Por Criador</option>
         </select>
@@ -2453,6 +2516,7 @@ function setTheme(theme) {
   if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
   else document.documentElement.removeAttribute('data-theme');
   try { localStorage.setItem(THEME_STORAGE_KEY, theme === 'dark' ? 'dark' : 'light'); } catch(e) {}
+  syncShortsTheme();
   refreshChartsForTheme();
   updateThemeBtn();
 }
@@ -2943,6 +3007,11 @@ function countFantasyUniqueVisitors(rows, predicate) {
     if (r.visitorId) set.add(r.visitorId);
   });
   return set.size;
+}
+
+function fmtFantasyCR2(rate) {
+  if (rate == null || !Number.isFinite(rate)) return '—';
+  return (rate * 100).toFixed(2).replace('.', ',') + '%';
 }
 
 function fmtFantasyCR(rate) {
@@ -4023,9 +4092,7 @@ function assignFixedOutliers(data) {
 }
 
 async function loadData() {
-  const badge = document.getElementById('dataBadge');
   try {
-    badge.textContent = 'Carregando dados...';
     const csvUrl = 'dados.csv?v=' + Date.now();
     const resp = await fetch(csvUrl, { cache: 'no-store' });
     if (!resp.ok) throw new Error(`Arquivo não encontrado (HTTP ${resp.status}). Verifique se "dados.csv" está na raiz do repositório.`);
@@ -4034,12 +4101,8 @@ async function loadData() {
     filteredData = [...allData];
     if (!allData.length) throw new Error('O arquivo dados.csv está vazio ou mal formatado.');
     assignFixedOutliers(allData);
-    badge.textContent = `${allData.length} vídeos`;
     init();
   } catch(err) {
-    badge.textContent = '⚠️ Erro ao carregar';
-    badge.style.background = '#fef2f2';
-    badge.style.color = '#dc2626';
 
     // Show visible error banner
     const banner = document.createElement('div');
@@ -4523,8 +4586,6 @@ function init() {
   initMainTemporalDefaults();
   loadTemporalToUI('main');
   updateFilterTemporalLabels();
-
-  document.getElementById('dataBadge').textContent = `${allData.length} vídeos`;
 
   initRangeFilters();
   updateCatInput();
@@ -5538,7 +5599,11 @@ const CHART_COLORS = {
   median: '#f59e0b',  // Mediana = amarelo
 };
 /** Tema visual Shorts (sem categoria) — temporal, performance, matriz, histograma */
-const SHORTS_THEME = '#C11D83';
+let SHORTS_THEME = '#C11D83';
+function syncShortsTheme() {
+  SHORTS_THEME = getTheme() === 'dark' ? '#FE13F0' : '#C11D83';
+}
+syncShortsTheme();
 
 // Fixed colors per category name
 const NAMED_CAT_COLORS = {
@@ -6261,8 +6326,8 @@ function classifyVideoShorts(r) {
   return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
 }
 
-let feedbackSortCol = 'status';
-let feedbackSortDir = 1;
+let feedbackSortCol = 'dataPublicacao';
+let feedbackSortDir = -1; // mais recentes primeiro
 
 function sortFeedback(col) {
   feedbackSortDir = (feedbackSortCol === col) ? feedbackSortDir * -1 : 1;
@@ -6285,7 +6350,7 @@ function renderFeedbackTable() {
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
   if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
 
-  // Sort
+  // Sort (default: dataPublicacao desc)
   const statusOrder = ['Escalar','Reembalar','Storytelling','Não Escalar'];
   rows.sort((a, b) => {
     let av, bv;
@@ -6296,6 +6361,9 @@ function renderFeedbackTable() {
       return feedbackSortDir * av.localeCompare(bv);
     } else if (feedbackSortCol === 'categoria') {
       av = a.r.categoria||''; bv = b.r.categoria||'';
+      return feedbackSortDir * av.localeCompare(bv);
+    } else if (feedbackSortCol === 'dataPublicacao') {
+      av = a.r.dataPublicacao||''; bv = b.r.dataPublicacao||'';
       return feedbackSortDir * av.localeCompare(bv);
     } else {
       av = a.r[feedbackSortCol]||0; bv = b.r[feedbackSortCol]||0;
@@ -6684,7 +6752,8 @@ function renderFunnel() {
       }
       if(conv){
         const isBold = conv.includes('*');
-        svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="#111827" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
+        const pctFill = getComputedStyle(document.documentElement).getPropertyValue('--funnel-pct').trim() || '#111827';
+        svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
       }
     });
 
@@ -6751,8 +6820,17 @@ function renderHeatmap() {
   const container = document.getElementById('heatmapContainer');
   if (!container || !d.length) return;
 
-  const creators = [...new Set(d.map(r=>r.creator).filter(Boolean))].sort();
-  const cats = [...new Set(d.map(r=>r.categoria||'(Sem categoria)'))].sort();
+  const isBlankLabel = (v) => {
+    const s = String(v == null ? '' : v).trim();
+    if (!s) return true;
+    const n = s.toLowerCase().replace(/[()]/g, '');
+    return n === 'sem criador' || n === 'sem categoria' || n === 'sem dados';
+  };
+  const creators = [...new Set(d.map(r => (r.creator || '').trim()).filter(c => c && !isBlankLabel(c)))].sort();
+  const cats = [...new Set(
+    d.map(r => (r.categoria || '').trim())
+      .filter(c => c && !isBlankLabel(c) && c !== '(Sem categoria)')
+  )].sort();
 
   const getVal = (rows) => {
     if (!rows || !rows.length) return null;
@@ -6779,7 +6857,7 @@ function renderHeatmap() {
   const cellData = {};
   creators.forEach(cr => {
     cats.forEach(cat => {
-      const rows = d.filter(r=>r.creator===cr && (r.categoria||'(Sem categoria)')===cat);
+      const rows = d.filter(r => (r.creator || '').trim() === cr && (r.categoria || '').trim() === cat);
       const v = rows.length ? getVal(rows) : null;
       cellData[`${cr}|${cat}`] = { v, n: rows.length };
       if (v!==null) allCells.push(v);
@@ -6872,10 +6950,10 @@ function renderDurationAnalysis() {
     ${cell('medRet',   v=>v.toFixed(1)+'%')}
         ${cell('avgDurSec',v=>formatDuration(Math.round(v)))}
         ${cell('ganchoMed',v=>v.toFixed(1)+'%')}
-        ${cell('inscAvg',  v=>v.toFixed(1))}
-        ${cell('commAvg',  v=>v.toFixed(1))}
+        ${cell('inscAvg',  v=>String(Math.round(v)))}
+        ${cell('commAvg',  v=>String(Math.round(v)))}
         ${cell('fantasyClicks', v=>fmtNum(v))}
-        ${cell('fantasyConversion', v=>fmtFantasyCR(v))}
+        ${cell('fantasyConversion', v=>fmtFantasyCR2(v))}
       </tr>` };
   };
 
@@ -7443,12 +7521,13 @@ function renderShortsFunil() {
       : fmtNum(vals[i]);
     svgContent += `<text x="${cx}" y="${mid-5}" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="system-ui,sans-serif">${stage}</text>`;
     svgContent += `<text x="${cx}" y="${mid+9}" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui,sans-serif">${valLabel}</text>`;
+    const pctFill = getComputedStyle(document.documentElement).getPropertyValue('--funnel-pct').trim() || '#111827';
     if (i === 6) {
       const conv = (fcConv == null || !Number.isFinite(fcConv)) ? '—' : fmtFantasyCR(fcConv);
-      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="#111827" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
+      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
     } else if (i > 0) {
       const conv = i===1?(vals[0]>0?vals[1]/vals[0]*100:0).toFixed(1)+'%':(vals[1]>0?vals[i]/vals[1]*100:0).toFixed(2)+'%';
-      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="#111827" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
+      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
     }
   });
 
@@ -7581,10 +7660,10 @@ function renderShortsIndicatorsHeatmap() {
         ${cell('medRet', v => v.toFixed(1) + '%')}
         ${cell('avgDurSec', v => formatDuration(Math.round(v)))}
         ${cell('ganchoMed', v => v.toFixed(2) + '%')}
-        ${cell('inscAvg', v => v.toFixed(1))}
-        ${cell('commAvg', v => v.toFixed(1))}
+        ${cell('inscAvg', v => String(Math.round(v)))}
+        ${cell('commAvg', v => String(Math.round(v)))}
         ${cell('fantasyClicks', v => fmtNum(v))}
-        ${cell('fantasyConversion', v => fmtFantasyCR(v))}
+        ${cell('fantasyConversion', v => fmtFantasyCR2(v))}
       </tr>`
     };
   };
@@ -7639,12 +7718,11 @@ function renderFeedbacksTab() {
   renderFeedbackTableShorts();
 }
 
-let feedbackSSortCol = 'impressoes';
-let feedbackSSortDir = -1;
+let feedbackSSortCol = 'dataPublicacao';
+let feedbackSSortDir = -1; // mais recentes primeiro
 
 function sortFeedbackS(col) {
-  feedbackSSortCol = col;
-  feedbackSSortDir = feedbackSSortCol === col ? -feedbackSSortDir : -1;
+  feedbackSSortDir = (feedbackSSortCol === col) ? -feedbackSSortDir : -1;
   feedbackSSortCol = col;
   document.querySelectorAll('[data-sfcol]').forEach(th => th.classList.remove('sort-asc','sort-desc'));
   const el = document.querySelector(`[data-sfcol="${col}"]`);
@@ -7672,6 +7750,7 @@ function renderFeedbackTableShorts() {
     if (feedbackSSortCol === 'status') return feedbackSSortDir * (order.indexOf(a.cls.status) - order.indexOf(b.cls.status));
     if (feedbackSSortCol === 'creator') return feedbackSSortDir * (a.r.creator||'').localeCompare(b.r.creator||'');
     if (feedbackSSortCol === 'categoria') return feedbackSSortDir * (a.r.categoria||'').localeCompare(b.r.categoria||'');
+    if (feedbackSSortCol === 'dataPublicacao') return feedbackSSortDir * (a.r.dataPublicacao||'').localeCompare(b.r.dataPublicacao||'');
     return feedbackSSortDir * ((a.r[feedbackSSortCol]||0) - (b.r[feedbackSSortCol]||0));
   });
 
