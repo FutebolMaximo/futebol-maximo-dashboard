@@ -5,9 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Futebol Máximo</title>
 <link rel="icon" href="assets/logo-futebol-maximo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
+  /* Akira Expanded (se colocar o arquivo em assets/fonts/) — fallback: Archivo Black */
+  @font-face {
+    font-family: 'AkiraExpanded';
+    src: local('Akira Expanded'), local('AkiraExpanded'),
+         url('assets/fonts/AkiraExpanded.otf') format('opentype'),
+         url('assets/fonts/AkiraExpanded.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
   :root {
     /* Accent — elétrico (light: ciano legível em fundo claro) */
     --accent: #00A8C4;
@@ -78,27 +91,27 @@
     --gray-400: #6b7280;
     --gray-300: rgba(255, 255, 255, 0.12);
     --gray-200: rgba(255, 255, 255, 0.08);
-    --gray-100: #1a1b20;
-    --gray-50:  #0A0A0B;
-    --white: #14151A;
+    --gray-100: #2a3142;
+    --gray-50:  #181D28;
+    --white: #222836;
     --green: #34d399;
     --amber: #fbbf24;
     --red: #f87171;
     --performance-good: #34d399;
     --performance-mid: #fbbf24;
     --performance-bad: #f87171;
-    --surface-bg: #0A0A0B;
-    --surface-card: #14151A;
-    --surface-hover: rgba(255, 255, 255, 0.03);
-    --surface-border: rgba(255, 255, 255, 0.05);
+    --surface-bg: #181D28;
+    --surface-card: #222836;
+    --surface-hover: rgba(255, 255, 255, 0.04);
+    --surface-border: rgba(255, 255, 255, 0.07);
     --chart-tick: #9CA3AF;
     --chart-grid: rgba(255, 255, 255, 0.05);
-    --chart-label-bg: rgba(20, 21, 26, 0.92);
-    --chart-tooltip-bg: #1a1b20;
+    --chart-label-bg: rgba(34, 40, 54, 0.94);
+    --chart-tooltip-bg: #2a3142;
     --chart-tooltip-text: #f3f4f6;
-    --input-bg: rgba(255, 255, 255, 0.03);
-    --input-border: rgba(255, 255, 255, 0.08);
-    --sticky-bg: rgba(10, 10, 11, 0.92);
+    --input-bg: rgba(255, 255, 255, 0.04);
+    --input-border: rgba(255, 255, 255, 0.10);
+    --sticky-bg: rgba(24, 29, 40, 0.94);
     --shadow: none;
     --shadow-lg: none;
   }
@@ -112,24 +125,32 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* HEADER — flat, alinhado ao fundo */
-  .header {
-    background: var(--surface-bg);
-    padding: 18px 32px;
-    display: flex;
+  /* ── APP CHROME (brand + tabs pill + actions) ── */
+  .app-chrome {
+    position: sticky;
+    top: 0;
+    z-index: 220;
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) auto minmax(140px, 1fr);
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 16px;
+    padding: 14px 24px;
+    background: color-mix(in srgb, var(--surface-bg) 88%, transparent);
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--surface-border);
     box-sizing: border-box;
     width: 100%;
   }
-  .header-left { display: flex; align-items: center; gap: 14px; }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
   .header-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,24 +165,63 @@
     object-fit: contain;
     display: block;
   }
-  .header-title { color: var(--gray-900); }
-  .header-title h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
-  .header-title p { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
-  .header-actions { display: flex; align-items: center; gap: 10px; }
-  .upload-btn {
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
-    color: var(--gray-800);
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    display: flex; align-items: center; gap: 6px;
-    transition: border-color .2s, background .2s;
+  .brand-wordmark {
+    font-family: 'AkiraExpanded', 'Archivo Black', Impact, Haettenschweiler, sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 0.86;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--gray-900);
+    user-select: none;
   }
-  .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
-  #csvFile { display: none; }
+  .brand-wordmark .bw-f,
+  .brand-wordmark .bw-m {
+    display: inline-block;
+    font-size: 1.12em;
+    letter-spacing: -0.06em;
+    transform: scaleX(1.08) scaleY(1.04);
+    transform-origin: left center;
+    color: var(--accent);
+  }
+  .chrome-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .chrome-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--surface-border);
+    background: var(--surface-card);
+    color: var(--gray-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+  }
+  .btn-circle:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--surface-border));
+    color: var(--accent);
+  }
+  .btn-circle.active-filter {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .btn-circle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
   .data-badge {
     background: var(--accent-soft);
     color: var(--accent);
@@ -170,6 +230,78 @@
     padding: 5px 12px;
     border-radius: 999px;
     border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    white-space: nowrap;
+  }
+  .filter-anchor { position: relative; }
+  .filters-popover {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(920px, calc(100vw - 32px));
+    max-height: min(78vh, 720px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.45);
+    padding: 18px 18px 16px;
+    z-index: 300;
+  }
+  .filters-popover .title-dropdown {
+    z-index: 320;
+  }
+  .filters-popover.open { display: block; }
+  .filters-popover-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .filters-popover-head h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .filters-popover-close {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--surface-border);
+    background: var(--input-bg);
+    color: var(--gray-600);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .filters-popover .filters-card {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  .filters-popover-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--surface-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface-card);
+  }
+  #csvFile { display: none; }
+  @media (max-width: 1100px) {
+    .app-chrome {
+      grid-template-columns: 1fr;
+      justify-items: stretch;
+    }
+    .chrome-center, .chrome-right, .brand { justify-content: flex-start; }
+    .filters-popover { left: 0; transform: none; width: min(920px, calc(100vw - 24px)); }
   }
 
   /* MAIN */
@@ -516,10 +648,10 @@
   }
   @media (max-width: 600px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .header { padding: 14px 16px; }
+    .app-chrome { padding: 12px 14px; }
+    .brand-wordmark { font-size: 13px; }
     .velho-mrow.cols-4 { grid-template-columns: 1fr 1fr; }
   }
-  /* ── STICKY FILTERS ── */
   .temp-mix-row { display:flex; align-items:center; gap:8px; padding:4px 0; font-size:11px; border-bottom:1px solid var(--gray-100); }
   .temp-mix-bar { height:14px; border-radius:3px; min-width:2px; }
 
@@ -552,30 +684,86 @@
 
   /* ── TABS ── */
   .tab-nav {
-    background: var(--surface-bg);
-    border-bottom: 1px solid var(--surface-border);
-    padding: 0 32px;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
     gap: 2px;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-    backdrop-filter: blur(12px);
+    padding: 4px;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 999px;
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .tab-btn {
-    padding: 12px 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
     border: none;
-    background: none;
+    background: transparent;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--gray-500);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color .15s, border-color .15s;
+    border-radius: 999px;
+    transition: color .15s, background .15s, box-shadow .15s;
+    white-space: nowrap;
   }
-  .tab-btn:hover { color: var(--accent); }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { color: var(--gray-800); background: var(--surface-hover); }
+  .tab-btn.active {
+    color: var(--gray-900);
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+  }
+  [data-theme="dark"] .tab-btn.active {
+    background: #343b4f;
+    color: #f8fafc;
+    box-shadow: none;
+  }
+  .kpi-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .kpi-label-row .kpi-label { margin-bottom: 0; }
+  .kpi-ico {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .kpi-ico svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  #panelShorts .kpi-ico {
+    background: color-mix(in srgb, var(--shorts) 16%, transparent);
+    color: var(--shorts);
+  }
 
   /* Segmented Tipo — outline (não border) evita “gordurinha” no segmento ativo */
   .dash-format-seg, .tipo-format-seg {
@@ -652,51 +840,19 @@
     }
   }
 
-  .filters-sticky {
-    position: sticky;
-    top: 45px;
-    z-index: 190;
-    background: var(--sticky-bg);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--surface-border);
-  }
-  .filters-sticky .filters-card {
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-    background: transparent;
-    margin: 0;
-    padding: 10px 20px;
-    gap: 10px 12px;
-  }
-  .btn-icon-toggle {
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
-    border-radius: var(--radius-sm);
-    padding: 4px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    line-height: 1;
-    height: 36px;
-    color: var(--gray-700);
-    transition: background .15s, border-color .15s, color .15s;
-  }
-  .btn-icon-toggle:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-  .btn-theme-icon { font-size: 18px; line-height: 1; display: inline-block; }
-
-  /* Dual range filters — single horizontal row (6 across) */
+  /* Dual range filters inside popover */
   .filter-ranges-grid {
     flex: 1 1 100%;
     width: 100%;
     display: flex;
-    flex-wrap: nowrap;
-    gap: 6px;
+    flex-wrap: wrap;
+    gap: 10px 12px;
     align-items: end;
     min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
+  }
+  .filters-popover .filter-group.filter-range-group {
+    flex: 1 1 140px;
+    min-width: 140px;
   }
   .filter-group.filter-range-group {
     display: grid;
@@ -1128,32 +1284,51 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-left">
+<!-- APP CHROME: brand + pill tabs + filter popover + circular actions -->
+<div class="app-chrome" id="appChrome">
+  <div class="brand">
     <div class="header-logo"><img src="assets/logo-futebol-maximo.png" alt="Futebol Máximo"></div>
-    <div class="header-title">
-      <h1>Dashboard Futebol Máximo</h1>
-      <p>Dashboard de Análise de Vídeos</p>
+    <div class="brand-wordmark" aria-label="Futebol Máximo">
+      <span class="bw-f">F</span>UTEBOL<br><span class="bw-m">M</span>ÁXIMO
     </div>
   </div>
-  <div class="header-actions">
-    <span class="data-badge" id="dataBadge">Carregando...</span>
-  </div>
-</div>
 
-<!-- TAB NAV -->
-<div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" id="tabBtnVelho"     onclick="switchTab('velho')">📼 VELHO</button>
-  <button class="tab-btn"        id="tabBtnDash"      onclick="switchTab('dashboard')">📊 Dashboard</button>
-  <button class="tab-btn"        id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">💬 Feedbacks</button>
-  <button class="tab-btn"        id="tabBtnBase"      onclick="switchTab('basedados')">📋 Base de Dados</button>
-  <button class="tab-btn"        id="tabBtnFantasy"   onclick="switchTab('fantasy')" style="display:none;">🎯 Fantasy</button>
-</div>
+  <div class="chrome-center">
+    <div class="tab-nav" id="tabNav">
+      <button class="tab-btn active" id="tabBtnVelho" onclick="switchTab('velho')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg>
+        VELHO
+      </button>
+      <button class="tab-btn" id="tabBtnDash" onclick="switchTab('dashboard')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="tab-btn" id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedbacks
+      </button>
+      <button class="tab-btn" id="tabBtnBase" onclick="switchTab('basedados')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 11v6c0 1.7 4 3 9 3s9-1.3 9-3v-6"/></svg>
+        Base de Dados
+      </button>
+      <button class="tab-btn" id="tabBtnFantasy" onclick="switchTab('fantasy')" style="display:none;">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        Fantasy
+      </button>
+    </div>
 
-<!-- STICKY FILTERS (shared across tabs) -->
-<div class="filters-sticky" id="filtersSticky">
-  <div class="filters-card">
+    <div class="filter-anchor">
+      <button type="button" id="btnFiltersToggle" class="btn-circle" onclick="toggleFiltersPopover(event)" title="Filtros" aria-haspopup="dialog" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      </button>
+      <div class="filters-popover" id="filtersPopover" role="dialog" aria-label="Filtros">
+        <div class="filters-popover-head">
+          <h3>Filtros</h3>
+          <button type="button" class="filters-popover-close" onclick="closeFiltersPopover()" title="Fechar" aria-label="Fechar">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="filters-card" id="filtersSticky">
     <div class="filter-group">
       <label>Criador</label>
       <select id="filterCreator">
@@ -1164,11 +1339,11 @@
       <label>Categoria</label>
       <div class="title-search-wrap" id="catWrap">
         <input type="text" id="filterCategoriaInput" placeholder="Todas as Categorias" readonly
-          onclick="toggleCatDropdown()" style="cursor:pointer;background:white;">
+          onclick="toggleCatDropdown()" style="cursor:pointer;background:var(--input-bg);">
         <div class="title-dropdown" id="catDropdown"></div>
       </div>
     </div>
-    <!-- Slot TIPO por aba: Dashboard XOR Base/VELHO XOR Fantasy (mesmo lugar na barra) -->
+    <!-- Slot TIPO por aba: Dashboard XOR Base/VELHO XOR Fantasy -->
     <div class="filter-group" id="dashboardTipoGroup">
       <label>TIPO</label>
       <div class="dash-format-seg" id="dashFormatSeg" role="group" aria-label="Tipo do Dashboard" title="Tipo">
@@ -1206,7 +1381,7 @@
       <label id="filterWeekLabel">SEMANA DE PUBLICAÇÃO</label>
       <div class="title-search-wrap" id="weekWrap">
         <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
-          onclick="toggleWeekDropdown()" style="cursor:pointer;background:white;">
+          onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);">
         <div class="title-dropdown" id="weekDropdown"></div>
       </div>
     </div>
@@ -1217,12 +1392,6 @@
           oninput="onTitleSearchInput()" onfocus="onTitleFocus()" onblur="onTitleBlur()">
         <div class="title-dropdown" id="titleDropdown"></div>
       </div>
-    </div>
-    <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end;gap:8px;min-width:auto;padding-bottom:1px;flex-wrap:wrap;">
-      <button class="btn-primary" onclick="applyFilters()">Aplicar</button>
-      <button class="btn-secondary" onclick="clearFilters()">Limpar</button>
-      <button id="btnEyeToggle" class="btn-icon-toggle" onclick="toggleAllSections()" title="Expandir/Recolher tudo">👁️</button>
-      <button id="btnThemeToggle" class="btn-icon-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro"><span class="btn-theme-icon">◐</span></button>
     </div>
     <div class="filter-ranges-grid">
       <div class="filter-group filter-range-group" data-range="views">
@@ -1312,6 +1481,19 @@
         </div>
       </div>
     </div>
+        </div>
+        <div class="filters-popover-actions">
+          <button type="button" class="btn-secondary" onclick="clearFilters()">Limpar</button>
+          <button type="button" class="btn-primary" onclick="applyFilters(); closeFiltersPopover();">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-right">
+    <span class="data-badge" id="dataBadge">Carregando...</span>
+    <button type="button" id="btnEyeToggle" class="btn-circle" onclick="toggleAllSections()" title="Expandir/Recolher tudo" aria-label="Expandir ou recolher seções"></button>
+    <button type="button" id="btnThemeToggle" class="btn-circle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema"></button>
   </div>
 </div>
 
@@ -1326,31 +1508,31 @@
   <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos vídeos?</p>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
     <div class="kpi-card">
-        <div class="kpi-label">VIEWS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="kpi-label">VIEWS</div></div>
         <div class="kpi-value" id="kViews">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kViewsMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">CTR%</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div class="kpi-label">CTR%</div></div>
         <div class="kpi-value" id="kCTR">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kCTRMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">AVG VIEW DURATION</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="kpi-label">AVG VIEW DURATION</div></div>
         <div class="kpi-value" id="kAvgDur">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kAvgDurMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">AVG VIEWED %</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M22 12A10 10 0 1 1 12 2"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6v6l3 2"/></svg></span><div class="kpi-label">AVG VIEWED %</div></div>
         <div class="kpi-value" id="kAvgPct">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kAvgPctMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">MINUTAGEM MÉDIA</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M5 4h14v4H5zM5 12h14v8H5z"/><path d="M9 8v4M15 8v4"/></svg></span><div class="kpi-label">MINUTAGEM MÉDIA</div></div>
         <div class="kpi-value" id="kDurMedia">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kDurMed">—</div>
@@ -1358,31 +1540,31 @@
   </div>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
     <div class="kpi-card">
-        <div class="kpi-label">IMPRESSÕES</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div class="kpi-label">IMPRESSÕES</div></div>
         <div class="kpi-value" id="kImpr">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kImprMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">INSCRITOS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span><div class="kpi-label">INSCRITOS</div></div>
         <div class="kpi-value" id="kInsc">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="kInscMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">LIKES</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span><div class="kpi-label">LIKES</div></div>
         <div class="kpi-value" id="kLikes">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="kLikesMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">COMENTÁRIOS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div class="kpi-label">COMENTÁRIOS</div></div>
         <div class="kpi-value" id="kComm">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="kCommMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">GANCHO</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span><div class="kpi-label">GANCHO</div></div>
         <div class="kpi-value" id="kGancho">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kGanchoMed">—</div>
@@ -1408,23 +1590,23 @@
     <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div style="display:flex;align-items:center;gap:8px;position:relative;">
         <button id="btnTempMetric" onclick="toggleTempMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-          <span id="tempMetricLabel">📈 Soma de Views</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          <span id="tempMetricLabel">Soma de Views</span> <span style="font-size:10px;opacity:.6;">▾</span>
         </button>
-        <div id="tempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
-          <div onclick="setTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
-          <div onclick="setTempMetric('viewsMedian','📊 Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views Mediana</div>
-          <div onclick="setTempMetric('ctr','📊 CTR% Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% Médio</div>
-          <div onclick="setTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
-          <div onclick="setTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
-          <div onclick="setTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
-          <div onclick="setTempMetric('gancho','🎣 Gancho Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho Médio</div>
+        <div id="tempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setTempMetric('views','Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Soma de Views</div>
+          <div onclick="setTempMetric('viewsMedian','Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Views Mediana</div>
+          <div onclick="setTempMetric('ctr','CTR% Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">CTR% Médio</div>
+          <div onclick="setTempMetric('ret','Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Retenção Média</div>
+          <div onclick="setTempMetric('insc','Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Total Inscritos</div>
+          <div onclick="setTempMetric('dur','Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg View Duration</div>
+          <div onclick="setTempMetric('gancho','Gancho Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Gancho Médio</div>
         </div>
       </div>
       <div style="position:relative;">
         <button onclick="toggleTempCatDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
           🏷️ Categorias <span id="tempCatBadge" style="display:none;background:var(--blue-500);color:white;border-radius:8px;padding:1px 6px;font-size:10px;margin-left:2px;"></span> <span style="font-size:10px;opacity:.6;">▾</span>
         </button>
-        <div id="tempCatDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;max-height:280px;overflow-y:auto;padding:4px 0;"></div>
+        <div id="tempCatDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;max-height:280px;overflow-y:auto;padding:4px 0;"></div>
       </div>
     </div>
     <div style="height:320px;margin-top:8px;"><canvas id="chartTempViews"></canvas></div>
@@ -1439,7 +1621,7 @@
   <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
   <div class="chart-card" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>🎯 CTR × Retenção por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
+      <span>CTR × Retenção por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
       <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:var(--gray-500);">
         <span>Quadrantes pela mediana do dataset</span>
         <div id="scatterLegend" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
@@ -1487,18 +1669,18 @@
       <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <div style="display:flex;align-items:center;gap:8px;position:relative;">
           <button onclick="togglePerfMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-            <span id="perfMetricLabel">📊 Views por Vídeo</span> <span style="font-size:10px;opacity:.6;">▾</span>
+            <span id="perfMetricLabel">Views por Vídeo</span> <span style="font-size:10px;opacity:.6;">▾</span>
           </button>
-          <div id="perfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:240px;padding:4px 0;">
-            <div onclick="setPerfMetric('views','📊 Views por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views por Vídeo</div>
-            <div onclick="setPerfMetric('avgViewDurSec','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
-            <div onclick="setPerfMetric('avgViewedPct','👁️ Avg Viewed %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Avg Viewed %</div>
-            <div onclick="setPerfMetric('comentarios','💬 Comentários')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">💬 Comentários</div>
+          <div id="perfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:240px;padding:4px 0;">
+            <div onclick="setPerfMetric('views','Views por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Views por Vídeo</div>
+            <div onclick="setPerfMetric('avgViewDurSec','Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg View Duration</div>
+            <div onclick="setPerfMetric('avgViewedPct','Avg Viewed %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg Viewed %</div>
+            <div onclick="setPerfMetric('comentarios','Comentários')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Comentários</div>
             <div onclick="setPerfMetric('conversaoComments','📬 Conv. Comentários %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📬 Conv. Comentários %</div>
             <div onclick="setPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
-            <div onclick="setPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
-            <div onclick="setPerfMetric('ctr','📊 CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 CTR% por Vídeo</div>
-            <div onclick="setPerfMetric('gancho','🎣 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🎣 Gancho % por Vídeo</div>
+            <div onclick="setPerfMetric('inscritos','Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Inscritos</div>
+            <div onclick="setPerfMetric('ctr','CTR% por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">CTR% por Vídeo</div>
+            <div onclick="setPerfMetric('gancho','Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Gancho % por Vídeo</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
@@ -1529,8 +1711,8 @@
           <h3 id="durTableTitle" style="margin:0;font-size:14px;font-weight:700;">Todas as faixas de duração</h3>
           <span style="font-size:11px;color:var(--gray-400);">▾</span>
         </button>
-        <div id="durGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
-          <div onclick="setDurGran('faixas')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixas de Duração</div>
+        <div id="durGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setDurGran('faixas')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Faixas de Duração</div>
           <div onclick="setDurGran('criadores')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
           <div onclick="setDurGran('categorias')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🏷️ Categorias</div>
         </div>
@@ -1573,7 +1755,7 @@
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido). Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks.</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
+      <span>Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
         <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
         <select id="funnelGroupBy" onchange="renderFunnel()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
@@ -1590,7 +1772,7 @@
   <p class="section-desc">Quantos vídeos temos em cada patamar de views?</p>
   <div style="margin-bottom:32px;">
     <div class="chart-card wide">
-      <div class="chart-title">📊 Distribuição de Views (faixas de 10K)</div>
+      <div class="chart-title">Distribuição de Views (faixas de 10K)</div>
       <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViews"></canvas></div>
     </div>
   </div>
@@ -1760,31 +1942,31 @@
   <p class="section-desc">Qual é a performance média de cada uma das métricas dos nossos Shorts?</p>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
     <div class="kpi-card">
-        <div class="kpi-label">VIEWS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="kpi-label">VIEWS</div></div>
         <div class="kpi-value" id="skViews">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skViewsMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">GANCHO %</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span><div class="kpi-label">GANCHO %</div></div>
         <div class="kpi-value" id="skCTR">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skCTRMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">AVG VIEW DURATION</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div class="kpi-label">AVG VIEW DURATION</div></div>
         <div class="kpi-value" id="skAvgDur">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skAvgDurMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">AVG VIEWED %</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M22 12A10 10 0 1 1 12 2"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6v6l3 2"/></svg></span><div class="kpi-label">AVG VIEWED %</div></div>
         <div class="kpi-value" id="skAvgPct">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skAvgPctMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">MINUTAGEM MÉDIA</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M5 4h14v4H5zM5 12h14v8H5z"/><path d="M9 8v4M15 8v4"/></svg></span><div class="kpi-label">MINUTAGEM MÉDIA</div></div>
         <div class="kpi-value" id="skDurMedia">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skDurMed">—</div>
@@ -1792,31 +1974,31 @@
   </div>
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;">
     <div class="kpi-card">
-        <div class="kpi-label">IMPRESSÕES</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div class="kpi-label">IMPRESSÕES</div></div>
         <div class="kpi-value" id="skImpr">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="skImprMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">INSCRITOS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span><div class="kpi-label">INSCRITOS</div></div>
         <div class="kpi-value" id="skInsc">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="skInscMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">LIKES</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span><div class="kpi-label">LIKES</div></div>
         <div class="kpi-value" id="skLikes">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="skLikesMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">COMENTÁRIOS</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div class="kpi-label">COMENTÁRIOS</div></div>
         <div class="kpi-value" id="skComm">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="skCommMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label">SHARES</div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span><div class="kpi-label">SHARES</div></div>
         <div class="kpi-value" id="skShares">—</div>
         <div class="kpi-sub">Média por vídeo</div>
         <div class="kpi-median" id="skSharesMed">—</div>
@@ -1835,15 +2017,15 @@
     <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <div style="display:flex;align-items:center;gap:8px;position:relative;">
         <button id="btnSTempMetric" onclick="toggleSTempMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-          <span id="sTempMetricLabel">📈 Soma de Views</span> <span style="font-size:10px;opacity:.6;">▾</span>
+          <span id="sTempMetricLabel">Soma de Views</span> <span style="font-size:10px;opacity:.6;">▾</span>
         </button>
-        <div id="sTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
-          <div onclick="setSTempMetric('views','📈 Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📈 Soma de Views</div>
-          <div onclick="setSTempMetric('viewsMedian','📊 Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views Mediana</div>
-          <div onclick="setSTempMetric('gancho','📊 Gancho % Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % Médio</div>
-          <div onclick="setSTempMetric('ret','👁️ Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Retenção Média</div>
-          <div onclick="setSTempMetric('insc','🔔 Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Total Inscritos</div>
-          <div onclick="setSTempMetric('dur','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
+        <div id="sTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div onclick="setSTempMetric('views','Soma de Views')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Soma de Views</div>
+          <div onclick="setSTempMetric('viewsMedian','Views Mediana')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Views Mediana</div>
+          <div onclick="setSTempMetric('gancho','Gancho % Médio')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Gancho % Médio</div>
+          <div onclick="setSTempMetric('ret','Retenção Média')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Retenção Média</div>
+          <div onclick="setSTempMetric('insc','Total Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Total Inscritos</div>
+          <div onclick="setSTempMetric('dur','Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg View Duration</div>
         </div>
       </div>
     </div>
@@ -1885,17 +2067,17 @@
       <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <div style="display:flex;align-items:center;gap:8px;position:relative;">
           <button onclick="toggleSPerfMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-            <span id="sPerfMetricLabel">📊 Views por Vídeo</span> <span style="font-size:10px;opacity:.6;">▾</span>
+            <span id="sPerfMetricLabel">Views por Vídeo</span> <span style="font-size:10px;opacity:.6;">▾</span>
           </button>
-          <div id="sPerfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:240px;padding:4px 0;">
-            <div onclick="setSPerfMetric('views','📊 Views por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Views por Vídeo</div>
-            <div onclick="setSPerfMetric('avgViewDurSec','⏱️ Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Avg View Duration</div>
-            <div onclick="setSPerfMetric('avgViewedPct','👁️ Avg Viewed %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👁️ Avg Viewed %</div>
-            <div onclick="setSPerfMetric('comentarios','💬 Comentários')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">💬 Comentários</div>
+          <div id="sPerfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:240px;padding:4px 0;">
+            <div onclick="setSPerfMetric('views','Views por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Views por Vídeo</div>
+            <div onclick="setSPerfMetric('avgViewDurSec','Avg View Duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg View Duration</div>
+            <div onclick="setSPerfMetric('avgViewedPct','Avg Viewed %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Avg Viewed %</div>
+            <div onclick="setSPerfMetric('comentarios','Comentários')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Comentários</div>
             <div onclick="setSPerfMetric('conversaoComments','📬 Conv. Comentários %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📬 Conv. Comentários %</div>
             <div onclick="setSPerfMetric('conversao','🔄 Conv. Inscritos %')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔄 Conv. Inscritos %</div>
-            <div onclick="setSPerfMetric('inscritos','🔔 Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">🔔 Inscritos</div>
-            <div onclick="setSPerfMetric('gancho','📊 Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">📊 Gancho % por Vídeo</div>
+            <div onclick="setSPerfMetric('inscritos','Inscritos')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Inscritos</div>
+            <div onclick="setSPerfMetric('gancho','Gancho % por Vídeo')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Gancho % por Vídeo</div>
           </div>
         </div>
       </div>
@@ -1920,9 +2102,9 @@
           <button type="button" id="btnShortsHeatmapGran" onclick="toggleShortsHeatmapGranDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
             <span id="shortsHeatmapGranLabel">👤 Criadores</span> <span style="font-size:10px;opacity:.6;">▾</span>
           </button>
-          <div id="shortsHeatmapGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:white;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
+          <div id="shortsHeatmapGranDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--surface-card);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:200px;padding:4px 0;">
             <div onclick="setShortsHeatmapGranularity('creator')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">👤 Criadores</div>
-            <div onclick="setShortsHeatmapGranularity('duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">⏱️ Faixa de duração</div>
+            <div onclick="setShortsHeatmapGranularity('duration')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background=''">Faixa de duração</div>
           </div>
         </div>
       </div>
@@ -1935,7 +2117,7 @@
   <p class="section-desc">Separa vídeos que dão alcance (volume relevante de views), comunidade (métricas de engajamento fortalecem o canal) e profundidade (segura atenção e gera tempo assistido).</p>
   <div class="chart-card wide" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>🔽 Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
+      <span>Impressões → Views → Likes → Inscritos → Shares → Comentários → Fantasy Clicks</span>
       <div style="display:flex;gap:8px;align-items:center;">
         <label style="font-size:12px;color:var(--gray-500);">Visão:</label>
         <select id="funnelGroupByShorts" onchange="renderShortsAll()" style="padding:5px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
@@ -1952,7 +2134,7 @@
   <p class="section-desc">Quantos Shorts temos em cada patamar de views?</p>
   <div style="margin-bottom:32px;">
     <div class="chart-card wide">
-      <div class="chart-title">📊 Distribuição de Views (faixas de 50K)</div>
+      <div class="chart-title">Distribuição de Views (faixas de 50K)</div>
       <div class="chart-wrap" style="height:260px;"><canvas id="chartHistViewsShorts"></canvas></div>
     </div>
   </div>
@@ -2062,11 +2244,11 @@
       <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <div style="display:flex;align-items:center;gap:8px;position:relative;">
           <button id="btnFTempMetric" onclick="toggleFantasyTempMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-            <span id="fantasyTempMetricLabel">🎯 Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
+            <span id="fantasyTempMetricLabel">Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
           </button>
           <div id="fantasyTempMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card,white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;padding:4px 0;">
-            <div onclick="setFantasyTempMetric('clicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-            <div onclick="setFantasyTempMetric('conversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
+            <div onclick="setFantasyTempMetric('clicks','Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">Fantasy Clicks</div>
+            <div onclick="setFantasyTempMetric('conversion','Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">Fantasy Conversion</div>
           </div>
         </div>
         <div class="fantasy-chart-controls">
@@ -2106,11 +2288,11 @@
         <div class="chart-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;align-items:center;gap:8px;position:relative;">
             <button id="btnFPerfMetric" onclick="toggleFantasyPerfMetricDD()" style="background:none;border:1px solid var(--gray-300);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:4px;">
-              <span id="fantasyPerfMetricLabel">🎯 Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
+              <span id="fantasyPerfMetricLabel">Fantasy Clicks</span> <span style="font-size:10px;opacity:.6;">▾</span>
             </button>
             <div id="fantasyPerfMetricDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface-card,white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:300;min-width:220px;padding:4px 0;">
-              <div onclick="setFantasyPerfMetric('clicks','🎯 Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Clicks</div>
-              <div onclick="setFantasyPerfMetric('conversion','🎯 Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">🎯 Fantasy Conversion</div>
+              <div onclick="setFantasyPerfMetric('clicks','Fantasy Clicks')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">Fantasy Clicks</div>
+              <div onclick="setFantasyPerfMetric('conversion','Fantasy Conversion')" style="padding:8px 14px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='var(--gray-100,#f3f4f6)'" onmouseout="this.style.background=''">Fantasy Conversion</div>
             </div>
           </div>
         </div>
@@ -2272,11 +2454,59 @@ function setTheme(theme) {
   else document.documentElement.removeAttribute('data-theme');
   try { localStorage.setItem(THEME_STORAGE_KEY, theme === 'dark' ? 'dark' : 'light'); } catch(e) {}
   refreshChartsForTheme();
+  updateThemeBtn();
 }
 
 function toggleTheme() {
   setTheme(getTheme() === 'dark' ? 'light' : 'dark');
 }
+
+const ICON_SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>';
+const ICON_EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+const ICON_EYE_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+function updateThemeBtn() {
+  const btn = document.getElementById('btnThemeToggle');
+  if (!btn) return;
+  const dark = getTheme() === 'dark';
+  btn.innerHTML = dark ? ICON_SUN : ICON_MOON;
+  btn.title = dark ? 'Tema claro' : 'Tema escuro';
+}
+
+function toggleFiltersPopover(ev) {
+  if (ev) ev.stopPropagation();
+  const pop = document.getElementById('filtersPopover');
+  const btn = document.getElementById('btnFiltersToggle');
+  if (!pop) return;
+  const open = !pop.classList.contains('open');
+  pop.classList.toggle('open', open);
+  if (btn) {
+    btn.classList.toggle('active-filter', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+}
+
+function closeFiltersPopover() {
+  const pop = document.getElementById('filtersPopover');
+  const btn = document.getElementById('btnFiltersToggle');
+  if (pop) pop.classList.remove('open');
+  if (btn) {
+    btn.classList.remove('active-filter');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const pop = document.getElementById('filtersPopover');
+  const btn = document.getElementById('btnFiltersToggle');
+  if (!pop || !pop.classList.contains('open')) return;
+  if (pop.contains(e.target) || (btn && btn.contains(e.target))) return;
+  closeFiltersPopover();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeFiltersPopover();
+});
 
 function mean(arr) {
   const valid = arr.filter(v => v !== null && v !== undefined && !isNaN(v));
@@ -3096,7 +3326,7 @@ function toggleFantasyTempMetricDD() {
 function setFantasyTempMetric(metric, label) {
   fantasyTemporalMetric = metric === 'conversion' ? 'conversion' : 'clicks';
   const lbl = document.getElementById('fantasyTempMetricLabel');
-  if (lbl) lbl.textContent = label || (fantasyTemporalMetric === 'conversion' ? '🎯 Fantasy Conversion' : '🎯 Fantasy Clicks');
+  if (lbl) lbl.textContent = label || (fantasyTemporalMetric === 'conversion' ? 'Fantasy Conversion' : 'Fantasy Clicks');
   const dd = document.getElementById('fantasyTempMetricDropdown');
   if (dd) dd.style.display = 'none';
   renderFantasyTemporal();
@@ -3474,7 +3704,7 @@ function toggleFantasyPerfMetricDD() {
 function setFantasyPerfMetric(metric, label) {
   fantasyPerformanceMetric = metric === 'conversion' ? 'conversion' : 'clicks';
   const lbl = document.getElementById('fantasyPerfMetricLabel');
-  if (lbl) lbl.textContent = label || (fantasyPerformanceMetric === 'conversion' ? '🎯 Fantasy Conversion' : '🎯 Fantasy Clicks');
+  if (lbl) lbl.textContent = label || (fantasyPerformanceMetric === 'conversion' ? 'Fantasy Conversion' : 'Fantasy Clicks');
   const dd = document.getElementById('fantasyPerfMetricDropdown');
   if (dd) dd.style.display = 'none';
   renderFantasyPerformance();
@@ -7246,7 +7476,7 @@ function setShortsHeatmapGranularity(gran) {
   if (gran !== 'creator' && gran !== 'duration') return;
   shortsHeatmapGranularity = gran;
   const labelEl = document.getElementById('shortsHeatmapGranLabel');
-  if (labelEl) labelEl.textContent = gran === 'duration' ? '⏱️ Faixa de duração' : '👤 Criadores';
+  if (labelEl) labelEl.textContent = gran === 'duration' ? 'Faixa de duração' : '👤 Criadores';
   const dd = document.getElementById('shortsHeatmapGranDropdown');
   if (dd) dd.style.display = 'none';
   renderShortsIndicatorsHeatmap();
@@ -7493,7 +7723,7 @@ function sanitizeDashboardMetric(metric, fallback, labelId, fallbackLabel) {
 }
 
 function setTempMetric(metric, label) {
-  tempMetric = sanitizeDashboardMetric(metric, 'views', 'tempMetricLabel', '📈 Soma de Views');
+  tempMetric = sanitizeDashboardMetric(metric, 'views', 'tempMetricLabel', 'Soma de Views');
   if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
     document.getElementById('tempMetricLabel').textContent = label;
   }
@@ -7551,7 +7781,7 @@ let perfMetric = 'views';
 let perfView = 'video'; // 'video' | 'categoria'
 
 function setPerfMetric(metric, label) {
-  perfMetric = sanitizeDashboardMetric(metric, 'views', 'perfMetricLabel', '📊 Views por Vídeo');
+  perfMetric = sanitizeDashboardMetric(metric, 'views', 'perfMetricLabel', 'Views por Vídeo');
   if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
     document.getElementById('perfMetricLabel').textContent = label;
   }
@@ -7590,7 +7820,7 @@ document.addEventListener('click', e => {
 let sTempMetric = 'views';
 
 function setSTempMetric(metric, label) {
-  sTempMetric = sanitizeDashboardMetric(metric, 'views', 'sTempMetricLabel', '📈 Soma de Views');
+  sTempMetric = sanitizeDashboardMetric(metric, 'views', 'sTempMetricLabel', 'Soma de Views');
   if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
     document.getElementById('sTempMetricLabel').textContent = label;
   }
@@ -7608,7 +7838,7 @@ let sPerfMetric = 'views';
 let sPerfView   = 'video';
 
 function setSPerfMetric(metric, label) {
-  sPerfMetric = sanitizeDashboardMetric(metric, 'views', 'sPerfMetricLabel', '📊 Views por Vídeo');
+  sPerfMetric = sanitizeDashboardMetric(metric, 'views', 'sPerfMetricLabel', 'Views por Vídeo');
   if (metric !== 'fantasyClicks' && metric !== 'fantasyConversion') {
     document.getElementById('sPerfMetricLabel').textContent = label;
   }
@@ -7841,14 +8071,13 @@ function updateEyeBtn() {
   const btn = document.getElementById('btnEyeToggle');
   if (!btn) return;
   if (allSectionsExpanded) {
-    btn.innerHTML = '👁️';
+    btn.innerHTML = ICON_EYE;
     btn.title = 'Recolher tudo';
     btn.style.opacity = '1';
   } else {
-    // Closed eye: eye with a diagonal line through it
-    btn.innerHTML = '<span style="position:relative;display:inline-block;line-height:1;">👁️<span style="position:absolute;top:50%;left:-1px;right:-1px;height:2px;background:#6b7280;transform:rotate(-35deg);transform-origin:center;border-radius:1px;margin-top:-1px;"></span></span>';
+    btn.innerHTML = ICON_EYE_OFF;
     btn.title = 'Expandir tudo';
-    btn.style.opacity = '0.7';
+    btn.style.opacity = '0.75';
   }
 }
 
@@ -8026,6 +8255,8 @@ function renderVelho() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  updateThemeBtn();
+  updateEyeBtn();
   syncFantasyTabVisibility();
   syncFormatControlsVisibility();
   syncDashboardFormatUI();
