@@ -242,14 +242,14 @@
     position: absolute;
     top: calc(100% + 10px);
     left: 0;
-    width: min(760px, calc(100vw - 24px));
+    width: min(720px, calc(100vw - 24px));
     max-height: none;
     overflow: visible;
     background: var(--surface-card);
     border: 1px solid var(--surface-border);
     border-radius: 20px;
     box-shadow: 0 24px 64px rgba(0,0,0,.45);
-    padding: 12px 14px 12px;
+    padding: 12px 18px 12px 14px;
     z-index: 300;
   }
   .filters-popover .title-dropdown { z-index: 320; }
@@ -305,11 +305,12 @@
     background: transparent;
     color: var(--gray-700);
     border-radius: 999px;
-    padding: 5px 11px;
-    font-size: 11px;
+    padding: 4px 9px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     line-height: 1.2;
+    text-transform: none;
     transition: background .15s, color .15s, border-color .15s;
   }
   .fp-toggle-btn:hover:not(:disabled) { border-color: color-mix(in srgb, var(--accent) 45%, var(--surface-border)); color: var(--accent); }
@@ -377,15 +378,31 @@
   .fp-chip.selected .fp-chip-check svg { display: block; }
   .fp-chip-check svg { display: none; width: 9px; height: 9px; }
   .fp-date-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
     margin-bottom: 10px;
+    align-items: flex-end;
   }
-  .fp-date-row .filter-group { min-width: 0; width: 100%; }
-  .fp-date-row input[type=date] { width: 100%; }
+  .fp-date-row .filter-group { min-width: 0; width: auto; flex: 0 0 auto; }
+  .fp-date-row input[type=date] {
+    width: 132px;
+    max-width: 132px;
+    box-sizing: border-box;
+  }
+  .fp-week-group {
+    max-width: 200px;
+    width: 200px;
+  }
+  .fp-week-group .title-search-wrap,
+  .fp-week-group .title-search-wrap input {
+    width: 100%;
+    max-width: 200px;
+    box-sizing: border-box;
+  }
   .filters-popover-actions {
     display: flex;
+    justify-content: center;
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid var(--surface-border);
@@ -394,13 +411,15 @@
     background: var(--surface-card);
   }
   .filters-popover-actions .btn-apply {
-    width: 100%;
-    height: 44px;
+    width: auto;
+    min-width: 110px;
+    height: 34px;
+    padding: 0 22px;
     border: none;
     border-radius: 999px;
     background: var(--accent);
     color: var(--accent-ink);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     display: inline-flex;
@@ -411,9 +430,11 @@
   .filters-popover .filter-ranges-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 6px 14px;
+    gap: 8px 18px;
     width: 100%;
     overflow: visible;
+    padding-right: 4px;
+    box-sizing: border-box;
   }
   .filters-popover .filter-group.filter-range-group {
     flex: none;
@@ -425,12 +446,40 @@
     font-size: 9px;
     margin: 0;
   }
+  .filters-popover .filter-range > input[type=number],
+  .filters-popover .filter-range > input[type=text].filter-range-mss {
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    box-sizing: border-box;
+    padding: 4px 2px;
+    text-align: center;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    height: 28px;
+    border-radius: 6px;
+  }
   @media (max-width: 640px) {
     .filters-popover .filter-ranges-grid { grid-template-columns: 1fr; }
   }
   #filterValoresSection.ranges-disabled { display: none !important; }
   .filters-popover .title-search-wrap { width: 100%; }
   .filters-popover .title-search-wrap input { width: 100%; }
+  .section-desc.feedback-rules {
+    font-style: normal;
+    opacity: .9;
+  }
+  .section-desc.feedback-rules ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+  }
+  .section-desc.feedback-rules li {
+    margin: 3px 0;
+  }
+  .section-desc.feedback-rules strong {
+    font-weight: 700;
+    color: var(--gray-800);
+  }
   #csvFile { display: none; }
   @media (max-width: 1100px) {
     .app-chrome {
@@ -438,7 +487,7 @@
       justify-items: stretch;
     }
     .chrome-center, .chrome-right, .brand { justify-content: flex-start; }
-    .filters-popover { left: 0; width: min(760px, calc(100vw - 24px)); }
+    .filters-popover { left: 0; width: min(720px, calc(100vw - 24px)); }
   }
 
   /* MAIN */
@@ -1086,6 +1135,7 @@
     display: contents;
   }
   .filter-range > input[type=number]:first-of-type,
+  .filter-range > input[type=text].filter-range-mss:first-of-type,
   .filter-range > .filter-range-time:first-child {
     grid-column: 1;
     grid-row: 2;
@@ -1095,40 +1145,32 @@
     grid-row: 2;
   }
   .filter-range > input[type=number]:last-of-type,
+  .filter-range > input[type=text].filter-range-mss:last-of-type,
   .filter-range > .filter-range-time:last-child {
     grid-column: 3;
     grid-row: 2;
   }
-  .filter-range input[type=number] {
-    width: 58px;
-    min-width: 48px;
+  .filter-range input[type=number],
+  .filter-range input[type=text].filter-range-mss {
+    width: 64px;
+    min-width: 64px;
+    max-width: 64px;
     padding: 4px 3px;
     text-align: center;
     font-size: 11px;
     font-variant-numeric: tabular-nums;
     height: 28px;
     border-radius: 6px;
+    box-sizing: border-box;
   }
-  .filter-range-group[data-range="views"] {
-    flex: 1.2 1 0;
-    min-width: 168px;
-  }
-  .filter-range-group[data-range="views"] .filter-range > input[type=number] {
-    width: 78px;
-    min-width: 68px;
-    font-size: 11px;
-    padding: 4px 2px;
-  }
-  .filter-range-group[data-range="outlier"] .filter-range > input[type=number],
-  .filter-range-group[data-range="ctr"] .filter-range > input[type=number],
-  .filter-range-group[data-range="gancho"] .filter-range > input[type=number],
-  .filter-range-group[data-range="avgviewed"] .filter-range > input[type=number] {
-    width: 48px;
-    min-width: 42px;
-  }
-  .filter-range-group[data-range="duration"] {
-    flex: 1.15 1 0;
-    min-width: 176px;
+  .filter-range-group[data-range="views"],
+  .filter-range-group[data-range="outlier"],
+  .filter-range-group[data-range="ctr"],
+  .filter-range-group[data-range="duration"],
+  .filter-range-group[data-range="gancho"],
+  .filter-range-group[data-range="avgviewed"] {
+    flex: 1 1 0;
+    min-width: 0;
   }
   .filter-range-time {
     display: flex;
@@ -1208,12 +1250,14 @@
     box-shadow: 0 0 0 3px var(--accent-glow);
   }
   .filter-range input[type=number]::placeholder,
+  .filter-range input[type=text].filter-range-mss::placeholder,
   .filter-range-time input[type=number]::placeholder {
     color: var(--gray-400);
     opacity: 1;
     font-weight: 500;
   }
   [data-theme="dark"] .filter-range input[type=number]::placeholder,
+  [data-theme="dark"] .filter-range input[type=text].filter-range-mss::placeholder,
   [data-theme="dark"] .filter-range-time input[type=number]::placeholder {
     color: var(--gray-500);
   }
@@ -1560,13 +1604,13 @@
                 <label id="filterDateEndLabel">Fim</label>
                 <input type="date" id="filterDateEnd">
               </div>
-            </div>
-            <div class="filter-group">
-              <label id="filterWeekLabel">Semana</label>
-              <div class="title-search-wrap" id="weekWrap">
-                <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
-                  onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);width:100%;">
-                <div class="title-dropdown" id="weekDropdown"></div>
+              <div class="filter-group fp-week-group">
+                <label id="filterWeekLabel">Semana</label>
+                <div class="title-search-wrap" id="weekWrap">
+                  <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
+                    onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);">
+                  <div class="title-dropdown" id="weekDropdown"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -1656,22 +1700,14 @@
               <div class="filter-group filter-range-group" data-range="duration">
                 <label>Avg View Duration</label>
                 <div class="filter-range">
-                  <div class="filter-range-time">
-                    <input type="number" id="filterDurMinM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima minutos">
-                    <span class="time-sep">:</span>
-                    <input type="number" id="filterDurMinS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração mínima segundos">
-                  </div>
+                  <input type="text" id="filterDurMin" class="filter-range-mss" inputmode="numeric" placeholder="m:ss" aria-label="Avg View Duration mínimo" autocomplete="off">
                   <div class="filter-range-track-wrap">
                     <div class="filter-range-rail"></div>
                     <div class="filter-range-fill" id="filterDurFill"></div>
                     <input type="range" id="filterDurMinRange" min="0" max="1000" step="1" aria-label="Avg View Duration mínimo">
                     <input type="range" id="filterDurMaxRange" min="0" max="1000" step="1" aria-label="Avg View Duration máximo">
                   </div>
-                  <div class="filter-range-time">
-                    <input type="number" id="filterDurMaxM" class="time-min" min="0" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima minutos">
-                    <span class="time-sep">:</span>
-                    <input type="number" id="filterDurMaxS" class="time-sec" min="0" max="59" step="1" inputmode="numeric" placeholder="-" aria-label="Duração máxima segundos">
-                  </div>
+                  <input type="text" id="filterDurMax" class="filter-range-mss" inputmode="numeric" placeholder="m:ss" aria-label="Avg View Duration máximo" autocomplete="off">
                 </div>
               </div>
               <div class="filter-group filter-range-group" data-range="gancho">
@@ -2000,16 +2036,8 @@
 
 <div id="panelFeedbacks" class="main" style="display:none;">
 
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="false"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Criador × Status</h2></div>
-  <p class="section-desc" id="feedbackMatrixDesc">Contagem de vídeos por criador e status de classificação.</p>
-  <div class="table-card" style="margin-bottom:24px;">
-    <div class="table-wrap" style="max-height:280px;">
-      <div id="feedbackMatrixWrap"></div>
-    </div>
-  </div>
-
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="false"><div class="section-divider"><span class="section-toggle">▼</span></div><h2 id="feedbackSectionTitle">Feedback Automático · Long Form</h2></div>
-  <p class="section-desc" id="feedbackSectionDesc">Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.</p>
+  <div class="section-desc feedback-rules" id="feedbackSectionDesc"></div>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -4809,6 +4837,20 @@ function mmssPartsToSec(m, s) {
   const se = clampNum(parseInt(s, 10) || 0, 0, 59);
   return mi * 60 + se;
 }
+function formatMmSs(sec) {
+  const p = secToMMSSParts(sec);
+  return `${p.m}:${p.s}`;
+}
+function parseMmSsInput(el, fallback) {
+  if (!el) return fallback;
+  const raw = String(el.value || '').trim();
+  if (raw === '') return fallback;
+  const sec = parseDuration(raw);
+  return Number.isFinite(sec) ? sec : fallback;
+}
+function durInputHasRestriction(el) {
+  return !!(el && String(el.value).trim() !== '');
+}
 
 function viewsFromSlider(sliderVal) {
   const t = Number(sliderVal) / RANGE_SLIDER_MAX;
@@ -4933,17 +4975,10 @@ function setDurUI(minSec, maxSec, writeInputs) {
   const maxRange = document.getElementById('filterDurMaxRange');
   if (minRange) minRange.value = durToSlider(minSec);
   if (maxRange) maxRange.value = durToSlider(maxSec);
-  const el = id => document.getElementById(id);
-  if (writeInputs === true || writeInputs === 'min') {
-    const pMin = secToMMSSParts(minSec);
-    if (el('filterDurMinM')) el('filterDurMinM').value = pMin.m;
-    if (el('filterDurMinS')) el('filterDurMinS').value = pMin.s;
-  }
-  if (writeInputs === true || writeInputs === 'max') {
-    const pMax = secToMMSSParts(maxSec);
-    if (el('filterDurMaxM')) el('filterDurMaxM').value = pMax.m;
-    if (el('filterDurMaxS')) el('filterDurMaxS').value = pMax.s;
-  }
+  const minEl = document.getElementById('filterDurMin');
+  const maxEl = document.getElementById('filterDurMax');
+  if (writeInputs === true || writeInputs === 'min') { if (minEl) minEl.value = formatMmSs(minSec); }
+  if (writeInputs === true || writeInputs === 'max') { if (maxEl) maxEl.value = formatMmSs(maxSec); }
   syncRangeFills();
 }
 
@@ -4955,11 +4990,6 @@ function inputHasRestriction(el) {
   return Number.isFinite(n);
 }
 
-function durSideHasRestriction(mEl, sEl) {
-  if (!mEl || !sEl) return false;
-  return String(mEl.value).trim() !== '' || String(sEl.value).trim() !== '';
-}
-
 function clearRangeFilterInputs() {
   [
     'filterViewsMin','filterViewsMax',
@@ -4967,7 +4997,7 @@ function clearRangeFilterInputs() {
     'filterCtrMin','filterCtrMax',
     'filterGanchoMin','filterGanchoMax',
     'filterAvgViewedMin','filterAvgViewedMax',
-    'filterDurMinM','filterDurMinS','filterDurMaxM','filterDurMaxS',
+    'filterDurMin','filterDurMax',
   ].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
@@ -4989,14 +5019,6 @@ function parsePctInput(el, fallback) {
   const n = parseFloat(String(el.value).replace(',', '.'));
   return Number.isFinite(n) ? n : fallback;
 }
-function parseDurInputs(mEl, sEl, fallback) {
-  if (!mEl || !sEl) return fallback;
-  const m = mEl.value;
-  const s = sEl.value;
-  if (m === '' && s === '') return fallback;
-  return mmssPartsToSec(m, s);
-}
-
 function readRangeFilterValues(writeBack) {
   const vMinEl = document.getElementById('filterViewsMin');
   const vMaxEl = document.getElementById('filterViewsMax');
@@ -5008,10 +5030,8 @@ function readRangeFilterValues(writeBack) {
   const gMaxEl = document.getElementById('filterGanchoMax');
   const aMinEl = document.getElementById('filterAvgViewedMin');
   const aMaxEl = document.getElementById('filterAvgViewedMax');
-  const dMinM = document.getElementById('filterDurMinM');
-  const dMinS = document.getElementById('filterDurMinS');
-  const dMaxM = document.getElementById('filterDurMaxM');
-  const dMaxS = document.getElementById('filterDurMaxS');
+  const dMinEl = document.getElementById('filterDurMin');
+  const dMaxEl = document.getElementById('filterDurMax');
 
   const viewsMinSet = inputHasRestriction(vMinEl);
   const viewsMaxSet = inputHasRestriction(vMaxEl);
@@ -5043,10 +5063,10 @@ function readRangeFilterValues(writeBack) {
   let avgViewedMax = avgViewedMaxSet ? roundPct1(clampNum(parsePctInput(aMaxEl, avgViewedBoundMax), avgViewedBoundMin, avgViewedBoundMax)) : avgViewedBoundMax;
   if (avgViewedMinSet && avgViewedMaxSet && avgViewedMin > avgViewedMax) { const t = avgViewedMin; avgViewedMin = avgViewedMax; avgViewedMax = t; }
 
-  const durMinSet = durSideHasRestriction(dMinM, dMinS);
-  const durMaxSet = durSideHasRestriction(dMaxM, dMaxS);
-  let durMin = durMinSet ? Math.round(clampNum(parseDurInputs(dMinM, dMinS, durBoundMin), durBoundMin, durBoundMax)) : durBoundMin;
-  let durMax = durMaxSet ? Math.round(clampNum(parseDurInputs(dMaxM, dMaxS, durBoundMax), durBoundMin, durBoundMax)) : durBoundMax;
+  const durMinSet = durInputHasRestriction(dMinEl);
+  const durMaxSet = durInputHasRestriction(dMaxEl);
+  let durMin = durMinSet ? Math.round(clampNum(parseMmSsInput(dMinEl, durBoundMin), durBoundMin, durBoundMax)) : durBoundMin;
+  let durMax = durMaxSet ? Math.round(clampNum(parseMmSsInput(dMaxEl, durBoundMax), durBoundMin, durBoundMax)) : durBoundMax;
   if (durMinSet && durMaxSet && durMin > durMax) { const t = durMin; durMin = durMax; durMax = t; }
 
   if (writeBack) {
@@ -5172,16 +5192,14 @@ function bindPctRange(prefix, bMin, bMax, fromSlider, toSlider) {
 }
 
 function bindDurRange() {
-  const minM = document.getElementById('filterDurMinM');
-  const minS = document.getElementById('filterDurMinS');
-  const maxM = document.getElementById('filterDurMaxM');
-  const maxS = document.getElementById('filterDurMaxS');
+  const minEl = document.getElementById('filterDurMin');
+  const maxEl = document.getElementById('filterDurMax');
   const minR = document.getElementById('filterDurMinRange');
   const maxR = document.getElementById('filterDurMaxRange');
 
   const syncFromDurInputs = (which) => {
-    const minSec = parseDurInputs(minM, minS, durBoundMin);
-    const maxSec = parseDurInputs(maxM, maxS, durBoundMax);
+    const minSec = parseMmSsInput(minEl, durBoundMin);
+    const maxSec = parseMmSsInput(maxEl, durBoundMax);
     let lo = Math.round(clampNum(minSec, durBoundMin, durBoundMax));
     let hi = Math.round(clampNum(maxSec, durBoundMin, durBoundMax));
     if (which === 'min' && lo > hi) lo = hi;
@@ -5194,52 +5212,48 @@ function bindDurRange() {
   if (minR) minR.addEventListener('input', () => {
     bumpRangeZ(minR);
     let min = durFromSlider(minR.value);
-    const max = parseDurInputs(maxM, maxS, durBoundMax);
+    const max = parseMmSsInput(maxEl, durBoundMax);
     if (min > max) { min = max; minR.value = durToSlider(min); }
     setDurUI(min, max, 'min');
   });
   if (maxR) maxR.addEventListener('input', () => {
     bumpRangeZ(maxR);
-    const min = parseDurInputs(minM, minS, durBoundMin);
+    const min = parseMmSsInput(minEl, durBoundMin);
     let max = durFromSlider(maxR.value);
     if (max < min) { max = min; maxR.value = durToSlider(max); }
     setDurUI(min, max, 'max');
   });
 
-  [minM, minS].forEach(el => {
-    if (!el) return;
-    el.addEventListener('input', () => syncFromDurInputs('min'));
-    el.addEventListener('blur', () => {
-      if (!durSideHasRestriction(minM, minS)) {
-        if (minM) minM.value = '';
-        if (minS) minS.value = '';
+  if (minEl) {
+    minEl.addEventListener('input', () => syncFromDurInputs('min'));
+    minEl.addEventListener('blur', () => {
+      if (!durInputHasRestriction(minEl)) {
+        minEl.value = '';
         if (minR) minR.value = durToSlider(durBoundMin);
         syncRangeFills();
         return;
       }
-      let min = parseDurInputs(minM, minS, durBoundMin);
-      const max = parseDurInputs(maxM, maxS, durBoundMax);
+      let min = parseMmSsInput(minEl, durBoundMin);
+      const max = parseMmSsInput(maxEl, durBoundMax);
       min = Math.round(clampNum(min, durBoundMin, Math.min(durBoundMax, max)));
       setDurUI(min, max, 'min');
     });
-  });
-  [maxM, maxS].forEach(el => {
-    if (!el) return;
-    el.addEventListener('input', () => syncFromDurInputs('max'));
-    el.addEventListener('blur', () => {
-      if (!durSideHasRestriction(maxM, maxS)) {
-        if (maxM) maxM.value = '';
-        if (maxS) maxS.value = '';
+  }
+  if (maxEl) {
+    maxEl.addEventListener('input', () => syncFromDurInputs('max'));
+    maxEl.addEventListener('blur', () => {
+      if (!durInputHasRestriction(maxEl)) {
+        maxEl.value = '';
         if (maxR) maxR.value = durToSlider(durBoundMax);
         syncRangeFills();
         return;
       }
-      const min = parseDurInputs(minM, minS, durBoundMin);
-      let max = parseDurInputs(maxM, maxS, durBoundMax);
+      const min = parseMmSsInput(minEl, durBoundMin);
+      let max = parseMmSsInput(maxEl, durBoundMax);
       max = Math.round(clampNum(max, Math.max(durBoundMin, min), durBoundMax));
       setDurUI(min, max, 'max');
     });
-  });
+  }
 }
 
 function initRangeFilters() {
@@ -6544,97 +6558,29 @@ function updateFeedbackSectionCopy() {
   const shorts = isFeedbackShortsMode();
   const titleEl = document.getElementById('feedbackSectionTitle');
   const descEl = document.getElementById('feedbackSectionDesc');
-  const matrixDesc = document.getElementById('feedbackMatrixDesc');
   if (titleEl) titleEl.textContent = shorts ? 'Feedback Automático · Shorts' : 'Feedback Automático · Long Form';
-  if (descEl) {
-    descEl.textContent = shorts
-      ? 'Classificação Shorts: Escalar = Views ≥114K + (Gancho ≥71% ou Avg Viewed% ≥80%). Gancho / Storytelling / Chamativo / Não Escalar pelas combinações (Não Escalar inclui Gancho+Avg altos com Views <114K).'
-      : 'Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.';
+  if (!descEl) return;
+  if (shorts) {
+    descEl.innerHTML = `
+      <div>Limiares Shorts: <strong>Views ≥114K</strong> · <strong>Gancho ≥71%</strong> · <strong>Avg Viewed% ≥80%</strong>.</div>
+      <ul>
+        <li><strong>Escalar:</strong> Views ≥114K e (Gancho ≥71% ou Avg Viewed% ≥80%).</li>
+        <li><strong>Chamativo:</strong> Views ≥114K, Gancho &lt;71% e Avg Viewed% &lt;80%.</li>
+        <li><strong>Gancho:</strong> Views &lt;114K, Gancho &lt;71% e Avg Viewed% ≥80%.</li>
+        <li><strong>Storytelling:</strong> Views &lt;114K, Gancho ≥71% e Avg Viewed% &lt;80%.</li>
+        <li><strong>Não Escalar:</strong> Views &lt;114K com Gancho ≥71% e Avg Viewed% ≥80%; ou Views &lt;114K com Gancho &lt;71% e Avg Viewed% &lt;80%.</li>
+      </ul>`;
+  } else {
+    descEl.innerHTML = `
+      <div>Limiares Long Form: <strong>Impressões ≥500K</strong> · <strong>Views ≥49K</strong> · <strong>Avg Viewed% ≥40%</strong>.</div>
+      <ul>
+        <li><strong>Escalar:</strong> Impressões ≥500K e Views ≥49K (Avg Viewed% indiferente).</li>
+        <li><strong>Reembalar:</strong> Impressões &lt;500K e Avg Viewed% ≥40% (Views indiferente).</li>
+        <li><strong>Storytelling:</strong> Impressões ≥500K, Avg Viewed% &lt;40% e Views &lt;49K.</li>
+        <li><strong>Chamativo:</strong> Impressões &lt;500K, Avg Viewed% &lt;40% e Views ≥49K.</li>
+        <li><strong>Não Escalar:</strong> demais combinações (inclui Impressões ≥500K, Avg Viewed% ≥40% e Views &lt;49K).</li>
+      </ul>`;
   }
-  if (matrixDesc) {
-    matrixDesc.textContent = shorts
-      ? 'Contagem de Shorts por criador e status (Escalar, Gancho, Storytelling, Chamativo, Não Escalar).'
-      : 'Contagem de Long Form por criador e status (Escalar, Reembalar, Storytelling, Chamativo, Não Escalar).';
-  }
-}
-
-function renderFeedbackMatrix() {
-  const wrap = document.getElementById('feedbackMatrixWrap');
-  if (!wrap) return;
-  const shorts = isFeedbackShortsMode();
-  const statuses = shorts
-    ? ['Escalar', 'Gancho', 'Storytelling', 'Chamativo', 'Não Escalar']
-    : ['Escalar', 'Reembalar', 'Storytelling', 'Chamativo', 'Não Escalar'];
-  const statusMeta = {
-    'Escalar': { color: '#4ade80', icon: '🟢' },
-    'Reembalar': { color: '#60a5fa', icon: '🔵' },
-    'Gancho': { color: '#60a5fa', icon: '🔵' },
-    'Storytelling': { color: '#fcd34d', icon: '🟡' },
-    'Chamativo': { color: '#c084fc', icon: '🟣' },
-    'Não Escalar': { color: '#fca5a5', icon: '🔴' },
-  };
-  const d = getFeedbackSourceRows();
-  const creators = FIXED_CREATORS.slice();
-  const counts = {};
-  creators.forEach(c => {
-    counts[c] = Object.fromEntries(statuses.map(s => [s, 0]));
-    counts[c]._total = 0;
-  });
-  let otherTotal = 0;
-  const otherByStatus = Object.fromEntries(statuses.map(s => [s, 0]));
-
-  d.forEach(r => {
-    const cls = classifyFeedbackRow(r);
-    const creator = r.creator || '';
-    if (counts[creator]) {
-      counts[creator][cls.status] = (counts[creator][cls.status] || 0) + 1;
-      counts[creator]._total += 1;
-    } else {
-      otherByStatus[cls.status] = (otherByStatus[cls.status] || 0) + 1;
-      otherTotal += 1;
-    }
-  });
-
-  const th = 'padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);white-space:nowrap;';
-  const tdL = 'padding:8px 10px;font-size:12px;border-bottom:1px solid var(--gray-100);';
-  const tdN = 'padding:8px 10px;font-size:12px;text-align:right;border-bottom:1px solid var(--gray-100);font-variant-numeric:tabular-nums;';
-
-  const rowHtml = (label, byStatus, total) => {
-    const cells = statuses.map(s => {
-      const n = byStatus[s] || 0;
-      const meta = statusMeta[s];
-      const style = n > 0 ? `color:${meta.color};font-weight:700;` : 'color:var(--gray-400);';
-      return `<td style="${tdN}${style}">${n || '—'}</td>`;
-    }).join('');
-    return `<tr>
-      <td style="${tdL}"><span class="creator-tag">${label}</span></td>
-      ${cells}
-      <td style="${tdN}font-weight:700;color:var(--gray-800);">${total}</td>
-    </tr>`;
-  };
-
-  let body = creators.map(c => rowHtml(c, counts[c], counts[c]._total)).join('');
-  if (otherTotal > 0) body += rowHtml('Outros', otherByStatus, otherTotal);
-
-  const totals = Object.fromEntries(statuses.map(s => [s, creators.reduce((a, c) => a + (counts[c][s] || 0), 0) + (otherByStatus[s] || 0)]));
-  const grand = creators.reduce((a, c) => a + counts[c]._total, 0) + otherTotal;
-  body += `<tr style="background:var(--gray-50);">
-    <td style="${tdL}font-weight:700;">Total</td>
-    ${statuses.map(s => `<td style="${tdN}font-weight:700;">${totals[s] || 0}</td>`).join('')}
-    <td style="${tdN}font-weight:700;">${grand}</td>
-  </tr>`;
-
-  wrap.innerHTML = `<table style="width:100%;border-collapse:collapse;">
-    <thead><tr>
-      <th style="${th}text-align:left;">Criador</th>
-      ${statuses.map(s => {
-        const m = statusMeta[s];
-        return `<th style="${th}text-align:right;color:${m.color};">${m.icon} ${s}</th>`;
-      }).join('')}
-      <th style="${th}text-align:right;">Total</th>
-    </tr></thead>
-    <tbody>${body}</tbody>
-  </table>`;
 }
 
 let feedbackSortCol = 'dataPublicacao';
@@ -8093,7 +8039,6 @@ function renderShortsIndicatorsHeatmap() {
 function renderFeedbacksTab() {
   syncFeedbackStatusFilterOptions();
   updateFeedbackSectionCopy();
-  renderFeedbackMatrix();
   renderFeedbackTable();
 }
 
