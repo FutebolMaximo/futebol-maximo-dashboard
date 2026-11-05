@@ -599,7 +599,13 @@
     border-radius: 6px;
     color-scheme: light;
   }
-  [data-theme="dark"] select { color-scheme: dark; }
+  [data-theme="dark"] { color-scheme: dark; }
+  [data-theme="dark"] select,
+  [data-theme="dark"] option {
+    color-scheme: dark;
+    background: var(--surface-card);
+    color: var(--gray-900);
+  }
   #heatmapMetric, #funnelGroupBy, #funnelGroupByShorts,
   #feedbackStatusFilter, #feedbackSStatusFilter {
     background: var(--input-bg) !important;
@@ -700,60 +706,72 @@
   thead th .sort-icon { margin-left: 1px; opacity: .4; }
   thead th.sorted .sort-icon { opacity: 1; color: var(--accent); }
 
-  /* Base de Dados — headers diagonais + colunas legíveis */
-  #dataTable { width: max-content; min-width: 100%; table-layout: fixed; font-size: 11px; }
-  #dataTable th:nth-child(1)  { width:92px; text-align:left; }   /* Data */
-  #dataTable th:nth-child(2)  { width:64px; }                    /* Semana */
-  #dataTable th:nth-child(3)  { width:72px; }                    /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:100px; text-align:left; }  /* Content ID */
-  #dataTable th:nth-child(5)  { width:220px; text-align:left; }  /* Título */
-  #dataTable th:nth-child(6)  { width:88px; }                    /* Tipo */
-  #dataTable th:nth-child(7)  { width:72px; }                    /* Criador */
-  #dataTable th:nth-child(8)  { width:100px; }                   /* Categoria */
-  #dataTable th:nth-child(9)  { width:64px; }                    /* Views */
-  #dataTable th:nth-child(10) { width:72px; }                    /* Fantasy Clicks */
-  #dataTable th:nth-child(11) { width:88px; }                    /* Fantasy Conversion */
-  #dataTable th:nth-child(12) { width:56px; }                    /* CTR% */
-  #dataTable th:nth-child(13) { width:72px; }                    /* Avg View Dur */
-  #dataTable th:nth-child(14) { width:64px; }                    /* Gancho */
-  #dataTable th:nth-child(15) { width:64px; }                    /* Duração */
-  #dataTable th:nth-child(16) { width:68px; }                    /* Avg View % */
-  #dataTable th:nth-child(17) { width:64px; }                    /* Impr. */
-  #dataTable th:nth-child(18) { width:64px; }                    /* CTR% YT */
-  #dataTable th:nth-child(19) { width:56px; }                    /* Likes */
-  #dataTable th:nth-child(20) { width:68px; }                    /* Inscritos */
-  #dataTable th:nth-child(21) { width:72px; }                    /* Conv. Insc. */
-  #dataTable th:nth-child(22) { width:56px; }                    /* Shares */
-  #dataTable th:nth-child(23) { width:64px; }                    /* Coment. */
-  #dataTable th:nth-child(24) { width:72px; }                    /* Conv. Comm. */
-  #dataTable td:nth-child(5) { white-space: normal; }
-  #dataTable td:nth-child(1),
-  #dataTable td:nth-child(6) {
-    overflow: visible;
-    text-overflow: clip;
-    white-space: nowrap;
+  /* Base de Dados — cabe tudo na viewport (sem scroll horizontal) */
+  #dataTable {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 10px;
   }
+  #dataTable th:nth-child(1)  { width:4.2%; }   /* Data */
+  #dataTable th:nth-child(2)  { width:3.2%; }   /* Semana */
+  #dataTable th:nth-child(3)  { width:3.6%; }   /* Mês_Ano */
+  #dataTable th:nth-child(4)  { width:5%; }     /* Content ID */
+  #dataTable th:nth-child(5)  { width:12%; }    /* Título */
+  #dataTable th:nth-child(6)  { width:3.8%; }   /* Tipo */
+  #dataTable th:nth-child(7)  { width:3.6%; }   /* Criador */
+  #dataTable th:nth-child(8)  { width:4.6%; }   /* Categoria */
+  #dataTable th:nth-child(9)  { width:3.4%; }   /* Views */
+  #dataTable th:nth-child(10) { width:3.6%; }   /* Fantasy Clicks */
+  #dataTable th:nth-child(11) { width:4.2%; }   /* Fantasy Conversion */
+  #dataTable th:nth-child(12) { width:3%; }     /* CTR% */
+  #dataTable th:nth-child(13) { width:3.6%; }   /* Avg View Dur */
+  #dataTable th:nth-child(14) { width:3.2%; }   /* Gancho */
+  #dataTable th:nth-child(15) { width:3.2%; }   /* Duração */
+  #dataTable th:nth-child(16) { width:3.4%; }   /* Avg View % */
+  #dataTable th:nth-child(17) { width:3.4%; }   /* Impr. */
+  #dataTable th:nth-child(18) { width:3.2%; }   /* CTR% YT */
+  #dataTable th:nth-child(19) { width:3%; }     /* Likes */
+  #dataTable th:nth-child(20) { width:3.4%; }   /* Inscritos */
+  #dataTable th:nth-child(21) { width:3.6%; }   /* Conv. Insc. */
+  #dataTable th:nth-child(22) { width:3%; }     /* Shares */
+  #dataTable th:nth-child(23) { width:3.2%; }   /* Coment. */
+  #dataTable th:nth-child(24) { width:3.6%; }   /* Conv. Comm. */
+  #dataTable td:nth-child(5) { white-space: normal; }
   #dataTable thead th {
-    height: 96px;
-    vertical-align: bottom;
-    white-space: nowrap;
-    word-break: normal;
-    overflow: visible;
-    padding: 0 4px 8px;
-    text-align: left;
-    line-height: 1.1;
+    height: 52px;
+    vertical-align: middle;
+    text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    overflow: hidden;
+    padding: 6px 2px;
+    line-height: 1.15;
+    font-size: 9px;
+    letter-spacing: 0.02em;
+    background: color-mix(in srgb, var(--surface-card) 88%, var(--accent));
+    border-bottom: 1px solid var(--surface-border);
   }
   #dataTable thead th .th-diag {
+    display: block;
+    white-space: normal;
+    transform: none;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 100%;
+  }
+  #dataTable thead th .sort-icon {
     display: inline-block;
-    transform: translate(6px, 0) rotate(-40deg);
-    transform-origin: bottom left;
-    white-space: nowrap;
-    max-width: none;
-    font-size: 10px;
-    letter-spacing: 0;
+    margin-left: 1px;
+    opacity: .45;
   }
   #panelBaseDados .table-card { min-height: calc(100vh - 160px); }
-  #panelBaseDados .table-wrap { overflow-x: auto; max-height: calc(100vh - 220px); }
+  #panelBaseDados .table-wrap { overflow-x: hidden; max-height: calc(100vh - 220px); }
+  #panelBaseDados #dataTable tbody td {
+    padding: 8px 2px;
+    font-size: 10px;
+  }
   #panelBaseDados .title-cell a,
   #panelBaseDados .title-cell span { color: var(--gray-900) !important; font-weight: 500; text-decoration: none; }
   tbody tr { border-bottom: 1px solid var(--surface-border); transition: background .12s; }
@@ -1236,15 +1254,15 @@
   .velho-loadmore-wrap[hidden] { display:none; }
   .velho-grid {
     display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap:18px 14px;
     min-width:0;
   }
-  @media (min-width: 1600px) {
-    .velho-grid { grid-template-columns: repeat(6, 1fr); }
+  @media (min-width: 1400px) {
+    .velho-grid { grid-template-columns: repeat(5, 1fr); }
   }
   @media (max-width: 1100px) {
-    .velho-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .velho-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
   }
   @media (max-width: 700px) {
     .velho-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1300,9 +1318,12 @@
   .velho-mrow.cols-3 { grid-template-columns:1fr 1fr 1fr; }
   .velho-mrow.cols-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
   .velho-mrow > div { min-width:0; }
-  .velho-metric-label { font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.3px; }
-  .velho-metric-val { font-size:14px; font-weight:800; color:var(--gray-900); line-height:1.15; }
-  .velho-metric-val.sec { font-size:12px; font-weight:600; color:var(--gray-700); }
+  .velho-metric-label {
+    font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .velho-metric-val { font-size:14px; font-weight:800; color:var(--gray-900); line-height:1.15; white-space: nowrap; }
+  .velho-metric-val.sec { font-size:12px; font-weight:600; color:var(--gray-700); white-space: nowrap; }
   .velho-empty {
     grid-column: 1 / -1;
     background: var(--surface-card);
@@ -1711,7 +1732,7 @@
         <div class="kpi-median" id="kViewsMed">—</div>
       </div>
     <div class="kpi-card">
-        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div class="kpi-label">CTR%</div></div>
+        <div class="kpi-label-row"><span class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div class="kpi-label">CTR YT %</div></div>
         <div class="kpi-value" id="kCTR">—</div>
         <div class="kpi-sub">Média dos vídeos</div>
         <div class="kpi-median" id="kCTRMed">—</div>
@@ -1813,12 +1834,12 @@
   <!-- SCATTER MATRIX -->
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true">
     <div class="section-divider"><span class="section-toggle">▼</span></div>
-    <h2>Matriz Avg View Duration × CTR%</h2>
+    <h2>Matriz Avg View Duration × Impressões</h2>
   </div>
   <p class="section-desc">O problema foi o Pacote, Gancho ou Retenção?</p>
   <div class="chart-card" style="margin-bottom:24px;">
     <div class="chart-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <span>CTR × Retenção por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
+      <span>Avg View Duration × Impressões por Vídeo <span style="font-size:11px;font-weight:400;color:var(--gray-500)">(tamanho = Views · cor = Categoria · clique na bolha = abre vídeo)</span></span>
       <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:var(--gray-500);">
         <span>Quadrantes pela mediana do dataset</span>
         <div id="scatterLegend" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
@@ -1979,16 +2000,17 @@
 <div id="panelFeedbacks" class="main" style="display:none;">
 
   <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Long Form</h2></div>
-  <p class="section-desc">Classificação Long Form: Escalar = CTR% ≥8% · Avg Viewed% ≥40% · Views ≥49K. Demais status pelas combinações de CTR e Avg Viewed%.</p>
+  <p class="section-desc">Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <select id="feedbackStatusFilter" onchange="renderFeedbackTable()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
+        <select id="feedbackStatusFilter" onchange="renderFeedbackTable()" style="padding:6px 10px;border:1px solid var(--input-border);border-radius:6px;font-size:12px;background:var(--input-bg);color:var(--gray-900);">
           <option value="">Todos os diagnósticos</option>
           <option value="Escalar">🟢 Escalar</option>
           <option value="Reembalar">🔵 Reembalar</option>
           <option value="Storytelling">🟡 Storytelling</option>
+          <option value="Chamativo">🟣 Chamativo</option>
           <option value="Não Escalar">🔴 Não Escalar</option>
         </select>
         <input type="text" id="feedbackSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTable()"
@@ -2015,7 +2037,7 @@
           <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
           <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
           <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
-          <th class="sortable" data-ftcol="ctr" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('ctr')">CTR%</th>
+          <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
           <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg View Dur</th>
           <th class="sortable" data-ftcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewedPct')">Avg Viewed%</th>
           <th class="sortable" data-ftcol="gancho" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('gancho')">Gancho</th>
@@ -5749,8 +5771,10 @@ function updateKPIs() {
 
   setKPI('kImpr',    fmtNum(avgImpr),                   'kImprMed',    fmtNum(medImpr));
   setKPI('kViews',   fmtNum(avgViews),                  'kViewsMed',   fmtNum(medViews));
-  const avgCTR2 = mean(d.map(r=>r.ctr)); const medCTR2 = median(d.map(r=>r.ctr));
-  setKPI('kCTR', (avgCTR2*100).toFixed(2)+'%', 'kCTRMed', (medCTR2*100).toFixed(2)+'%');
+  const ctrYTVals = d.map(r => r.ctrYT).filter(Number.isFinite);
+  const avgCTRYT = mean(ctrYTVals);
+  const medCTRYT = median(ctrYTVals);
+  setKPI('kCTR', ctrYTVals.length ? avgCTRYT.toFixed(2)+'%' : '—', 'kCTRMed', ctrYTVals.length ? medCTRYT.toFixed(2)+'%' : '—');
   // Gancho: only Long Form videos with non-null gancho values
   const ganchoVals = d.filter(r=>r.gancho!==null&&r.gancho!==undefined).map(r=>r.gancho);
   const avgGancho = mean(ganchoVals); const medGancho = median(ganchoVals);
@@ -6300,8 +6324,8 @@ function renderScatter() {
   // Fixed quadrant lines: medians of Long Form 2026 (independent of filters)
   const lf2026 = allData.filter(r => (r.tipo||'').toLowerCase().includes('long') && r.ano === 2026);
   const base4scatter = lf2026.length > 0 ? lf2026 : d;
-  const medDur = median(base4scatter.map(r => r.avgViewDurSec));
-  const medCTR = median(base4scatter.map(r => r.ctr));
+  const medDur = median(base4scatter.map(r => r.avgViewDurSec).filter(Number.isFinite));
+  const medImp = median(base4scatter.map(r => r.impressoes).filter(v => Number.isFinite(v) && v > 0));
   const maxViews = Math.max(...d.map(r => r.views), 1);
   const minR = 4, maxR = 28;
 
@@ -6312,12 +6336,12 @@ function renderScatter() {
     catMap[cat].push(r);
   });
 
-  const scatterPts = d.filter(r => Number.isFinite(r.avgViewDurSec) && Number.isFinite(r.ctr));
+  const scatterPts = d.filter(r => Number.isFinite(r.avgViewDurSec) && Number.isFinite(r.impressoes));
   const qTotal = scatterPts.length || 1;
   const qCounts = { tr:0, br:0, tl:0, bl:0 };
   scatterPts.forEach(r => {
     const right = r.avgViewDurSec >= medDur;
-    const top = r.ctr >= medCTR;
+    const top = r.impressoes >= medImp;
     if (right && top) qCounts.tr++;
     else if (right && !top) qCounts.br++;
     else if (!right && top) qCounts.tl++;
@@ -6327,9 +6351,9 @@ function renderScatter() {
 
   const datasets = Object.entries(catMap).map(([cat, rows]) => ({
     label: cat,
-    data: rows.map(r => ({
+    data: rows.filter(r => Number.isFinite(r.avgViewDurSec) && Number.isFinite(r.impressoes)).map(r => ({
       x: r.avgViewDurSec,
-      y: r.ctr,
+      y: r.impressoes,
       r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
       _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _impressoes: r.impressoes, _cat: cat,
     })),
@@ -6350,10 +6374,10 @@ function renderScatter() {
   const dark = getTheme() === 'dark';
   const quadrantFills = dark
     ? [
-        'rgba(52,211,153,0.16)',  // top-right green
-        'rgba(251,191,36,0.14)',  // bottom-right amber
-        'rgba(96,165,250,0.16)',  // top-left blue
-        'rgba(248,113,113,0.14)', // bottom-left red
+        'rgba(52,211,153,0.16)',
+        'rgba(251,191,36,0.14)',
+        'rgba(96,165,250,0.16)',
+        'rgba(248,113,113,0.14)',
       ]
     : [
         'rgba(220,252,231,0.38)',
@@ -6368,7 +6392,7 @@ function renderScatter() {
       const {ctx: c, chartArea: {left, right, top, bottom}, scales} = chart;
       if (!scales.x || !scales.y) return;
       const xMed = scales.x.getPixelForValue(medDur);
-      const yMed = scales.y.getPixelForValue(medCTR);
+      const yMed = scales.y.getPixelForValue(medImp);
       c.save();
       [
         { x1:xMed, y1:top,   x2:right, y2:yMed,   color:quadrantFills[0] },
@@ -6382,7 +6406,6 @@ function renderScatter() {
       c.beginPath(); c.moveTo(left, yMed); c.lineTo(right, yMed); c.stroke();
       c.setLineDash([]);
 
-      // % labels no centro de cada quadrante
       const pctStyle = dark ? '#f8fafc' : '#111827';
       c.font = 'bold 12px system-ui, sans-serif';
       c.fillStyle = pctStyle;
@@ -6398,14 +6421,14 @@ function renderScatter() {
       drawPct(left, top, xMed, yMed, qPct('tl'));
       drawPct(left, yMed, xMed, bottom, qPct('bl'));
 
-      const ctrLabel = `CTR% ${(medCTR*100).toFixed(2)}%`;
+      const impLabel = fmtNum(medImp);
       c.font = 'bold 10px system-ui, sans-serif';
-      const ctrW = c.measureText(ctrLabel).width + 8;
+      const impW = c.measureText(impLabel).width + 8;
       c.fillStyle = ct.labelBg;
-      c.beginPath(); c.roundRect(right - ctrW - 2, yMed - 9, ctrW, 16, 3); c.fill();
+      c.beginPath(); c.roundRect(right - impW - 2, yMed - 9, impW, 16, 3); c.fill();
       c.fillStyle = dark ? '#f1f5f9' : ct.tick;
       c.textAlign = 'right'; c.textBaseline = 'middle';
-      c.fillText(ctrLabel, right - 6, yMed);
+      c.fillText(impLabel, right - 6, yMed);
 
       const durLabel = `${formatDuration(medDur)}`;
       const durW = c.measureText(durLabel).width + 8;
@@ -6435,8 +6458,8 @@ function renderScatter() {
             const p = ctx.raw;
             return [
               ` ${p._title}`,
-              ` Avg View Dur: ${formatDuration(p.x)} · CTR%: ${(p.y*100).toFixed(2)}%`,
-              ` Views: ${fmtNum(p._views)} · CTR: ${p._ctr.toFixed(2)}% · Impressões: ${fmtNum(p._impressoes)}`,
+              ` Avg View Dur: ${formatDuration(p.x)} · Impressões: ${fmtNum(p.y)}`,
+              ` Views: ${fmtNum(p._views)} · CTR: ${Number.isFinite(p._ctr) ? (p._ctr*100).toFixed(2)+'%' : '—'}`,
               ` ${p._cat}`,
               p._link ? ' 🔗 Clique para abrir' : '',
             ].filter(Boolean);
@@ -6451,8 +6474,8 @@ function renderScatter() {
           grid: { display: false },
         },
         y: {
-          title: { display:true, text:'CTR%', font:{size:11}, color: ct.tick },
-          ticks: { callback: v => (v*100).toFixed(1)+'%', font:{size:10}, color: ct.tick },
+          title: { display:true, text:'Impressões', font:{size:11}, color: ct.tick },
+          ticks: { callback: v => fmtNum(v), font:{size:10}, color: ct.tick },
           grid: { color: ct.grid, drawBorder: false },
         }
       }
@@ -6465,25 +6488,31 @@ function renderScatter() {
 // Shorts classification: Gancho + Avg Viewed% + Views
 const THRESHOLDS_SHORTS = { views: 114000, gancho: 0.71, avgViewedPct: 80 };
 
-// Long Form classification: CTR + Avg Viewed% + Views (sem Gancho / Avg View Dur)
+// Long Form: Impressões + Avg Viewed% + Views
 const THRESHOLDS = {
   views:        49000,   // >=49K views
-  ctr:          0.08,    // >=8% CTR
+  impressoes:   500000,  // >=500K impressões
   avgViewedPct: 40,      // >=40% avg viewed
 };
 
 function classifyVideo(r) {
   const highViews = (r.views || 0) >= THRESHOLDS.views;
-  const highCTR = Number.isFinite(r.ctr) && r.ctr >= THRESHOLDS.ctr;
+  const highImp = Number.isFinite(r.impressoes) && r.impressoes >= THRESHOLDS.impressoes;
   const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS.avgViewedPct;
 
-  if (highViews && highCTR && highAvg)
+  // Escalar: Imp alta + Views altas (Avg Viewed% indiferente)
+  if (highImp && highViews)
     return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
-  // Demais: pelas 2 métricas (CTR × Avg Viewed); views altas sem Escalar caem aqui
-  if (!highCTR && highAvg)
+  // Reembalar: Imp baixa + Avg Viewed alta (Views indiferente)
+  if (!highImp && highAvg)
     return { status:'Reembalar', color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Trocar Thumb & Titulo', acao:'Testar nova thumbnail e titulo' };
-  if (highCTR && !highAvg)
+  // Storytelling: Imp alta + Avg baixa + Views baixas
+  if (highImp && !highAvg && !highViews)
     return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
+  // Chamativo: Imp baixa + Avg baixa + Views altas
+  if (!highImp && !highAvg && highViews)
+    return { status:'Chamativo', color:'#c084fc', bg:'rgba(192,132,252,.18)', icon:'🟣', diag:'Melhorar retenção / profundidade', acao:'Revisar conteúdo para converter alcance em retenção' };
+  // Não Escalar: restante (inclui Imp alta + Avg alta + Views baixas)
   return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
 }
 
@@ -6526,7 +6555,7 @@ function renderFeedbackTable() {
   if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
 
   // Sort (default: dataPublicacao desc)
-  const statusOrder = ['Escalar','Reembalar','Storytelling','Não Escalar'];
+  const statusOrder = ['Escalar','Reembalar','Storytelling','Chamativo','Não Escalar'];
   rows.sort((a, b) => {
     let av, bv;
     if (feedbackSortCol === 'status') {
@@ -6555,7 +6584,7 @@ function renderFeedbackTable() {
 
   document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => {
     const oV = r.views >= THRESHOLDS.views;
-    const oC = Number.isFinite(r.ctr) ? r.ctr >= THRESHOLDS.ctr : null;
+    const oImp = Number.isFinite(r.impressoes) ? r.impressoes >= THRESHOLDS.impressoes : null;
     const oR = Number.isFinite(r.avgViewedPct) ? r.avgViewedPct >= THRESHOLDS.avgViewedPct : null;
     const cc = catColor(r.categoria);
     return `
@@ -6566,7 +6595,7 @@ function renderFeedbackTable() {
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
       <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${cc}22;color:${cc};border:1px solid ${cc}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oC)}">${Number.isFinite(r.ctr) ? (r.ctr*100).toFixed(2)+'%' : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oImp)}">${Number.isFinite(r.impressoes) ? fmtNum(r.impressoes) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
@@ -6577,7 +6606,7 @@ function renderFeedbackTable() {
   }).join('');
 
   document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Escalar: Views ≥49K · CTR% ≥8% · Avg Viewed% ≥40%`;
+    `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · demais status por Imp × Avg Viewed% × Views`;
   document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
 }
 
@@ -6927,7 +6956,7 @@ function renderFunnel() {
       }
       if(conv){
         const isBold = conv.includes('*');
-        const pctFill = getComputedStyle(document.documentElement).getPropertyValue('--funnel-pct').trim() || '#111827';
+        const pctFill = getTheme() === 'dark' ? '#e5e7eb' : '#111827';
         svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
       }
     });
@@ -6997,9 +7026,9 @@ function renderHeatmap() {
 
   const isBlankLabel = (v) => {
     const s = String(v == null ? '' : v).trim();
-    if (!s) return true;
-    const n = s.toLowerCase().replace(/[()]/g, '');
-    return n === 'sem criador' || n === 'sem categoria' || n === 'sem dados';
+    if (!s || s === '—' || s === '-' || s === '–') return true;
+    const n = s.toLowerCase().replace(/[()]/g, '').replace(/\s+/g, ' ').trim();
+    return n === 'sem criador' || n === 'sem categoria' || n === 'sem dados' || n === 'n/a' || n === 'na' || n === 'null' || n === 'undefined';
   };
   const creators = [...new Set(d.map(r => (r.creator || '').trim()).filter(c => c && !isBlankLabel(c)))].sort();
   const cats = [...new Set(
@@ -7696,7 +7725,7 @@ function renderShortsFunil() {
       : fmtNum(vals[i]);
     svgContent += `<text x="${cx}" y="${mid-5}" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="system-ui,sans-serif">${stage}</text>`;
     svgContent += `<text x="${cx}" y="${mid+9}" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui,sans-serif">${valLabel}</text>`;
-    const pctFill = getComputedStyle(document.documentElement).getPropertyValue('--funnel-pct').trim() || '#111827';
+    const pctFill = getTheme() === 'dark' ? '#e5e7eb' : '#111827';
     if (i === 6) {
       const conv = (fcConv == null || !Number.isFinite(fcConv)) ? '—' : fmtFantasyCR(fcConv);
       svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
