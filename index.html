@@ -6501,8 +6501,8 @@ function classifyVideo(r) {
   const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS.avgViewedPct;
   const highDur = Number.isFinite(r.avgViewDurSec) && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec;
 
-  // Escalar: Imp alta + Views altas + Avg alta + Dur ≥6:00
-  if (highImp && highViews && highAvg && highDur)
+  // Escalar: Imp alta + Views altas + (Avg alta OU Dur ≥6:00)
+  if (highImp && highViews && (highAvg || highDur))
     return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
   // Reembalar: Imp baixa + Avg Viewed alta (Views indiferente)
   if (!highImp && highAvg)
@@ -6512,8 +6512,8 @@ function classifyVideo(r) {
     return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
   // Chamativo:
   // 1) Imp baixa + Avg baixa + Views altas
-  // 2) Imp alta + Views altas + (Avg baixa OU Dur <6:00)
-  if ((!highImp && !highAvg && highViews) || (highImp && highViews && (!highAvg || !highDur)))
+  // 2) Imp alta + Views altas + Avg baixa + Dur <6:00 (não escalou)
+  if ((!highImp && !highAvg && highViews) || (highImp && highViews && !highAvg && !highDur))
     return { status:'Chamativo', color:'#c084fc', bg:'rgba(192,132,252,.18)', icon:'🟣', diag:'Melhorar retenção / profundidade', acao:'Revisar conteúdo para converter alcance em retenção' };
   // Não Escalar: restante (inclui Imp alta + Avg alta + Views baixas)
   return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
@@ -6598,10 +6598,10 @@ function updateFeedbackSectionCopy() {
     descEl.innerHTML = `
       <div>Limiares Long Form: <strong>Impressões ≥500K</strong> · <strong>Views ≥49K</strong> · <strong>Avg Viewed% ≥40%</strong> · <strong>Avg View Dur ≥6:00</strong>.</div>
       <ul>
-        <li><strong>Escalar:</strong> Impressões ≥500K, Views ≥49K, Avg Viewed% ≥40% e Avg View Dur ≥6:00.</li>
+        <li><strong>Escalar:</strong> Impressões ≥500K, Views ≥49K e (Avg Viewed% ≥40% ou Avg View Dur ≥6:00).</li>
         <li><strong>Reembalar:</strong> Impressões &lt;500K e Avg Viewed% ≥40% (Views indiferente).</li>
         <li><strong>Storytelling:</strong> Impressões ≥500K, Avg Viewed% &lt;40% e Views &lt;49K.</li>
-        <li><strong>Chamativo:</strong> (1) Impressões &lt;500K, Avg Viewed% &lt;40% e Views ≥49K; ou (2) Impressões ≥500K, Views ≥49K e (Avg Viewed% &lt;40% ou Avg View Dur &lt;6:00).</li>
+        <li><strong>Chamativo:</strong> (1) Impressões &lt;500K, Avg Viewed% &lt;40% e Views ≥49K; ou (2) Impressões ≥500K, Views ≥49K, Avg Viewed% &lt;40% e Avg View Dur &lt;6:00.</li>
         <li><strong>Não Escalar:</strong> demais combinações (inclui Impressões ≥500K, Avg Viewed% ≥40% e Views &lt;49K).</li>
       </ul>`;
   }
@@ -6713,7 +6713,7 @@ function renderFeedbackTable() {
   if (footer) {
     footer.textContent = shorts
       ? `${rows.length} Shorts · Escalar: Views ≥114K + (Gancho ≥71% ou Avg ≥80%) · Não Escalar: Views <114K com Gancho+Avg altos (ou tudo baixo)`
-      : `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · Avg ≥40% · Dur ≥6:00`;
+      : `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · (Avg ≥40% ou Dur ≥6:00)`;
   }
   if (title) title.textContent = shorts
     ? `${rows.length} Shorts classificados`
