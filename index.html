@@ -2732,6 +2732,18 @@ function median(arr) {
   return valid.length % 2 ? valid[m] : (valid[m-1]+valid[m])/2;
 }
 
+/** Linear-interpolated percentile; p in [0, 1] (e.g. 0.95 = P95). */
+function percentile(arr, p) {
+  const valid = [...arr.filter(v => v !== null && v !== undefined && !isNaN(v))].sort((a, b) => a - b);
+  if (!valid.length) return 0;
+  if (valid.length === 1) return valid[0];
+  const t = clampNum(p, 0, 1) * (valid.length - 1);
+  const lo = Math.floor(t);
+  const hi = Math.ceil(t);
+  if (lo === hi) return valid[lo];
+  return valid[lo] + (valid[hi] - valid[lo]) * (t - lo);
+}
+
 function parseOptionalDecimal(v) {
   if (v === null || v === undefined) return null;
   const s = String(v).trim();
@@ -6328,11 +6340,16 @@ function renderScatter() {
   });
   const qPct = k => ((qCounts[k] / qTotal) * 100).toFixed(0) + '%';
 
+  // Linear Y capped at P95 so outliers don't squash the mass; tooltip keeps real impressões
+  const impVals = scatterPts.map(r => r.impressoes);
+  const p95Imp = percentile(impVals, 0.95);
+  const yCap = Math.max(p95Imp || 0, medImp || 0, 1);
+
   const datasets = Object.entries(catMap).map(([cat, rows]) => ({
     label: cat,
     data: rows.filter(r => Number.isFinite(r.avgViewDurSec) && Number.isFinite(r.impressoes)).map(r => ({
       x: r.avgViewDurSec,
-      y: r.impressoes,
+      y: Math.min(r.impressoes, yCap),
       r: minR + (Math.sqrt(r.views / maxViews)) * (maxR - minR),
       _title: r.title, _link: r.link, _views: r.views, _ctr: r.ctr, _impressoes: r.impressoes, _cat: cat,
     })),
@@ -6435,9 +6452,10 @@ function renderScatter() {
         tooltip: { ...chartTooltipTheme(), callbacks: {
           label: ctx => {
             const p = ctx.raw;
+            const impReal = Number.isFinite(p._impressoes) ? p._impressoes : p.y;
             return [
               ` ${p._title}`,
-              ` Avg View Dur: ${formatDuration(p.x)} · Impressões: ${fmtNum(p.y)}`,
+              ` Avg View Dur: ${formatDuration(p.x)} · Impressões: ${fmtNum(impReal)}`,
               ` Views: ${fmtNum(p._views)} · CTR: ${Number.isFinite(p._ctr) ? (p._ctr*100).toFixed(2)+'%' : '—'}`,
               ` ${p._cat}`,
               p._link ? ' 🔗 Clique para abrir' : '',
@@ -6453,6 +6471,8 @@ function renderScatter() {
           grid: { display: false },
         },
         y: {
+          min: 0,
+          max: yCap,
           title: { display:true, text:'Impressões', font:{size:11}, color: ct.tick },
           ticks: { callback: v => fmtNum(v), font:{size:10}, color: ct.tick },
           grid: { color: ct.grid, drawBorder: false },
