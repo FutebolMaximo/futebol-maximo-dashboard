@@ -242,15 +242,14 @@
     position: absolute;
     top: calc(100% + 10px);
     left: 0;
-    width: min(420px, calc(100vw - 32px));
-    max-height: min(78vh, 720px);
-    overflow-x: hidden;
-    overflow-y: auto;
+    width: min(760px, calc(100vw - 24px));
+    max-height: none;
+    overflow: visible;
     background: var(--surface-card);
     border: 1px solid var(--surface-border);
     border-radius: 20px;
     box-shadow: 0 24px 64px rgba(0,0,0,.45);
-    padding: 16px 16px 14px;
+    padding: 12px 14px 12px;
     z-index: 300;
   }
   .filters-popover .title-dropdown { z-index: 320; }
@@ -286,28 +285,28 @@
     display: block;
   }
   .fp-section {
-    padding: 14px 0;
+    padding: 8px 0;
     border-bottom: 1px solid var(--surface-border);
   }
   .fp-section:last-of-type { border-bottom: none; }
   .fp-section-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--gray-900);
-    margin: 0 0 10px;
+    margin: 0 0 6px;
   }
   .fp-toggle {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
   .fp-toggle-btn {
     border: 1px solid var(--surface-border);
     background: transparent;
     color: var(--gray-700);
     border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 12px;
+    padding: 5px 11px;
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     line-height: 1.2;
@@ -326,13 +325,13 @@
   .fp-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 5px;
   }
   .fp-chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 12px 7px 10px;
+    gap: 6px;
+    padding: 4px 9px 4px 8px;
     border-radius: 999px;
     border: 1px solid var(--surface-border);
     background: transparent;
@@ -410,9 +409,9 @@
   }
   .filters-popover-actions .btn-apply:hover { filter: brightness(1.05); }
   .filters-popover .filter-ranges-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
     width: 100%;
     overflow: visible;
   }
@@ -420,6 +419,14 @@
     flex: none;
     width: 100%;
     min-width: 0;
+    margin: 0;
+  }
+  .filters-popover .filter-group.filter-range-group > label {
+    font-size: 9px;
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .filters-popover .filter-ranges-grid { grid-template-columns: 1fr; }
   }
   #filterValoresSection.ranges-disabled { display: none !important; }
   .filters-popover .title-search-wrap { width: 100%; }
@@ -431,7 +438,7 @@
       justify-items: stretch;
     }
     .chrome-center, .chrome-right, .brand { justify-content: flex-start; }
-    .filters-popover { left: 0; width: min(420px, calc(100vw - 24px)); }
+    .filters-popover { left: 0; width: min(760px, calc(100vw - 24px)); }
   }
 
   /* MAIN */
@@ -607,7 +614,7 @@
     color: var(--gray-900);
   }
   #heatmapMetric, #funnelGroupBy, #funnelGroupByShorts,
-  #feedbackStatusFilter, #feedbackSStatusFilter {
+  #feedbackStatusFilter {
     background: var(--input-bg) !important;
     color: var(--gray-900) !important;
     border-color: var(--input-border) !important;
@@ -713,31 +720,29 @@
     table-layout: fixed;
     font-size: 10px;
   }
-  #dataTable th:nth-child(1)  { width:4.2%; }   /* Data */
-  #dataTable th:nth-child(2)  { width:3.2%; }   /* Semana */
-  #dataTable th:nth-child(3)  { width:3.6%; }   /* Mês_Ano */
-  #dataTable th:nth-child(4)  { width:5%; }     /* Content ID */
-  #dataTable th:nth-child(5)  { width:12%; }    /* Título */
-  #dataTable th:nth-child(6)  { width:3.8%; }   /* Tipo */
-  #dataTable th:nth-child(7)  { width:3.6%; }   /* Criador */
-  #dataTable th:nth-child(8)  { width:4.6%; }   /* Categoria */
-  #dataTable th:nth-child(9)  { width:3.4%; }   /* Views */
-  #dataTable th:nth-child(10) { width:3.6%; }   /* Fantasy Clicks */
-  #dataTable th:nth-child(11) { width:4.2%; }   /* Fantasy Conversion */
-  #dataTable th:nth-child(12) { width:3%; }     /* CTR% */
-  #dataTable th:nth-child(13) { width:3.6%; }   /* Avg View Dur */
-  #dataTable th:nth-child(14) { width:3.2%; }   /* Gancho */
-  #dataTable th:nth-child(15) { width:3.2%; }   /* Duração */
-  #dataTable th:nth-child(16) { width:3.4%; }   /* Avg View % */
-  #dataTable th:nth-child(17) { width:3.4%; }   /* Impr. */
-  #dataTable th:nth-child(18) { width:3.2%; }   /* CTR% YT */
-  #dataTable th:nth-child(19) { width:3%; }     /* Likes */
-  #dataTable th:nth-child(20) { width:3.4%; }   /* Inscritos */
-  #dataTable th:nth-child(21) { width:3.6%; }   /* Conv. Insc. */
-  #dataTable th:nth-child(22) { width:3%; }     /* Shares */
-  #dataTable th:nth-child(23) { width:3.2%; }   /* Coment. */
-  #dataTable th:nth-child(24) { width:3.6%; }   /* Conv. Comm. */
-  #dataTable td:nth-child(5) { white-space: normal; }
+  #dataTable th:nth-child(1)  { width:4.4%; }   /* Data */
+  #dataTable th:nth-child(2)  { width:5.2%; }   /* Content ID */
+  #dataTable th:nth-child(3)  { width:13%; }    /* Título */
+  #dataTable th:nth-child(4)  { width:4%; }     /* Tipo */
+  #dataTable th:nth-child(5)  { width:3.8%; }   /* Criador */
+  #dataTable th:nth-child(6)  { width:7.2%; }   /* Categoria */
+  #dataTable th:nth-child(7)  { width:3.6%; }   /* Views */
+  #dataTable th:nth-child(8)  { width:3.8%; }   /* Fantasy Clicks */
+  #dataTable th:nth-child(9)  { width:4.4%; }   /* Fantasy Conversion */
+  #dataTable th:nth-child(10) { width:3.2%; }   /* CTR% */
+  #dataTable th:nth-child(11) { width:3.8%; }   /* Avg View Dur */
+  #dataTable th:nth-child(12) { width:3.4%; }   /* Gancho */
+  #dataTable th:nth-child(13) { width:3.4%; }   /* Duração */
+  #dataTable th:nth-child(14) { width:3.6%; }   /* Avg View % */
+  #dataTable th:nth-child(15) { width:3.6%; }   /* Impr. */
+  #dataTable th:nth-child(16) { width:3.4%; }   /* CTR% YT */
+  #dataTable th:nth-child(17) { width:3.2%; }   /* Likes */
+  #dataTable th:nth-child(18) { width:3.6%; }   /* Inscritos */
+  #dataTable th:nth-child(19) { width:3.8%; }   /* Conv. Insc. */
+  #dataTable th:nth-child(20) { width:3.2%; }   /* Shares */
+  #dataTable th:nth-child(21) { width:3.4%; }   /* Coment. */
+  #dataTable th:nth-child(22) { width:3.8%; }   /* Conv. Comm. */
+  #dataTable td:nth-child(3) { white-space: normal; }
   #dataTable thead th {
     height: 52px;
     vertical-align: middle;
@@ -785,24 +790,19 @@
   }
   tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 11px; font-weight: 400; color: var(--gray-800); }
   #feedbackStatusFilter,
-  #feedbackSearch,
-  #feedbackSStatusFilter,
-  #feedbackSSearch {
+  #feedbackSearch {
     background: var(--input-bg);
     color: var(--gray-900);
     border: 1px solid var(--input-border);
     border-radius: var(--radius-sm);
   }
   #feedbackStatusFilter:focus,
-  #feedbackSearch:focus,
-  #feedbackSStatusFilter:focus,
-  #feedbackSSearch:focus {
+  #feedbackSearch:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
     outline: none;
   }
-  [data-theme="dark"] #feedbackStatusFilter option,
-  [data-theme="dark"] #feedbackSStatusFilter option {
+  [data-theme="dark"] #feedbackStatusFilter option {
     background: #14151A;
     color: #e2e8f0;
   }
@@ -1054,8 +1054,9 @@
     min-width: 0;
   }
   .filters-popover .filter-group.filter-range-group {
-    flex: 1 1 140px;
-    min-width: 140px;
+    flex: none;
+    width: 100%;
+    min-width: 0;
   }
   .filter-group.filter-range-group {
     display: grid;
@@ -1549,6 +1550,28 @@
           <select id="filterCreator" hidden aria-hidden="true"><option value="">Todos</option></select>
 
           <div class="fp-section">
+            <h4 class="fp-section-title">Data</h4>
+            <div class="fp-date-row">
+              <div class="filter-group">
+                <label id="filterDateStartLabel">Início</label>
+                <input type="date" id="filterDateStart">
+              </div>
+              <div class="filter-group">
+                <label id="filterDateEndLabel">Fim</label>
+                <input type="date" id="filterDateEnd">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label id="filterWeekLabel">Semana</label>
+              <div class="title-search-wrap" id="weekWrap">
+                <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
+                  onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);width:100%;">
+                <div class="title-dropdown" id="weekDropdown"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fp-section">
             <h4 class="fp-section-title">Criadores</h4>
             <div class="fp-toggle" id="creatorToggle" role="group" aria-label="Criadores"></div>
           </div>
@@ -1585,28 +1608,6 @@
             <div id="catWrap" style="display:none;">
               <input type="text" id="filterCategoriaInput" readonly>
               <div class="title-dropdown" id="catDropdown"></div>
-            </div>
-          </div>
-
-          <div class="fp-section">
-            <h4 class="fp-section-title">Data</h4>
-            <div class="fp-date-row">
-              <div class="filter-group">
-                <label id="filterDateStartLabel">Início</label>
-                <input type="date" id="filterDateStart">
-              </div>
-              <div class="filter-group">
-                <label id="filterDateEndLabel">Fim</label>
-                <input type="date" id="filterDateEnd">
-              </div>
-            </div>
-            <div class="filter-group">
-              <label id="filterWeekLabel">Semana</label>
-              <div class="title-search-wrap" id="weekWrap">
-                <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
-                  onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);width:100%;">
-                <div class="title-dropdown" id="weekDropdown"></div>
-              </div>
             </div>
           </div>
 
@@ -1999,8 +2000,16 @@
 
 <div id="panelFeedbacks" class="main" style="display:none;">
 
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Long Form</h2></div>
-  <p class="section-desc">Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.</p>
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="false"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Criador × Status</h2></div>
+  <p class="section-desc" id="feedbackMatrixDesc">Contagem de vídeos por criador e status de classificação.</p>
+  <div class="table-card" style="margin-bottom:24px;">
+    <div class="table-wrap" style="max-height:280px;">
+      <div id="feedbackMatrixWrap"></div>
+    </div>
+  </div>
+
+  <div class="section-header" onclick="toggleSection(this)" data-collapsed="false"><div class="section-divider"><span class="section-toggle">▼</span></div><h2 id="feedbackSectionTitle">Feedback Automático · Long Form</h2></div>
+  <p class="section-desc" id="feedbackSectionDesc">Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.</p>
   <div class="table-card" style="margin-bottom:24px;">
     <div class="table-toolbar">
       <h3 id="feedbackTitle">Todos os vídeos</h3>
@@ -2037,10 +2046,10 @@
           <th class="sortable" data-ftcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('creator')">Criador</th>
           <th class="sortable" data-ftcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('categoria')">Categoria</th>
           <th class="sortable" data-ftcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('views')">Views</th>
-          <th class="sortable" data-ftcol="impressoes" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
+          <th class="sortable" data-ftcol="impressoes" id="feedbackThImp" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('impressoes')">Impressões</th>
           <th class="sortable" data-ftcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewDurSec')">Avg View Dur</th>
           <th class="sortable" data-ftcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('avgViewedPct')">Avg Viewed%</th>
-          <th class="sortable" data-ftcol="gancho" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('gancho')">Gancho</th>
+          <th class="sortable" data-ftcol="gancho" id="feedbackThGancho" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedback('gancho')">Gancho</th>
           <th class="sortable" data-ftcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedback('status')">Status</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
           <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
@@ -2049,55 +2058,6 @@
       </table>
     </div>
     <div class="table-footer" id="feedbackFooter"></div>
-  </div>
-
-  <div class="section-header" onclick="toggleSection(this)" data-collapsed="true" style="margin-top:16px;"><div class="section-divider"><span class="section-toggle">▼</span></div><h2>Feedback Automático · Shorts</h2></div>
-  <p class="section-desc">Classificação Shorts: Escalar = Gancho% ≥71% · Avg Viewed% ≥80% · Views ≥114K. Demais status pelas combinações de Gancho e Avg Viewed%.</p>
-  <div class="table-card" style="margin-bottom:24px;">
-    <div class="table-toolbar">
-      <h3 id="feedbackSTitle">Todos os Shorts</h3>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <select id="feedbackSStatusFilter" onchange="renderFeedbackTableShorts()" style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;">
-          <option value="">Todos os diagnósticos</option>
-          <option value="Escalar">🟢 Escalar</option>
-          <option value="Gancho">🔵 Gancho</option>
-          <option value="Storytelling">🟡 Storytelling</option>
-          <option value="Não Escalar">🔴 Não Escalar</option>
-        </select>
-        <input type="text" id="feedbackSSearch" placeholder="🔍 Buscar vídeo..." oninput="renderFeedbackTableShorts()"
-          style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;width:200px;">
-      </div>
-    </div>
-    <div class="table-wrap" style="max-height:480px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-                <colgroup>
-          <col style="width:26%">
-          <col style="width:8%">
-          <col style="width:10%">
-          <col style="width:7%">
-          <col style="width:7%">
-          <col style="width:8%">
-          <col style="width:8%">
-          <col style="width:10%">
-          <col style="width:8%">
-          <col style="width:8%">
-        </colgroup>
-        <thead><tr>
-          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Vídeo</th>
-          <th class="sortable" data-sfcol="creator" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('creator')">Criador</th>
-          <th class="sortable" data-sfcol="categoria" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('categoria')">Categoria</th>
-          <th class="sortable" data-sfcol="views" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('views')">Views</th>
-          <th class="sortable" data-sfcol="gancho" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('gancho')">Gancho</th>
-          <th class="sortable" data-sfcol="avgViewDurSec" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewDurSec')">Avg View Dur</th>
-          <th class="sortable" data-sfcol="avgViewedPct" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;text-align:right;" onclick="sortFeedbackS('avgViewedPct')">Avg Viewed%</th>
-          <th class="sortable" data-sfcol="status" style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;" onclick="sortFeedbackS('status')">Status</th>
-          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Diagnóstico</th>
-          <th style="padding:6px 6px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);position:sticky;top:0;z-index:5;">Ação</th>
-        </tr></thead>
-        <tbody id="feedbackSBody"></tbody>
-      </table>
-    </div>
-    <div class="table-footer" id="feedbackSFooter"></div>
   </div>
 
 </div>
@@ -2120,8 +2080,6 @@
         <thead>
           <tr>
             <th onclick="sortTable('dataPublicacao')" data-col="dataPublicacao"><span class="th-diag">Data <span class="sort-icon">↕</span></span></th>
-            <th onclick="sortTable('semana')" data-col="semana"><span class="th-diag">Semana <span class="sort-icon">↕</span></span></th>
-            <th onclick="sortTable('mesAno')" data-col="mesAno"><span class="th-diag">Mês_Ano <span class="sort-icon">↕</span></span></th>
             <th onclick="sortTable('id')" data-col="id"><span class="th-diag">Content ID <span class="sort-icon">↕</span></span></th>
             <th onclick="sortTable('title')" data-col="title"><span class="th-diag">Título <span class="sort-icon">↕</span></span></th>
             <th onclick="sortTable('tipo')" data-col="tipo"><span class="th-diag">Tipo <span class="sort-icon">↕</span></span></th>
@@ -2704,6 +2662,10 @@ function toggleFiltersPopover(ev) {
   if (btn) {
     btn.classList.toggle('active-filter', open);
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  if (open) {
+    renderCreatorToggle();
+    renderCategoryChips();
   }
 }
 
@@ -4344,15 +4306,15 @@ function syncFantasyFormatFilterUI() {
   }
 }
 
-/** Per-tab sticky slot: Dashboard TIPO | Base/VELHO TIPO | Fantasy TIPO | Feedbacks none. */
+/** Per-tab sticky slot: Dashboard/Feedbacks TIPO | Base/VELHO TIPO | Fantasy TIPO. */
 function syncFormatControlsVisibility() {
   const dashGroup = document.getElementById('dashboardTipoGroup');
   const baseVelhoGroup = document.getElementById('baseVelhoTipoGroup');
   const fantasyGroup = document.getElementById('filterTipoGroup');
-  const onDash = activeTab === 'dashboard';
+  const onDashOrFb = activeTab === 'dashboard' || activeTab === 'feedbacks';
   const onBaseVelho = activeTab === 'basedados' || activeTab === 'velho';
   const onFantasy = activeTab === 'fantasy';
-  if (dashGroup) dashGroup.style.display = onDash ? '' : 'none';
+  if (dashGroup) dashGroup.style.display = onDashOrFb ? '' : 'none';
   if (baseVelhoGroup) baseVelhoGroup.style.display = onBaseVelho ? '' : 'none';
   if (fantasyGroup) fantasyGroup.style.display = onFantasy ? '' : 'none';
 }
@@ -4392,12 +4354,19 @@ function renderVisibleDashboardPipeline() {
   resizeAllChartsSoon(60);
 }
 
-/** Immediate Dashboard format switch — does not touch Base/VELHO/Fantasy. */
+/** Immediate Dashboard/Feedbacks format switch — does not touch Base/VELHO/Fantasy. */
 function setDashboardFormat(fmt) {
   if (fmt !== 'longform' && fmt !== 'shorts') return;
   const changed = dashboardFormat !== fmt;
   dashboardFormat = fmt;
   syncDashboardFormatUI();
+  if (activeTab === 'feedbacks') {
+    if (changed) {
+      syncFeedbackStatusFilterOptions();
+      renderFeedbacksTab();
+    }
+    return;
+  }
   if (activeTab !== 'dashboard') return;
   if (!changed) return;
   syncDashboardPanels();
@@ -4532,9 +4501,7 @@ function setNumericRangesEnabled(enabled) {
 }
 
 function getCreatorToggleList() {
-  const fromData = getSourceCreators();
-  const extras = fromData.filter(c => !FIXED_CREATORS.includes(c)).sort((a, b) => a.localeCompare(b, 'pt-BR'));
-  return [...FIXED_CREATORS, ...extras];
+  return FIXED_CREATORS.slice();
 }
 
 function setCreatorFilter(value) {
@@ -6248,8 +6215,6 @@ function renderTable() {
     return `
     <tr>
       <td style="white-space:nowrap;">${dateFmt}</td>
-      <td style="white-space:nowrap;">${r.semana||'—'}</td>
-      <td style="white-space:nowrap;">${r.mesAno||'—'}</td>
       <td style="white-space:nowrap;font-variant-numeric:normal;">${contentId}</td>
       <td class="title-cell">
         ${r.link
@@ -6517,24 +6482,166 @@ function classifyVideo(r) {
 }
 
 function classifyVideoShorts(r) {
-  const highViews = (r.views || 0) >= THRESHOLDS_SHORTS.views;
+  const highViews = (r.views || 0) >= THRESHOLDS_SHORTS.views; // ≥114K
   const highGancho = Number.isFinite(r.gancho) && r.gancho >= THRESHOLDS_SHORTS.gancho;
   const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct;
 
-  if (highViews && highGancho && highAvg)
+  // Escalar: Views altas + (Gancho alto OU Avg alto)
+  if (highViews && (highGancho || highAvg))
     return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
-  if (!highGancho && highAvg)
+  // Chamativo: Views altas + Gancho baixo + Avg baixo
+  if (highViews && !highGancho && !highAvg)
+    return { status:'Chamativo', color:'#c084fc', bg:'rgba(192,132,252,.18)', icon:'🟣', diag:'Melhorar retenção / profundidade', acao:'Revisar conteúdo para converter alcance em retenção' };
+  // Gancho: Views baixas + Gancho baixo + Avg alto
+  if (!highViews && !highGancho && highAvg)
     return { status:'Gancho', color:'#60a5fa', bg:'rgba(96,165,250,.18)', icon:'🔵', diag:'Melhorar abertura / hook', acao:'Revisar primeiros segundos e hook' };
-  if (highGancho && !highAvg)
+  // Storytelling: Views baixas + Gancho alto + Avg baixo
+  if (!highViews && highGancho && !highAvg)
     return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
+  // Não Escalar: restante (inclui Gancho alto + Avg alto + Views <114K)
   return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
+}
+
+const FEEDBACK_STATUS_LF = [
+  { value: 'Escalar', label: '🟢 Escalar' },
+  { value: 'Reembalar', label: '🔵 Reembalar' },
+  { value: 'Storytelling', label: '🟡 Storytelling' },
+  { value: 'Chamativo', label: '🟣 Chamativo' },
+  { value: 'Não Escalar', label: '🔴 Não Escalar' },
+];
+const FEEDBACK_STATUS_SHORTS = [
+  { value: 'Escalar', label: '🟢 Escalar' },
+  { value: 'Gancho', label: '🔵 Gancho' },
+  { value: 'Storytelling', label: '🟡 Storytelling' },
+  { value: 'Chamativo', label: '🟣 Chamativo' },
+  { value: 'Não Escalar', label: '🔴 Não Escalar' },
+];
+
+function isFeedbackShortsMode() {
+  return dashboardFormat === 'shorts';
+}
+
+function getFeedbackSourceRows() {
+  return isFeedbackShortsMode() ? (filteredShorts || []) : (filteredLong || []);
+}
+
+function classifyFeedbackRow(r) {
+  return isFeedbackShortsMode() ? classifyVideoShorts(r) : classifyVideo(r);
+}
+
+function syncFeedbackStatusFilterOptions() {
+  const sel = document.getElementById('feedbackStatusFilter');
+  if (!sel) return;
+  const prev = sel.value;
+  const opts = isFeedbackShortsMode() ? FEEDBACK_STATUS_SHORTS : FEEDBACK_STATUS_LF;
+  sel.innerHTML = '<option value="">Todos os diagnósticos</option>' +
+    opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+  const valid = opts.some(o => o.value === prev);
+  sel.value = valid ? prev : '';
+}
+
+function updateFeedbackSectionCopy() {
+  const shorts = isFeedbackShortsMode();
+  const titleEl = document.getElementById('feedbackSectionTitle');
+  const descEl = document.getElementById('feedbackSectionDesc');
+  const matrixDesc = document.getElementById('feedbackMatrixDesc');
+  if (titleEl) titleEl.textContent = shorts ? 'Feedback Automático · Shorts' : 'Feedback Automático · Long Form';
+  if (descEl) {
+    descEl.textContent = shorts
+      ? 'Classificação Shorts: Escalar = Views ≥114K + (Gancho ≥71% ou Avg Viewed% ≥80%). Gancho / Storytelling / Chamativo / Não Escalar pelas combinações (Não Escalar inclui Gancho+Avg altos com Views <114K).'
+      : 'Classificação Long Form: Escalar = Imp ≥500K · Views ≥49K. Reembalar / Storytelling / Chamativo / Não Escalar pelas combinações de Impressões, Avg Viewed% e Views.';
+  }
+  if (matrixDesc) {
+    matrixDesc.textContent = shorts
+      ? 'Contagem de Shorts por criador e status (Escalar, Gancho, Storytelling, Chamativo, Não Escalar).'
+      : 'Contagem de Long Form por criador e status (Escalar, Reembalar, Storytelling, Chamativo, Não Escalar).';
+  }
+}
+
+function renderFeedbackMatrix() {
+  const wrap = document.getElementById('feedbackMatrixWrap');
+  if (!wrap) return;
+  const shorts = isFeedbackShortsMode();
+  const statuses = shorts
+    ? ['Escalar', 'Gancho', 'Storytelling', 'Chamativo', 'Não Escalar']
+    : ['Escalar', 'Reembalar', 'Storytelling', 'Chamativo', 'Não Escalar'];
+  const statusMeta = {
+    'Escalar': { color: '#4ade80', icon: '🟢' },
+    'Reembalar': { color: '#60a5fa', icon: '🔵' },
+    'Gancho': { color: '#60a5fa', icon: '🔵' },
+    'Storytelling': { color: '#fcd34d', icon: '🟡' },
+    'Chamativo': { color: '#c084fc', icon: '🟣' },
+    'Não Escalar': { color: '#fca5a5', icon: '🔴' },
+  };
+  const d = getFeedbackSourceRows();
+  const creators = FIXED_CREATORS.slice();
+  const counts = {};
+  creators.forEach(c => {
+    counts[c] = Object.fromEntries(statuses.map(s => [s, 0]));
+    counts[c]._total = 0;
+  });
+  let otherTotal = 0;
+  const otherByStatus = Object.fromEntries(statuses.map(s => [s, 0]));
+
+  d.forEach(r => {
+    const cls = classifyFeedbackRow(r);
+    const creator = r.creator || '';
+    if (counts[creator]) {
+      counts[creator][cls.status] = (counts[creator][cls.status] || 0) + 1;
+      counts[creator]._total += 1;
+    } else {
+      otherByStatus[cls.status] = (otherByStatus[cls.status] || 0) + 1;
+      otherTotal += 1;
+    }
+  });
+
+  const th = 'padding:8px 10px;background:var(--gray-50);font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;border-bottom:2px solid var(--gray-200);white-space:nowrap;';
+  const tdL = 'padding:8px 10px;font-size:12px;border-bottom:1px solid var(--gray-100);';
+  const tdN = 'padding:8px 10px;font-size:12px;text-align:right;border-bottom:1px solid var(--gray-100);font-variant-numeric:tabular-nums;';
+
+  const rowHtml = (label, byStatus, total) => {
+    const cells = statuses.map(s => {
+      const n = byStatus[s] || 0;
+      const meta = statusMeta[s];
+      const style = n > 0 ? `color:${meta.color};font-weight:700;` : 'color:var(--gray-400);';
+      return `<td style="${tdN}${style}">${n || '—'}</td>`;
+    }).join('');
+    return `<tr>
+      <td style="${tdL}"><span class="creator-tag">${label}</span></td>
+      ${cells}
+      <td style="${tdN}font-weight:700;color:var(--gray-800);">${total}</td>
+    </tr>`;
+  };
+
+  let body = creators.map(c => rowHtml(c, counts[c], counts[c]._total)).join('');
+  if (otherTotal > 0) body += rowHtml('Outros', otherByStatus, otherTotal);
+
+  const totals = Object.fromEntries(statuses.map(s => [s, creators.reduce((a, c) => a + (counts[c][s] || 0), 0) + (otherByStatus[s] || 0)]));
+  const grand = creators.reduce((a, c) => a + counts[c]._total, 0) + otherTotal;
+  body += `<tr style="background:var(--gray-50);">
+    <td style="${tdL}font-weight:700;">Total</td>
+    ${statuses.map(s => `<td style="${tdN}font-weight:700;">${totals[s] || 0}</td>`).join('')}
+    <td style="${tdN}font-weight:700;">${grand}</td>
+  </tr>`;
+
+  wrap.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr>
+      <th style="${th}text-align:left;">Criador</th>
+      ${statuses.map(s => {
+        const m = statusMeta[s];
+        return `<th style="${th}text-align:right;color:${m.color};">${m.icon} ${s}</th>`;
+      }).join('')}
+      <th style="${th}text-align:right;">Total</th>
+    </tr></thead>
+    <tbody>${body}</tbody>
+  </table>`;
 }
 
 let feedbackSortCol = 'dataPublicacao';
 let feedbackSortDir = -1; // mais recentes primeiro
 
 function sortFeedback(col) {
-  feedbackSortDir = (feedbackSortCol === col) ? feedbackSortDir * -1 : 1;
+  feedbackSortDir = (feedbackSortCol === col) ? feedbackSortDir * -1 : -1;
   feedbackSortCol = col;
   document.querySelectorAll('th[data-ftcol]').forEach(th => {
     th.classList.remove('sort-asc','sort-desc');
@@ -6544,33 +6651,49 @@ function sortFeedback(col) {
 }
 
 function renderFeedbackTable() {
-  const d = filteredLong;
-  if (!d.length) { document.getElementById('feedbackBody').innerHTML = ''; return; }
+  const bodyEl = document.getElementById('feedbackBody');
+  if (!bodyEl) return;
 
-  const statusFilter = document.getElementById('feedbackStatusFilter').value;
-  const searchQ = (document.getElementById('feedbackSearch').value || '').toLowerCase();
+  updateFeedbackSectionCopy();
 
-  let rows = d.map(r => ({ r, cls: classifyVideo(r) }));
+  const shorts = isFeedbackShortsMode();
+  const d = getFeedbackSourceRows();
+  const statusFilter = (document.getElementById('feedbackStatusFilter') || {}).value || '';
+  const searchQ = ((document.getElementById('feedbackSearch') || {}).value || '').toLowerCase();
+
+  if (!d.length) {
+    bodyEl.innerHTML = '';
+    const footer = document.getElementById('feedbackFooter');
+    const title = document.getElementById('feedbackTitle');
+    if (footer) footer.textContent = '';
+    if (title) title.textContent = shorts ? '0 Shorts classificados' : '0 vídeos classificados';
+    return;
+  }
+
+  let rows = d.map(r => ({ r, cls: classifyFeedbackRow(r) }));
   if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
-  if (searchQ)      rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ));
+  if (searchQ) rows = rows.filter(({r}) =>
+    r.title.toLowerCase().includes(searchQ) || (r.creator || '').toLowerCase().includes(searchQ)
+  );
 
-  // Sort (default: dataPublicacao desc)
-  const statusOrder = ['Escalar','Reembalar','Storytelling','Chamativo','Não Escalar'];
+  const statusOrder = shorts
+    ? ['Escalar', 'Gancho', 'Storytelling', 'Chamativo', 'Não Escalar']
+    : ['Escalar', 'Reembalar', 'Storytelling', 'Chamativo', 'Não Escalar'];
   rows.sort((a, b) => {
     let av, bv;
     if (feedbackSortCol === 'status') {
       return feedbackSortDir * (statusOrder.indexOf(a.cls.status) - statusOrder.indexOf(b.cls.status));
     } else if (feedbackSortCol === 'creator') {
-      av = a.r.creator||''; bv = b.r.creator||'';
+      av = a.r.creator || ''; bv = b.r.creator || '';
       return feedbackSortDir * av.localeCompare(bv);
     } else if (feedbackSortCol === 'categoria') {
-      av = a.r.categoria||''; bv = b.r.categoria||'';
+      av = a.r.categoria || ''; bv = b.r.categoria || '';
       return feedbackSortDir * av.localeCompare(bv);
     } else if (feedbackSortCol === 'dataPublicacao') {
-      av = a.r.dataPublicacao||''; bv = b.r.dataPublicacao||'';
+      av = a.r.dataPublicacao || ''; bv = b.r.dataPublicacao || '';
       return feedbackSortDir * av.localeCompare(bv);
     } else {
-      av = a.r[feedbackSortCol]||0; bv = b.r[feedbackSortCol]||0;
+      av = a.r[feedbackSortCol] || 0; bv = b.r[feedbackSortCol] || 0;
       return feedbackSortDir * (av - bv);
     }
   });
@@ -6582,32 +6705,46 @@ function renderFeedbackTable() {
   const titleLink = getTheme() === 'dark' ? '#f3f4f6' : 'var(--gray-800)';
   const neut = 'font-weight:400;color:var(--gray-700)';
 
-  document.getElementById('feedbackBody').innerHTML = rows.map(({r, cls}) => {
-    const oV = r.views >= THRESHOLDS.views;
+  bodyEl.innerHTML = rows.map(({r, cls}) => {
+    const oV = shorts
+      ? r.views >= THRESHOLDS_SHORTS.views
+      : r.views >= THRESHOLDS.views;
     const oImp = Number.isFinite(r.impressoes) ? r.impressoes >= THRESHOLDS.impressoes : null;
-    const oR = Number.isFinite(r.avgViewedPct) ? r.avgViewedPct >= THRESHOLDS.avgViewedPct : null;
-    const cc = catColor(r.categoria);
+    const oG = Number.isFinite(r.gancho) ? r.gancho >= THRESHOLDS_SHORTS.gancho : null;
+    const oR = Number.isFinite(r.avgViewedPct)
+      ? r.avgViewedPct >= (shorts ? THRESHOLDS_SHORTS.avgViewedPct : THRESHOLDS.avgViewedPct)
+      : null;
+    const cc = shorts ? SHORTS_THEME : catColor(r.categoria);
+    const catLabel = shorts ? 'Shorts' : (r.categoria || '—');
+    const ganchoTxt = Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(1) + '%' : '—';
     return `
     <tr style="border-bottom:1px solid var(--gray-100);">
       <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
         ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:${titleLink};text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;color:${titleLink};">${r.title}</span>`}
       </td>
       <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${cc}22;color:${cc};border:1px solid ${cc}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="${r.categoria||'—'}">${r.categoria||'—'}</span></td>
+      <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${cc}22;color:${cc};border:1px solid ${cc}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="${catLabel}">${catLabel}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oImp)}">${Number.isFinite(r.impressoes) ? fmtNum(r.impressoes) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${shorts ? neut : fbOk(oImp)}">${Number.isFinite(r.impressoes) ? fmtNum(r.impressoes) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.gancho!==null&&r.gancho!==undefined?(r.gancho*100).toFixed(1)+'%':'—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${shorts ? fbOk(oG) : neut}">${ganchoTxt}</td>
       <td style="padding:5px 6px;font-size:11px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:10px;white-space:nowrap;background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}55;">${cls.icon} ${cls.status}</span></td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
       <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('feedbackFooter').textContent =
-    `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · demais status por Imp × Avg Viewed% × Views`;
-  document.getElementById('feedbackTitle').textContent = `${rows.length} vídeos classificados`;
+  const footer = document.getElementById('feedbackFooter');
+  const title = document.getElementById('feedbackTitle');
+  if (footer) {
+    footer.textContent = shorts
+      ? `${rows.length} Shorts · Escalar: Views ≥114K + (Gancho ≥71% ou Avg ≥80%) · Não Escalar: Views <114K com Gancho+Avg altos (ou tudo baixo)`
+      : `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · demais status por Imp × Avg Viewed% × Views`;
+  }
+  if (title) title.textContent = shorts
+    ? `${rows.length} Shorts classificados`
+    : `${rows.length} vídeos classificados`;
 }
 
 // ── TEMPORAL EVOLUTION ────────────────────────────────────────────────────────
@@ -7680,66 +7817,102 @@ function renderShortsCharts() {
 
 
 function renderShortsFunil() {
+  const groupByEl = document.getElementById('funnelGroupByShorts');
+  const groupBy = groupByEl ? groupByEl.value : 'all';
   const d = filteredShorts;
   const container = document.getElementById('funnelContainerShorts');
   if (!container || !d.length) return;
 
-  const stages = ['Impressões','Views','Likes','Inscritos','Shares','Comentários','Fantasy Clicks'];
-  const stageColors = ['#10b981','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777','#c2410c'];
-  const fcSum = sumFantasyClicks(d);
-  const fcConv = aggregateFantasyConversion(d);
-  const vals = [
-    d.reduce((a,r)=>a+r.impressoes,0),
-    d.reduce((a,r)=>a+r.views,0),
-    d.reduce((a,r)=>a+r.likes,0),
-    d.reduce((a,r)=>a+r.inscritos,0),
-    d.reduce((a,r)=>a+r.shares,0),
-    d.reduce((a,r)=>a+r.comentarios,0),
-    fcSum
-  ];
-  const maxV = vals[0]||1;
-  const MAX_W=600, MIN_W=60, STAGE_H=52, GAP=3;
-  const totalH = stages.length*(STAGE_H+GAP)+GAP;
-  const bandW = (i) => {
-    if (i === 6) {
-      const commentsW = MIN_W + (vals[5]/maxV)*(MAX_W-MIN_W);
-      const floor = Math.max(150, commentsW * 0.78);
-      if (vals[6] == null || !Number.isFinite(vals[6])) return floor;
-      const raw = MIN_W + (vals[6]/maxV)*(MAX_W-MIN_W);
-      return Math.max(raw, floor);
-    }
-    return MIN_W + (vals[i]/maxV)*(MAX_W-MIN_W);
-  };
-
-  let svgContent = '';
-
-  stages.forEach((stage,i) => {
-    const w = bandW(i);
-    const nextW = i < stages.length - 1 ? bandW(i + 1) : w * 0.85;
-    const cx = MAX_W/2; const y = GAP+i*(STAGE_H+GAP);
-    const x1=cx-w/2, x2=cx+w/2, x3=cx+nextW/2, x4=cx-nextW/2;
-    svgContent += `<polygon points="${x1},${y} ${x2},${y} ${x3},${y+STAGE_H} ${x4},${y+STAGE_H}" fill="${stageColors[i]}" opacity="0.88"/>`;
-    const mid = y+STAGE_H/2;
-    const valLabel = (i === 6)
-      ? (vals[6] == null || !Number.isFinite(vals[6]) ? '—' : fmtNum(vals[6]))
-      : fmtNum(vals[i]);
-    svgContent += `<text x="${cx}" y="${mid-5}" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="system-ui,sans-serif">${stage}</text>`;
-    svgContent += `<text x="${cx}" y="${mid+9}" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui,sans-serif">${valLabel}</text>`;
-    const pctFill = getTheme() === 'dark' ? '#e5e7eb' : '#111827';
-    if (i === 6) {
-      const conv = (fcConv == null || !Number.isFinite(fcConv)) ? '—' : fmtFantasyCR(fcConv);
-      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
-    } else if (i > 0) {
-      const conv = i===1?(vals[0]>0?vals[1]/vals[0]*100:0).toFixed(1)+'%':(vals[1]>0?vals[i]/vals[1]*100:0).toFixed(2)+'%';
-      svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="400" font-family="system-ui,sans-serif">${conv}</text>`;
-    }
+  let groups = {};
+  if (groupBy === 'all') groups = { 'Todos os Shorts': d };
+  else d.forEach(r => {
+    const key = (groupBy === 'creator' ? r.creator : r.categoria) || '(Sem dados)';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(r);
   });
 
-  container.innerHTML = `<div style="overflow-x:auto;">
-    <svg viewBox="0 0 ${MAX_W+100} ${totalH}" width="100%" style="max-width:720px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
-      ${svgContent}
-    </svg>
-  </div>`;
+  const stages = ['Impressões','Views','Likes','Inscritos','Shares','Comentários','Fantasy Clicks'];
+  const stageColors = ['#10b981','#0891b2','#f59e0b','#7c3aed','#06b6d4','#db2777','#c2410c'];
+
+  const allGD = Object.values(groups).map(rows => funnelKPIs(rows)).filter(Boolean);
+  const maxCS = [0,1,2,3,4,5].map(i => {
+    const convs = allGD.map(k => {
+      const v = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm];
+      if (i === 0) return 0;
+      if (i === 1) return v[0] > 0 ? v[1] / v[0] * 100 : 0;
+      return v[1] > 0 ? v[i] / v[1] * 100 : 0;
+    });
+    return Math.max(...convs);
+  });
+
+  let htmlOut = '';
+  Object.entries(groups).sort(([,a],[,b]) => b.length - a.length).forEach(([name, rows]) => {
+    const k = funnelKPIs(rows);
+    if (!k) return;
+    const fcSum = sumFantasyClicks(rows);
+    const fcConv = aggregateFantasyConversion(rows);
+    const vals = [k.totalImpr,k.totalViews,k.totalLikes,k.totalInsc,k.totalShares,k.totalComm, fcSum];
+    const maxV = vals[0] || 1;
+    const MAX_W = 600, MIN_W = 60, STAGE_H = 52, GAP = 3;
+    const totalH = stages.length * (STAGE_H + GAP) + GAP;
+    const bandW = (i) => {
+      if (i === 6) {
+        const commentsW = MIN_W + (vals[5] / maxV) * (MAX_W - MIN_W);
+        const floor = Math.max(150, commentsW * 0.78);
+        if (vals[6] == null || !Number.isFinite(vals[6])) return floor;
+        const raw = MIN_W + (vals[6] / maxV) * (MAX_W - MIN_W);
+        return Math.max(raw, floor);
+      }
+      return MIN_W + (vals[i] / maxV) * (MAX_W - MIN_W);
+    };
+
+    let svgContent = '';
+    stages.forEach((stage, i) => {
+      const w = bandW(i);
+      const nextW = i < stages.length - 1 ? bandW(i + 1) : w * 0.85;
+      const cx = MAX_W / 2;
+      const y = GAP + i * (STAGE_H + GAP);
+      const x1 = cx - w / 2, x2 = cx + w / 2, x3 = cx + nextW / 2, x4 = cx - nextW / 2;
+      svgContent += `<polygon points="${x1},${y} ${x2},${y} ${x3},${y+STAGE_H} ${x4},${y+STAGE_H}" fill="${stageColors[i]}" opacity="0.88"/>`;
+      const mid = y + STAGE_H / 2;
+      const valLabel = (i === 6)
+        ? (vals[6] == null || !Number.isFinite(vals[6]) ? '—' : fmtNum(vals[6]))
+        : fmtNum(vals[i]);
+      svgContent += `<text x="${cx}" y="${mid-5}" text-anchor="middle" fill="white" font-size="10" font-weight="600" font-family="system-ui,sans-serif">${stage}</text>`;
+      svgContent += `<text x="${cx}" y="${mid+9}" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui,sans-serif">${valLabel}</text>`;
+      let conv = '';
+      if (i === 6) {
+        conv = (fcConv == null || !Number.isFinite(fcConv)) ? '—' : fmtFantasyCR(fcConv);
+      } else {
+        if (i === 1 && vals[0] > 0) {
+          const pv = (vals[1] / vals[0] * 100);
+          const ib = groupBy !== 'all' && maxCS[1] > 0 && Math.abs(pv - maxCS[1]) < 0.001;
+          conv = `${pv.toFixed(1)}%${ib ? '*' : ''}`;
+        }
+        if (i >= 2 && i <= 5 && vals[1] > 0) {
+          const pv = (vals[i] / vals[1] * 100);
+          const ib = groupBy !== 'all' && maxCS[i] > 0 && Math.abs(pv - maxCS[i]) < 0.0001;
+          conv = `${pv.toFixed(2)}%${ib ? '*' : ''}`;
+        }
+      }
+      if (conv) {
+        const isBold = conv.includes('*');
+        const pctFill = getTheme() === 'dark' ? '#e5e7eb' : '#111827';
+        svgContent += `<text x="${MAX_W+10}" y="${mid+4}" fill="${pctFill}" font-size="10" font-weight="${isBold?'700':'400'}" font-family="system-ui,sans-serif">${conv.replace('*','')}</text>`;
+      }
+    });
+
+    htmlOut += `<div style="margin-bottom:28px;">
+      ${groupBy !== 'all' ? `<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">${name} <span style="font-weight:400;color:var(--gray-400);">(${rows.length} Shorts · CTR ${(k.ctr*100).toFixed(1)}% · Ret ${k.ret.toFixed(1)}%)</span></div>` : ''}
+      <div style="overflow-x:auto;">
+        <svg viewBox="0 0 ${MAX_W+100} ${totalH}" width="100%" style="max-width:720px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+          ${svgContent}
+        </svg>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = htmlOut || '<p style="color:var(--gray-400);padding:12px;">Sem dados suficientes.</p>';
 }
 
 // ── SHORTS · HEATMAP INDICADORES (por Creator) ─────────────────────────────────
@@ -7918,77 +8091,10 @@ function renderShortsIndicatorsHeatmap() {
 
 
 function renderFeedbacksTab() {
+  syncFeedbackStatusFilterOptions();
+  updateFeedbackSectionCopy();
+  renderFeedbackMatrix();
   renderFeedbackTable();
-  renderFeedbackTableShorts();
-}
-
-let feedbackSSortCol = 'dataPublicacao';
-let feedbackSSortDir = -1; // mais recentes primeiro
-
-function sortFeedbackS(col) {
-  feedbackSSortDir = (feedbackSSortCol === col) ? -feedbackSSortDir : -1;
-  feedbackSSortCol = col;
-  document.querySelectorAll('[data-sfcol]').forEach(th => th.classList.remove('sort-asc','sort-desc'));
-  const el = document.querySelector(`[data-sfcol="${col}"]`);
-  if (el) el.classList.add(feedbackSSortDir === 1 ? 'sort-asc' : 'sort-desc');
-  renderFeedbackTableShorts();
-}
-
-function renderFeedbackTableShorts() {
-  const bodyEl   = document.getElementById('feedbackSBody');
-  const footerEl = document.getElementById('feedbackSFooter');
-  const titleEl  = document.getElementById('feedbackSTitle');
-  if (!bodyEl) return;
-  const d = filteredShorts;
-  if (!d.length) { bodyEl.innerHTML = ''; return; }
-
-  const statusFilter = (document.getElementById('feedbackSStatusFilter')||{}).value || '';
-  const searchQ = ((document.getElementById('feedbackSSearch')||{}).value || '').toLowerCase();
-
-  let rows = d.map(r => ({ r, cls: classifyVideoShorts(r) }));
-  if (statusFilter) rows = rows.filter(({cls}) => cls.status === statusFilter);
-  if (searchQ) rows = rows.filter(({r}) => r.title.toLowerCase().includes(searchQ) || (r.creator||'').toLowerCase().includes(searchQ));
-
-  const order = ['Escalar','Gancho','Storytelling','Não Escalar'];
-  rows.sort((a,b) => {
-    if (feedbackSSortCol === 'status') return feedbackSSortDir * (order.indexOf(a.cls.status) - order.indexOf(b.cls.status));
-    if (feedbackSSortCol === 'creator') return feedbackSSortDir * (a.r.creator||'').localeCompare(b.r.creator||'');
-    if (feedbackSSortCol === 'categoria') return feedbackSSortDir * (a.r.categoria||'').localeCompare(b.r.categoria||'');
-    if (feedbackSSortCol === 'dataPublicacao') return feedbackSSortDir * (a.r.dataPublicacao||'').localeCompare(b.r.dataPublicacao||'');
-    return feedbackSSortDir * ((a.r[feedbackSSortCol]||0) - (b.r[feedbackSSortCol]||0));
-  });
-
-  const fbOk = ok => ok == null
-    ? 'font-weight:400;color:var(--gray-400)'
-    : (ok ? 'font-weight:700;color:#4ade80' : 'font-weight:400;color:#fca5a5');
-  const shCat = SHORTS_THEME;
-  const titleLink = getTheme() === 'dark' ? '#f3f4f6' : 'var(--gray-800)';
-  const neut = 'font-weight:400;color:var(--gray-700)';
-
-  bodyEl.innerHTML = rows.map(({r, cls}) => {
-    const oV = r.views >= THRESHOLDS_SHORTS.views;
-    const oG = Number.isFinite(r.gancho) ? r.gancho >= THRESHOLDS_SHORTS.gancho : null;
-    const oR = Number.isFinite(r.avgViewedPct) ? r.avgViewedPct >= THRESHOLDS_SHORTS.avgViewedPct : null;
-    const ganchoTxt = Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(2) + '%' : '—';
-    return `
-    <tr style="border-bottom:1px solid var(--gray-100);">
-      <td style="padding:5px 8px;font-size:11px;white-space:normal;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;" title="${r.title.replace(/"/g,'&quot;')}">
-        ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="color:${titleLink};text-decoration:none;font-weight:500;">${r.title}</a>` : `<span style="font-weight:500;color:${titleLink};">${r.title}</span>`}
-      </td>
-      <td style="padding:5px 6px;font-size:11px;overflow:hidden;"><span class="creator-tag">${r.creator||'—'}</span></td>
-      <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${shCat}22;color:${shCat};border:1px solid ${shCat}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="Shorts">Shorts</span></td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oG)}">${ganchoTxt}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:5px 6px;font-size:11px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:10px;white-space:nowrap;background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}55;">${cls.icon} ${cls.status}</span></td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.diag}">${cls.diag}</td>
-      <td style="padding:5px 6px;font-size:10px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${cls.acao}">${cls.acao}</td>
-    </tr>`;
-  }).join('');
-
-  if (footerEl) footerEl.textContent = `${rows.length} Shorts · Escalar: Views ≥114K · Gancho ≥71% · Avg Viewed% ≥80%`;
-  if (titleEl) titleEl.textContent = `${rows.length} Shorts classificados`;
 }
 
 // ── TEMPORAL METRIC + CATEGORY SELECTORS ──────────────────────────────────────
@@ -8493,34 +8599,13 @@ function renderVelho() {
     const dur = (r.duracao !== null && r.duracao !== undefined) ? formatDuration(r.duracao) : '—';
     const outlier = fmtOutlier(r.outlier);
     const perfCls = outlierPerformanceClass(r.outlier);
-    const ctr = Number.isFinite(r.ctr) ? (r.ctr * 100).toFixed(2) + '%' : '—';
-    const gancho = fmtGanchoCell(r, 1);
-    const avgDur = (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined) ? formatDuration(r.avgViewDurSec) : '—';
     const title = escapeHtml(r.title);
-    const lf = isLongForm(r);
     const fcDisp = (r.fantasyClicks != null && Number.isFinite(r.fantasyClicks)) ? fmtNum(r.fantasyClicks) : '—';
-    const metricsHtml = lf
-      ? `<div class="velho-metrics lf">
+    const metricsHtml = `<div class="velho-metrics lf">
           <div class="velho-mrow cols-3">
             <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
             <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
             <div><div class="velho-metric-label">Fantasy Clicks</div><div class="velho-metric-val">${fcDisp}</div></div>
-          </div>
-          <div class="velho-mrow cols-3">
-            <div><div class="velho-metric-label">CTR</div><div class="velho-metric-val sec">${ctr}</div></div>
-            <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
-            <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
-          </div>
-        </div>`
-      : `<div class="velho-metrics lf">
-          <div class="velho-mrow cols-3">
-            <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
-            <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
-            <div><div class="velho-metric-label">Fantasy Clicks</div><div class="velho-metric-val">${fcDisp}</div></div>
-          </div>
-          <div class="velho-mrow cols-2">
-            <div><div class="velho-metric-label">Gancho</div><div class="velho-metric-val sec">${gancho}</div></div>
-            <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDur}</div></div>
           </div>
         </div>`;
     return `<article class="velho-card" data-videoid="${escapeHtml(id)}">
