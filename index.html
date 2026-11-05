@@ -6487,20 +6487,22 @@ function renderScatter() {
 // Shorts classification: Gancho + Avg Viewed% + Views
 const THRESHOLDS_SHORTS = { views: 114000, gancho: 0.71, avgViewedPct: 80 };
 
-// Long Form: Impressões + Avg Viewed% + Views
+// Long Form: Impressões + Avg Viewed% + Views (+ Avg View Dur para Escalar)
 const THRESHOLDS = {
-  views:        49000,   // >=49K views
-  impressoes:   500000,  // >=500K impressões
-  avgViewedPct: 40,      // >=40% avg viewed
+  views:         49000,   // >=49K views
+  impressoes:    500000,  // >=500K impressões
+  avgViewedPct:  40,      // >=40% avg viewed
+  avgViewDurSec: 360,     // >=6:00 avg view duration
 };
 
 function classifyVideo(r) {
   const highViews = (r.views || 0) >= THRESHOLDS.views;
   const highImp = Number.isFinite(r.impressoes) && r.impressoes >= THRESHOLDS.impressoes;
   const highAvg = Number.isFinite(r.avgViewedPct) && r.avgViewedPct >= THRESHOLDS.avgViewedPct;
+  const highDur = Number.isFinite(r.avgViewDurSec) && r.avgViewDurSec >= THRESHOLDS.avgViewDurSec;
 
-  // Escalar: Imp alta + Views altas (Avg Viewed% indiferente)
-  if (highImp && highViews)
+  // Escalar: Imp alta + Views altas + Avg alta + Dur ≥6:00
+  if (highImp && highViews && highAvg && highDur)
     return { status:'Escalar', color:'#4ade80', bg:'rgba(74,222,128,.18)', icon:'🟢', diag:'Estudar & Replicar', acao:'Fazer sequencia e replicar o formato' };
   // Reembalar: Imp baixa + Avg Viewed alta (Views indiferente)
   if (!highImp && highAvg)
@@ -6508,8 +6510,10 @@ function classifyVideo(r) {
   // Storytelling: Imp alta + Avg baixa + Views baixas
   if (highImp && !highAvg && !highViews)
     return { status:'Storytelling', color:'#fcd34d', bg:'rgba(252,211,77,.18)', icon:'🟡', diag:'Melhorar retenção', acao:'Revisar storytelling e ritmo de entrega' };
-  // Chamativo: Imp baixa + Avg baixa + Views altas
-  if (!highImp && !highAvg && highViews)
+  // Chamativo:
+  // 1) Imp baixa + Avg baixa + Views altas
+  // 2) Imp alta + Views altas + (Avg baixa OU Dur <6:00)
+  if ((!highImp && !highAvg && highViews) || (highImp && highViews && (!highAvg || !highDur)))
     return { status:'Chamativo', color:'#c084fc', bg:'rgba(192,132,252,.18)', icon:'🟣', diag:'Melhorar retenção / profundidade', acao:'Revisar conteúdo para converter alcance em retenção' };
   // Não Escalar: restante (inclui Imp alta + Avg alta + Views baixas)
   return { status:'Não Escalar', color:'#fca5a5', bg:'rgba(252,165,165,.18)', icon:'🔴', diag:'Aperfeicoar Formato', acao:'Revisar pauta e reformular formato' };
@@ -6592,12 +6596,12 @@ function updateFeedbackSectionCopy() {
       </ul>`;
   } else {
     descEl.innerHTML = `
-      <div>Limiares Long Form: <strong>Impressões ≥500K</strong> · <strong>Views ≥49K</strong> · <strong>Avg Viewed% ≥40%</strong>.</div>
+      <div>Limiares Long Form: <strong>Impressões ≥500K</strong> · <strong>Views ≥49K</strong> · <strong>Avg Viewed% ≥40%</strong> · <strong>Avg View Dur ≥6:00</strong>.</div>
       <ul>
-        <li><strong>Escalar:</strong> Impressões ≥500K e Views ≥49K (Avg Viewed% indiferente).</li>
+        <li><strong>Escalar:</strong> Impressões ≥500K, Views ≥49K, Avg Viewed% ≥40% e Avg View Dur ≥6:00.</li>
         <li><strong>Reembalar:</strong> Impressões &lt;500K e Avg Viewed% ≥40% (Views indiferente).</li>
         <li><strong>Storytelling:</strong> Impressões ≥500K, Avg Viewed% &lt;40% e Views &lt;49K.</li>
-        <li><strong>Chamativo:</strong> Impressões &lt;500K, Avg Viewed% &lt;40% e Views ≥49K.</li>
+        <li><strong>Chamativo:</strong> (1) Impressões &lt;500K, Avg Viewed% &lt;40% e Views ≥49K; ou (2) Impressões ≥500K, Views ≥49K e (Avg Viewed% &lt;40% ou Avg View Dur &lt;6:00).</li>
         <li><strong>Não Escalar:</strong> demais combinações (inclui Impressões ≥500K, Avg Viewed% ≥40% e Views &lt;49K).</li>
       </ul>`;
   }
@@ -6680,6 +6684,9 @@ function renderFeedbackTable() {
     const oR = Number.isFinite(r.avgViewedPct)
       ? r.avgViewedPct >= (shorts ? THRESHOLDS_SHORTS.avgViewedPct : THRESHOLDS.avgViewedPct)
       : null;
+    const oDur = !shorts && Number.isFinite(r.avgViewDurSec)
+      ? r.avgViewDurSec >= THRESHOLDS.avgViewDurSec
+      : null;
     const cc = shorts ? SHORTS_THEME : catColor(r.categoria);
     const catLabel = shorts ? 'Shorts' : (r.categoria || '—');
     const ganchoTxt = Number.isFinite(r.gancho) ? (r.gancho * 100).toFixed(1) + '%' : '—';
@@ -6692,7 +6699,7 @@ function renderFeedbackTable() {
       <td style="padding:5px 6px;font-size:10px;overflow:visible;"><span style="background:${cc}22;color:${cc};border:1px solid ${cc}44;padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;" title="${catLabel}">${catLabel}</span></td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oV)}">${fmtNum(r.views)}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${shorts ? neut : fbOk(oImp)}">${Number.isFinite(r.impressoes) ? fmtNum(r.impressoes) : '—'}</td>
-      <td style="padding:5px 6px;text-align:right;font-size:11px;${neut}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
+      <td style="padding:5px 6px;text-align:right;font-size:11px;${shorts ? neut : fbOk(oDur)}">${r.avgViewDurSec !== null && r.avgViewDurSec !== undefined ? formatDuration(r.avgViewDurSec) : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${fbOk(oR)}">${r.avgViewedPct !== null && r.avgViewedPct !== undefined ? r.avgViewedPct.toFixed(1)+'%' : '—'}</td>
       <td style="padding:5px 6px;text-align:right;font-size:11px;${shorts ? fbOk(oG) : neut}">${ganchoTxt}</td>
       <td style="padding:5px 6px;font-size:11px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:10px;white-space:nowrap;background:${cls.bg};color:${cls.color};border:1px solid ${cls.color}55;">${cls.icon} ${cls.status}</span></td>
@@ -6706,7 +6713,7 @@ function renderFeedbackTable() {
   if (footer) {
     footer.textContent = shorts
       ? `${rows.length} Shorts · Escalar: Views ≥114K + (Gancho ≥71% ou Avg ≥80%) · Não Escalar: Views <114K com Gancho+Avg altos (ou tudo baixo)`
-      : `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · demais status por Imp × Avg Viewed% × Views`;
+      : `${rows.length} vídeos · Escalar: Imp ≥500K · Views ≥49K · Avg ≥40% · Dur ≥6:00`;
   }
   if (title) title.textContent = shorts
     ? `${rows.length} Shorts classificados`
