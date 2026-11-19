@@ -733,6 +733,60 @@
   }
   .toggle-btn.active { background: var(--accent); color: var(--accent-ink); }
   .toggle-btn:not(.active):hover { background: var(--accent-soft); color: var(--accent); }
+
+  /* Shorts — botões ativos em rosa neon */
+  #panelShorts {
+    --shorts-accent: #C11D83;
+    --shorts-accent-ink: #ffffff;
+    --shorts-accent-soft: rgba(193, 29, 131, 0.14);
+    --shorts-accent-glow: rgba(193, 29, 131, 0.35);
+  }
+  [data-theme="dark"] #panelShorts {
+    --shorts-accent: #FE13F0;
+    --shorts-accent-ink: #0A0A0B;
+    --shorts-accent-soft: rgba(254, 19, 240, 0.16);
+    --shorts-accent-glow: rgba(254, 19, 240, 0.35);
+  }
+  #panelShorts .toggle-btn.active {
+    background: var(--shorts-accent);
+    color: var(--shorts-accent-ink);
+  }
+  #panelShorts .toggle-btn:not(.active):hover {
+    background: var(--shorts-accent-soft);
+    color: var(--shorts-accent);
+  }
+
+  /* Fantasy — accent laranja neon #FF5C00 */
+  #fantasyDashboard {
+    --fantasy-accent: #FF5C00;
+    --fantasy-accent-ink: #ffffff;
+    --fantasy-accent-soft: rgba(255, 92, 0, 0.14);
+    --fantasy-accent-glow: rgba(255, 92, 0, 0.35);
+  }
+  #fantasyDashboard .kpi-value,
+  #fantasyDashboard .kpi-median {
+    color: var(--fantasy-accent);
+  }
+  #fantasyDashboard .section-divider {
+    background: var(--fantasy-accent);
+    box-shadow: 0 0 12px var(--fantasy-accent-glow);
+  }
+  #fantasyDashboard .toggle-btn.active {
+    background: var(--fantasy-accent);
+    color: var(--fantasy-accent-ink);
+  }
+  #fantasyDashboard .toggle-btn:not(.active):hover {
+    background: var(--fantasy-accent-soft);
+    color: var(--fantasy-accent);
+  }
+  #fantasyDashboard .btn-primary {
+    background: var(--fantasy-accent);
+    color: var(--fantasy-accent-ink);
+    border-color: var(--fantasy-accent);
+  }
+  #fantasyDashboard .btn-primary:hover {
+    filter: brightness(1.05);
+  }
   .legend-pills { display: flex; gap: 12px; margin-left: auto; flex-wrap: wrap; }
   .pill { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-600); }
   .pill-dot { width: 12px; height: 3px; border-radius: 2px; }
@@ -1334,9 +1388,14 @@
   .velho-toolbar h3 { font-size:14px; font-weight:700; color:var(--gray-700); margin:0; text-transform:uppercase; letter-spacing:.4px; }
   .velho-toolbar > span { font-size:12px; color:var(--gray-500); }
   .velho-toolbar-right {
-    display:flex; align-items:center; gap:10px; margin-left:auto; flex-wrap:wrap;
+    display:flex; align-items:center; gap:10px; margin-left:auto;
+    flex-wrap:nowrap; flex-shrink:0;
   }
-  .velho-search-wrap { position: relative; width: min(280px, 100%); }
+  .velho-search-wrap {
+    position: relative;
+    width: 240px;
+    flex: 0 0 240px;
+  }
   .velho-search-input-row {
     display:flex; align-items:center; gap:6px;
     height:32px; padding:0 10px;
@@ -1354,25 +1413,14 @@
     flex:1; min-width:0; border:none; outline:none; background:transparent;
     font-size:13px; color:var(--gray-900); height:100%;
   }
-  #velhoSearchDropdown {
-    min-width: 100%;
-    width: max(100%, 320px);
-    max-height: 280px;
-  }
-  #velhoSearchDropdown .title-option {
-    white-space: normal;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    line-height: 1.35;
-  }
-  #velhoSearchDropdown .title-option span.velho-opt-title {
-    flex: 1;
-    min-width: 0;
-  }
   .velho-sort {
     display:flex; align-items:center; gap:8px;
     font-size:12px; font-weight:600; color:var(--gray-600);
+    flex-shrink:0; white-space:nowrap;
+  }
+  @media (max-width: 700px) {
+    .velho-toolbar-right { flex-wrap:wrap; }
+    .velho-search-wrap { width: min(240px, 100%); flex: 1 1 180px; }
   }
   .velho-sort select {
     height:32px; padding:0 10px; border:1px solid var(--input-border); border-radius:6px;
@@ -2348,7 +2396,7 @@
   <div class="charts-controls">
     <div class="topn-input">
       <label>N Vídeos:</label>
-      <input type="number" id="topNInputShorts" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+      <input type="number" id="topNInputShorts" value="10" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
       <div class="topn-toggle">
         <button id="btnTopShorts" class="toggle-btn" onclick="setChartModeShorts('top')">🏆 Melhores</button>
         <button id="btnBotShorts" class="toggle-btn" onclick="setChartModeShorts('bottom')">🔍 Piores</button>
@@ -2448,9 +2496,8 @@
         <div class="velho-search-input-row">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3" stroke-linecap="round"/></svg>
           <input type="text" id="velhoSearchInput" placeholder="Buscar vídeo..." autocomplete="off"
-            oninput="onVelhoSearchInput()" onfocus="openVelhoSearchDropdown()">
+            oninput="onVelhoSearchInput()">
         </div>
-        <div class="title-dropdown" id="velhoSearchDropdown"></div>
       </div>
       <label class="velho-sort">Ordenar por
         <select id="velhoSortSelect" onchange="setVelhoSort(this.value)">
@@ -2582,7 +2629,7 @@
     <div class="charts-controls">
       <div class="topn-input">
         <label>N Vídeos:</label>
-        <input type="number" id="topNInputFantasy" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+        <input type="number" id="topNInputFantasy" value="10" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
         <div class="topn-toggle">
           <button id="btnFTop" class="toggle-btn" onclick="setFantasyPerfMode('top')">🏆 Melhores</button>
           <button id="btnFBot" class="toggle-btn" onclick="setFantasyPerfMode('bottom')">🔍 Piores</button>
@@ -2819,10 +2866,7 @@ document.addEventListener('pointerdown', (e) => {
   closeFiltersPopover();
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeFiltersPopover();
-    if (typeof closeVelhoSearchDropdown === 'function') closeVelhoSearchDropdown();
-  }
+  if (e.key === 'Escape') closeFiltersPopover();
 });
 
 function mean(arr) {
@@ -3554,14 +3598,15 @@ function renderFantasyBreakdownChart() {
   const rows = buildFantasyBreakdown(filteredFantasy, fantasyBreakdownDimension);
   const labels = rows.map(r => r.label);
   const values = rows.map(r => r.value);
+  const fAccent = (typeof FANTASY_ACCENT !== 'undefined') ? FANTASY_ACCENT : '#FF5C00';
   const barColors = labels.map(lab => {
     if (fantasyBreakdownDimension === 'formato' && lab === 'Shorts') return SHORTS_THEME + 'b8';
     if (fantasyBreakdownDimension === 'formato' && lab === 'LIVE') return FANTASY_PERF_LIVE_COLOR + 'b8';
     if (fantasyBreakdownDimension === 'categoria') {
-      const c = (CAT_COLORS && CAT_COLORS[lab]) || '#2563eb';
+      const c = (CAT_COLORS && CAT_COLORS[lab]) || fAccent;
       return c + 'b8';
     }
-    return 'rgba(37, 99, 235, 0.72)';
+    return fAccent + 'b8';
   });
   const borderColors = barColors.map(c => (typeof c === 'string' && c.length === 9) ? c.slice(0, 7) : c);
   const barH = 28;
@@ -3818,12 +3863,13 @@ function renderFantasyTemporal() {
       return range ? `${k} · ${range}` : k;
     };
     const agg = keys.map(k => fantasyTemporalMetricVal(grouped[k], fantasyTemporalMetric));
+    const fAccent = (typeof FANTASY_ACCENT !== 'undefined') ? FANTASY_ACCENT : '#FF5C00';
     datasets = [{
       type: 'line',
       label: lineLabel,
       data: agg,
-      borderColor: '#7c3aed',
-      backgroundColor: '#7c3aed22',
+      borderColor: fAccent,
+      backgroundColor: fAccent + '22',
       fill: true,
       tension: 0.3,
       pointRadius: 3,
@@ -3932,6 +3978,7 @@ function resolveFantasyPublishDate(datesSet, videoId) {
 }
 
 /** Vermelho LIVE — Performance Fantasy (sem token 365Scores dedicado no projeto). */
+const FANTASY_ACCENT = '#FF5C00';
 const FANTASY_PERF_LIVE_COLOR = '#FF495C';
 
 function buildFantasyPerformanceVideos(rows) {
@@ -4013,8 +4060,8 @@ function compareFantasyPerfVideos(a, b, mode) {
 
 function getFantasyPerfTopN() {
   const el = document.getElementById('topNInputFantasy');
-  const n = el ? parseInt(el.value, 10) : 20;
-  if (!Number.isFinite(n) || n < 1) return 20;
+  const n = el ? parseInt(el.value, 10) : 10;
+  if (!Number.isFinite(n) || n < 1) return 10;
   return Math.min(n, 500);
 }
 
@@ -4609,11 +4656,13 @@ function getFilterSourceRows() {
 }
 
 function getSourceCategories() {
-  return [...new Set(getFilterSourceRows().map(r => r.categoria || '(Sem categoria)'))].sort();
+  return [...new Set(getFilterSourceRows().map(r => r.categoria || '(Sem categoria)'))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
 }
 
 function getSourceCreators() {
-  return [...new Set(getFilterSourceRows().map(r => r.creator).filter(Boolean))].sort();
+  return [...new Set(getFilterSourceRows().map(r => r.creator).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
 }
 
 function getSourceTitlesList() {
@@ -4801,7 +4850,9 @@ function renderCategoryChips() {
   if (!wrap) return;
   const cats = getSourceCategories();
   const available = new Set(cats);
-  const ghosts = catAllSelected ? [] : [...selectedCats].filter(c => !available.has(c)).sort();
+  const ghosts = catAllSelected ? [] : [...selectedCats].filter(c => !available.has(c));
+  const ordered = [...new Set([...ghosts, ...cats])]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
   const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
@@ -4809,7 +4860,7 @@ function renderCategoryChips() {
     <span class="fp-chip-check">${checkSvg}</span>Todas
   </button>`;
 
-  [...ghosts, ...cats].forEach(c => {
+  ordered.forEach(c => {
     const isGhost = !available.has(c);
     const selected = !catAllSelected && selectedCats.has(c);
     const color = (CAT_COLORS && CAT_COLORS[c]) || '#64748b';
@@ -7792,7 +7843,7 @@ function renderShortsTemporal() {
 
 
 function getChartDataShorts(metric) {
-  const n = parseInt(document.getElementById('topNInputShorts').value)||20;
+  const n = parseInt(document.getElementById('topNInputShorts').value)||10;
   const metricVal = r => typeof metric==='function' ? metric(r) : r[metric];
   let sorted;
   if (chartModeShorts === 'recent') {
@@ -8568,8 +8619,8 @@ function isVelhoEligible(r) {
 
 let velhoSort = 'date';
 let velhoVisibleCount = 30;
-/** Empty set = show all eligible videos. Otherwise only selected videoIds. */
-let selectedVelhoIds = new Set();
+/** Live title filter for VELHO grid (substring, case-insensitive). */
+let velhoSearchQuery = '';
 
 function setVelhoSort(mode) {
   const allowed = new Set(['date','outlier','views','ctr','gancho','avgViewDur','avgViewed','fantasyClicks','fantasyConversion']);
@@ -8590,118 +8641,17 @@ function getVelhoEligibleBase() {
   return [...(filteredAll || [])].filter(isVelhoEligible);
 }
 
-function pruneSelectedVelhoIds() {
-  if (!selectedVelhoIds.size) return;
-  const valid = new Set(getVelhoEligibleBase().map(r => r.videoId));
-  selectedVelhoIds = new Set([...selectedVelhoIds].filter(id => valid.has(id)));
-}
-
-function updateVelhoSearchInput() {
-  const inp = document.getElementById('velhoSearchInput');
-  if (!inp) return;
-  if (!selectedVelhoIds.size) {
-    if (document.activeElement !== inp) {
-      inp.value = '';
-      inp.placeholder = 'Buscar vídeo...';
-    } else {
-      inp.placeholder = 'Buscar vídeo...';
-    }
-  } else {
-    inp.placeholder = `${selectedVelhoIds.size} vídeo(s) selecionado(s)`;
-    if (document.activeElement !== inp) inp.value = '';
-  }
-}
-
-function openVelhoSearchDropdown() {
-  populateVelhoSearchDropdown();
-  const dd = document.getElementById('velhoSearchDropdown');
-  if (dd) dd.classList.add('open');
-}
-
-function closeVelhoSearchDropdown() {
-  const dd = document.getElementById('velhoSearchDropdown');
-  if (dd) dd.classList.remove('open');
-  updateVelhoSearchInput();
-}
-
 function onVelhoSearchInput() {
-  openVelhoSearchDropdown();
-}
-
-function populateVelhoSearchDropdown() {
-  const dd = document.getElementById('velhoSearchDropdown');
   const inp = document.getElementById('velhoSearchInput');
-  if (!dd) return;
-  const q = ((inp && document.activeElement === inp) ? inp.value : '').trim().toLowerCase();
-  const rows = getVelhoEligibleBase()
-    .slice()
-    .sort((a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '') || (b.views || 0) - (a.views || 0));
-  const filtered = q
-    ? rows.filter(r => (r.title || '').toLowerCase().includes(q))
-    : rows;
-  const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const escAttr = s => String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-
-  if (!filtered.length) {
-    dd.innerHTML = `<div class="title-option" style="cursor:default;color:var(--gray-500);">Nenhum vídeo encontrado</div>`;
-    return;
-  }
-
-  const clearRow = selectedVelhoIds.size
-    ? `<div class="title-option" onclick="event.stopPropagation(); clearVelhoSearchSelection()" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
-        Limpar seleção (${selectedVelhoIds.size})
-      </div>`
-    : '';
-
-  dd.innerHTML = clearRow + filtered.slice(0, 80).map(r => {
-    const checked = selectedVelhoIds.has(r.videoId) ? 'checked' : '';
-    return `<div class="title-option" onclick="event.stopPropagation(); toggleVelhoSearchCheck('${escAttr(r.videoId)}')">
-      <input type="checkbox" ${checked} style="pointer-events:none;margin-top:2px;flex-shrink:0;">
-      <span class="velho-opt-title">${esc(r.title || '—')}</span>
-    </div>`;
-  }).join('') + (filtered.length > 80
-    ? `<div class="title-option" style="cursor:default;color:var(--gray-400);font-size:11px;">Mostrando 80 de ${filtered.length} — refine a busca</div>`
-    : '');
-}
-
-function toggleVelhoSearchCheck(videoId) {
-  if (!videoId) return;
-  if (selectedVelhoIds.has(videoId)) selectedVelhoIds.delete(videoId);
-  else selectedVelhoIds.add(videoId);
+  velhoSearchQuery = (inp ? inp.value : '').trim().toLowerCase();
   velhoVisibleCount = 30;
-  populateVelhoSearchDropdown();
-  const dd = document.getElementById('velhoSearchDropdown');
-  if (dd) dd.classList.add('open');
-  updateVelhoSearchInput();
   renderVelho();
 }
-
-function clearVelhoSearchSelection() {
-  selectedVelhoIds.clear();
-  velhoVisibleCount = 30;
-  const inp = document.getElementById('velhoSearchInput');
-  if (inp) inp.value = '';
-  populateVelhoSearchDropdown();
-  const dd = document.getElementById('velhoSearchDropdown');
-  if (dd) dd.classList.add('open');
-  updateVelhoSearchInput();
-  renderVelho();
-}
-
-document.addEventListener('pointerdown', (e) => {
-  const wrap = document.getElementById('velhoSearchWrap');
-  if (!wrap) return;
-  const dd = document.getElementById('velhoSearchDropdown');
-  if (!dd || !dd.classList.contains('open')) return;
-  if (wrap.contains(e.target)) return;
-  closeVelhoSearchDropdown();
-});
 
 function getVelhoSortedRows() {
-  pruneSelectedVelhoIds();
   let rows = getVelhoEligibleBase();
-  if (selectedVelhoIds.size) {
-    rows = rows.filter(r => selectedVelhoIds.has(r.videoId));
+  if (velhoSearchQuery) {
+    rows = rows.filter(r => (r.title || '').toLowerCase().includes(velhoSearchQuery));
   }
   const dateCmp = (a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
   const viewsCmp = (a, b) => (b.views || 0) - (a.views || 0);
@@ -8778,7 +8728,6 @@ function renderVelho() {
     return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
   };
 
-  updateVelhoSearchInput();
   const combined = getVelhoSortedRows();
   const eligible = combined.length;
   const rows = combined.slice(0, velhoVisibleCount);
