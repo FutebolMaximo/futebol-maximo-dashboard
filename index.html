@@ -241,19 +241,21 @@
     display: none;
     position: absolute;
     top: calc(100% + 10px);
-    left: 0;
-    width: min(720px, calc(100vw - 24px));
-    max-height: none;
+    right: 0;
+    left: auto;
+    width: min(640px, calc(100vw - 24px));
+    max-height: min(85vh, 820px);
     overflow: visible;
     background: var(--surface-card);
     border: 1px solid var(--surface-border);
     border-radius: 20px;
     box-shadow: 0 24px 64px rgba(0,0,0,.45);
-    padding: 12px 18px 12px 14px;
+    padding: 12px 16px 12px 14px;
     z-index: 300;
+    flex-direction: column;
   }
   .filters-popover .title-dropdown { z-index: 320; }
-  .filters-popover.open { display: block; }
+  .filters-popover.open { display: flex; }
   .filters-popover-head {
     display: flex;
     align-items: center;
@@ -261,6 +263,7 @@
     margin-bottom: 4px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--surface-border);
+    flex-shrink: 0;
   }
   .filters-popover-head h3 {
     margin: 0;
@@ -279,10 +282,14 @@
   .filters-popover .filters-card {
     background: transparent;
     border: none;
-    padding: 0;
+    padding: 0 2px 0 0;
     margin: 0;
     box-shadow: none;
     display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(min(85vh, 820px) - 72px);
+    min-height: 0;
   }
   .fp-section {
     padding: 8px 0;
@@ -328,6 +335,14 @@
     flex-wrap: wrap;
     gap: 5px;
   }
+  .filters-popover .fp-chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  @media (max-width: 560px) {
+    .filters-popover .fp-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   .fp-chip {
     display: inline-flex;
     align-items: center;
@@ -342,6 +357,15 @@
     cursor: pointer;
     line-height: 1.2;
     transition: border-color .15s, box-shadow .15s, opacity .15s;
+  }
+  .filters-popover .fp-chip {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    justify-content: flex-start;
   }
   .fp-chip:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--surface-border)); }
   .fp-chip.selected {
@@ -391,14 +415,32 @@
     box-sizing: border-box;
   }
   .fp-week-group {
-    max-width: 200px;
-    width: 200px;
+    width: min(100%, 320px);
+    max-width: 320px;
   }
   .fp-week-group .title-search-wrap,
   .fp-week-group .title-search-wrap input {
     width: 100%;
-    max-width: 200px;
+    max-width: 320px;
     box-sizing: border-box;
+  }
+  #weekDropdown {
+    min-width: 340px;
+    width: max(100%, 340px);
+    max-width: min(420px, calc(100vw - 40px));
+  }
+  #weekDropdown .title-option {
+    white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 6px;
+    line-height: 1.35;
+  }
+  #weekDropdown .week-range {
+    font-size: 10px;
+    color: var(--gray-500);
+    white-space: nowrap;
   }
   .filters-popover-actions {
     display: flex;
@@ -487,7 +529,12 @@
       justify-items: stretch;
     }
     .chrome-center, .chrome-right, .brand { justify-content: flex-start; }
-    .filters-popover { left: 0; width: min(720px, calc(100vw - 24px)); }
+    .filters-popover {
+      left: 0;
+      right: auto;
+      width: min(640px, calc(100vw - 24px));
+      max-height: min(85vh, 820px);
+    }
   }
 
   /* MAIN */
@@ -668,11 +715,21 @@
     color: var(--gray-900) !important;
     border-color: var(--input-border) !important;
   }
-  .topn-toggle { display: flex; border: 1px solid var(--input-border); border-radius: var(--radius-sm); overflow: hidden; background: var(--input-bg); }
+  .topn-toggle { display: inline-flex; border: 1px solid var(--input-border); border-radius: var(--radius-sm); overflow: hidden; background: var(--input-bg); }
   .toggle-btn {
     background: transparent; border: none; padding: 0 12px; height: 32px;
     font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gray-600);
     transition: background .15s, color .15s;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+  #btnTempWeek, #btnTempMonth,
+  #btnSTempWeek, #btnSTempMonth {
+    min-width: 108px;
+    flex: 1 1 0;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
   }
   .toggle-btn.active { background: var(--accent); color: var(--accent-ink); }
   .toggle-btn:not(.active):hover { background: var(--accent-soft); color: var(--accent); }
@@ -1275,11 +1332,47 @@
     margin-bottom:16px; flex-wrap:wrap;
   }
   .velho-toolbar h3 { font-size:14px; font-weight:700; color:var(--gray-700); margin:0; text-transform:uppercase; letter-spacing:.4px; }
-  .velho-toolbar span { font-size:12px; color:var(--gray-500); }
+  .velho-toolbar > span { font-size:12px; color:var(--gray-500); }
+  .velho-toolbar-right {
+    display:flex; align-items:center; gap:10px; margin-left:auto; flex-wrap:wrap;
+  }
+  .velho-search-wrap { position: relative; width: min(280px, 100%); }
+  .velho-search-input-row {
+    display:flex; align-items:center; gap:6px;
+    height:32px; padding:0 10px;
+    border:1px solid var(--input-border); border-radius:6px;
+    background:var(--input-bg);
+  }
+  .velho-search-input-row:focus-within {
+    border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow);
+  }
+  .velho-search-input-row svg {
+    width:14px; height:14px; flex-shrink:0;
+    stroke:var(--gray-500); fill:none; stroke-width:2;
+  }
+  .velho-search-input-row input {
+    flex:1; min-width:0; border:none; outline:none; background:transparent;
+    font-size:13px; color:var(--gray-900); height:100%;
+  }
+  #velhoSearchDropdown {
+    min-width: 100%;
+    width: max(100%, 320px);
+    max-height: 280px;
+  }
+  #velhoSearchDropdown .title-option {
+    white-space: normal;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.35;
+  }
+  #velhoSearchDropdown .title-option span.velho-opt-title {
+    flex: 1;
+    min-width: 0;
+  }
   .velho-sort {
     display:flex; align-items:center; gap:8px;
     font-size:12px; font-weight:600; color:var(--gray-600);
-    margin-left:auto;
   }
   .velho-sort select {
     height:32px; padding:0 10px; border:1px solid var(--input-border); border-radius:6px;
@@ -1604,13 +1697,13 @@
                 <label id="filterDateEndLabel">Fim</label>
                 <input type="date" id="filterDateEnd">
               </div>
-              <div class="filter-group fp-week-group">
-                <label id="filterWeekLabel">Semana</label>
-                <div class="title-search-wrap" id="weekWrap">
-                  <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
-                    onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);">
-                  <div class="title-dropdown" id="weekDropdown"></div>
-                </div>
+            </div>
+            <div class="filter-group fp-week-group">
+              <label id="filterWeekLabel">Semana</label>
+              <div class="title-search-wrap" id="weekWrap">
+                <input type="text" id="filterWeekInput" placeholder="Todas as Semanas" readonly
+                  onclick="toggleWeekDropdown()" style="cursor:pointer;background:var(--input-bg);">
+                <div class="title-dropdown" id="weekDropdown"></div>
               </div>
             </div>
           </div>
@@ -1630,16 +1723,16 @@
           <div class="fp-section" id="baseVelhoTipoGroup" style="display:none;">
             <h4 class="fp-section-title">Tipo</h4>
             <div class="fp-toggle" id="baseVelhoTipoSeg" role="group" aria-label="Tipo Base/VELHO">
-              <button type="button" class="fp-toggle-btn" id="btnBaseVelhoTipoAll" onclick="setBaseVelhoTipo('')">Todos</button>
-              <button type="button" class="fp-toggle-btn active" id="btnBaseVelhoTipoLF" onclick="setBaseVelhoTipo('long')">Long Form</button>
+              <button type="button" class="fp-toggle-btn active" id="btnBaseVelhoTipoAll" onclick="setBaseVelhoTipo('')">Todos</button>
+              <button type="button" class="fp-toggle-btn" id="btnBaseVelhoTipoLF" onclick="setBaseVelhoTipo('long')">Long Form</button>
               <button type="button" class="fp-toggle-btn" id="btnBaseVelhoTipoShorts" onclick="setBaseVelhoTipo('shorts')">Shorts</button>
             </div>
           </div>
           <div class="fp-section" id="filterTipoGroup" style="display:none;">
             <h4 class="fp-section-title">Tipo</h4>
             <div class="fp-toggle fantasy-tipo-seg" id="fantasyTipoSeg" role="group" aria-label="Tipo Fantasy">
-              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoAll" onclick="setFantasyFormatFilter('')">Todos</button>
-              <button type="button" class="fp-toggle-btn active" id="btnFantasyTipoLF" onclick="setFantasyFormatFilter('long')">Long Form</button>
+              <button type="button" class="fp-toggle-btn active" id="btnFantasyTipoAll" onclick="setFantasyFormatFilter('')">Todos</button>
+              <button type="button" class="fp-toggle-btn" id="btnFantasyTipoLF" onclick="setFantasyFormatFilter('long')">Long Form</button>
               <button type="button" class="fp-toggle-btn" id="btnFantasyTipoShorts" onclick="setFantasyFormatFilter('shorts')">Shorts</button>
               <button type="button" class="fp-toggle-btn" id="btnFantasyTipoLive" onclick="setFantasyFormatFilter('live')">Live</button>
               <button type="button" class="fp-toggle-btn" id="btnFantasyTipoBio" onclick="setFantasyFormatFilter('bio')">BIO</button>
@@ -1909,7 +2002,7 @@
   <div class="charts-controls">
     <div class="topn-input">
       <label>N Vídeos:</label>
-      <input type="number" id="topNInput" value="20" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
+      <input type="number" id="topNInput" value="10" min="1" max="500" style="width:70px;height:32px;border:1px solid var(--gray-300);border-radius:6px;padding:4px 8px;font-size:13px;outline:none;">
       <div class="topn-toggle">
         <button id="btnTop" class="toggle-btn" onclick="setChartMode('top')">🏆 Melhores</button>
         <button id="btnBot" class="toggle-btn" onclick="setChartMode('bottom')">🔍 Piores</button>
@@ -2350,19 +2443,29 @@
 <div class="main" id="panelVelho" style="display:none;">
   <div class="velho-toolbar">
     <span id="velhoCount"></span>
-    <label class="velho-sort">Ordenar por
-      <select id="velhoSortSelect" onchange="setVelhoSort(this.value)">
-        <option value="date" selected>Data</option>
-        <option value="outlier">Outlier</option>
-        <option value="views">Views</option>
-        <option value="ctr">CTR %</option>
-        <option value="gancho">Gancho %</option>
-        <option value="avgViewDur">Avg View Duration</option>
-        <option value="avgViewed">Avg Viewed %</option>
-        <option value="fantasyClicks">Fantasy Clicks</option>
-        <option value="fantasyConversion">Fantasy Conversion</option>
-      </select>
-    </label>
+    <div class="velho-toolbar-right">
+      <div class="velho-search-wrap" id="velhoSearchWrap">
+        <div class="velho-search-input-row">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3" stroke-linecap="round"/></svg>
+          <input type="text" id="velhoSearchInput" placeholder="Buscar vídeo..." autocomplete="off"
+            oninput="onVelhoSearchInput()" onfocus="openVelhoSearchDropdown()">
+        </div>
+        <div class="title-dropdown" id="velhoSearchDropdown"></div>
+      </div>
+      <label class="velho-sort">Ordenar por
+        <select id="velhoSortSelect" onchange="setVelhoSort(this.value)">
+          <option value="date" selected>Data</option>
+          <option value="outlier">Outlier</option>
+          <option value="views">Views</option>
+          <option value="ctr">CTR %</option>
+          <option value="gancho">Gancho %</option>
+          <option value="avgViewDur">Avg View Duration</option>
+          <option value="avgViewed">Avg Viewed %</option>
+          <option value="fantasyClicks">Fantasy Clicks</option>
+          <option value="fantasyConversion">Fantasy Conversion</option>
+        </select>
+      </label>
+    </div>
   </div>
   <div id="velhoGrid" class="velho-grid"></div>
   <div id="velhoLoadMoreWrap" class="velho-loadmore-wrap" hidden>
@@ -2716,7 +2819,10 @@ document.addEventListener('pointerdown', (e) => {
   closeFiltersPopover();
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeFiltersPopover();
+  if (e.key === 'Escape') {
+    closeFiltersPopover();
+    if (typeof closeVelhoSearchDropdown === 'function') closeVelhoSearchDropdown();
+  }
 });
 
 function mean(arr) {
@@ -4304,8 +4410,8 @@ let tempMode = 'month'; // 'week' | 'month'
 let activeTab = 'velho';
 /** Independent Tipo/Formato contexts (session-only; no localStorage). */
 let dashboardFormat = 'longform'; // 'longform' | 'shorts' — Dashboard only; immediate
-let baseVelhoTipo = 'long';       // '' | 'long' | 'shorts' — Base+VELHO shared; default Long Form
-let fantasyFormatFilter = 'long'; // '' | 'long' | 'shorts' | 'live' | 'bio' | 'unidentified'
+let baseVelhoTipo = '';          // '' | 'long' | 'shorts' — Base+VELHO shared; default Todos
+let fantasyFormatFilter = '';    // '' | 'long' | 'shorts' | 'live' | 'bio' | 'unidentified' — default Todos
 const FIXED_CREATORS = ['Felipe', 'João', 'Rai'];
 
 function syncDashboardFormatUI() {
@@ -4675,7 +4781,8 @@ function renderHistograms() {
   const labels = bins.map((_, i) => i < MAX_VIEWS_BINS ? `${fmtNum(i*BIN_VIEWS)}–${fmtNum((i+1)*BIN_VIEWS)}` : `>100K`);
   destroyChart('chartHistViews');
   const el = document.getElementById('chartHistViews');
-  if (el) chartInstances['chartHistViews'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', 'rgba(0,240,255,.55)'));
+  const accent = (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00F0FF');
+  if (el) chartInstances['chartHistViews'] = new Chart(el, buildHistConfig(labels, bins, 'Qtd Vídeos', accent + '99'));
 }
 
 
@@ -5558,10 +5665,10 @@ function clearFilters() {
   closeStickyMultiselectDropdowns();
   resetRangeFiltersToBounds();
 
-  // Default de tipo = Long Form em todos os contextos
+  // Defaults: Dashboard Long Form; Base/VELHO/Fantasy Tipo = Todos
   dashboardFormat = 'longform';
-  baseVelhoTipo = 'long';
-  fantasyFormatFilter = 'long';
+  baseVelhoTipo = '';
+  fantasyFormatFilter = '';
   syncDashboardFormatUI();
   syncBaseVelhoTipoUI();
   syncFantasyFormatFilterUI();
@@ -5990,7 +6097,7 @@ function buildBarConfig(labels, values, meanVal, medianVal, yLabel, formatTick, 
 }
 
 function getTopN() {
-  return parseInt(document.getElementById('topNInput').value) || 20;
+  return parseInt(document.getElementById('topNInput').value) || 10;
 }
 
 function getChartData(metric) {
@@ -7443,10 +7550,11 @@ function populateWeekDropdown() {
     }).join('')}
     ${weeks.map(w => {
       const checked = (weekAllSelected || selectedWeeks.has(w.key)) ? 'checked' : '';
+      const rangeHtml = w.range ? `<span class="week-range">${w.range}</span>` : '';
       return `<div class="title-option" onclick="event.stopPropagation(); toggleWeekCheck('${w.key}', this)">
-        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:6px;">
-        <span style="font-size:10px;font-weight:700;color:var(--blue-600);margin-right:4px;">${w.label}</span>
-        <span style="font-size:10px;color:var(--gray-500);margin-right:4px;">${w.range}</span>
+        <input type="checkbox" ${checked} style="pointer-events:none;margin-right:2px;flex-shrink:0;">
+        <span style="font-size:11px;font-weight:700;color:var(--accent);">${w.label}</span>
+        ${rangeHtml}
         <span style="font-size:10px;color:var(--gray-400);">(${w.count}v)</span>
       </div>`;
     }).join('')}`;
@@ -8460,6 +8568,8 @@ function isVelhoEligible(r) {
 
 let velhoSort = 'date';
 let velhoVisibleCount = 30;
+/** Empty set = show all eligible videos. Otherwise only selected videoIds. */
+let selectedVelhoIds = new Set();
 
 function setVelhoSort(mode) {
   const allowed = new Set(['date','outlier','views','ctr','gancho','avgViewDur','avgViewed','fantasyClicks','fantasyConversion']);
@@ -8476,8 +8586,123 @@ function loadMoreVelho() {
   renderVelho();
 }
 
+function getVelhoEligibleBase() {
+  return [...(filteredAll || [])].filter(isVelhoEligible);
+}
+
+function pruneSelectedVelhoIds() {
+  if (!selectedVelhoIds.size) return;
+  const valid = new Set(getVelhoEligibleBase().map(r => r.videoId));
+  selectedVelhoIds = new Set([...selectedVelhoIds].filter(id => valid.has(id)));
+}
+
+function updateVelhoSearchInput() {
+  const inp = document.getElementById('velhoSearchInput');
+  if (!inp) return;
+  if (!selectedVelhoIds.size) {
+    if (document.activeElement !== inp) {
+      inp.value = '';
+      inp.placeholder = 'Buscar vídeo...';
+    } else {
+      inp.placeholder = 'Buscar vídeo...';
+    }
+  } else {
+    inp.placeholder = `${selectedVelhoIds.size} vídeo(s) selecionado(s)`;
+    if (document.activeElement !== inp) inp.value = '';
+  }
+}
+
+function openVelhoSearchDropdown() {
+  populateVelhoSearchDropdown();
+  const dd = document.getElementById('velhoSearchDropdown');
+  if (dd) dd.classList.add('open');
+}
+
+function closeVelhoSearchDropdown() {
+  const dd = document.getElementById('velhoSearchDropdown');
+  if (dd) dd.classList.remove('open');
+  updateVelhoSearchInput();
+}
+
+function onVelhoSearchInput() {
+  openVelhoSearchDropdown();
+}
+
+function populateVelhoSearchDropdown() {
+  const dd = document.getElementById('velhoSearchDropdown');
+  const inp = document.getElementById('velhoSearchInput');
+  if (!dd) return;
+  const q = ((inp && document.activeElement === inp) ? inp.value : '').trim().toLowerCase();
+  const rows = getVelhoEligibleBase()
+    .slice()
+    .sort((a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '') || (b.views || 0) - (a.views || 0));
+  const filtered = q
+    ? rows.filter(r => (r.title || '').toLowerCase().includes(q))
+    : rows;
+  const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const escAttr = s => String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+
+  if (!filtered.length) {
+    dd.innerHTML = `<div class="title-option" style="cursor:default;color:var(--gray-500);">Nenhum vídeo encontrado</div>`;
+    return;
+  }
+
+  const clearRow = selectedVelhoIds.size
+    ? `<div class="title-option" onclick="event.stopPropagation(); clearVelhoSearchSelection()" style="font-weight:700;border-bottom:2px solid var(--gray-200);background:var(--gray-50);">
+        Limpar seleção (${selectedVelhoIds.size})
+      </div>`
+    : '';
+
+  dd.innerHTML = clearRow + filtered.slice(0, 80).map(r => {
+    const checked = selectedVelhoIds.has(r.videoId) ? 'checked' : '';
+    return `<div class="title-option" onclick="event.stopPropagation(); toggleVelhoSearchCheck('${escAttr(r.videoId)}')">
+      <input type="checkbox" ${checked} style="pointer-events:none;margin-top:2px;flex-shrink:0;">
+      <span class="velho-opt-title">${esc(r.title || '—')}</span>
+    </div>`;
+  }).join('') + (filtered.length > 80
+    ? `<div class="title-option" style="cursor:default;color:var(--gray-400);font-size:11px;">Mostrando 80 de ${filtered.length} — refine a busca</div>`
+    : '');
+}
+
+function toggleVelhoSearchCheck(videoId) {
+  if (!videoId) return;
+  if (selectedVelhoIds.has(videoId)) selectedVelhoIds.delete(videoId);
+  else selectedVelhoIds.add(videoId);
+  velhoVisibleCount = 30;
+  populateVelhoSearchDropdown();
+  const dd = document.getElementById('velhoSearchDropdown');
+  if (dd) dd.classList.add('open');
+  updateVelhoSearchInput();
+  renderVelho();
+}
+
+function clearVelhoSearchSelection() {
+  selectedVelhoIds.clear();
+  velhoVisibleCount = 30;
+  const inp = document.getElementById('velhoSearchInput');
+  if (inp) inp.value = '';
+  populateVelhoSearchDropdown();
+  const dd = document.getElementById('velhoSearchDropdown');
+  if (dd) dd.classList.add('open');
+  updateVelhoSearchInput();
+  renderVelho();
+}
+
+document.addEventListener('pointerdown', (e) => {
+  const wrap = document.getElementById('velhoSearchWrap');
+  if (!wrap) return;
+  const dd = document.getElementById('velhoSearchDropdown');
+  if (!dd || !dd.classList.contains('open')) return;
+  if (wrap.contains(e.target)) return;
+  closeVelhoSearchDropdown();
+});
+
 function getVelhoSortedRows() {
-  const rows = [...(filteredAll || [])].filter(isVelhoEligible);
+  pruneSelectedVelhoIds();
+  let rows = getVelhoEligibleBase();
+  if (selectedVelhoIds.size) {
+    rows = rows.filter(r => selectedVelhoIds.has(r.videoId));
+  }
   const dateCmp = (a, b) => (b.dataPublicacao || '').localeCompare(a.dataPublicacao || '');
   const viewsCmp = (a, b) => (b.views || 0) - (a.views || 0);
   const outCmp = (a, b) => (b.outlier || 0) - (a.outlier || 0);
@@ -8553,6 +8778,7 @@ function renderVelho() {
     return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
   };
 
+  updateVelhoSearchInput();
   const combined = getVelhoSortedRows();
   const eligible = combined.length;
   const rows = combined.slice(0, velhoVisibleCount);
@@ -8573,11 +8799,19 @@ function renderVelho() {
     const perfCls = outlierPerformanceClass(r.outlier);
     const title = escapeHtml(r.title);
     const fcDisp = (r.fantasyClicks != null && Number.isFinite(r.fantasyClicks)) ? fmtNum(r.fantasyClicks) : '—';
+    const impDisp = Number.isFinite(r.impressoes) ? fmtNum(r.impressoes) : '—';
+    const avgDurDisp = (r.avgViewDurSec !== null && r.avgViewDurSec !== undefined) ? formatDuration(r.avgViewDurSec) : '—';
+    const ganchoDisp = fmtGanchoCell(r, 0);
     const metricsHtml = `<div class="velho-metrics lf">
           <div class="velho-mrow cols-3">
             <div><div class="velho-metric-label">Views</div><div class="velho-metric-val ${perfCls}">${fmtNum(r.views)}</div></div>
             <div><div class="velho-metric-label">Outlier</div><div class="velho-metric-val ${perfCls}">${outlier}</div></div>
             <div><div class="velho-metric-label">Fantasy Clicks</div><div class="velho-metric-val">${fcDisp}</div></div>
+          </div>
+          <div class="velho-mrow cols-3">
+            <div><div class="velho-metric-label">Impressões</div><div class="velho-metric-val sec">${impDisp}</div></div>
+            <div><div class="velho-metric-label">Avg View Dur</div><div class="velho-metric-val sec">${avgDurDisp}</div></div>
+            <div><div class="velho-metric-label">Gancho %</div><div class="velho-metric-val sec">${ganchoDisp}</div></div>
           </div>
         </div>`;
     return `<article class="velho-card" data-videoid="${escapeHtml(id)}">
